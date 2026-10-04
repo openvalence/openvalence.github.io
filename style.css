@@ -246,6 +246,8 @@ h2::after {
   font: 400 .7rem/1.7 var(--mono);
   color: var(--tx-val);
 }
+.sources a { color: var(--tx-val); white-space: nowrap; }
+.sources a:hover { color: var(--highlight); }
 
 /* ---- footer ---- */
 .foot {
@@ -269,7 +271,7 @@ h2::after {
   body { font-size: 16px; }
   main { padding-top: 36px; }
   .opening, section { margin-bottom: 48px; }
-  .chip.opt { display: none; }
+  .chip.opt, .foot .lic { display: none; }
   .figures > div { padding: 16px 14px 18px; }
   .figures dd { font-size: 2.1rem; }
   .parts thead { display: none; }
