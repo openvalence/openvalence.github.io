@@ -3,62 +3,149 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OpenValence</title>
-<meta name="description" content="Open hardware and software for linear motion machines.">
+<title>OpenValence: open hardware and software for linear motion machines</title>
+<meta name="description" content="Open hardware and software for linear motion machines. One hub holds the machine state, every client stays in sync with it, and the whole stack is in the open.">
+<meta name="theme-color" content="#08090B">
 <link rel="icon" href="mark.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/">
+<meta property="og:title" content="OpenValence">
+<meta property="og:description" content="Open hardware and software for linear motion machines. One hub holds the machine state, every client stays in sync with it, and the whole stack is in the open.">
+<meta property="og:image" content="https://openvalence.org/images/phosphor-dash.png">
+<meta property="og:image:width" content="1440">
+<meta property="og:image:height" content="900">
+<meta property="og:image:alt" content="Phosphor's Dash page driving the valencesim device twin, a generator running.">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
+
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <span class="chip live"><span class="dot" aria-hidden="true"></span>live</span>
+    <span class="chip opt"><span class="key">Site</span>openvalence.org</span>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+
 <main>
-  <header>
-    <img src="mark.svg" alt="" width="96" height="96">
-    <h1>OpenValence</h1>
-    <p class="lede">Open hardware and software for linear motion machines. One hub holds the machine's state, any number of clients stay in sync with it, and every part of the stack is here in the open.</p>
-    <nav>
-      <a class="button" href="https://openvalence.github.io/Valence/">Docs</a>
-      <a class="button ghost" href="https://github.com/openvalence">GitHub</a>
-    </nav>
-  </header>
+  <section class="opening">
+    <p class="kicker">pre-release protocol · spec v1.0-draft</p>
+    <h1>Open hardware and software for linear motion machines.</h1>
+    <p>One hub holds the machine's state. Any number of clients stay in sync with it: the desktop app, a browser tab, a script, a plugin. The board, its firmware, the protocol between them and the client are all here, in the open, under <span class="nb">MIT</span>, <span class="nb">Apache-2.0</span> and <span class="nb">CERN-OHL-S-2.0</span>.</p>
+  </section>
 
-  <h2>The parts</h2>
-  <div class="cards">
-    <a class="card" href="https://github.com/openvalence/Valence">
-      <h3>Valence</h3>
-      <p>The protocol. Spec, registry, reference library, clients, tools, documentation.</p>
-    </a>
-    <a class="card" href="https://github.com/openvalence/Nucleus">
-      <h3>Nucleus</h3>
-      <p>Firmware for the OSSM Flagship PCB (ESP32-P4 + ESP32-C6). Pure ESP-IDF. Quadrature on the LP core, measured to within 8 ns.</p>
-    </a>
-    <a class="card" href="https://github.com/openvalence/Phosphor">
-      <h3>Phosphor</h3>
-      <p>The cross-platform client. Windows, macOS, Linux (Flatpak). Plugins, themes, a built-in simulator to try everything with no hardware.</p>
-    </a>
-    <a class="card" href="https://github.com/openvalence/Kinetic">
-      <h3>Kinetic</h3>
-      <p>The motion engine: trajectory planning, waveform shaping, blend and stretch policies. Header-only C++ on Ruckig, deterministic across targets.</p>
-    </a>
-    <a class="card" href="https://github.com/openvalence/Hardware">
-      <h3>Hardware</h3>
-      <p>The OSSM Flagship PCB and everything physical around it. KiCad.</p>
-    </a>
-    <a class="card" href="https://github.com/openvalence/Isotope">
-      <h3>Isotope</h3>
-      <p>Accessory firmware for the ESP-NOW network around Nucleus. WIP.</p>
-    </a>
-    <a class="card" href="https://github.com/openvalence/ButtplugIO">
-      <h3>ButtplugIO</h3>
-      <p>Fork of buttplugio/buttplug with the Valence hardware manager (branch <code>valence</code>).</p>
-    </a>
-  </div>
+  <section aria-labelledby="s-client">
+    <h2 id="s-client" data-n="01">The client</h2>
+    <figure class="shot">
+      <a href="images/phosphor-dash.png"><img src="images/phosphor-dash.png" width="1440" height="900" alt="Phosphor's Dash page: the planned position reads 393.4 mm in large blue numerals, a 0 to 500 mm rail sits below it, and the telemetry chart shows position and speed as two sine waves while the Simple Stroke pattern runs."></a>
+      <figcaption>Phosphor 1.0.0 · Dash · connected to valencesim 0.1.11, Simple Stroke running · 1440 × 900, unedited · <a href="images/phosphor-dash.png">full size</a></figcaption>
+    </figure>
+    <p>Phosphor is the reference client. It builds its pages from what the hub declares, so a new setting on the machine shows up in the app without an app update. Plugins draw their own controls over the same protocol. It ships with valencesim, the device twin, so you can drive it with no hardware attached.</p>
+  </section>
 
-  <h2>Where things stand</h2>
-  <p>The firmware homes a real rail, plays scripts, and talks to the client over Wi-Fi, with Bluetooth as the fallback. Phosphor builds for all three desktop platforms from one source. The protocol is pre-release: it changes through RFCs, and the registry is the single source of every wire number. Read the <a href="https://openvalence.github.io/Valence/">docs</a> first if you want to build a client or a machine.</p>
+  <section aria-labelledby="s-measured">
+    <h2 id="s-measured" data-n="02">Measured</h2>
+    <dl class="figures">
+      <!-- Nucleus .claude/rules/motion-control.md, "The LP-core emitter": Rigol DHO4204 single-shot captures at 8 ns per sample, 2026-09-20 -->
+      <div>
+        <dt>quadrature edge jitter from the LP core, under one 8 ns scope sample</dt>
+        <dd>8<span class="unit">ns</span></dd>
+      </div>
+      <!-- Nucleus .claude/rules/architecture.md, "Position truth": HP flash hammer with the cache off, LP late=0, 2,156 transitions, 0 illegal, 0 outliers -->
+      <div>
+        <dt>edges scoped while the main cores hammered flash; none late, none illegal</dt>
+        <dd>2,156</dd>
+      </div>
+      <!-- Kinetic README.md, "Determinism": double-precision planning, same bits on every IEEE-754 target built with -ffp-contract=off -->
+      <div>
+        <dt>difference between the native, wasm and ESP32-P4 motion plans</dt>
+        <dd>0<span class="unit">ULP</span></dd>
+      </div>
+      <!-- Phosphor README.md, "Builds": Windows, macOS (aarch64) and Linux bundles plus a Flatpak -->
+      <div>
+        <dt>desktop platforms from one source: Windows, macOS, Linux</dt>
+        <dd>3</dd>
+      </div>
+    </dl>
+    <p class="sources">Sources: <a href="https://github.com/openvalence/Nucleus/blob/main/.claude/rules/motion-control.md">Nucleus motion-control rules</a> · <a href="https://github.com/openvalence/Nucleus/blob/main/.claude/rules/architecture.md">Nucleus architecture rules</a> · <a href="https://github.com/openvalence/Kinetic#determinism">Kinetic, Determinism</a> · <a href="https://github.com/openvalence/Phosphor#builds">Phosphor, Builds</a></p>
+  </section>
 
-  <footer>
-    <p>Credits: the Advanced pattern generator comes from <a href="https://github.com/fray-d/OSSM-Lite">fray-d's OSSM-Lite</a>, the stroke patterns from <a href="https://github.com/theelims/StrokeEngine">theelims' StrokeEngine</a>, and motion planning rides on <a href="https://github.com/pantor/ruckig">Ruckig</a>.</p>
-    <p>Licenses: Valence MIT, spec text CC BY 4.0. Nucleus, Phosphor and Kinetic Apache-2.0. Hardware and the OSSM-Lite generator CERN-OHL-S-2.0.</p>
-  </footer>
+  <section aria-labelledby="s-parts">
+    <h2 id="s-parts" data-n="03">The parts</h2>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Repo</th><th scope="col">What it is</th><th scope="col">License</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row"><a href="https://github.com/openvalence/Valence">Valence</a></th>
+          <td>The protocol: spec, registry, reference library, clients, tools, documentation.</td>
+          <td><span class="nb">MIT</span> · spec text <span class="nb">CC BY 4.0</span></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="https://github.com/openvalence/Nucleus">Nucleus</a></th>
+          <td>Firmware for the OSSM Flagship board, ESP32-P4 with an ESP32-C6 for Wi-Fi. Pure ESP-IDF; quadrature from the LP core.</td>
+          <td>Apache-2.0</td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="https://github.com/openvalence/Phosphor">Phosphor</a></th>
+          <td>The client. Windows, macOS, Linux (Flatpak). Plugins, themes, and the device twin built in.</td>
+          <td>Apache-2.0</td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="https://github.com/openvalence/Kinetic">Kinetic</a></th>
+          <td>The motion engine: trajectory planning, waveform shaping, blend and stretch policies. Header-only C++ on Ruckig.</td>
+          <td>Apache-2.0</td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="https://github.com/openvalence/Hardware">Hardware</a></th>
+          <td>The OSSM Flagship board and everything physical around it, in KiCad.</td>
+          <td>CERN-OHL-S-2.0</td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="https://github.com/openvalence/Isotope">Isotope</a></th>
+          <td>Accessory firmware for the ESP-NOW network around Nucleus. Design stage.</td>
+          <td>not yet</td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="https://github.com/openvalence/ButtplugIO">ButtplugIO</a></th>
+          <td>A fork of buttplugio/buttplug carrying the Valence hardware manager, on branch <code>valence</code>.</td>
+          <td>BSD-3-Clause</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section aria-labelledby="s-stand">
+    <h2 id="s-stand" data-n="04">Where things stand</h2>
+    <p>The firmware homes a real rail, plays scripts, and talks to the client over Wi-Fi, with Bluetooth as the fallback. Phosphor builds for all three desktop platforms from one source. The protocol is pre-release: it changes through RFCs, and the registry is the single source of every wire number. If you want to build a client or a machine, start with the <a href="/Valence/">docs</a>; if you want to add a control surface, start with <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Phosphor's plugin contract</a>.</p>
+  </section>
+
+  <section aria-labelledby="s-built">
+    <h2 id="s-built" data-n="05">How it's built</h2>
+    <p>One person designs this and makes every decision; coding agents write most of the code under that direction. The rules they work to are in the repos: a written doctrine, a registry that owns every wire number, lint that fails the build, tests on every change, and a bench where firmware has to move a real motor before it counts as done. That's stated here so nobody has to guess.</p>
+  </section>
+
+  <section aria-labelledby="s-credits">
+    <h2 id="s-credits" data-n="06">Credits</h2>
+    <p class="credits">The Advanced pattern generator comes from <a href="https://github.com/fray-d/OSSM-Lite">fray-d's OSSM-Lite</a> and keeps its <span class="nb">CERN-OHL-S-2.0</span> license. The stroke patterns come from <a href="https://github.com/theelims/StrokeEngine">theelims' StrokeEngine</a>, and motion planning rides on <a href="https://github.com/pantor/ruckig">Ruckig</a>.</p>
+    <p class="credits">Type is Chakra Petch and Martian Mono, both under the <a href="fonts/LICENSE">SIL Open Font License</a>.</p>
+  </section>
 </main>
+
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span><span class="nb">MIT</span> · <span class="nb">CC BY 4.0</span> · <span class="nb">Apache-2.0</span> · <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="/Valence/">docs →</a>
+</footer>
+
 </body>
 </html>

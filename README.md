@@ -6,7 +6,10 @@ https://openvalence.github.io/Valence/.
 
 ## Editing
 
-The site is `index.html`, `style.css` and `mark.svg`, with no build step.
+The site is `index.html`, `style.css`, `mark.svg`, the self-hosted fonts in
+`fonts/` (SIL OFL, notice in `fonts/LICENSE`) and the screenshot in `images/`,
+with no build step. The colors and type are Phosphor's default chassis
+(Phosphor `src/style.css`); keep them in step with it.
 Edit them, open `index.html` in a browser to check, and push to `main`:
 GitHub Pages serves the branch root within a minute.
 
@@ -14,8 +17,8 @@ GitHub Pages serves the branch root within a minute.
 
 Add a file named `CNAME` at the repo root holding the bare domain (for
 example `www.example.org`), and set the same domain under Settings > Pages,
-then turn on Enforce HTTPS once the certificate is issued. There is no
-`CNAME` file yet because there is no domain yet.
+then turn on Enforce HTTPS once the certificate is issued. This repo's
+`CNAME` holds `openvalence.org`.
 
 At the DNS host, point a `CNAME` record for `www` at
 `openvalence.github.io`, and give the apex the `A` records 185.199.108.153,
