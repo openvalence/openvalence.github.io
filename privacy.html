@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy: OpenValence</title>
+<meta name="description" content="What Phosphor, valencesim, the Nucleus firmware and this website do with your data. Short version: nothing leaves your machine unless you point it somewhere.">
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preload" href="fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <span class="chip opt"><span class="key">Page</span>privacy</span>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <section class="opening">
+    <p class="kicker">privacy policy · effective October 4, 2026</p>
+    <h1>Nothing leaves your machine unless you point it somewhere.</h1>
+    <p>The plain version first. Phosphor has no telemetry, no crash reporting, no analytics, no accounts and no ads. I have not built any of that in, first party or third party, and there is no server of mine for the app to talk to. Everything it remembers lives in a folder on your computer. The only things it ever sends go to places you chose yourself: the machine on your network, a Stash server you entered the address of, a page a plugin loads, a Bluetooth device you connected. What those endpoints and your operating system do with traffic is outside my control, and this page says where that line is.</p>
+    <p>The rest is the long version, written so that it is checkable. The source is public; every claim here can be read in the code.</p>
+  </section>
+
+  <section aria-labelledby="s-scope">
+    <h2 id="s-scope" data-n="01">What this covers</h2>
+    <p>This policy covers the Phosphor application on Windows, macOS, Linux and Android, the valencesim device twin that ships with the desktop builds, the Nucleus firmware that runs on the machine, and this website, openvalence.org. All of it is published by AtlanticTM under the OpenValence name. "I" below means the one person who maintains it.</p>
+  </section>
+
+  <section aria-labelledby="s-stored">
+    <h2 id="s-stored" data-n="02">What the app stores, and where</h2>
+    <p>Phosphor keeps its state in the per-user application data folder your operating system gives it: <code>%APPDATA%</code> and <code>%LOCALAPPDATA%</code> under <code>com.phosphor.app</code> on Windows, <code>~/Library/Application Support/com.phosphor.app</code> on macOS, <code>~/.local/share/com.phosphor.app</code> on Linux (inside <code>~/.var/app/org.openvalence.Phosphor</code> for the Flatpak), and the app's private storage on Android. The Microsoft Store build may be redirected by Windows into the package's own <code>LocalCache</code> folder. In those folders you will find:</p>
+    <ul>
+      <li>Saved hubs: the address, name and session details of machines you connected to, so the app can reconnect.</li>
+      <li>Plugin settings, including, if you set one up, the URL and API key of your Stash server. The key is stored as you typed it, protected only by your operating system's user account, and it is deliberately left out of the app's settings export so it never ends up in a backup file.</li>
+      <li>Your themes, layouts, pages, enabled plugins and the simulator's saved state.</li>
+      <li>A log file (<code>Phosphor.log</code>) with technical events: connections, errors, the simulator's output. It stays on disk and is never uploaded. If you send it to me for a bug report, that is you sending it.</li>
+      <li>Media you open in the funscript player is read from where it already is. The app does not copy it anywhere.</li>
+    </ul>
+    <p>Uninstalling removes the application. The data folder may stay behind depending on the platform; deleting it deletes everything the app ever knew about you.</p>
+  </section>
+
+  <section aria-labelledby="s-network">
+    <h2 id="s-network" data-n="03">What the app sends, and to whom</h2>
+    <p>Every network connection Phosphor makes goes to an endpoint you chose. There is no endpoint of mine.</p>
+    <ul>
+      <li><strong>Your machine.</strong> To find a hub, the app sends a short discovery broadcast on your local network and listens for replies; it only broadcasts when you ask it to scan, or when it reconnects to a hub you saved. Once connected, the app and the hub exchange machine state over a WebSocket on your network. An emergency stop is also sent as a broadcast so it reaches the hub even if the session has dropped.</li>
+      <li><strong>Stash.</strong> If you enter a Stash server in the funscript player, the app sends requests to that address with the API key you gave it, and streams video from it. That is your server, on whatever network you put it on; its own logs are its business.</li>
+      <li><strong>Plugins and the pages they load.</strong> The app allows plugins to fetch <code>http</code> and <code>https</code> URLs. The plugins that ship with the app only contact addresses you configured. A plugin you install from elsewhere can contact whatever its author wrote it to; read its manifest before enabling it.</li>
+      <li><strong>Other programs on your computer.</strong> Phosphor runs a ButtplugIO server so that other software can drive the machine and your toys through it. It listens on the loopback address only (<code>127.0.0.1</code>, port 12345 by default), so only programs on the same computer can reach it. It never listens on your network unless you change that setting.</li>
+      <li><strong>The simulator.</strong> valencesim runs as a child process on loopback. Nothing it does leaves the computer.</li>
+    </ul>
+    <p>The app does not check for updates by itself. Updates arrive through whatever installed it: the Microsoft Store, Flathub, or a download from GitHub.</p>
+  </section>
+
+  <section aria-labelledby="s-bluetooth">
+    <h2 id="s-bluetooth" data-n="04">Bluetooth</h2>
+    <p>Phosphor uses Bluetooth Low Energy for two things: finding and talking to a hub when Wi-Fi is not available, and, through ButtplugIO, finding and controlling toys. A scan runs when you press Scan, and the app connects only to the device you pick. It reads the advertising data the devices around you broadcast during a scan, keeps it in memory for the list you see, and discards it when the scan ends; it does not keep a record of devices you did not connect to.</p>
+    <p>On Android, the operating system requires the location permission before any app may scan for Bluetooth devices, because scan results can in principle be used to infer location. Phosphor asks for that permission for that reason only. It does not read your position and has no code that would.</p>
+  </section>
+
+  <section aria-labelledby="s-firmware">
+    <h2 id="s-firmware" data-n="05">The machine</h2>
+    <p>Nucleus, the firmware on the hub, stores the machine's configuration and the names of the clients that are allowed to control it, on the board itself. It has no internet connection of its own and no server it reports to. It answers discovery on your local network and serves the clients that connect to it. Resetting the board's configuration clears it.</p>
+  </section>
+
+  <section aria-labelledby="s-outside">
+    <h2 id="s-outside" data-n="06">What is outside my control</h2>
+    <p>The honest list of parties that may learn something about you while you use this software, none of which I run or receive anything from:</p>
+    <ul>
+      <li><strong>Your operating system.</strong> Windows, macOS, Android and Linux distributions collect their own diagnostics about the applications you run, under their own settings and policies. On Windows the app renders through WebView2, which is Microsoft's component and follows Microsoft's telemetry settings for your account.</li>
+      <li><strong>Where you got the app.</strong> The Microsoft Store, Flathub and GitHub each count installs and downloads and may show me aggregate numbers. They do not give me who you are.</li>
+      <li><strong>Endpoints you configured.</strong> Your Stash server, any URL a plugin loads, and the hub itself all see the requests the app makes to them.</li>
+      <li><strong>Bluetooth devices.</strong> A connected device learns that something connected to it. What a toy's manufacturer does with that, if it has its own app or cloud, is theirs to disclose.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s-site">
+    <h2 id="s-site" data-n="07">This website</h2>
+    <p>openvalence.org is static files served by GitHub Pages. GitHub keeps standard server logs (IP address, pages requested, browser) under <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>; I do not have access to them. The site sets no cookies, loads no analytics, and serves its fonts from its own folder rather than a third party. The documentation at <a href="/Valence/">/Valence/</a> is the same kind of static site.</p>
+  </section>
+
+  <section aria-labelledby="s-changes">
+    <h2 id="s-changes" data-n="08">Changes and contact</h2>
+    <p>If any of the above changes, this page changes with it and the date at the top moves. The page is a file in a public repository, so its history is the changelog: <a href="https://github.com/openvalence/openvalence.github.io/commits/main/privacy.html">every revision</a>.</p>
+    <p>Questions, or something here that does not match what the code does: <a href="mailto:atlantic@openvalence.org">atlantic@openvalence.org</a>. If the code and this page disagree, the code is the fact and this page is the bug.</p>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic"><span class="nb">MIT</span> · <span class="nb">CC BY 4.0</span> · <span class="nb">Apache-2.0</span> · <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="/">home →</a>
+</footer>
+
+</body>
+</html>
