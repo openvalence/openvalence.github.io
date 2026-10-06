@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OpenValence: open hardware and software for linear motion machines</title>
-<meta name="description" content="Open hardware and software for linear motion machines. One hub holds the machine state, every client stays in sync with it, and the whole stack is in the open.">
+<meta name="description" content="Open hardware and software for linear motion machines: a motion controller board, its firmware, the Valence protocol and the Phosphor desktop client. The firmware runs a hub that holds the machine state, and every connected client stays in sync with it.">
 <meta name="theme-color" content="#08090B">
 <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
@@ -16,11 +16,11 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/">
 <meta property="og:title" content="OpenValence">
-<meta property="og:description" content="Open hardware and software for linear motion machines. One hub holds the machine state, every client stays in sync with it, and the whole stack is in the open.">
+<meta property="og:description" content="Open hardware and software for linear motion machines: a motion controller board, its firmware, the Valence protocol and the Phosphor desktop client. The firmware runs a hub that holds the machine state, and every connected client stays in sync with it.">
 <meta property="og:image" content="https://openvalence.org/images/phosphor-dash.png">
 <meta property="og:image:width" content="1440">
 <meta property="og:image:height" content="900">
-<meta property="og:image:alt" content="Phosphor's Dash page driving the valencesim device twin, a generator running.">
+<meta property="og:image:alt" content="Phosphor's Dash page driving the valencesim device twin, a pattern running.">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
@@ -41,8 +41,8 @@
 <main>
   <section class="opening">
     <p class="kicker">pre-release protocol · spec v1.0-draft</p>
-    <h1>Open hardware and software for linear motion machines.</h1>
-    <p>One hub holds the machine's state. Any number of clients stay in sync with it: the desktop app, a browser tab, a script, a plugin. The board, its firmware, the protocol between them and the client are all here, in the open, under <span class="nb">MIT</span>, <span class="nb">CC BY 4.0</span>, <span class="nb">Apache-2.0</span> and <span class="nb">CERN-OHL-S-2.0</span>.</p>
+    <h1>Open hardware and software for linear motion machines</h1>
+    <p>The firmware runs a hub that holds the machine's state. The desktop app, browser tabs, scripts and plugins connect to the hub as clients and stay in sync with it. The board, its firmware, the protocol and the client are published under <span class="nb">MIT</span>, <span class="nb">CC BY 4.0</span>, <span class="nb">Apache-2.0</span> and <span class="nb">CERN-OHL-S-2.0</span>.</p>
   </section>
 
   <section aria-labelledby="s-client">
@@ -51,34 +51,29 @@
       <a href="images/phosphor-dash.png"><img src="images/phosphor-dash.png" width="1440" height="900" alt="Phosphor's Dash page: the planned position reads 393.4 mm in large blue numerals, a 0 to 500 mm rail sits below it, and the telemetry chart shows position and speed as two sine waves while the Simple Stroke pattern runs."></a>
       <figcaption>Phosphor 0.1.0 · Dash · connected to valencesim 0.1.11, Simple Stroke running · 1440 × 900, unedited · <a href="images/phosphor-dash.png">full size</a></figcaption>
     </figure>
-    <p>Phosphor is the reference client. It builds its pages from what the hub declares, so a new setting on the machine shows up in the app without an app update. Plugins draw their own controls over the same protocol. It ships with valencesim, the device twin, so you can drive it with no hardware attached.</p>
+    <p>Phosphor is the reference client. Phosphor builds its pages from the settings the hub declares; a setting added in the firmware appears in Phosphor without a Phosphor update. Plugins draw their own controls over the same protocol. It ships with valencesim, the device twin, which lets Phosphor run with no hardware attached.</p>
   </section>
 
   <section aria-labelledby="s-measured">
-    <h2 id="s-measured" data-n="02">Measured</h2>
+    <h2 id="s-measured" data-n="02">Measurements</h2>
     <dl class="figures">
       <!-- Nucleus .claude/rules/motion-control.md, "The LP-core emitter": Rigol DHO4204 single-shot captures at 8 ns per sample, 2026-09-20 -->
       <div>
-        <dt>quadrature edge jitter from the LP core, under one 8 ns scope sample</dt>
+        <dt>quadrature edge jitter from the LP core, Rigol DHO4204 at 8 ns per sample</dt>
         <dd>8<span class="unit">ns</span></dd>
       </div>
       <!-- Nucleus .claude/rules/architecture.md, "Position truth": HP flash hammer with the cache off, LP late=0, 2,156 transitions, 0 illegal, 0 outliers -->
       <div>
-        <dt>edges scoped while the main cores hammered flash; none late, none illegal</dt>
+        <dt>quadrature transitions scoped while the HP cores wrote to flash with the cache disabled (about 1.0 s of every 5 s): LP late count 0, illegal transitions 0</dt>
         <dd>2,156</dd>
       </div>
       <!-- Kinetic README.md, "Determinism": double-precision planning, same bits on every IEEE-754 target built with -ffp-contract=off -->
       <div>
-        <dt>difference between the native, wasm and ESP32-P4 motion plans</dt>
+        <dt>difference between the native, wasm and ESP32-P4 motion plans, built with -ffp-contract=off</dt>
         <dd>0<span class="unit">ULP</span></dd>
       </div>
-      <!-- Phosphor README.md, "Builds": Windows, macOS (aarch64) and Linux bundles plus a Flatpak -->
-      <div>
-        <dt>desktop platforms from one source: Windows, macOS, Linux</dt>
-        <dd>3</dd>
-      </div>
     </dl>
-    <p class="sources">Sources: <a href="https://github.com/openvalence/Nucleus/blob/main/.claude/rules/motion-control.md">Nucleus: motion control</a> · <a href="https://github.com/openvalence/Nucleus/blob/main/.claude/rules/architecture.md">Nucleus: architecture</a> · <a href="https://github.com/openvalence/Kinetic#determinism">Kinetic: determinism</a> · <a href="https://github.com/openvalence/Phosphor#builds">Phosphor: builds</a></p>
+    <p class="sources">Sources: <a href="https://github.com/openvalence/Nucleus/blob/main/.claude/rules/motion-control.md">Nucleus: motion control</a> · <a href="https://github.com/openvalence/Nucleus/blob/main/.claude/rules/architecture.md">Nucleus: architecture</a> · <a href="https://github.com/openvalence/Kinetic#determinism">Kinetic: determinism</a></p>
   </section>
 
   <section aria-labelledby="s-parts">
@@ -95,17 +90,17 @@
         </tr>
         <tr>
           <th scope="row"><a href="https://github.com/openvalence/Nucleus">Nucleus</a></th>
-          <td>Firmware for the OSSM Flagship board, ESP32-P4 with an ESP32-C6 for Wi-Fi. Pure ESP-IDF; quadrature from the LP core.</td>
+          <td>Firmware for the OSSM Flagship board: an ESP32-P4 with an ESP32-C6 for Wi-Fi. Built on ESP-IDF. The P4's low-power (LP) core generates the quadrature output.</td>
           <td>Apache-2.0</td>
         </tr>
         <tr>
           <th scope="row"><a href="https://github.com/openvalence/Phosphor">Phosphor</a></th>
-          <td>The client. Windows, macOS, Linux (Flatpak). Plugins, themes, and the device twin built in.</td>
+          <td>The reference client, for Windows, macOS and Linux (including a Flatpak), with plugins, themes and the valencesim device twin.</td>
           <td>Apache-2.0</td>
         </tr>
         <tr>
           <th scope="row"><a href="https://github.com/openvalence/Kinetic">Kinetic</a></th>
-          <td>The motion engine: trajectory planning, waveform shaping, blend and stretch policies. Header-only C++ on Ruckig.</td>
+          <td>The motion engine: trajectory planning, waveform shaping, blend and stretch policies. It is header-only C++ and uses Ruckig.</td>
           <td>Apache-2.0</td>
         </tr>
         <tr>
@@ -115,8 +110,8 @@
         </tr>
         <tr>
           <th scope="row"><a href="https://github.com/openvalence/Isotope">Isotope</a></th>
-          <td>Accessory firmware for the ESP-NOW network around Nucleus. Design stage.</td>
-          <td>not yet</td>
+          <td>Accessory firmware for the ESP-NOW network around Nucleus. It is in the design stage.</td>
+          <td>none yet</td>
         </tr>
         <tr>
           <th scope="row"><a href="https://github.com/openvalence/ButtplugIO">ButtplugIO</a></th>
@@ -128,18 +123,18 @@
   </section>
 
   <section aria-labelledby="s-stand">
-    <h2 id="s-stand" data-n="04">Where things stand</h2>
-    <p>The firmware homes a real rail, plays scripts, and talks to the client over Wi-Fi, with Bluetooth as the fallback. Phosphor builds for all three desktop platforms from one source. The protocol is pre-release: it changes through RFCs, and the registry is the single source of every wire number. If you want to build a client or a machine, start with the <a href="/Valence/">docs</a>; if you want to add a control surface, start with <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Phosphor's plugin contract</a>.</p>
+    <h2 id="s-stand" data-n="04">Status</h2>
+    <p>The firmware homes the rail, plays scripts, and connects to the client over Wi-Fi. Phosphor builds for Windows, macOS and Linux from one codebase. The protocol is pre-release: it changes through RFCs, and the registry assigns every wire number. The <a href="/Valence/">docs</a> cover building clients and machines; <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Phosphor's plugin contract</a> covers building control surfaces.</p>
   </section>
 
   <section aria-labelledby="s-built">
-    <h2 id="s-built" data-n="05">How it's built</h2>
-    <p>One person designs this and makes every decision; coding agents write most of the code under that direction. The rules they work to are in the repos: a written doctrine, a registry that owns every wire number, lint that fails the build, tests on every change, and a bench where firmware has to move a real motor before it counts as done. That's stated here so nobody has to guess.</p>
+    <h2 id="s-built" data-n="05">Development process</h2>
+    <p>One person designs this and makes every decision; coding agents write most of the code under that direction. Each repo holds its rules: a written doctrine, a registry that assigns every wire number, lint that fails the build, tests on every change, and a bench gate that requires firmware to move a real motor before a change is closed.</p>
   </section>
 
   <section aria-labelledby="s-credits">
     <h2 id="s-credits" data-n="06">Credits</h2>
-    <p class="credits">The Advanced pattern generator comes from <a href="https://github.com/fray-d/OSSM-Lite">fray-d's OSSM-Lite</a> and keeps its <span class="nb">CERN-OHL-S-2.0</span> license. The stroke patterns come from <a href="https://github.com/theelims/StrokeEngine">theelims' StrokeEngine</a>, and motion planning rides on <a href="https://github.com/pantor/ruckig">Ruckig</a>.</p>
+    <p class="credits">The Advanced pattern comes from <a href="https://github.com/fray-d/OSSM-Lite">fray-d's OSSM-Lite</a> and keeps its <span class="nb">CERN-OHL-S-2.0</span> license. The stroke patterns come from <a href="https://github.com/theelims/StrokeEngine">theelims' StrokeEngine</a>, and Kinetic plans motion with <a href="https://github.com/pantor/ruckig">Ruckig</a>.</p>
     <p class="credits">Type is Chakra Petch and Martian Mono, both under the <a href="fonts/LICENSE">SIL Open Font License</a>.</p>
   </section>
 </main>
