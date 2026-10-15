@@ -269,6 +269,9 @@ h3 {
 .links { font: 400 .72rem/1.8 var(--mono); color: var(--tx-val); }
 .links a { color: var(--tx-val); }
 .links a:hover { color: var(--reality); }
+.links.dl { font-size: .95rem; overflow-wrap: anywhere; }
+.links.dl a { color: var(--reality); font-weight: 600; text-decoration-color: color-mix(in srgb, var(--reality) 45%, transparent); }
+.links.dl a:hover { color: var(--tx-hi); text-decoration-color: currentColor; }
 .parallel { max-width: 46rem; }
 .parallel td:first-of-type { width: auto; }
 .parallel td:last-child { width: auto; font: inherit; color: var(--tx); }
