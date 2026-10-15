@@ -361,3 +361,11 @@ h3 {
 main code { overflow-wrap: anywhere; }
 main pre { max-width: 100%; overflow-x: auto; padding: 10px 12px; background: var(--bg-sunken); border: 1px solid var(--line-1); border-radius: var(--radius); }
 main pre code { overflow-wrap: normal; }
+
+/* ---- labeled app screenshots in the docs ---- */
+.docshot { margin: 8px 0 24px; }
+.docshot img { display: block; width: 100%; height: auto; border: 1px solid var(--line-1); border-radius: var(--radius); background: var(--bg-sunken); }
+.docshot figcaption { margin-top: 10px; }
+.legend { margin: 0; padding-left: 1.6em; font-size: .95rem; color: var(--tx); }
+.legend li { margin-bottom: 2px; }
+.legend li::marker { font: 400 .72rem var(--mono); color: var(--reality); }

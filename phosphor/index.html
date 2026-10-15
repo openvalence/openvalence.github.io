@@ -10,6 +10,8 @@
 <meta property="og:url" content="https://openvalence.org/phosphor/">
 <meta property="og:title" content="Phosphor: OpenValence">
 <meta property="og:description" content="Phosphor is the reference client for Valence machines. Build a dashboard from what your machine reports, add plugins, play funscripts and connect other apps.">
+<meta name="twitter:title" content="Phosphor: OpenValence">
+<meta name="twitter:description" content="Phosphor is the reference client for Valence machines. Build a dashboard from what your machine reports, add plugins, play funscripts and connect other apps.">
 <!-- chrome:head -->
 <meta name="theme-color" content="#08090B">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -118,7 +120,7 @@
 
     <h3>Buttplug</h3>
     <!-- docs/BUTTPLUG.md lines 12, 32 (127.0.0.1, port 12345), 88-92 (defaults, no start on launch); docs/DESIGN.md §10.8 lines 1067-1085; privacy.html s-network -->
-    <p>The desktop and Android apps embed a Buttplug server, spec v0 to v4, that listens on 127.0.0.1 at port 12345 by default. Only programs on the same computer can reach it. Apps that speak Buttplug see your machine as one linear device and can drive it, and the toys it finds over Bluetooth, serial or HID each get their own module on the Dash. If an app stops or disconnects, the machine holds its last target; only the hub's E-Stop latches.</p>
+    <p>The desktop and Android apps embed a Buttplug server, spec v0 to v4, that listens on 127.0.0.1 at port 12345 by default. Only programs on the same computer can reach it. Apps with Buttplug.io support see your machine as one linear device and can drive it, and the toys it finds over Bluetooth, serial or HID each get their own module on the Dash. If an app stops or disconnects, the machine holds its last target; only the hub's E-Stop latches.</p>
     <p>Starting the server on launch is off by default. The Buttplug pane starts and stops it and shows connected apps, devices and a log. Toys as hub relationships is an open design question <span class="tag">WIP</span>.</p>
 
     <h3>Themes</h3>
