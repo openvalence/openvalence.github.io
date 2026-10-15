@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plugins: OpenValence</title>
+<meta name="description" content="Phosphor plugins: what they can do, the five that ship with the app, how permissions and the one-source motion lock work, and where plugin developers start.">
+<link rel="canonical" href="https://openvalence.org/phosphor/docs/plugins/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/phosphor/docs/plugins/">
+<meta property="og:title" content="Plugins: OpenValence">
+<meta property="og:description" content="Phosphor plugins: what they can do, the five that ship with the app, how permissions and the one-source motion lock work, and where plugin developers start.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/phosphor/" aria-current="page">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip" href="/downloads/">Downloads</a>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <p class="kicker">phosphor · docs</p>
+    <h1>Plugins</h1>
+    <p>A plugin adds a card, a page, a theme or a protocol adapter to Phosphor. It works through Valence, the same way every built-in control does, so it cannot reach the machine by a side door.</p>
+  </section>
+
+  <section aria-labelledby="s-can">
+    <h2 id="s-can" data-n="01">What a plugin can do</h2>
+    <!-- docs/PLUGINS.md Prime Rule, Module shape, The API (v1) table -->
+    <dl class="terms">
+      <div><dt>Cards</dt><dd>A card you can place on the Dash.</dd></div>
+      <div><dt>Pages</dt><dd>A tab in the sidebar under Plugins.</dd></div>
+      <div><dt>Settings</dt><dd>A card on the plugin's row in the Plugins pane.</dd></div>
+      <div><dt>Menus and dock panels</dt><dd>Items in the right-click menu, and a panel in the right dock.</dd></div>
+      <div><dt>Themes</dt><dd>A color preset. It carries no code and cannot change safety colors.</dd></div>
+      <div><dt>Writes</dt><dd>Settings, actions and commands, through the same path as a built-in control. So a plugin write shows the same pending, confirmed and refused states you already know.</dd></div>
+      <div><dt>Motion</dt><dd>Position targets and scheduled segments, under the rules in Permissions below.</dd></div>
+    </dl>
+    <p>A plugin's API object has no session, socket or transport handle, and Phosphor's tests fail if one appears. So what a plugin does to the machine goes through Valence, where the hub clamps it like any other client's request.</p>
+  </section>
+
+  <section aria-labelledby="s-ship">
+    <h2 id="s-ship" data-n="02">Plugins that ship with Phosphor</h2>
+    <!-- Phosphor src/plugins/factory.js; plugins/factory/*/manifest.json; PLUGINS.md Factory plugins; src/plugins/graph.js:35 manifest -->
+    <p>Factory plugins are bundled in the app and enabled by default. They use the same rules as any plugin you install.</p>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Plugin</th><th scope="col">What it does</th><th scope="col">Permissions</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row"><a href="/phosphor/docs/funscript-player/">funscript-player</a></th>
+          <td>Plays a video and its funscript from disk or a Stash server, and drives the machine from the script.</td>
+          <td><span class="nb">motion</span> · <span class="nb">net.fetch</span> · <span class="nb">intent</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Advanced pattern</th>
+          <td>The pattern card: a stroke editor, rhythm steps and presets. Credited to <a href="https://github.com/fray-d/OSSM-Lite">fray-d's OSSM-Lite</a>.</td>
+          <td><span class="nb">intent</span></td>
+        </tr>
+        <tr>
+          <th scope="row">quick-access</th>
+          <td>Pin modules to a tray on the right. Not shown on phones.</td>
+          <td><span class="nb">intent</span> · <span class="nb">menu</span></td>
+        </tr>
+        <tr>
+          <th scope="row">saved-networks</th>
+          <td>The hub's Wi-Fi card: the networks it hears, tap to save one, and the saved list. <span class="tag">WIP</span> The scan picker follows protocol drafts.</td>
+          <td><span class="nb">intent</span></td>
+        </tr>
+        <tr>
+          <th scope="row">arcade</th>
+          <td>Three small games. Its page appears only under a hidden theme. Games work with no machine, and motion needs an Allow motion switch that starts off.</td>
+          <td><span class="nb">motion</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p>The <a href="/phosphor/docs/node-editor/">node editor</a> is also a plugin, called <code>graph</code>. The Plugins pane lists it as built-in.</p>
+    <p>The page a hub serves from its own flash loads no plugins at all. Plugins run in the Phosphor app.</p>
+  </section>
+
+  <section aria-labelledby="s-manage">
+    <h2 id="s-manage" data-n="03">Enable, disable, reload</h2>
+    <!-- PluginsPane.svelte (enabled switch, Show tab, Reload, error slot, folder path); PLUGINS.md Loading, Module shape (error boundary) -->
+    <p>The Plugins pane is in the sidebar's Phosphor section. It appears once Phosphor has a hub's catalog. Each plugin has a row with:</p>
+    <ul>
+      <li>An <strong>enabled</strong> switch. The choice is remembered. A disabled factory plugin stays off.</li>
+      <li>A <strong>Show tab</strong> switch for plugins with a page. It hides the sidebar tab without disabling the plugin.</li>
+      <li>Its version, where it came from (factory, built-in or folder), its status, its permissions, the roles it binds, and its settings card.</li>
+      <li>A <strong>Reload</strong> button, and a last-error line that always shows, so an error never moves the layout.</li>
+    </ul>
+    <p>A plugin that throws is recorded on its row and in the Log pane. If a card throws, it is dropped and its settings return to the standard controls. So one broken plugin does not take the page down with it.</p>
+  </section>
+
+  <section aria-labelledby="s-perm">
+    <h2 id="s-perm" data-n="04">Permissions</h2>
+    <!-- PLUGINS.md Permissions, The API (One producer); src/plugins/host.js:28 MOTION_HOLD_MS 500, :360 menu, :408 net.fetch -->
+    <p>Reading needs no permission. A plugin declares everything else in its manifest, the Plugins pane shows the list, and the app refuses a gated call that the manifest did not declare.</p>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Permission</th><th scope="col">Allows</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row"><code>intent</code></th><td>Writing settings, actions and commands, and controls bound to hub fields</td></tr>
+        <tr><th scope="row"><code>motion</code></th><td>Sending motion input to the machine</td></tr>
+        <tr><th scope="row"><code>menu</code></th><td>Adding items to the right-click menus</td></tr>
+        <tr><th scope="row"><code>net.fetch</code></th><td>HTTP and HTTPS requests to services that are not the machine. The connected hub's own addresses are refused.</td></tr>
+        <tr><th scope="row"><code>net.listen:&lt;port&gt;</code></th><td>A TCP listener on 127.0.0.1 only, never the LAN</td></tr>
+      </tbody>
+    </table>
+    <h3>The motion lock: one source drives</h3>
+    <p>Only one plugin may send motion at a time. When one sends scheduled motion, it holds the motion input until its last segment ends plus 500 ms. Any other plugin's motion is refused meanwhile, with <code>motion input in use by &lt;plugin&gt;</code>, and the funscript player grays Play with the same words. A running pattern gives <code>stop the pattern first</code>. So two sources never interleave into one stream, and the answer to "why won't it move" is on screen in words.</p>
+    <p>The hub applies its own check on top. If another source holds the rail, the refusal reads <code>refused: rail owned by &lt;source&gt;</code>. The e-stop and pause in the top strip are Phosphor's, not a plugin's, and always work.</p>
+  </section>
+
+  <section aria-labelledby="s-install">
+    <h2 id="s-install" data-n="05">Installing a plugin</h2>
+    <!-- PLUGINS.md Loading ("plugins are enabled by default once installed"; "Restart the app"), Permissions ("does not contain hostile code"); PluginsPane.svelte "Drop a plugin folder here and restart"; privacy.html; src-tauri/src/plugins.rs:32-33 -->
+    <p>A plugin is a folder with a <code>manifest.json</code> and one module file. Put the folder in the plugins folder and restart Phosphor. The Plugins pane prints the folder's real path on your system. A plugin with the same name as a factory plugin replaces it.</p>
+    <p><strong>A plugin you install is enabled right away, and a plugin runs with the full authority of the app page.</strong> The permission list is a record of what the plugin says it will do. It is not a sandbox. A hostile module could open its own network connection. So install a plugin only from a source you would trust with a program, and read its manifest first. The <a href="/privacy.html">privacy page</a> says the same: the plugins that ship with the app contact only addresses you configured, and a plugin from elsewhere can contact whatever its author wrote.</p>
+    <p>When you read a manifest, start with <code>permissions</code>. A manifest larger than 64 KiB, or a module larger than 2 MiB, is not loaded.</p>
+  </section>
+
+  <section aria-labelledby="s-dev">
+    <h2 id="s-dev" data-n="06">For developers</h2>
+    <!-- PLUGINS.md Module shape, Manifest, The API (v1), Freeze; examples dir -->
+    <p>The full contract is in <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">docs/PLUGINS.md</a>. The short version:</p>
+    <dl class="terms">
+      <div><dt>Module</dt><dd>One self-contained ES module that exports <code>activate(api)</code>. Phosphor loads it from a <code>blob:</code> URL, so bundle your dependencies in. <code>activate</code> may return a deactivate function.</dd></div>
+      <div><dt>Manifest</dt><dd><code>name</code>, <code>version</code>, <code>api</code> (must be 1), <code>kind</code> (<code>widget</code>, <code>adapter</code> or <code>theme</code>), <code>entry</code>, <code>description</code>, and the <code>roles</code>, <code>channels</code>, <code>permissions</code> and optional <code>credits</code> it uses. An invalid manifest is listed with its problems and its code never runs.</dd></div>
+      <div><dt>Binding</dt><dd>A card claims fields by registry role, never by channel id, so it works on any hub that has the role. <code>registerHero</code> gives a card, <code>registerPage</code> a sidebar page, <code>registerSettings</code> a settings card.</dd></div>
+      <div><dt>Reading and writing</dt><dd><code>value</code>, <code>status</code>, <code>gate</code> and <code>age</code> read. <code>write</code> needs <code>intent</code>. <code>submitMotion</code>, <code>submitSegments</code> and <code>submitSamples</code> need <code>motion</code>.</dd></div>
+      <div><dt>UI kit</dt><dd><code>api.ui</code> offers Phosphor's own buttons, sliders, lists, sheets and pages in plain DOM, so a plugin looks native in every theme.</dd></div>
+      <div><dt>Stability</dt><dd>The API freezes, additive only, when the first external plugin exists. Rows marked freeze candidate in the doc are the ones that freeze. The rest may still change.</dd></div>
+    </dl>
+    <p>Three examples are in the repo under <a href="https://github.com/openvalence/Phosphor/tree/main/plugins/examples"><code>plugins/examples</code></a>: a read-only gauge, a UI kit demo and a TCode adapter. Examples are documentation and never load by default.</p>
+    <p class="links"><a href="/phosphor/docs/">Phosphor docs</a> · <a href="/phosphor/docs/funscript-player/">Funscript player</a> · <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">PLUGINS.md</a></p>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

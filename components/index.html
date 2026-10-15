@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Components: OpenValence</title>
+<meta name="description" content="The parts of OpenValence: the Valence protocol, Nucleus firmware, the Phosphor app, the Kinetic planner, the OSSM Flagship board and Isotope accessories.">
+<link rel="canonical" href="https://openvalence.org/components/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/components/">
+<meta property="og:title" content="Components: OpenValence">
+<meta property="og:description" content="The parts of OpenValence: the Valence protocol, Nucleus firmware, the Phosphor app, the Kinetic planner, the OSSM Flagship board and Isotope accessories.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "SoftwareSourceCode", "name": "Valence", "description": "The protocol: spec, registry, reference library, clients, tools, documentation.", "codeRepository": "https://github.com/openvalence/Valence", "programmingLanguage": "C++", "license": "https://opensource.org/licenses/MIT", "url": "https://openvalence.org/valence/", "author": { "@id": "https://openvalence.org/#org" } },
+    { "@type": "SoftwareSourceCode", "name": "Nucleus", "description": "Firmware for the OSSM Flagship board: ESP32-P4 with an ESP32-C6 radio, built on ESP-IDF.", "codeRepository": "https://github.com/openvalence/Nucleus", "programmingLanguage": "C++", "license": "https://www.apache.org/licenses/LICENSE-2.0", "url": "https://openvalence.org/nucleus/", "author": { "@id": "https://openvalence.org/#org" } },
+    { "@type": "SoftwareSourceCode", "name": "Phosphor", "description": "The reference Valence client: a UI builder with plugins, for desktop.", "codeRepository": "https://github.com/openvalence/Phosphor", "programmingLanguage": ["JavaScript", "Rust"], "license": "https://www.apache.org/licenses/LICENSE-2.0", "url": "https://openvalence.org/phosphor/", "author": { "@id": "https://openvalence.org/#org" } },
+    { "@type": "SoftwareSourceCode", "name": "Kinetic", "description": "Header-only C++ planner for jerk-limited trajectories, deterministic across targets.", "codeRepository": "https://github.com/openvalence/Kinetic", "programmingLanguage": "C++", "license": "https://www.apache.org/licenses/LICENSE-2.0", "url": "https://openvalence.org/kinetic/", "author": { "@id": "https://openvalence.org/#org" } },
+    { "@type": "SoftwareSourceCode", "name": "Hardware", "description": "The OSSM Flagship board and everything physical around it, in KiCad.", "codeRepository": "https://github.com/openvalence/Hardware", "license": "https://ohwr.org/cern_ohl_s_v2.txt", "url": "https://openvalence.org/hardware/", "author": { "@id": "https://openvalence.org/#org" } },
+    { "@type": "SoftwareSourceCode", "name": "Isotope", "description": "Accessory firmware for the ESP-NOW network around Nucleus. Design stage.", "codeRepository": "https://github.com/openvalence/Isotope", "url": "https://openvalence.org/isotope/", "author": { "@id": "https://openvalence.org/#org" } }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <a class="chip" href="/components/" aria-current="page">Components</a>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip" href="/downloads/">Downloads</a>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <p class="kicker">components · six repos</p>
+    <h1>The parts</h1>
+    <p>A protocol, the firmware that speaks it, an app that drives it, a planner that turns it into motion, a board to run it on, and accessories, someday. Each one is its own repo. The <a href="/diagrams/#system">system diagram</a> shows how they connect.</p>
+  </section>
+
+  <section aria-labelledby="s-list">
+    <h2 id="s-list" data-n="01">Components</h2>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Part</th><th scope="col">What it is</th><th scope="col">Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row"><a href="/valence/">Valence</a></th>
+          <td>The protocol. The machine describes itself, apps draw it, the machine enforces its own limits.</td>
+          <td>spec v1.0-draft</td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/nucleus/">Nucleus</a></th>
+          <td>Firmware for the OSSM Flagship board. Runs the Valence hub, the planner and the quadrature output on an ESP32-P4.</td>
+          <td>works on the bench</td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/phosphor/">Phosphor</a></th>
+          <td>The app. A UI builder with plugins, a funscript player and a built-in Virtual machine.</td>
+          <td>not released yet</td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/kinetic/">Kinetic</a></th>
+          <td>The motion planner. Timed knots in, jerk-limited motion out, same bits on every target.</td>
+          <td>runs in Nucleus and <a href="/Kinetic/">in your browser</a></td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/hardware/">Hardware</a></th>
+          <td>The OSSM Flagship board, in KiCad.</td>
+          <td>in design</td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="/isotope/">Isotope</a></th>
+          <td>Firmware for small accessories that join the machine over ESP-NOW.</td>
+          <td>WIP, design only</td>
+        </tr>
+        <tr>
+          <th scope="row"><a href="https://github.com/openvalence/ButtplugIO">ButtplugIO</a></th>
+          <td>A fork of buttplugio/buttplug carrying the Valence hardware manager, on branch <code>valence</code>.</td>
+          <td>fork</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section aria-labelledby="s-lic">
+    <h2 id="s-lic" data-n="02">Licenses</h2>
+    <!-- licensing rulings 2026-10-03; Nucleus README License; Valence README License; Isotope README License -->
+    <ul>
+      <li>Software: <span class="nb">Apache-2.0</span>. The Advanced pattern, derived from fray-d's OSSM-Lite, stays <span class="nb">CERN-OHL-S-2.0</span>.</li>
+      <li>Valence: the spec text is <span class="nb">CC BY 4.0</span>, the library and tools are <span class="nb">MIT</span>.</li>
+      <li>Hardware: <span class="nb">CERN-OHL-S-2.0</span>.</li>
+      <li>Isotope: no license chosen yet.</li>
+      <li>ButtplugIO keeps upstream's <span class="nb">BSD-3-Clause</span>.</li>
+    </ul>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

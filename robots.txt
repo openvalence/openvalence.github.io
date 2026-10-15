@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://openvalence.org/sitemap.xml
+Sitemap: https://openvalence.org/Valence/dev/sitemap.xml

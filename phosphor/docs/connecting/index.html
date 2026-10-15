@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connecting: OpenValence</title>
+<meta name="description" content="Connect Phosphor to a machine: discovery, Bluetooth setup, the watch, control and configure access tiers, the Pair button, and what E-Stop does.">
+<link rel="canonical" href="https://openvalence.org/phosphor/docs/connecting/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/phosphor/docs/connecting/">
+<meta property="og:title" content="Connecting: OpenValence">
+<meta property="og:description" content="Connect Phosphor to a machine: discovery, Bluetooth setup, the watch, control and configure access tiers, the Pair button, and what E-Stop does.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/phosphor/" aria-current="page">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip" href="/downloads/">Downloads</a>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <p class="kicker">phosphor · docs</p>
+    <h1>Connecting and pairing</h1>
+    <p>How Phosphor finds a machine, how a new machine gets onto Wi-Fi, who is allowed to do what, and how you approve a new client. Parts of the Pair button behavior are draft and are marked.</p>
+  </section>
+
+  <section aria-labelledby="s-find">
+    <h2 id="s-find" data-n="01">Finding a machine</h2>
+    <!-- src/shell/hubs.svelte.js:107-139 (scan order, 1.5 s), 192; src/model/machine.svelte.js:952; src/model/prefs.js:32 -->
+    <p>Hubs, Find a hub, Scan sends a UDP discovery probe on your local network and waits 1.5 s. Only if no machine answers does it start a Bluetooth scan. Bluetooth permission prompts therefore wait until the network has found nothing. The probe that runs at launch is network-only and never raises a Bluetooth prompt.</p>
+    <p>You can also type an address as <code>host</code> or <code>host:port</code>; the port is 82 when you leave it off. If the field is empty, Phosphor says "Enter a hub address". Saved hubs get a nickname you can edit, and a Connect, Sim and Forget button.</p>
+  </section>
+
+  <section aria-labelledby="s-wifi-ble">
+    <h2 id="s-wifi-ble" data-n="02">Wi-Fi and Bluetooth</h2>
+    <!-- src/shell/hubs.svelte.js:21-27 (BLE lands at watch; hop to WS), 242-249; src/shell/HubsPane.svelte:59, 83-85; README.md lines 10-16 -->
+    <p>Wi-Fi is the normal link: a WebSocket to the machine on port 82. In the app, a Wi-Fi session starts at the control tier. Bluetooth is for setting a machine up and for reaching one that is offline. A Bluetooth session starts at the watch tier by design, and the status line reads "Live on &lt;address&gt; over Bluetooth (watch tier)".</p>
+    <p>If the machine offers a Wi-Fi address, Phosphor probes it once, hops to Wi-Fi when it answers, and falls back to Bluetooth if the Wi-Fi session is not live in time. The Upgrade to Wi-Fi button on the Hubs page retries by hand. A browser page cannot use Bluetooth, so only the app can do this.</p>
+  </section>
+
+  <section aria-labelledby="s-setup">
+    <h2 id="s-setup" data-n="03">Set up a machine over Bluetooth</h2>
+    <!-- src/shell/ble-setup.js:1-20, 47-48 (ASK_GRACE_MS 1500, HANDOVER_MS 30000), 60-61, 188, 235, 244; src/shell/SetupFlow.svelte:3-15, 62, 69; docs/PLUGINS.md saved-networks (RFC-118 draft) -->
+    <p>Use this for a machine that has no Wi-Fi yet, or that lost its network. Open Hubs and press Set up a machine, or press Set up on a row marked <code>needs setup</code>. That mark means the machine is in config mode or reports no Wi-Fi.</p>
+    <ol>
+      <li>Scan. Machines that need setup sort first.</li>
+      <li>Press Set up on your machine. Phosphor connects over Bluetooth and asks for the configure tier. The status reads "Asking for configure", then "Press Pair on the machine".</li>
+      <li>Press Pair on the machine. Setup continues on approval.</li>
+      <li>Choose a network. Where the machine can list the networks it hears, Phosphor shows them strongest first with signal bars, and asks for the passphrase once. Where it cannot, you get a setup form built from the machine's own Setup settings. <span class="tag">WIP</span> The network list relies on a draft protocol change (RFC-118).</li>
+      <li>Phosphor sends the join, then waits up to 30 s for the machine to appear on Wi-Fi and connects to it. "Connected over Wi-Fi" means it worked.</li>
+    </ol>
+    <p>If the machine does not appear, the status reads "Joined, but the hub did not appear on WiFi", with Try again. The setup flow itself does not store or log the network name or passphrase; the form sends them to the machine. The wait is 30 s because a machine can reboot after it joins.</p>
+  </section>
+
+  <section aria-labelledby="s-tiers">
+    <h2 id="s-tiers" data-n="04">Access tiers</h2>
+    <!-- Valence SPEC §12.2 (ratified), §11.1, §11.2; src/ui/PairingPane.svelte:306 (This session), 202-205 (Needs configure) -->
+    <p>Every session has one of three tiers. The Pairing page shows yours under "This session".</p>
+    <dl class="terms">
+      <div><dt>watch</dt><dd>Connect, browse and subscribe. Open by default.</dd></div>
+      <div><dt>control</dt><dd>Send intents and streams, and drive motion.</dd></div>
+      <div><dt>configure</dt><dd>Change configuration and administer access: approve or deny pairing, revoke and evict.</dd></div>
+    </dl>
+    <p>Pause and E-Stop work from every tier, even watch. The rule in the spec is that you may always stop the machine, and you may not always start it. A client with the lowest access can still stop a machine it cannot drive. Controls above your tier are grayed with a reason, such as "Needs configure" or "session not authorized".</p>
+  </section>
+
+  <section aria-labelledby="s-pairing">
+    <h2 id="s-pairing" data-n="05">Pairing</h2>
+    <!-- Valence SPEC §12.3, §13.4.1; src/ui/PairingPane.svelte:202-205, 239-249, 265-266, 311-327, 346-347; src/ui/PairingPane.svelte:323-326 is the help text; Valence spec/registry/registry.yaml:1439 (pairing_window_default_s 120) -->
+    <p>Pairing is how a client gets a tier above watch. A machine can offer several ways in: knock and approve, a numeric PIN, and push to pair. The Pairing page lists the ones this machine offers under "Modes offered", and shows whether the pairing window is open.</p>
+    <h3>From Phosphor</h3>
+    <dl class="terms">
+      <div><dt>Pair this client</dt><dd>Sends a knock. The status reads "Knock sent: waiting for the hub", then "Knock delivered: waiting for approval". Someone at configure approves it, or presses Pair on the machine. If nobody answers, it ends with "Knock expired" or "No answer within the pairing window".</dd></div>
+      <div><dt>Ask configure</dt><dd>Asks for the top tier. The status reads "Asked configure: double-press Pair on the machine". If another client already has an ask pending, a double press approves neither.</dd></div>
+      <div><dt>Pending knocks</dt><dd>Lists the clients waiting. Approve and Deny need configure.</dd></div>
+      <div><dt>Trust ledger</dt><dd>Lists paired clients. <strong>Control ownership</strong> lists who holds each motion source, and Evict removes a session (needs configure).</dd></div>
+    </dl>
+    <p>A factory-fresh machine gives its first knock the configure tier. After that, a window grants control, and configure by approval only.</p>
+    <h3>At the machine</h3>
+    <p>Phosphor's own help text, under "At the machine" on the Pairing page, says:</p>
+    <ol>
+      <li>Press Pair: a 120 s window, control (configure if unclaimed).</li>
+      <li>Ask configure, then double-press Pair to approve it.</li>
+      <li>Hold Pair 5 s: every client drops to watch.</li>
+      <li>No Pair button: power-cycle three times, each within 10 s of boot.</li>
+    </ol>
+    <p>The window stays open for 120 s after the press. The power-cycle trick is for a machine with no Pair button.</p>
+    <p><span class="tag">WIP</span> The double press and the 5 s hold are in draft RFC-114, and they may change before release. A single Pair press that approves a configure ask on a machine that has lost its network is in draft RFC-117, and that may change too. The firmware is built as if both were accepted.</p>
+    <p>Booting a machine with Pair held puts it in config mode: Bluetooth and USB serial only, no Wi-Fi, and the first knock gets configure.</p>
+  </section>
+
+  <section aria-labelledby="s-estop">
+    <h2 id="s-estop" data-n="06">What E-Stop does</h2>
+    <!-- docs/DESIGN.md §10.3 lines 505-526; src/ui/widgets/SafetyOp.svelte:81-82; src/ui/TopStrip.svelte:242; src/shell/SettingsPane.svelte:74; docs/DESIGN.md §10.8 line 1078 -->
+    <p>E-Stop is one control with two states, in the top strip on every page. Tap it to latch. The strip then reads "Halted: hold E-Stop 3 s", and holding the same button for 3 s releases it. There is no separate clear button. A machine that cuts motor power on E-Stop shows E-Stop on the button, and the tooltip says "Cut motor power". A machine that only stops motion shows Halt, so the label never promises more than the machine does.</p>
+    <p>In the desktop app, each press also broadcasts a stop packet to every hub on your network, next to the stop sent over the session. Every hub on the network that supports it latches, including ones you are not connected to. You can turn this off under Settings, Connection, "Broadcast e-stop to every hub on the LAN". It needs a live link to fire, and the Virtual never broadcasts.</p>
+    <p>An app connected through the Buttplug server cannot latch E-Stop. When such an app stops or disconnects, the machine holds its last target. Only the hub's E-Stop latches. Use E-Stop, not the other app's stop button, when you need the machine to halt.</p>
+    <p class="links"><a href="/phosphor/docs/troubleshooting/">Troubleshooting</a> · <a href="/phosphor/docs/getting-started/">Getting started</a> · <a href="/phosphor/docs/">Docs</a></p>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting started: OpenValence</title>
+<meta name="description" content="Install Phosphor, launch it, try the built-in Virtual machine with no hardware, then find a real machine. Includes a short tour of the main screens.">
+<link rel="canonical" href="https://openvalence.org/phosphor/docs/getting-started/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/phosphor/docs/getting-started/">
+<meta property="og:title" content="Getting started: OpenValence">
+<meta property="og:description" content="Install Phosphor, launch it, try the built-in Virtual machine with no hardware, then find a real machine. Includes a short tour of the main screens.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/phosphor/" aria-current="page">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip" href="/downloads/">Downloads</a>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <p class="kicker">phosphor · docs</p>
+    <h1>Getting started</h1>
+    <p>Install Phosphor, try it on the built-in Virtual machine, then connect a real one. You do not need hardware for the first half.</p>
+  </section>
+
+  <section aria-labelledby="s-install">
+    <h2 id="s-install" data-n="01">Install</h2>
+    <!-- gh release list is empty for every repo (site brief); Phosphor docs/BUILD.md lines 56-63 (Windows: Rust MSVC, Node 22), 9-17 (layout) -->
+    <p>Nothing is released yet, so there is no installer to download. <a href="/downloads/">Downloads</a> will list builds when there are some.</p>
+    <p>Until then you can build from source. The Phosphor repo expects its siblings beside it in one folder: <code>Valence</code>, <code>Nucleus</code>, <code>Kinetic</code> and <code>ButtplugIO</code> on its <code>valence</code> branch. On Windows you need Rust (MSVC) and Node 22. Then, in the Phosphor folder:</p>
+    <pre><code>npm ci
+npm run build:app -- --bundles nsis</code></pre>
+    <p>Phosphor imports the sibling checkouts directly and keeps no copy of them. The steps for macOS, Linux, Flatpak and Android are in <a href="https://github.com/openvalence/Phosphor/blob/main/docs/BUILD.md">BUILD.md</a>.</p>
+  </section>
+
+  <section aria-labelledby="s-launch">
+    <h2 id="s-launch" data-n="02">First launch</h2>
+    <!-- src/App.svelte:160 (first run opens Hubs), 152-157 (sections); src/model/prefs.js:32 (reconnect default true); docs/DESIGN.md §10.11 lines 1183-1187 -->
+    <p>With no saved hub, Phosphor opens on the Hubs page. That page lists saved hubs, finds new ones and holds the Virtual machine. From the second launch on, Phosphor redials the last hub by default. The setting is Settings, Connection, "Reconnect to the last hub on launch", and it is on until you turn it off. So you can open the app and find the machine already connected.</p>
+    <p>The sidebar has three sections. Machine and Valence fill in once a hub's catalog has loaded. Phosphor, the third, is always there.</p>
+  </section>
+
+  <section aria-labelledby="s-virtual">
+    <h2 id="s-virtual" data-n="03">Try the Virtual machine</h2>
+    <!-- docs/DESIGN.md §10.10 lines 1113-1131, 1153-1160; src/shell/HubsPane.svelte:116-129; src/ui/TopStrip.svelte:252; src/shell/HubsPane.svelte:58 -->
+    <p>The Virtual is the Nucleus hub firmware compiled to WebAssembly and run inside Phosphor. It has patterns, planning and telemetry like a real hub, and it has no motor. Nothing physical moves, so it is the safe place to learn the app.</p>
+    <ol>
+      <li>Open Phosphor, then Hubs.</li>
+      <li>In the Saved hubs list, find the last row, <code>Virtual</code>, with a <code>ν virtual</code> badge and the line "The hub as software".</li>
+      <li>Press Connect. The line changes to <code>Nucleus</code> and a version, and Connect becomes Stop.</li>
+      <li>Open Dash in the Machine section. The status slot in the top strip reads "Virtual: nothing moves".</li>
+      <li>Open the Generator page, pick a pattern and start it. The rail on the Dash follows it.</li>
+    </ol>
+    <p>The Virtual is never saved as a hub and never auto-connects. It boots homed. Any disconnect stops it, and its settings, presets and pairings persist between runs. So you can close Phosphor and come back to the same setup.</p>
+    <p>Layouts, plugins and the theme are Phosphor's own state, not the machine's, so anything you build while connected to the Virtual is already saved. To arrange the Dash, use the wrench next to the layout name in the sidebar.</p>
+  </section>
+
+  <section aria-labelledby="s-find">
+    <h2 id="s-find" data-n="04">Find a real machine</h2>
+    <!-- src/shell/hubs.svelte.js:107 (LAN_SCAN_MS 1500), 109 and src-tauri/src/discovery.rs:22 (port 22096), 120-139 (scan order); src/model/machine.svelte.js:952, 956-960 (host:port, default 82); src/shell/HubsPane.svelte:136-143, 155 -->
+    <p>On the Hubs page, under Find a hub, press Scan. Scan sends a discovery probe on your local network (UDP port 22096) and waits 1.5 s. If any machine answers, you get a list. If none does, Scan falls back to a Bluetooth scan. A machine on your network therefore shows up in about a second and a half, and Bluetooth only starts when the network found nothing.</p>
+    <p>Each row shows the machine's name, its address, firmware version and when it was last seen. A row can carry marks: <code>LAN</code> or <code>BLE</code> for how it was found, <code>needs setup</code> for a machine with no Wi-Fi, and <code>pairing open</code>. Press Connect on the row.</p>
+    <p>If Scan finds nothing, type the address into the field under it, as <code>host</code> or <code>host:port</code>. The port is 82 when you leave it off. The field starts with the last address you dialed. A hub is saved once it has been live over Wi-Fi.</p>
+    <p>A machine with no Wi-Fi yet, or a new network to join, goes through Set up a machine. Pairing and access tiers are on <a href="/phosphor/docs/connecting/">Connecting</a>.</p>
+  </section>
+
+  <section aria-labelledby="s-screens">
+    <h2 id="s-screens" data-n="05">The main screens</h2>
+    <!-- docs/DESIGN.md §10.11 lines 1183-1187, 1218-1220; src/App.svelte:128-149; src/shell/settings-pane.js:48-52; src/ui/TopStrip.svelte:242-244 -->
+    <h3>Machine</h3>
+    <p>Dash is the home page you arrange. Below it are the pages the machine's catalog defines. The names come from the registry and typically include Generator, Motion, Limits, Hardware, System, Other and Setup. A page appears only if the machine offers settings in that category.</p>
+    <h3>Valence</h3>
+    <p>Pairing, Link and Log. Pairing handles access. Link shows the protocol view: traffic, channels and refusals. Log has tabs for the log, anomalies, safety events, the session, changes and Health.</p>
+    <h3>Phosphor</h3>
+    <p>Display (themes), Plugins, Hubs, Buttplug, Settings, Merge and About. Display folds into Settings in the app and is its own page on the hub-served page.</p>
+    <h3>The top strip</h3>
+    <p>The strip carries Home, Flip, Override, Pause and E-Stop, with the rail and the position numerals beside them. Override lets you jog across the full travel. Pause and E-Stop are always there, and E-Stop latches until you hold it for 3 s. So a stop is one tap away from every page.</p>
+    <p class="links"><a href="/phosphor/docs/">Docs</a> · <a href="/phosphor/">Phosphor</a> · <a href="https://github.com/openvalence/Phosphor">Repo</a></p>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

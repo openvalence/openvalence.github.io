@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Valence is: OpenValence</title>
+<meta name="description" content="Valence is the web for motion machines: the machine serves its own control panel, any app can open it, and the machine enforces its own limits.">
+<link rel="canonical" href="https://openvalence.org/valence/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/valence/">
+<meta property="og:title" content="What Valence is: OpenValence">
+<meta property="og:description" content="Valence is the web for motion machines: the machine serves its own control panel, any app can open it, and the machine enforces its own limits.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/" aria-current="page">Valence</a>
+    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip" href="/downloads/">Downloads</a>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <p class="kicker">component · protocol · spec v1.0-draft</p>
+    <h1>Valence is the web for motion machines</h1>
+    <p>The machine serves its own control panel, and any app can open it.</p>
+  </section>
+
+  <section aria-labelledby="s-web">
+    <h2 id="s-web" data-n="01">The short version</h2>
+    <p>You already know how this works. You type an address, a server sends a page, your browser draws it. The server doesn't care which browser you use. Valence does the same job for a machine.</p>
+    <table class="parts parallel">
+      <thead>
+        <tr><th scope="col">On the web</th><th scope="col">In Valence</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Website</th><td>The machine. Its firmware runs a hub that holds the machine's state.</td></tr>
+        <tr><th scope="row">Browser</th><td>The app. Phosphor, a script, a plugin, a hardware remote. Any number at once, all kept in sync.</td></tr>
+        <tr><th scope="row">HTTP and HTML</th><td>Valence: the wire format, plus the catalog the machine sends to describe itself.</td></tr>
+        <tr><th scope="row">Server-side checks</th><td>Machine-side limits. The machine checks every request, whatever the app thinks.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section aria-labelledby="s-diff">
+    <h2 id="s-diff" data-n="02">The one difference</h2>
+    <!-- SPEC §1.2 item 7 (no widget hints, no layout, no ordering, no styling); §8 intro and §8.8 (the catalog builds the whole settings and control surface) -->
+    <p>A website sends a finished page. A Valence machine sends a description: what each setting is, its units, its range, and who may change it. No layout, no colors, no widget hints. The app decides how it looks.</p>
+    <p>So a setting added in the firmware shows up in every app the next time it connects, with its label, units and limits. Nobody ships an app update for it.</p>
+  </section>
+
+  <section aria-labelledby="s-safety">
+    <h2 id="s-safety" data-n="03">Why safety lives in the machine</h2>
+    <p>Your app is one client of many, and any client can be wrong: an old version, a buggy plugin, a script with a bad number in it. So the machine trusts none of them.</p>
+    <ul>
+      <!-- SPEC §1.2 item 1: hub-authoritative, echoes report applied (post-clamp) values -->
+      <li>The machine holds the only real state. Apps send requests. The machine clamps each one to its limits and tells every app what it actually did.</li>
+      <!-- SPEC §11.4: sole-caller rule; Nucleus .claude/rules/architecture.md: MotionArbiter is the only component that commands motion -->
+      <li>One component on the machine drives the motor. Every request goes through it. There is no side door.</li>
+      <!-- SPEC §11.3 deadman default 600 ms; releases ownership -->
+      <li>If an app goes quiet, it loses control of motion. The default is 600 ms.</li>
+      <!-- SPEC §11.1, §11.2: pause and estop are role-exempt -->
+      <li>Anyone connected can stop the machine, even an app that is only watching. Starting it takes control access. The spec puts it this way: "you may always stop the machine; you may not always start it."</li>
+      <!-- SPEC §11.2 honesty clause H1 -->
+      <li>A hardware e-stop is still the last word. The protocol's stop is a convenience, not a replacement for one.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s-tiers">
+    <h2 id="s-tiers" data-n="04">Who can do what</h2>
+    <!-- SPEC §12.2 (ratified): watch 0, control 1, configure 2; §12.3 pairing -->
+    <p>Every connection has an access tier. <strong>Watch</strong> sees everything and can stop the machine. <strong>Control</strong> can also move it. <strong>Configure</strong> can also change setup and decide who else gets in. Watching needs no pairing; the rest does. The <a href="/diagrams/#pairing">pairing diagram</a> shows how you get each one.</p>
+  </section>
+
+  <section aria-labelledby="s-repo">
+    <h2 id="s-repo" data-n="05">What's in the repo</h2>
+    <!-- Valence README.md, Layout table and License -->
+    <dl class="terms">
+      <div><dt>The spec</dt><dd>The protocol, in one document, plus the registry that assigns every wire number. <span class="nb">CC BY 4.0</span>.</dd></div>
+      <div><dt>The library</dt><dd>A C++20 reference implementation. Header-only, no hardware, no dependencies. <span class="nb">MIT</span>.</dd></div>
+      <div><dt>Clients</dt><dd>A JavaScript client and Valence Connect, a plugin for MultiFunPlayer.</dd></div>
+      <div><dt>Valence Bench</dt><dd>A reference hub that runs with no hardware, for testing a client.</dd></div>
+      <div><dt>Tools</dt><dd>A wire-level conformance probe, a tracer, a soak tester.</dd></div>
+    </dl>
+    <!-- SPEC header: v1.0-draft; README: name reserved for conformant implementations (NOTICE) -->
+    <p>Status: pre-release. The spec is v1.0-draft and changes through RFCs. Wire numbers are not frozen yet. The name "Valence" is reserved for implementations that pass conformance.</p>
+  </section>
+
+  <section aria-labelledby="s-build">
+    <h2 id="s-build" data-n="06">Build on it</h2>
+    <ul>
+      <li><a href="/Valence/latest/build/quickstart/">Quickstart</a>: talk to a hub in a few lines.</li>
+      <li><a href="/Valence/latest/build/hub/">Build a hub</a>: make your own machine speak Valence.</li>
+      <li><a href="/Valence/latest/build/plugins/">Plugins</a> and <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Phosphor's plugin contract</a>: draw your own controls.</li>
+      <li><a href="/Valence/latest/spec/">The spec</a>, rendered, and <a href="https://github.com/openvalence/Valence/blob/main/spec/SPEC.md">the source</a>.</li>
+      <li><a href="/Valence/latest/community/contributing/">Contributing</a> and <a href="/Valence/latest/community/rfc-process/">the RFC process</a>.</li>
+    </ul>
+    <p class="links"><a href="https://github.com/openvalence/Valence">Repo</a> · <a href="/Valence/">Docs</a> · <a href="/diagrams/">Diagrams</a> · <a href="/components/">All components</a></p>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

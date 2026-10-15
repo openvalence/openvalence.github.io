@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Downloads: OpenValence</title>
+<meta name="description" content="Phosphor and Nucleus downloads. Nothing is released yet: builds come from CI, and the first release will appear on GitHub Releases. Here's what it will hold.">
+<link rel="canonical" href="https://openvalence.org/downloads/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/downloads/">
+<meta property="og:title" content="Downloads: OpenValence">
+<meta property="og:description" content="Phosphor and Nucleus downloads. Nothing is released yet: builds come from CI, and the first release will appear on GitHub Releases. Here's what it will hold.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Phosphor",
+  "description": "The reference Valence client: a UI builder for linear motion machines, with plugins, a funscript player and a built-in Virtual machine.",
+  "url": "https://openvalence.org/phosphor/",
+  "downloadUrl": "https://github.com/openvalence/Phosphor/releases",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "publisher": { "@id": "https://openvalence.org/#org" }
+}
+</script>
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip" href="/downloads/" aria-current="page">Downloads</a>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <p class="kicker">downloads · nothing released yet</p>
+    <h1>Downloads</h1>
+    <!-- gh release list is empty for Phosphor, Nucleus, Valence, Kinetic, Hardware, Isotope (checked 2026-10-15) -->
+    <p>WIP: there's no release yet. Builds come from CI, and the first release is coming soon. When it lands, it lands on GitHub Releases, and this page links straight to the files.</p>
+  </section>
+
+  <section aria-labelledby="s-phosphor">
+    <h2 id="s-phosphor" data-n="01">Phosphor</h2>
+    <p>The app. <a href="https://github.com/openvalence/Phosphor/releases">Phosphor releases</a> <span class="tag">none yet</span></p>
+    <!-- Phosphor .github/workflows/build.yml: nsis (signed via SignPath), app+dmg, deb, AppImage, flatpak bundle; a v* tag opens a draft release -->
+    <p>The first release will carry:</p>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Platform</th><th scope="col">File</th><th scope="col">Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Windows</th><td>Installer (.exe), signed</td><td>builds in CI</td></tr>
+        <tr><th scope="row">macOS</th><td>Disk image (.dmg)</td><td>builds in CI</td></tr>
+        <tr><th scope="row">Linux</th><td>Flatpak bundle, .deb and AppImage</td><td>builds in CI</td></tr>
+        <tr><th scope="row">Android</th><td>APK</td><td>WIP</td></tr>
+      </tbody>
+    </table>
+    <p>Until then, you can build it yourself from the <a href="https://github.com/openvalence/Phosphor">repo</a>. The README has the commands.</p>
+  </section>
+
+  <section aria-labelledby="s-firmware">
+    <h2 id="s-firmware" data-n="02">Firmware</h2>
+    <p>Nucleus, for the OSSM Flagship board. <a href="https://github.com/openvalence/Nucleus/releases">Nucleus releases</a> <span class="tag">none yet</span></p>
+    <p>No prebuilt images yet. The board isn't for sale yet either, so for now the firmware is a build-it-yourself affair: ESP-IDF through PlatformIO, steps in the <a href="https://github.com/openvalence/Nucleus#build-and-flash">Nucleus README</a>.</p>
+  </section>
+
+  <section aria-labelledby="s-nohw">
+    <h2 id="s-nohw" data-n="03">No hardware?</h2>
+    <p>The <a href="/Kinetic/">Kinetic playground</a> runs the motion planner in your browser, nothing to install. More on the <a href="/demos/">demos page</a>.</p>
+  </section>
+
+  <section aria-labelledby="s-verify">
+    <h2 id="s-verify" data-n="04">Checking a download</h2>
+    <p>Only download from <a href="https://github.com/openvalence">github.com/openvalence</a>. This site never hosts binaries. Checksums will be listed here once the releases publish them.</p>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

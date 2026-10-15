@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nucleus: OpenValence</title>
+<meta name="description" content="Nucleus is the firmware for the OSSM Flagship board: an ESP32-P4 runs the Valence hub and the motion planner, and its LP core emits the quadrature signal.">
+<link rel="canonical" href="https://openvalence.org/nucleus/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/nucleus/">
+<meta property="og:title" content="Nucleus: OpenValence">
+<meta property="og:description" content="Nucleus is the firmware for the OSSM Flagship board: an ESP32-P4 runs the Valence hub and the motion planner, and its LP core emits the quadrature signal.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip" href="/downloads/">Downloads</a>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <p class="kicker">component · firmware</p>
+    <h1>Nucleus</h1>
+    <!-- Nucleus README.md "Chips"; LICENSE -->
+    <p>Nucleus is the firmware for the OSSM Flagship board. It runs the Valence hub, plans the motion and generates the quadrature signal that steers the servo drive. It is built on ESP-IDF and licensed <span class="nb">Apache-2.0</span>.</p>
+  </section>
+
+  <section aria-labelledby="s-status">
+    <h2 id="s-status" data-n="01">Status <span class="tag">bench</span></h2>
+    <!-- Nucleus README.md "Build and flash"; docs/board-map.md "The bench profile"; gh release list is empty -->
+    <p>Works on the bench, not in the field yet. It runs on an ESP32-P4 dev board and bench rigs; a finished Flagship board does not exist yet (see <a href="/hardware/">Hardware</a>). There is no release and no download. When there is one, it will be on <a href="/downloads/">Downloads</a>.</p>
+  </section>
+
+  <section aria-labelledby="s-chips">
+    <h2 id="s-chips" data-n="02">Chips</h2>
+    <!-- Nucleus README.md:15-22 "Chips"; .claude/rules/transport.md:83-84 -->
+    <p>The ESP32-P4 runs everything we wrote: the Valence hub, the WebSocket server, policy and motion. The ESP32-C6 is a Wi-Fi and BLE radio on an SDIO link, running Espressif's stock <code>esp_hosted</code> image. So there is no radio firmware to build or flash: you only ever flash the P4.</p>
+    <!-- Nucleus README.md:20-22; docs/supervisor.md:232-244 -->
+    <p>A CH32V003 board monitor runs its own small firmware, programmed by the P4 and carried inside the Nucleus update. So one update covers both chips.</p>
+  </section>
+
+  <section aria-labelledby="s-motion">
+    <h2 id="s-motion" data-n="03">Motion</h2>
+    <!-- Nucleus MotionArbiter.h:120-128 kStripLen=128; ValenceMotion.h:289 kMotionTickUs=1000 -->
+    <p>The planner, <a href="/kinetic/">Kinetic²</a>, keeps a strip of the next 128 positions in mm, one per 1 ms tick. So a planner solve of up to 128 ms never leaves the steer without a plan. Past the end of the strip the steer holds the last position and counts a planner stall.</p>
+    <!-- Nucleus MotionArbiter.h:262-273 MotionEmitter::steer, fence, lease -->
+    <p>Every 1 ms tick the steer reads the strip and gives the LP core three things: a velocity, a fence and a lease renewal. The fence is a pair of edge counts that no edge may cross. The lease is a 4 ms timer.</p>
+    <!-- Nucleus MotionArbiter.h:111-119 kLeaseTicks = 4 -->
+    <p>If the lease is not renewed for 4 ms, the LP core parks itself and counts a lapse. So a stalled main core can keep the carriage moving at its last speed for 4 ms at most.</p>
+    <!-- Phosphor src/model/motion.js:80-85 LEAD_MARGIN_MS=100, leadCapMs; Nucleus StoredState.h:77-81 factory horizon 1000 ms -->
+    <p>A Wi-Fi hiccup is a separate problem with a separate cover. The client sends segments up to the schedule horizon minus 100 ms ahead, which is 900 ms at the factory horizon of 1000 ms. So a Wi-Fi stall shorter than that lead never reaches the motion.</p>
+    <!-- motion-control.md:252-254 (125 ns poll loop at 40 MHz, 128 ns spread); :248-251 (4003 cycles per edge, 100.000 and 100.128 us) -->
+    <p>The LP core emits A/B quadrature edges, and its signed edge count is the machine's position. Its poll loop is 5 cycles, 125 ns at 40 MHz, and every edge lands on that grid. Measured at a prime edge rate on a Rigol DHO4204, the spread is 128 ns peak to peak and the rounding does not accumulate. So timing error stays inside one 125 ns step and never adds up over a stroke.</p>
+    <!-- architecture.md:86-94; motion-control.md:270-276: cache off about 1.0 s of every 5 s, 2,156 transitions, 0 illegal -->
+    <p>The LP core runs from its own SRAM. While the main cores erased and wrote flash with the cache off, a scope saw 2,156 transitions and 0 illegal ones. So saving settings does not glitch the motor signal.</p>
+  </section>
+
+  <section aria-labelledby="s-safety">
+    <h2 id="s-safety" data-n="04">Safety</h2>
+    <!-- architecture.md:69-77 MotionArbiter sole-caller rule -->
+    <p>The MotionArbiter is the only code allowed to command motion. Manual input, scripts, patterns and network sessions submit intents to it. So every safety check lives in one place: homed, commissioned, pause, e-stop, and a clamp to the rail window.</p>
+    <!-- subsystem-map.md:31,79 ValenceBoardIo (E-stop NC and NO contacts, read first on every pass); Hardware flagship/FEATURES.md:107-113 -->
+    <p>The E-stop input is read first on every 10 ms pass and latches an e-stop in the hub. On the board, the same button also cuts motor power in hardware. So an e-stop does not depend on the firmware being healthy.</p>
+  </section>
+
+  <section aria-labelledby="s-pairing">
+    <h2 id="s-pairing" data-n="05">Pairing <span class="tag">WIP</span></h2>
+    <!-- Nucleus flagship_p4/src/system/ButtonGesture.h:38-42 (kDoublePressMs 600, kDemoteHoldMs 5000; RFC-114 and RFC-117 are drafts); Valence SPEC §12.3 -->
+    <p>A single press of the PAIR button opens a 120 s pairing window. A double press approves the one pending request for configure access. Holding it for 5 s drops every paired client to watch access and ends their sessions. So you can pair, approve and lock out clients from the button alone. These gestures are in draft RFCs and may change.</p>
+    <!-- Valence SPEC §13.4.1 -->
+    <p>Boot with PAIR held and the board enters config mode: BLE and USB serial only, no Wi-Fi, and the first client to connect gets configure access. So you can set up a board that has no network. The access tiers are in the <a href="/Valence/">Valence docs</a>.</p>
+  </section>
+
+  <section aria-labelledby="s-updates">
+    <h2 id="s-updates" data-n="06">Updates</h2>
+    <!-- Nucleus build-test-deploy.md:102-118 -->
+    <p>An HTTP POST to <code>/ota</code> on port 80, with a token, writes the new image to the idle slot and reboots. The new image is on trial: if its hub task hangs before it proves itself, the watchdog resets the board and the bootloader brings back the previous image. So a bad update does not brick the board.</p>
+  </section>
+
+  <section aria-labelledby="s-fit">
+    <h2 id="s-fit" data-n="07">How it fits</h2>
+    <!-- Valence SPEC §1.2; Phosphor README.md (Virtual machine) -->
+    <p>Nucleus is the hub in <a href="/Valence/">Valence</a>: it holds the machine's state, and clients such as <a href="/phosphor/">Phosphor</a> send intents that it clamps and echoes. Kinetic is pinned by commit, and the board it runs on is <a href="/hardware/">Hardware</a>. The same hub code compiles to WebAssembly and runs inside Phosphor as the Virtual, so you can try it with no board; see <a href="/demos/">Demos</a>. The <a href="/diagrams/">diagrams</a> show the whole system, and <a href="/components/">Components</a> lists every part.</p>
+    <p class="links"><a href="https://github.com/openvalence/Nucleus">Repo</a> · <a href="/Valence/">Valence docs</a> · <a href="/hardware/">Hardware</a> · <a href="/kinetic/">Kinetic</a> · <a href="/diagrams/">Diagrams</a> · <a href="/downloads/">Downloads</a></p>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

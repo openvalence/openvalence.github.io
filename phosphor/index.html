@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phosphor: OpenValence</title>
+<meta name="description" content="Phosphor is the reference client for Valence machines. Build a dashboard from what your machine reports, add plugins, play funscripts and connect other apps.">
+<link rel="canonical" href="https://openvalence.org/phosphor/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/phosphor/">
+<meta property="og:title" content="Phosphor: OpenValence">
+<meta property="og:description" content="Phosphor is the reference client for Valence machines. Build a dashboard from what your machine reports, add plugins, play funscripts and connect other apps.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Phosphor",
+  "description": "The reference Valence client: a UI builder for linear motion machines, with plugins, a funscript player and a built-in Virtual machine.",
+  "url": "https://openvalence.org/phosphor/",
+  "downloadUrl": "https://github.com/openvalence/Phosphor/releases",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "publisher": { "@id": "https://openvalence.org/#org" }
+}
+</script>
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/phosphor/" aria-current="page">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip" href="/downloads/">Downloads</a>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <p class="kicker">client · pre-release</p>
+    <h1>Phosphor, the Valence client</h1>
+    <!-- Phosphor README.md lines 3-18; docs/DESIGN.md §1 -->
+    <p>Phosphor is the reference client for Valence machines. It is one Svelte 5 app, delivered as a Tauri 2 desktop and mobile app and as a page a hub can serve from its own flash. It builds its pages from the catalog the machine sends, so it needs no machine-specific code.</p>
+  </section>
+
+  <section aria-labelledby="s-status">
+    <h2 id="s-status" data-n="01">Status</h2>
+    <!-- gh release list is empty for every repo (site brief); CI: Phosphor/.github/workflows/build.yml -->
+    <p>Pre-release. There is no published release, so <a href="/downloads/">Downloads</a> has nothing to offer yet. CI builds installers on every push to <code>main</code>, but none of them is published. Features marked <span class="tag">WIP</span> are not finished.</p>
+  </section>
+
+  <section aria-labelledby="s-features">
+    <h2 id="s-features" data-n="02">What it does</h2>
+    <figure class="shot">
+      <a href="/images/phosphor-dash.png"><img src="/images/phosphor-dash.png" width="1440" height="900" alt="Phosphor's Dash page: the planned position reads 393.4 mm in large blue numerals, a 0 to 500 mm rail sits below it, and the telemetry chart shows position and speed as two sine waves while the Simple Stroke pattern runs."></a>
+      <figcaption>Phosphor 0.1.0 · Dash · connected to a simulated machine, Simple Stroke running · 1440 × 900, unedited · <a href="/images/phosphor-dash.png">full size</a></figcaption>
+    </figure>
+
+    <h3>Dash</h3>
+    <!-- docs/DESIGN.md §10.1 (lines 372-416), §10.2 (418-497), §10.6 (983-1054) -->
+    <p>The Dash is a grid you arrange. In edit mode you place, move, resize and delete controls from a palette, and save the result as a named layout. A control is one catalog field plus one way to show it: a writable field can be a knob, slider, stepper, segmented control or toggle, and a read-only field can be a number, bar, bulb, graph or large numeral. A control can narrow the machine's range but never widen it, so a Dash cannot ask for more than the machine allows.</p>
+    <p>Layouts are stored on the device you made them on. They do not sync.</p>
+
+    <h3>Pages from the catalog</h3>
+    <!-- Phosphor README.md lines 20-26: test/check-device-knowledge.mjs gates npm run build; docs/DESIGN.md §10.1 line 379 -->
+    <p>Every setting the machine declares gets a page, even if you never build a Dash. Phosphor's source holds no channel ids or field names from any particular machine, and a build check enforces it. A setting added in the firmware shows up in Phosphor on the next connect, with no Phosphor update.</p>
+
+    <h3>Safety strip</h3>
+    <!-- docs/DESIGN.md §10.3 lines 505-526; src/ui/widgets/SafetyOp.svelte:81-82; src/model/prefs.js:34 -->
+    <p>The top strip always carries E-Stop and Pause, and you cannot remove or hide them. Tapping E-Stop latches it. Releasing takes a 3 s hold. On a machine that does not cut motor power the button reads Halt instead. In the desktop app, an E-Stop press also broadcasts a stop packet to every hub on your network that supports it; that is a setting, on by default.</p>
+    <p>The strip is at the top because the bottom edge sits against the Windows taskbar, where a missed click is easy.</p>
+
+    <h3>Plugins</h3>
+    <!-- docs/PLUGINS.md lines 10-18 (Prime Rule), 387 (freeze candidate), 678-701 (permissions), 703-711 (loading), 783 factory list -->
+    <p>A plugin is one JavaScript module and a <code>manifest.json</code>. It reads the catalog and writes through the same path every built-in control uses, so a plugin write gets the same pending, echo and fault states. A plugin has no socket or session handle. Plugins are version 1 of the API, and the API is not frozen yet.</p>
+    <p>A plugin runs with the page's full authority. The manifest lists what it intends to do, and the Plugins pane shows it, but that is a label and not a sandbox. Install plugins only from sources you would trust with a program.</p>
+    <p>Phosphor ships five: the Advanced pattern card (a port of fray-d's OSSM-Lite), the funscript player, a quick-access tray, a Wi-Fi picker and a set of three small games. The hub-served page loads no plugins.</p>
+    <p class="links"><a href="/phosphor/docs/plugins/">Plugin docs</a> · <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Plugin contract</a></p>
+
+    <h3>Funscript player</h3>
+    <!-- docs/plugins/FUNSCRIPT.md lines 66-77 (lead cap = horizon less 100 ms; 1000 ms horizon), 93-94 (horizons 500, 1000) -->
+    <p>The player plays a video next to its funscript and drives the rail from it. Video comes from a file or from a Stash server you point it at. It sends the machine segments up to the granted horizon minus 100 ms ahead: 900 ms at a 1000 ms horizon. A Wi-Fi stall under about 900 ms never reaches the stroke, because the machine already has the next stretch.</p>
+    <p class="links"><a href="/phosphor/docs/funscript-player/">Funscript player docs</a></p>
+
+    <h3>Node editor</h3>
+    <!-- docs/GRAPH.md lines 8-29 (where a chain runs; TICK_MS 50 ms, 20 Hz), 31-47 (socket types) -->
+    <p>The node editor wires catalog fields, math nodes and Buttplug outputs into chains with float, int and bool sockets. A single hub map between a source field and an accessory field is stored on the hub and keeps running if Phosphor closes. Every other chain runs in Phosphor, evaluated 20 times a second, and stops on Pause or E-Stop. Those chains only run while Phosphor is open.</p>
+    <p class="links"><a href="/phosphor/docs/node-editor/">Node editor docs</a></p>
+
+    <h3>Buttplug</h3>
+    <!-- docs/BUTTPLUG.md lines 12, 32 (127.0.0.1, port 12345), 88-92 (defaults, no start on launch); docs/DESIGN.md §10.8 lines 1067-1085; privacy.html s-network -->
+    <p>The desktop and Android apps embed a Buttplug server, spec v0 to v4, that listens on 127.0.0.1 at port 12345 by default. Only programs on the same computer can reach it. Apps that speak Buttplug see your machine as one linear device and can drive it, and the toys it finds over Bluetooth, serial or HID each get their own module on the Dash. If an app stops or disconnects, the machine holds its last target; only the hub's E-Stop latches.</p>
+    <p>Starting the server on launch is off by default. The Buttplug pane starts and stops it and shows connected apps, devices and a log. Toys as hub relationships is an open design question <span class="tag">WIP</span>.</p>
+
+    <h3>Themes</h3>
+    <!-- src/themes/index.js lines 6-25 (20 themes); docs/THEMES.md line 19 (12 color presets), docs/DESIGN.md §10.16 lines 1559-1564 -->
+    <p>There are 20 themes, from the default Phosphor theme to Luna, Mica, Liquid Glass, Material, Blueprint and P1 Terminal. The default theme has 12 color presets. A theme restyles chrome, controls, type and icons. The stop pair, the safety edge and the warning states look the same in every theme, so a theme can change how the app looks without changing what a danger signal looks like.</p>
+
+    <h3>Health and diagnostics</h3>
+    <!-- docs/DESIGN.md §10.14 lines 1397-1411 (29 conditions, three areas), 1453-1455 (local only), 1461-1462 and 1475 (reports); src/model/health/core.js:39-201 -->
+    <p>Phosphor tracks 29 conditions in three areas: Link, This device and Machine. Each line is a measured fact with the number that raised it, such as <code>Memory up 140 MB in 35 min</code>, and one action. When a stream pauses, Phosphor classifies the cause as this device, the network, the machine or unknown, and marks it "likely" when it cannot be sure.</p>
+    <p>Everything stays on your device. There is no telemetry and no crash reporting. A report is a public GitHub issue that you submit yourself, after a review screen that lists every field in it. Some Machine conditions read "not reported by this machine" until the protocol gains the health roles they need <span class="tag">WIP</span>.</p>
+    <p class="links"><a href="/phosphor/docs/troubleshooting/">Troubleshooting</a></p>
+
+    <h3>The Virtual machine</h3>
+    <!-- docs/DESIGN.md §10.10 lines 1113-1131, 1153-1160; docs/BUILD.md lines 19-24, 30 (541 KB wasm) -->
+    <p>The Virtual is the Nucleus hub firmware compiled to WebAssembly and run inside Phosphor, on every platform. It is a full hub with patterns, planning and telemetry, but no motor, so nothing physical moves. It appears in the Hubs list with a <code>ν virtual</code> badge. You can try every page and build a Dash before you own a machine. Its tool name is Neutrino.</p>
+    <p>A saved hub also offers Sim, which replays the machine's last catalog. Settings you change there can be applied to the real machine later from the Merge pane, ticked row by row.</p>
+    <p class="links"><a href="/phosphor/docs/getting-started/">Try it in Getting started</a></p>
+  </section>
+
+  <section aria-labelledby="s-platforms">
+    <h2 id="s-platforms" data-n="03">Platforms</h2>
+    <!-- docs/BUILD.md lines 379-388 (CI jobs), 228-229 (Intel Macs not built), 302-353 (Android); README.md line 160; docs/DESIGN.md §10.7 lines 1058-1063 -->
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Platform</th><th scope="col">Package</th><th scope="col">Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Windows</th>
+          <td>NSIS installer, x86_64, signed through SignPath in CI.</td>
+          <td>built by CI, not released</td>
+        </tr>
+        <tr>
+          <th scope="row">macOS</th>
+          <td>A .dmg for Apple silicon. Intel Macs are not built. CI builds are ad-hoc signed and not notarized.</td>
+          <td>built by CI, not released</td>
+        </tr>
+        <tr>
+          <th scope="row">Linux</th>
+          <td>.deb and .AppImage, x86_64.</td>
+          <td>built by CI, not released</td>
+        </tr>
+        <tr>
+          <th scope="row">Flatpak</th>
+          <td>A bundle built by CI on the GNOME runtime. It is not on Flathub.</td>
+          <td>built by CI, not released</td>
+        </tr>
+        <tr>
+          <th scope="row">Android</th>
+          <td>A debug APK built from source, Android 8.0 or later. CI does not build it.</td>
+          <td>local builds only <span class="tag">WIP</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Browser</th>
+          <td>The page a hub serves from its own flash. No Bluetooth and no plugins.</td>
+          <td>backup surface</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>The browser page is the zero-install way in and the guest surface. The app is the primary delivery, so a feature can ship in the app first.</p>
+  </section>
+
+  <section aria-labelledby="s-fit">
+    <h2 id="s-fit" data-n="04">How it fits</h2>
+    <!-- Phosphor README.md lines 164-172; docs/BUILD.md lines 19-24 -->
+    <p>Phosphor is a Valence client. The hub holds the machine's state, Phosphor sends intents, and the hub clamps them and echoes what it applied. See <a href="/diagrams/">the diagrams</a> for the whole picture and <a href="/valence/">the Valence docs</a> for the protocol. Phosphor imports the Valence JavaScript client directly, and the Virtual is built from Nucleus, so it never carries its own copy of the protocol.</p>
+  </section>
+
+  <section aria-labelledby="s-docs">
+    <h2 id="s-docs" data-n="05">Phosphor docs</h2>
+    <ul>
+      <li><a href="/phosphor/docs/getting-started/">Getting started</a>: install, first launch, the Virtual.</li>
+      <li><a href="/phosphor/docs/connecting/">Connecting</a>: discovery, Bluetooth setup, access tiers, pairing, E-Stop.</li>
+      <li><a href="/phosphor/docs/funscript-player/">Funscript player</a></li>
+      <li><a href="/phosphor/docs/node-editor/">Node editor</a></li>
+      <li><a href="/phosphor/docs/plugins/">Plugins</a></li>
+      <li><a href="/phosphor/docs/troubleshooting/">Troubleshooting</a></li>
+      <li><a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Plugin contract</a> on GitHub, the full reference.</li>
+    </ul>
+    <!-- README.md lines 184-186 -->
+    <p class="links"><a href="https://github.com/openvalence/Phosphor">Repo</a> · <a href="/downloads/">Downloads</a> · <a href="/phosphor/docs/">Docs</a> · Apache-2.0, except the Advanced pattern plugin, which stays <span class="nb">CERN-OHL-S-2.0</span></p>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

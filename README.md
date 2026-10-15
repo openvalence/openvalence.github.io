@@ -1,28 +1,37 @@
 # openvalence.github.io
 
 This repo holds the static OpenValence website, live at
-https://openvalence.github.io, and its GitHub Pages configuration. The
+https://openvalence.org, and its GitHub Pages configuration. The
 documentation is built from the Valence repo and lives at
-https://openvalence.github.io/Valence/.
+https://openvalence.org/Valence/.
 
 ## Site files
 
-The site consists of:
+Plain HTML, no build step:
 
-- `index.html`
-- `style.css`
-- `mark.svg`
+- `index.html`, `privacy.html`, `404.html`, and one folder per page
+  (`valence/`, `components/`, `nucleus/`, `phosphor/` with `phosphor/docs/`,
+  `kinetic/`, `hardware/`, `isotope/`, `diagrams/`, `demos/`, `downloads/`)
+- `style.css`, `mark.svg`, `favicon.ico`, `icons/`
 - `fonts/`: the self-hosted fonts (SIL OFL, notice in `fonts/LICENSE`)
-- `images/`: the screenshot
+- `images/`: screenshots, the demo capture and the social card (`og.png`)
+- `sitemap.xml`, `robots.txt`
 
-There is no build step. The colors and type are Phosphor's default chassis
-(Phosphor `src/style.css`); keep them matched to it.
+The colors and type are Phosphor's default chassis (Phosphor `src/style.css`);
+keep them matched to it. Every page carries the same head, header and footer
+between `<!-- chrome:* -->` markers. Edit them in `tools/chrome.html`, then run
+`python tools/chrome.py` to copy them into every page. Add a new page's URL to
+`sitemap.xml`.
 
 1. Edit the files.
-2. Open `index.html` in a browser to check.
+2. Preview with `python -m http.server` from the repo root (pages use
+   root-relative links, so opening a file directly won't style it).
 3. Push to `main`.
 
-GitHub Pages serves the branch root within a minute.
+GitHub Pages serves the branch root within a minute. The lowercase page
+folders sit beside the docs at `/Valence/` and the Kinetic playground at
+`/Kinetic/`, which are separate Pages sites; GitHub's paths are
+case-sensitive.
 
 ## Custom domain
 

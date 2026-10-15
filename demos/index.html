@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demos: OpenValence</title>
+<meta name="description" content="Run the Kinetic motion planner in your browser, shape a funscript with Bézier handles, and watch Phosphor drive its built-in Virtual machine. No hardware needed.">
+<link rel="canonical" href="https://openvalence.org/demos/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/demos/">
+<meta property="og:title" content="Demos: OpenValence">
+<meta property="og:description" content="Run the Kinetic motion planner in your browser, shape a funscript with Bézier handles, and watch Phosphor drive its built-in Virtual machine. No hardware needed.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/" aria-current="page">Demos</a>
+    <a class="chip" href="/downloads/">Downloads</a>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <p class="kicker">demos · no hardware needed</p>
+    <h1>Try it without a machine</h1>
+    <p>The planner runs in your browser today. The app runs its own virtual machine on your desktop. Neither needs a board.</p>
+  </section>
+
+  <section aria-labelledby="s-playground">
+    <h2 id="s-playground" data-n="01">Kinetic playground</h2>
+    <!-- Kinetic playground/README.md; .github/workflows/pages.yml builds kinetic2.wasm and deploys playground/ to https://openvalence.org/Kinetic/ -->
+    <p>The same Kinetic² planner that runs in the firmware, compiled to WebAssembly. Click the position trace to drop a knot, tune the planner options, and see what it did: the curve, its speed, acceleration and jerk against the ceilings, and every trim it had to make.</p>
+    <!-- Kinetic README.md "Determinism": bit-identical on every IEEE-754 target built with -ffp-contract=off -->
+    <!-- Nucleus flagship_p4/src/CMakeLists.txt:59-62 builds with -ffp-contract=off, as does Kinetic/CMakeLists.txt:13 -->
+    <p>Kinetic gives the same bits on every target, and the firmware and the WebAssembly build use the same compiler rule for it. Same knots, same settings: the curve in your browser is the curve the machine plans.</p>
+    <p class="links"><a href="/Kinetic/">Open the playground</a> · <a href="/Kinetic/handles.html">Open the handles editor</a> · <a href="/kinetic/">About Kinetic</a></p>
+    <!-- Kinetic playground/handles.html: open a .funscript or the built-in script; drag a knot's handles to set angle and length -->
+    <p>The handles editor loads a funscript as a chain of Bézier curves. Drag a knot's handles to set how fast it passes through. Bring your own <code>.funscript</code> or use the built-in one.</p>
+  </section>
+
+  <section aria-labelledby="s-virtual">
+    <h2 id="s-virtual" data-n="02">Phosphor and the Virtual machine</h2>
+    <figure class="capture">
+      <video controls muted loop playsinline preload="none" width="1280" height="800" poster="/images/phosphor-virtual.jpg" aria-describedby="cap-virtual">
+        <source src="/images/phosphor-virtual.webm" type="video/webm">
+      </video>
+      <figcaption id="cap-virtual">Phosphor main 1775961 · connected to the built-in Virtual · Home, speed 55, Advanced pattern running · 1280 × 800, 18 s, recorded headless, no sound</figcaption>
+    </figure>
+    <!-- Phosphor README.md "Neutrino, the built-in machine (the hub firmware as wasm)"; src/model/integral/ -->
+    <p>The Virtual is the machine's firmware compiled to WebAssembly, running inside Phosphor. It speaks Valence like a real machine, so everything you see in the clip is the real protocol, the real catalog and the real planner, minus the motor.</p>
+    <p>You get it with Phosphor: connect to "Virtual" in the machine list. Phosphor isn't released yet; see <a href="/downloads/">Downloads</a>.</p>
+    <p>A version of this that runs on this website is WIP.</p>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

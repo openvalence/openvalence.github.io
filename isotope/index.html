@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Isotope: OpenValence</title>
+<meta name="description" content="Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: a design home, nothing runs yet. No license chosen.">
+<link rel="canonical" href="https://openvalence.org/isotope/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/isotope/">
+<meta property="og:title" content="Isotope: OpenValence">
+<meta property="og:description" content="Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: a design home, nothing runs yet. No license chosen.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip" href="/downloads/">Downloads</a>
+    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <p class="kicker">component · accessory firmware</p>
+    <h1>Isotope</h1>
+    <!-- Isotope README.md intro; docs/DESIGN.md §1 -->
+    <p>Isotope is the planned firmware for Valence accessories: small ESP32 boards, such as a peristaltic pump or a motorized stand, that join a hub over ESP-NOW and show up in its catalog as ordinary channels.</p>
+  </section>
+
+  <section aria-labelledby="s-status">
+    <h2 id="s-status" data-n="01">Status <span class="tag">WIP</span></h2>
+    <!-- Isotope README.md banner "Nothing here runs yet"; "License: Not chosen" -->
+    <p>WIP: a design home, nothing runs yet. The repo is public. It holds the design document and validation plans; there is no firmware, generator, flasher or builder. Nothing is built until the radio numbers it depends on are measured on dev boards. No license is chosen yet, so nothing in the repo is licensed for reuse.</p>
+    <!-- Isotope docs/DESIGN.md §13 "The hub side": Nucleus today runs the stock esp_hosted slave image, which has no ESP-NOW -->
+    <p>The hub side is not built either. <a href="/nucleus/">Nucleus</a> runs Espressif's stock radio image today, which has no ESP-NOW, so the hub needs a change before any accessory can join.</p>
+  </section>
+
+  <section aria-labelledby="s-works">
+    <h2 id="s-works" data-n="02">How it will work</h2>
+    <dl class="terms">
+      <div><dt>Hub and spoke</dt><dd>Accessories talk only to the hub. They never talk to a client or to each other. A client such as <a href="/phosphor/">Phosphor</a> sees accessory channels like any other channel in the hub's catalog. So no client needs accessory-specific code.</dd></div>
+      <div><dt>Join and declare</dt><dd>You open a pairing window on the hub. The accessory sends a join request, then declares its own channels. The hub stores them. So adding an accessory needs no change to the hub or the client.</dd></div>
+      <div><dt>The hub runs the logic</dt><dd>The relationships that drive an accessory live in the hub, not in the client. So an accessory behaves the same from any client.</dd></div>
+      <div><dt>Fails safe on its own</dt><dd>The hub sends a beacon once a second. With no beacon for 5 seconds, or on a goodbye or an e-stop, each actuator goes to the safe value it declared. So a lost hub leaves each actuator at a value you chose in advance.</dd></div>
+      <div><dt>Unencrypted</dt><dd>A deliberate choice, with obligations: the accessory clamps every actuating value, and the hub never treats accessory telemetry as safety-grade. So nothing safety-critical hangs on an accessory.</dd></div>
+      <div><dt>Small fleets</dt><dd>A hub addresses at most 19 accessories; 3 is typical. The limit comes from ESP-NOW's peer table.</dd></div>
+    </dl>
+  </section>
+
+  <section aria-labelledby="s-order">
+    <h2 id="s-order" data-n="03">Build order</h2>
+    <!-- Isotope README.md "The order things get built" -->
+    <dl class="terms">
+      <div><dt>Config and generator</dt><dd>A declarative config, shaped like ESPHome's, is the one place an accessory is described. The generator turns it into an image.</dd></div>
+      <div><dt>Web flasher</dt><dd>A browser page takes a config, makes the image and flashes it over Web Serial.</dd></div>
+      <div><dt>Visual builder</dt><dd>A blueprint-style editor on top of the config. It writes the same config and never does anything the config cannot.</dd></div>
+    </dl>
+  </section>
+
+  <section aria-labelledby="s-fit">
+    <h2 id="s-fit" data-n="04">How it fits</h2>
+    <!-- Isotope README.md "Its relatives"; Hardware flagship/FEATURES.md "Accessories" -->
+    <p>Isotope speaks <a href="/Valence/">Valence</a> and takes every wire number from the spec. Anything it needs that the spec lacks goes through an RFC first. The hub is <a href="/nucleus/">Nucleus</a>. A plain on/off or PWM load, like a pump, does not need Isotope: the <a href="/hardware/">Flagship board</a> has a pin for it. See the <a href="/diagrams/">diagrams</a> and <a href="/components/">Components</a> for the whole system.</p>
+    <p class="links"><a href="https://github.com/openvalence/Isotope">Repo</a> · <a href="https://github.com/openvalence/Isotope/blob/main/docs/DESIGN.md">Design document</a> · <a href="/Valence/">Valence docs</a> · <a href="/components/">Components</a></p>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>
