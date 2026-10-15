@@ -76,6 +76,14 @@
     </ul>
     <p>If you pick several videos at once, the first plays and the rest go to the queue, each with its same-named script.</p>
     <p>A script with no video plays against a clock. The stage shows a stroke meter instead of a picture, and fullscreen is grayed.</p>
+    <figure class="docshot"><picture><source srcset="../img/fs-player-light.webp" media="(prefers-color-scheme: light)"><img src="../img/fs-player-dark.webp" width="1280" height="800" alt="The Funscript page with a video and a script loaded, the transport controls, the timeline and the Scale settings." decoding="async"></picture><figcaption>The Funscript page with a video and a script loaded.</figcaption></figure>
+    <ol class="legend">
+      <li>Open video loads a video or audio file.</li>
+      <li>Open script loads a funscript.</li>
+      <li>Scale is in the Settings panel.</li>
+      <li>Play starts the video, and the machine too when Motion is on.</li>
+      <li>Motion lets Play move the machine.</li>
+    </ol>
     <h3>Side files: V8 and V9</h3>
     <p>V8 is oscillation amplitude and V9 is oscillation frequency. If the loaded script has either one and the hub has an oscillator input, the player sends them while the main axis plays. They can come from side files or from inside the main file (funscript 1.1 <code>axes</code>, 2.0 <code>channels</code>). A side file wins over the same axis inside the main file. The hub scales each one onto the oscillator's own limits.</p>
     <p>Every other axis in the files is ignored, and the status says so, for example <code>Extra axes ignored: roll</code>. On a hub without an oscillator input the status reads <code>This machine has no oscillator input</code>. A side file that fails to read becomes a note in the status. It does not stop the load. A Stash scene serves one file, so it carries embedded axes only.</p>
@@ -164,6 +172,14 @@
       <li>The hub's actual plan, as a lighter line.</li>
       <li>The measured position, in the reality color.</li>
     </ul>
+    <figure class="docshot"><picture><source srcset="../img/fs-analyzer-light.webp" media="(prefers-color-scheme: light)"><img src="../img/fs-analyzer-dark.webp" width="1280" height="800" alt="The analyzer view of the Funscript player while a script plays against the Virtual machine, with the timeline graph and the motion controls." loading="lazy" decoding="async"></picture><figcaption>The analyzer while a script plays against the Virtual.</figcaption></figure>
+    <ol class="legend">
+      <li>Graph turns the timeline into the analyzer.</li>
+      <li>Preview applies a change without storing it. Live sits beside it.</li>
+      <li>Lag and Plan show how far the machine runs from the script.</li>
+      <li>Motion behavior holds the hub's tuning controls.</li>
+      <li>Motion stays on while the script plays.</li>
+    </ol>
     <p><!-- analyzer.js:47 LAG_MIN_MS -100, LAG_MAX_MS 400, LAG_EVERY_MS 500; ui.js:105 TRACE_MS 8000 -->
     <code>Lag n ms</code> and <code>Plan n ms</code> give the shift, between −100 and 400 ms, that best lays the measured position, and the plan, over the script across the last 8 seconds. They update twice a second. They are a scope, not a calibration. So use them to see whether the machine runs early or late, then set the offset by feel. The Kinetic line reads <code>Kinetic: wasm</code> when the planner is running. If it cannot start, it reads <code>Kinetic: fallback</code> and the curve becomes straight lines between actions.</p>
     <p>Below the graph are the hub's tuning controls, smoothness and the speed and acceleration ceilings among them, plus the input limits. They come from whatever the hub's catalog lists. This is why the plugin declares the <code>intent</code> permission. There are two modes:</p>

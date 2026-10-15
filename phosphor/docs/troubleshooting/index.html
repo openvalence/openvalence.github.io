@@ -93,6 +93,15 @@
     <h2 id="s-health" data-n="02">Pauses, stutter and lag</h2>
     <!-- src/model/health/core.js:39-201 (CONDITIONS: lines, actions, thresholds); docs/DESIGN.md §10.14 lines 1397-1459; src/ui/LogPane.svelte:52-57 -->
     <p>Open Log, then the Health tab. It has three cards, Link, This device and Machine, and a list of incidents kept on this device. The same line also appears in the top strip's status slot. Each line is a measurement, followed by the one thing to try.</p>
+    <figure class="docshot"><picture><source srcset="../img/ts-health-light.webp" media="(prefers-color-scheme: light)"><img src="../img/ts-health-dark.webp" width="1280" height="800" alt="The Health tab of the Log page showing the link readings, with the This device section below." decoding="async"></picture><figcaption>The Health tab of the Log page.</figcaption></figure>
+    <ol class="legend">
+      <li>The Health tab.</li>
+      <li>Status reads Good when nothing is wrong.</li>
+      <li>Round trip gives the typical and the slowest time.</li>
+      <li>"Not reported by this machine" means it does not send that number.</li>
+      <li>Updates per second, from the machine and to it.</li>
+      <li>This device starts below Link.</li>
+    </ol>
     <h3>Link</h3>
     <ul>
       <li><code>Motion paused N ms · this device fell behind</code>: this computer sent the next moves too late. Close other apps.</li>
@@ -132,6 +141,15 @@
     <h2 id="s-log" data-n="03">The log</h2>
     <!-- privacy.html s-stored; src-tauri/src/lib.rs:122-130 (release builds log to file at Info level); docs/BUILD.md lines 273-276; src/ui/LogPane.svelte:52-57, 147-150, 469 -->
     <p>The Log page has tabs for Log, Anomalies, Safety, Session, Changes and Health. The Log tab filters by Errors, Warnings, Info and Debug, and by source, and it searches. Plugin errors appear there tagged <code>plugin:&lt;name&gt;</code>.</p>
+    <figure class="docshot"><picture><source srcset="../img/ts-log-light.webp" media="(prefers-color-scheme: light)"><img src="../img/ts-log-dark.webp" width="1280" height="800" alt="The Log tab with its search field, severity filters, source filter and the Pause, Clear and Copy buttons." loading="lazy" decoding="async"></picture><figcaption>The Log tab and its filters.</figcaption></figure>
+    <ol class="legend">
+      <li>Search, with F3 as the shortcut.</li>
+      <li>Severity filters: Errors, Warnings, Info and Debug.</li>
+      <li>The source filter.</li>
+      <li>Pause freezes the list so new lines stop scrolling in.</li>
+      <li>Clear empties the list.</li>
+      <li>Copy puts the shown lines on the clipboard.</li>
+    </ol>
     <p>Phosphor also writes <code>Phosphor.log</code> to disk, at Info level, in release builds too. It is never uploaded. The <a href="/privacy.html">privacy page</a> lists the app's data folders on each platform, and for the Flatpak the folder is <code>~/.var/app/org.openvalence.Phosphor</code>. If you send the file with a bug report, that is you sending it.</p>
   </section>
 

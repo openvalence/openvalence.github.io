@@ -101,6 +101,15 @@
     <h2 id="s-pairing" data-n="05">Pairing</h2>
     <!-- Valence SPEC §12.3, §13.4.1; src/ui/PairingPane.svelte:202-205, 239-249, 265-266, 311-327, 346-347; src/ui/PairingPane.svelte:323-326 is the help text; Valence spec/registry/registry.yaml:1439 (pairing_window_default_s 120) -->
     <p>Pairing is how a client gets a tier above watch. A machine can offer several ways in: knock and approve, a numeric PIN, and push to pair. The Pairing page lists the ones this machine offers under "Modes offered", and shows whether the pairing window is open.</p>
+    <figure class="docshot"><picture><source srcset="../img/conn-pairing-light.webp" media="(prefers-color-scheme: light)"><img src="../img/conn-pairing-dark.webp" width="1280" height="800" alt="The Pairing page with the session tier, the Pair this client and Ask configure buttons, the At the machine help and the pending knocks." decoding="async"></picture><figcaption>The Pairing page on a session at the control tier.</figcaption></figure>
+    <ol class="legend">
+      <li>This session shows your tier.</li>
+      <li>Modes offered lists the ways this machine lets a client in.</li>
+      <li>Pair this client sends a knock.</li>
+      <li>Ask configure asks for the top tier.</li>
+      <li>At the machine is the help text for the machine's own Pair button.</li>
+      <li>Pending knocks lists the clients waiting for approval.</li>
+    </ol>
     <h3>From Phosphor</h3>
     <dl class="terms">
       <div><dt>Pair this client</dt><dd>Sends a knock. The status reads "Knock sent: waiting for the hub", then "Knock delivered: waiting for approval". Someone at configure approves it, or presses Pair on the machine. If nobody answers, it ends with "Knock expired" or "No answer within the pairing window".</dd></div>
@@ -126,6 +135,13 @@
     <h2 id="s-estop" data-n="06">What E-Stop does</h2>
     <!-- docs/DESIGN.md §10.3 lines 505-526; src/ui/widgets/SafetyOp.svelte:81-82; src/ui/TopStrip.svelte:242; src/shell/SettingsPane.svelte:74; docs/DESIGN.md §10.8 line 1078 -->
     <p>E-Stop is one control with two states, in the top strip on every page. Tap it to latch. The strip then reads "Halted: hold E-Stop 3 s", and holding the same button for 3 s releases it. There is no separate clear button. A machine that cuts motor power on E-Stop shows E-Stop on the button, and the tooltip says "Cut motor power". A machine that only stops motion shows Halt, so the label never promises more than the machine does.</p>
+    <figure class="docshot"><picture><source srcset="../img/conn-estop-light.webp" media="(prefers-color-scheme: light)"><img src="../img/conn-estop-dark.webp" width="1280" height="800" alt="The top strip after Halt is pressed, with the latched E-stop message, the Halted button and the E-stop latched bar." loading="lazy" decoding="async"></picture><figcaption>The top strip after Halt is tapped.</figcaption></figure>
+    <ol class="legend">
+      <li>The planned position stays on screen while the machine is halted.</li>
+      <li>The status slot reads "Halted: hold Halt 3 s".</li>
+      <li>The rail reads "E-stop latched".</li>
+      <li>The button now reads Halted. Hold it for 3 s to release.</li>
+    </ol>
     <p>In the desktop app, each press also broadcasts a stop packet to every hub on your network, next to the stop sent over the session. Every hub on the network that supports it latches, including ones you are not connected to. You can turn this off under Settings, Connection, "Broadcast e-stop to every hub on the LAN". It needs a live link to fire, and the Virtual never broadcasts.</p>
     <p>An app connected through the Buttplug server cannot latch E-Stop. When such an app stops or disconnects, the machine holds its last target. Only the hub's E-Stop latches. Use E-Stop, not the other app's stop button, when you need the machine to halt.</p>
     <p class="links"><a href="/phosphor/docs/troubleshooting/">Troubleshooting</a> · <a href="/phosphor/docs/getting-started/">Getting started</a> · <a href="/phosphor/docs/">Docs</a></p>
