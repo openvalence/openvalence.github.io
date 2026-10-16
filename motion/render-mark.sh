@@ -37,12 +37,17 @@ for piece in ${PIECES[@]}; do
     done
   done
   # alpha: the dark drawing (phosphor's light adds up on a dark page), square and wide
+  # The frames' color under clear pixels is noise the encoder pays for: rebuilt from the color over black.
   for cut in 1920x1080 1080x1080; do
-    crop=$([ $cut = 1080x1080 ] && echo "crop=1080:1080:420:0," || echo "")
-    ffmpeg -y -v error -framerate 60 -i "renders/mark-$piece-dark/frame_%06d.png" -an -vf "${crop}format=yuva420p" -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf $vcrf -row-mt 1 -deadline good -cpu-used 1 -g 600 "$OUT/$piece-alpha-$cut.webm"
+    crop=$([ $cut = 1080x1080 ] && echo "crop=1080:1080:420:0," || echo "null,")
+    ffmpeg -y -v error -f lavfi -i "color=c=black:s=$cut:r=60" -framerate 60 -i "renders/mark-$piece-dark/frame_%06d.png" -an \
+      -filter_complex "[1]${crop}split[a][b];[0][a]overlay=shortest=1[pm];[b]alphaextract[al];[pm][al]alphamerge,unpremultiply=inplace=1,format=yuva420p" \
+      -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf $vcrf -row-mt 1 -deadline good -cpu-used 1 -g 600 "$OUT/$piece-alpha-$cut.webm"
   done
-  # Discord and READMEs: 25 fps, 360 square on dark, one palette for the whole loop, under 2 MB
+  # Discord and READMEs: 25 fps, 360 square on dark, one palette, under 2 MB. Phosphor repeats every
+  # 1.2 s, so its GIF is two periods; orbit's is the whole clip.
+  gd=9.6; [ $piece = phosphor ] && gd=2.4
   ffmpeg -y -v error -f lavfi -i "color=c=${BG[dark]}:s=1920x1080:r=60" -framerate 60 -i "renders/mark-$piece-dark/frame_%06d.png" \
-    -filter_complex "[0][1]overlay=shortest=1,crop=1080:1080:420:0,fps=25,scale=360:360:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=full[p];[b][p]paletteuse=dither=sierra2_4a" -loop 0 "$OUT/$piece-dark.gif"
+    -filter_complex "[0][1]overlay=shortest=1,crop=1080:1080:420:0,trim=duration=$gd,fps=25,scale=360:360:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=full[p];[b][p]paletteuse=dither=sierra2_4a" -loop 0 "$OUT/$piece-dark.gif"
 done
 ls -l "$OUT"

@@ -81,8 +81,9 @@ animations (Phosphor's `src/ui/mark-anim.js` is a byte-identical copy; edit here
 
 Both clips are 9.6 s at 60 fps and loop. `bash render-mark.sh [piece ...]` renders them and writes
 into `renders/mark/` (or `$OUT`): `<piece>-<dark|light>-<1920x1080|1080x1080>.mp4` and `.webm`,
-`<piece>-alpha-<1920x1080|1080x1080>.webm` (VP9 with alpha) and `<piece>-dark.gif` (360 square,
-25 fps). They are for posts and READMEs and are not committed.
+`<piece>-alpha-<1920x1080|1080x1080>.webm` (VP9 with alpha, phosphor drawn for a dark page) and
+`<piece>-dark.gif` (360 square, 25 fps; phosphor's is two of its 1.2 s periods). They are for posts
+and READMEs and are not committed.
 
 ## The Kinetic² data
 
