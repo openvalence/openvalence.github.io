@@ -29,6 +29,7 @@
 <meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
 <meta name="twitter:card" content="summary_large_image">
 <!-- /chrome:head -->
+<script src="/site.js" defer></script>
 </head>
 <body>
 
@@ -70,6 +71,27 @@
       <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#shield"/></svg>Server-side checks</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#lock"/></svg><span><b>Machine-side limits</b>The machine checks every request, whatever the app thinks.</span></dd></div>
       </dl>
     </div>
+
+    <!-- motion/any-app.html; entries as Nucleus flagship_p4/src/hub/ValenceCatalog.h declares them (Pattern speed, depth, stroke; Jog limits jog_speed) -->
+    <figure class="motion">
+      <div class="frame dark">
+        <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/any-app-dark.webp" aria-label="Animation, no sound: the machine sends its catalog to three apps. Phosphor on a desktop draws the speed setting as a slider, a phone as a stepper, a remote as a knob. Turning the knob changes the value on the machine, and every app shows the new value.">
+          <source src="/images/motion/any-app-dark-640.webm" type="video/webm" media="(max-width: 700px)">
+          <source src="/images/motion/any-app-dark-640.mp4" type="video/mp4" media="(max-width: 700px)">
+          <source src="/images/motion/any-app-dark.webm" type="video/webm">
+          <source src="/images/motion/any-app-dark.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="frame light">
+        <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/any-app-light.webp" aria-label="Animation, no sound: the machine sends its catalog to three apps. Phosphor on a desktop draws the speed setting as a slider, a phone as a stepper, a remote as a knob. Turning the knob changes the value on the machine, and every app shows the new value.">
+          <source src="/images/motion/any-app-light-640.webm" type="video/webm" media="(max-width: 700px)">
+          <source src="/images/motion/any-app-light-640.mp4" type="video/mp4" media="(max-width: 700px)">
+          <source src="/images/motion/any-app-light.webm" type="video/webm">
+          <source src="/images/motion/any-app-light.mp4" type="video/mp4">
+        </video>
+      </div>
+      <figcaption>One catalog entry, three controls. The desktop is Phosphor; the phone and the remote are sketches of what any app could draw. The machine holds the value and tells every app what it is.</figcaption>
+    </figure>
   </section>
 
   <section class="band" aria-labelledby="s-diff">

@@ -1,0 +1,11 @@
+/* Shared by the three pieces. Fonts are copied from /fonts by render.sh. */
+@font-face { font-family: 'Archivo'; src: url('assets/Archivo.woff2') format('woff2'); font-weight: 700 900; font-stretch: 100% 125%; }
+@font-face { font-family: 'Martian Mono'; src: url('assets/MartianMono.woff2') format('woff2'); font-weight: 100 800; font-stretch: 75% 112.5%; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1280px; height: 720px; overflow: hidden; background: var(--bg, #0B0B0C); }
+#root { position: relative; width: 1280px; height: 720px; overflow: hidden; }
+.clip { position: absolute; inset: 0; }
+svg { display: block; width: 1280px; height: 720px; }
+.disp { font-family: Archivo, 'Arial Black', sans-serif; font-weight: 900; font-stretch: 118%; letter-spacing: -0.015em; }
+.kick { font-family: Archivo, sans-serif; font-weight: 800; font-stretch: 110%; letter-spacing: 0.06em; text-transform: uppercase; }
+.mono { font-family: 'Martian Mono', ui-monospace, monospace; font-weight: 400; }

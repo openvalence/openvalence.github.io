@@ -572,3 +572,14 @@ main pre code { overflow-wrap: normal; }
 .diagram.on-band figcaption { color: rgba(255,255,255,.9); }
 .band .split img { box-shadow: 0 30px 80px -30px rgba(0,0,20,.6); }
 .aside h2.xl { font-size: clamp(2rem, 4.4vw, 3.8rem); }
+
+/* ---- motion clips (motion/README.md): one video per color scheme; the hidden one loads only its poster ---- */
+.motion { margin: 32px 0 28px; max-width: 1040px; }
+.motion .frame { background: none; }
+.motion .vtoggle { top: 12px; bottom: auto; }
+.motion .light { display: none; }
+@media (prefers-color-scheme: light) { .motion .dark { display: none; } .motion .light { display: block; } }
+.motion figcaption { margin-top: 12px; font-size: .92rem; color: var(--ink-3); max-width: var(--measure); }
+.motion figcaption > p { margin: 0 0 8px; }
+.motion .beats { margin: 0; padding-left: 1.4em; }
+.motion .beats li { margin-bottom: 6px; }

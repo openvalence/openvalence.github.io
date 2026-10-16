@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# render.sh -- renders the three pieces, both themes, and encodes the web files into
+# ../images/motion/. Usage: bash render.sh [piece ...]   (default: all three)
+# Needs Node 22+, FFmpeg, and `npm install` here first. See README.md.
+set -euo pipefail
+cd "$(dirname "$0")"
+export HYPERFRAMES_NO_TELEMETRY=1
+HF="${HF:-node_modules/.bin/hyperframes}"
+OUT=../images/motion
+PIECES=("${@:-screen-to-rail knots-to-curve any-app}")
+mkdir -p assets renders "$OUT"
+cp ../fonts/Archivo.woff2 ../fonts/MartianMono.woff2 ../images/phosphor/dash-dark.webp ../images/phosphor/dash-light.webp assets/
+
+TAGS=(-color_primaries bt709 -color_trc bt709 -colorspace bt709 -color_range tv)
+for piece in ${PIECES[@]}; do
+  for theme in dark light; do
+    name="$piece-$theme" frames="renders/$piece-$theme"
+    rm -rf "$frames"
+    "$HF" render . --composition "$piece.html" --variables "{\"theme\":\"$theme\"}" --format png-sequence --output "$frames" --quiet
+    crf=31; [ "$piece" = knots-to-curve ] && crf=33   # the 24.5 s piece, held under 1.2 MB
+    for w in 1280 640; do
+      sfx=$([ $w = 1280 ] && echo "" || echo "-$w")
+      vf="scale=$w:-2:flags=lanczos:out_color_matrix=bt709:out_range=tv,format=yuv420p"
+      in=(-y -v error -framerate 30 -i "$frames/frame_%06d.png" -vf "$vf" -an "${TAGS[@]}")
+      # one keyframe per loop: the clips are short and only ever loop from the start
+      ffmpeg "${in[@]}" -c:v libvpx-vp9 -b:v 0 -crf $crf -row-mt 1 -deadline good -cpu-used 1 -g 400 "$OUT/$name$sfx.webm"
+      ffmpeg "${in[@]}" -c:v libx264 -profile:v high -crf 21 -preset veryslow -tune animation -g 400 -movflags +faststart "$OUT/$name$sfx.mp4"
+    done
+    ffmpeg -y -v error -i "$frames/frame_000001.png" -c:v libwebp -quality 80 "$OUT/$name.webp"
+  done
+done
+ls -l "$OUT"
