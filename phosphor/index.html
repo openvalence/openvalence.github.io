@@ -34,7 +34,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "Phosphor",
-  "description": "The reference Valence client: a UI builder for linear motion machines, with plugins, a funscript player and a built-in Virtual machine.",
+  "description": "The reference Valence client: a UI builder for linear motion machines, with plugins, a funscript player and Neutrino, a built-in emulated machine.",
   "url": "https://openvalence.org/phosphor/",
   "downloadUrl": "https://github.com/openvalence/Phosphor/releases",
   "applicationCategory": "UtilitiesApplication",
@@ -82,8 +82,8 @@
 
   <div class="stage">
   <figure class="feature-hero">
-    <div class="frame"><picture><source srcset="/images/phosphor/dash-light.webp" data-hi="/images/phosphor/hi/dash-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark.webp" data-hi="/images/phosphor/hi/dash-dark.webp" width="1280" height="800" alt="The Phosphor Dash connected to the Virtual machine with a pattern running, showing the large position readout, the position rail with a moving comet, the telemetry chart with two sine traces and the pattern controls." fetchpriority="high" decoding="async"></picture></div>
-    <figcaption>The Dash, connected to the built-in Virtual with a pattern running. Phosphor main c23c98c.</figcaption>
+    <div class="frame"><picture><source srcset="/images/phosphor/dash-light.webp" data-hi="/images/phosphor/hi/dash-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark.webp" data-hi="/images/phosphor/hi/dash-dark.webp" width="1280" height="800" alt="The Phosphor Dash connected to Neutrino with a pattern running, showing the large position readout, the position rail with a moving comet, the telemetry chart with two sine traces and the pattern controls." fetchpriority="high" decoding="async"></picture></div>
+    <figcaption>The Dash, connected to Neutrino, the built-in machine, with a pattern running. Phosphor main c23c98c.</figcaption>
   </figure>
   </div>
 
@@ -160,14 +160,14 @@
     <!-- src/themes/index.js lines 6-25 (20 themes); docs/THEMES.md line 19 (12 color presets), docs/DESIGN.md §10.16 lines 1559-1564 -->
     <p>There are 20 themes, from the default Phosphor theme to Luna, Mica, Liquid Glass, Material, Blueprint and P1 Terminal. The default theme has 12 color presets. A theme restyles chrome, controls, type and icons. The stop pair, the safety edge and the warning states look the same in every theme, so a theme can change how the app looks without changing what a danger signal looks like.</p>
     <ul class="swipe" tabindex="0" aria-label="Theme screenshots, scroll sideways">
-      <li><figure><img src="/images/phosphor/theme-luna.webp" data-hi="/images/phosphor/hi/theme-luna.webp" width="1280" height="800" alt="The Phosphor Dash in the Luna theme connected to the Virtual machine with a pattern running, in a bright blue and green desktop look with glossy blue panels over a sky-and-hill backdrop." loading="lazy" decoding="async"><figcaption><b>Luna</b></figcaption></figure></li>
-      <li><figure><img src="/images/phosphor/theme-glass.webp" data-hi="/images/phosphor/hi/theme-glass.webp" width="1280" height="800" alt="The Phosphor Dash in the Liquid Glass theme connected to the Virtual machine with a pattern running, in translucent rounded panels over a dark purple backdrop with soft colored light orbs." loading="lazy" decoding="async"><figcaption><b>Liquid Glass</b></figcaption></figure></li>
-      <li><figure><img src="/images/phosphor/theme-blueprint.webp" data-hi="/images/phosphor/hi/theme-blueprint.webp" width="1280" height="800" alt="The Phosphor Dash in the Blueprint theme connected to the Virtual machine with a pattern running, in white linework on a blue drafting-grid background." loading="lazy" decoding="async"><figcaption><b>Blueprint</b></figcaption></figure></li>
-      <li><figure><img src="/images/phosphor/theme-p1.webp" data-hi="/images/phosphor/hi/theme-p1.webp" width="1280" height="800" alt="The Phosphor Dash in the P1 Terminal theme connected to the Virtual machine with a pattern running, in bright green phosphor text on a black terminal screen." loading="lazy" decoding="async"><figcaption><b>P1 Terminal</b></figcaption></figure></li>
-      <li><figure><img src="/images/phosphor/theme-outrun.webp" data-hi="/images/phosphor/hi/theme-outrun.webp" width="1280" height="800" alt="The Phosphor Dash in the Outrun theme connected to the Virtual machine with a pattern running, in neon cyan and magenta on a dark purple synthwave backdrop with a striped sun." loading="lazy" decoding="async"><figcaption><b>Outrun</b></figcaption></figure></li>
-      <li><figure><img src="/images/phosphor/theme-notebook.webp" data-hi="/images/phosphor/hi/theme-notebook.webp" width="1280" height="800" alt="The Phosphor Dash in the Notebook theme connected to the Virtual machine with a pattern running, in hand-drawn ink styling on cream ruled paper." loading="lazy" decoding="async"><figcaption><b>Notebook</b></figcaption></figure></li>
+      <li><figure><img src="/images/phosphor/theme-luna.webp" data-hi="/images/phosphor/hi/theme-luna.webp" width="1280" height="800" alt="The Phosphor Dash in the Luna theme connected to Neutrino with a pattern running, in a bright blue and green desktop look with glossy blue panels over a sky-and-hill backdrop." loading="lazy" decoding="async"><figcaption><b>Luna</b></figcaption></figure></li>
+      <li><figure><img src="/images/phosphor/theme-glass.webp" data-hi="/images/phosphor/hi/theme-glass.webp" width="1280" height="800" alt="The Phosphor Dash in the Liquid Glass theme connected to Neutrino with a pattern running, in translucent rounded panels over a dark purple backdrop with soft colored light orbs." loading="lazy" decoding="async"><figcaption><b>Liquid Glass</b></figcaption></figure></li>
+      <li><figure><img src="/images/phosphor/theme-blueprint.webp" data-hi="/images/phosphor/hi/theme-blueprint.webp" width="1280" height="800" alt="The Phosphor Dash in the Blueprint theme connected to Neutrino with a pattern running, in white linework on a blue drafting-grid background." loading="lazy" decoding="async"><figcaption><b>Blueprint</b></figcaption></figure></li>
+      <li><figure><img src="/images/phosphor/theme-p1.webp" data-hi="/images/phosphor/hi/theme-p1.webp" width="1280" height="800" alt="The Phosphor Dash in the P1 Terminal theme connected to Neutrino with a pattern running, in bright green phosphor text on a black terminal screen." loading="lazy" decoding="async"><figcaption><b>P1 Terminal</b></figcaption></figure></li>
+      <li><figure><img src="/images/phosphor/theme-outrun.webp" data-hi="/images/phosphor/hi/theme-outrun.webp" width="1280" height="800" alt="The Phosphor Dash in the Outrun theme connected to Neutrino with a pattern running, in neon cyan and magenta on a dark purple synthwave backdrop with a striped sun." loading="lazy" decoding="async"><figcaption><b>Outrun</b></figcaption></figure></li>
+      <li><figure><img src="/images/phosphor/theme-notebook.webp" data-hi="/images/phosphor/hi/theme-notebook.webp" width="1280" height="800" alt="The Phosphor Dash in the Notebook theme connected to Neutrino with a pattern running, in hand-drawn ink styling on cream ruled paper." loading="lazy" decoding="async"><figcaption><b>Notebook</b></figcaption></figure></li>
     </ul>
-    <p>Same Dash, same Virtual, six of the 20 themes. Scroll or swipe the row.</p>
+    <p>Same Dash, same Neutrino, six of the 20 themes. Scroll or swipe the row.</p>
   </section>
 
   <section aria-labelledby="s-more">
@@ -176,7 +176,7 @@
       <li><figure><picture><source srcset="/images/phosphor/wifi-light.webp" data-hi="/images/phosphor/hi/wifi-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/wifi-dark.webp" data-hi="/images/phosphor/hi/wifi-dark.webp" width="1280" height="800" alt="The Phosphor Wi-Fi picker listing nearby networks with signal bars and lock icons, the connected network checked, and Other network, Advanced and Scan buttons at the bottom." loading="lazy" decoding="async"></picture><figcaption><b>Wi-Fi picker</b>One of the five plugins that ship with Phosphor.</figcaption></figure></li>
       <li><figure><picture><source srcset="/phosphor/docs/img/ts-health-light.webp" data-hi="/phosphor/docs/img/hi/ts-health-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/ts-health-dark.webp" data-hi="/phosphor/docs/img/hi/ts-health-dark.webp" width="1280" height="800" alt="The Health tab of the Log page showing the link readings, with the This device section below." loading="lazy" decoding="async"></picture><figcaption><b>Health</b>Measured facts with the number behind them. <a href="/phosphor/docs/troubleshooting/">Troubleshooting</a></figcaption></figure></li>
       <li><figure><picture><source srcset="/phosphor/docs/img/conn-estop-light.webp" data-hi="/phosphor/docs/img/hi/conn-estop-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/conn-estop-dark.webp" data-hi="/phosphor/docs/img/hi/conn-estop-dark.webp" width="1280" height="800" alt="The top strip after Halt is pressed, with the latched E-stop message, the Halted button and the E-stop latched bar." loading="lazy" decoding="async"></picture><figcaption><b>Safety strip</b>E-Stop and Pause, always on top. <a href="/phosphor/docs/connecting/">Connecting</a></figcaption></figure></li>
-      <li><figure><picture><source srcset="/phosphor/docs/img/gs-hubs-light.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/gs-hubs-dark.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with the built-in Virtual machine listed under Saved hubs and the Find a hub controls below it." loading="lazy" decoding="async"></picture><figcaption><b>The Virtual</b>Listed with the hubs, ready before you own a machine. <a href="/phosphor/docs/getting-started/">Getting started</a></figcaption></figure></li>
+      <li><figure><picture><source srcset="/phosphor/docs/img/gs-hubs-light.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/gs-hubs-dark.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with Neutrino, the built-in machine, listed under Saved hubs and the Find a hub controls below it." loading="lazy" decoding="async"></picture><figcaption><b>Neutrino</b>Listed with the hubs, ready before you own a machine. <a href="/phosphor/docs/getting-started/">Getting started</a></figcaption></figure></li>
     </ul>
 
     <ul class="facts three mt">
@@ -192,7 +192,7 @@
       <li><b>Health and diagnostics</b>
         <!-- docs/DESIGN.md §10.14 lines 1397-1411 (29 conditions, three areas), 1453-1455 (local only); src/model/health/core.js:39-201 -->
         <p>29 conditions in three areas, each a measured fact with one action. No telemetry, no crash reporting.</p></li>
-      <li><b>The Virtual machine</b>
+      <li><b>Neutrino, the built-in machine</b>
         <!-- docs/DESIGN.md §10.10 lines 1113-1131, 1153-1160; docs/BUILD.md lines 19-24 -->
         <p>The Nucleus hub firmware compiled to WebAssembly, running inside Phosphor. Nothing physical moves.</p></li>
     </ul>
@@ -218,8 +218,8 @@
       <p>Everything stays on your device. There is no telemetry and no crash reporting. A report is a public GitHub issue that you submit yourself, after a review screen that lists every field in it. Some Machine conditions read "not reported by this machine" until the protocol gains the health roles they need <span class="tag">WIP</span>.</p>
     </details>
     <details class="more">
-      <summary>The Virtual machine, the details</summary>
-      <p>The Virtual is a full hub with patterns, planning and telemetry, but no motor. It appears in the Hubs list with a <code>ν virtual</code> badge, on every platform. You can try every page and build a Dash before you own a machine. Its tool name is Neutrino.</p>
+      <summary>Neutrino, the details</summary>
+      <p>Neutrino is a full hub with patterns, planning and telemetry, but no motor. It appears in the Hubs list as Neutrino, on every platform, with a <code>ν</code> badge; hover the badge for "Virtual machine: real Nucleus firmware, emulated in the app". You can try every page and build a Dash before you own a machine.</p>
       <p>A saved hub also offers Sim, which replays the machine's last catalog. Settings you change there can be applied to the real machine later from the Merge pane, ticked row by row.</p>
     </details>
   </section>
@@ -241,13 +241,13 @@
   <section class="aside" aria-labelledby="s-fit">
     <h2 id="s-fit">How it fits.</h2>
     <!-- Phosphor README.md lines 164-172; docs/BUILD.md lines 19-24 -->
-    <p>Phosphor is a Valence client. The hub holds the machine's state, Phosphor sends intents, and the hub clamps them and echoes what it applied. See <a href="/diagrams/">the diagrams</a> for the whole picture and <a href="/valence/">the Valence docs</a> for the protocol. Phosphor imports the Valence JavaScript client directly, and the Virtual is built from Nucleus, so it never carries its own copy of the protocol.</p>
+    <p>Phosphor is a Valence client. The hub holds the machine's state, Phosphor sends intents, and the hub clamps them and echoes what it applied. See <a href="/diagrams/">the diagrams</a> for the whole picture and <a href="/valence/">the Valence docs</a> for the protocol. Phosphor imports the Valence JavaScript client directly, and Neutrino is built from Nucleus, so it never carries its own copy of the protocol.</p>
   </section>
 
   <section aria-labelledby="s-docs">
     <h2 class="xl" id="s-docs">Read the manual.</h2>
     <ul class="index">
-      <li><h3><a href="/phosphor/docs/getting-started/">Getting started</a></h3><p>Install, first launch, the Virtual.</p><span class="lic">guide</span></li>
+      <li><h3><a href="/phosphor/docs/getting-started/">Getting started</a></h3><p>Install, first launch, Neutrino.</p><span class="lic">guide</span></li>
       <li><h3><a href="/phosphor/docs/connecting/">Connecting</a></h3><p>Discovery, Bluetooth setup, access tiers, pairing, E-Stop.</p><span class="lic">guide</span></li>
       <li><h3><a href="/phosphor/docs/funscript-player/">Funscript player</a></h3><p>Video, script, scale and the timeline.</p><span class="lic">guide</span></li>
       <li><h3><a href="/phosphor/docs/node-editor/">Node editor</a></h3><p>Wire fields and math into chains.</p><span class="lic">guide</span></li>

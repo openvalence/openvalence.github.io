@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Getting started: OpenValence</title>
-<meta name="description" content="Install Phosphor, launch it, try the built-in Virtual machine with no hardware, then find a real machine. Includes a short tour of the main screens.">
+<meta name="description" content="Install Phosphor, launch it, try Neutrino, the built-in machine, with no hardware, then find a real machine. Includes a short tour of the main screens.">
 <link rel="canonical" href="https://openvalence.org/phosphor/docs/getting-started/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/phosphor/docs/getting-started/">
 <meta property="og:title" content="Getting started: OpenValence">
-<meta property="og:description" content="Install Phosphor, launch it, try the built-in Virtual machine with no hardware, then find a real machine. Includes a short tour of the main screens.">
+<meta property="og:description" content="Install Phosphor, launch it, try Neutrino, the built-in machine, with no hardware, then find a real machine. Includes a short tour of the main screens.">
 <meta name="twitter:title" content="Getting started: OpenValence">
-<meta name="twitter:description" content="Install Phosphor, launch it, try the built-in Virtual machine with no hardware, then find a real machine. Includes a short tour of the main screens.">
+<meta name="twitter:description" content="Install Phosphor, launch it, try Neutrino, the built-in machine, with no hardware, then find a real machine. Includes a short tour of the main screens.">
 <!-- chrome:head -->
 <meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
@@ -54,7 +54,7 @@
 <main>
   <section class="opening">
     <h1>Getting started</h1>
-    <p>Install Phosphor, try it on the built-in Virtual machine, then connect a real one. You do not need hardware for the first half.</p>
+    <p>Install Phosphor, try it on Neutrino, the built-in machine, then connect a real one. You do not need hardware for the first half.</p>
   </section>
 
   <section aria-labelledby="s-install">
@@ -70,31 +70,31 @@ npm run build:app -- --bundles nsis</code></pre>
   <section aria-labelledby="s-launch">
     <h2 id="s-launch" data-n="02">First launch</h2>
     <!-- src/App.svelte:160 (first run opens Hubs), 152-157 (sections); src/model/prefs.js:32 (reconnect default true); docs/DESIGN.md §10.11 lines 1183-1187 -->
-    <p>With no saved hub, Phosphor opens on the Hubs page. That page lists saved hubs, finds new ones and holds the Virtual machine. From the second launch on, Phosphor redials the last hub by default. The setting is Settings, Connection, "Reconnect to the last hub on launch", and it is on until you turn it off. So you can open the app and find the machine already connected.</p>
+    <p>With no saved hub, Phosphor opens on the Hubs page. That page lists saved hubs, finds new ones and holds Neutrino, the built-in machine. From the second launch on, Phosphor redials the last hub by default. The setting is Settings, Connection, "Reconnect to the last hub on launch", and it is on until you turn it off. So you can open the app and find the machine already connected.</p>
     <p>The sidebar has three sections. Machine and Valence fill in once a hub's catalog has loaded. Phosphor, the third, is always there.</p>
   </section>
 
   <section aria-labelledby="s-virtual">
-    <h2 id="s-virtual" data-n="03">Try the Virtual machine</h2>
+    <h2 id="s-virtual" data-n="03">Try Neutrino</h2>
     <!-- docs/DESIGN.md §10.10 lines 1113-1131, 1153-1160; src/shell/HubsPane.svelte:116-129; src/ui/TopStrip.svelte:252; src/shell/HubsPane.svelte:58 -->
-    <p>The Virtual is the Nucleus hub firmware compiled to WebAssembly and run inside Phosphor. It has patterns, planning and telemetry like a real hub, and it has no motor. Nothing physical moves, so it is the safe place to learn the app.</p>
+    <p>Neutrino is the Nucleus hub firmware compiled to WebAssembly and run inside Phosphor. It has patterns, planning and telemetry like a real hub, and it has no motor. Nothing physical moves, so it is the safe place to learn the app.</p>
     <ol>
       <li>Open Phosphor, then Hubs.</li>
-      <li>In the Saved hubs list, find the last row, <code>Virtual</code>, with a <code>ν virtual</code> badge and the line "The hub as software".</li>
+      <li>In the Saved hubs list, find the last row, <code>Neutrino</code>, with a <code>ν</code> badge (hover it for "Virtual machine: real Nucleus firmware, emulated in the app") and the line "The hub as software".</li>
       <li>Press Connect. The line changes to <code>Nucleus</code> and a version, and Connect becomes Stop.</li>
-      <li>Open Dash in the Machine section. The status slot in the top strip reads "Virtual: nothing moves".</li>
+      <li>Open Dash in the Machine section.</li>
       <li>Open the Generator page, pick a pattern and start it. The rail on the Dash follows it.</li>
     </ol>
-    <figure class="docshot"><picture><source srcset="../img/gs-hubs-light.webp" data-hi="../img/hi/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="../img/gs-hubs-dark.webp" data-hi="../img/hi/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with the built-in Virtual machine listed under Saved hubs and the Find a hub controls below it." decoding="async"></picture><figcaption>The Hubs page before connecting.</figcaption></figure>
+    <figure class="docshot"><picture><source srcset="../img/gs-hubs-light.webp" data-hi="../img/hi/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="../img/gs-hubs-dark.webp" data-hi="../img/hi/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with Neutrino, the built-in machine, listed under Saved hubs and the Find a hub controls below it." decoding="async"></picture><figcaption>The Hubs page before connecting.</figcaption></figure>
     <ol class="legend">
-      <li>The Virtual row, under Saved hubs.</li>
+      <li>The Neutrino row, under Saved hubs.</li>
       <li>Connect starts it.</li>
       <li>Hubs, in the Phosphor part of the sidebar.</li>
       <li>Scan looks for machines on your network.</li>
       <li>The hub address field, for when Scan finds nothing.</li>
     </ol>
-    <p>The Virtual is never saved as a hub and never auto-connects. It boots homed. Any disconnect stops it, and its settings, presets and pairings persist between runs. So you can close Phosphor and come back to the same setup.</p>
-    <p>Layouts, plugins and the theme are Phosphor's own state, not the machine's, so anything you build while connected to the Virtual is already saved. To arrange the Dash, use the wrench next to the layout name in the sidebar.</p>
+    <p>Neutrino is never saved as a hub and never auto-connects. It boots homed. Any disconnect stops it, and its settings, presets and pairings persist between runs. So you can close Phosphor and come back to the same setup.</p>
+    <p>Layouts, plugins and the theme are Phosphor's own state, not the machine's, so anything you build while connected to Neutrino is already saved. To arrange the Dash, use the wrench next to the layout name in the sidebar.</p>
   </section>
 
   <section aria-labelledby="s-find">
@@ -109,7 +109,7 @@ npm run build:app -- --bundles nsis</code></pre>
   <section aria-labelledby="s-screens">
     <h2 id="s-screens" data-n="05">The main screens</h2>
     <!-- docs/DESIGN.md §10.11 lines 1183-1187, 1218-1220; src/App.svelte:128-149; src/shell/settings-pane.js:48-52; src/ui/TopStrip.svelte:242-244 -->
-    <figure class="docshot"><picture><source srcset="../img/gs-dash-light.webp" data-hi="../img/hi/gs-dash-light.webp" media="(prefers-color-scheme: light)"><img src="../img/gs-dash-dark.webp" data-hi="../img/hi/gs-dash-dark.webp" width="1280" height="800" alt="The Dash connected to the Virtual machine with a pattern running, showing the top strip with the position readout, the sidebar and the Telemetry and Pattern cards." loading="lazy" decoding="async"></picture><figcaption>The Dash connected to the Virtual, with a pattern running.</figcaption></figure>
+    <figure class="docshot"><picture><source srcset="../img/gs-dash-light.webp" data-hi="../img/hi/gs-dash-light.webp" media="(prefers-color-scheme: light)"><img src="../img/gs-dash-dark.webp" data-hi="../img/hi/gs-dash-dark.webp" width="1280" height="800" alt="The Dash connected to Neutrino with a pattern running, showing the top strip with the position readout, the sidebar and the Telemetry and Pattern cards." loading="lazy" decoding="async"></picture><figcaption>The Dash connected to Neutrino, with a pattern running.</figcaption></figure>
     <ol class="legend">
       <li>AUTH shows your access tier. Here it reads control.</li>
       <li>The planned position, in millimeters.</li>

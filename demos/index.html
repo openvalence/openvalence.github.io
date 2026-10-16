@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Demos: OpenValence</title>
-<meta name="description" content="Run the Kinetic motion planner in your browser, shape a funscript with Bézier handles, and watch Phosphor drive its built-in Virtual machine. No hardware needed.">
+<meta name="description" content="Run the Kinetic motion planner in your browser, shape a funscript with Bézier handles, and watch Phosphor drive Neutrino, its built-in emulated machine. No hardware needed.">
 <link rel="canonical" href="https://openvalence.org/demos/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/demos/">
 <meta property="og:title" content="Demos: OpenValence">
-<meta property="og:description" content="Run the Kinetic motion planner in your browser, shape a funscript with Bézier handles, and watch Phosphor drive its built-in Virtual machine. No hardware needed.">
+<meta property="og:description" content="Run the Kinetic motion planner in your browser, shape a funscript with Bézier handles, and watch Phosphor drive Neutrino, its built-in emulated machine. No hardware needed.">
 <meta name="twitter:title" content="Demos: OpenValence">
-<meta name="twitter:description" content="Run the Kinetic motion planner in your browser, shape a funscript with Bézier handles, and watch Phosphor drive its built-in Virtual machine. No hardware needed.">
+<meta name="twitter:description" content="Run the Kinetic motion planner in your browser, shape a funscript with Bézier handles, and watch Phosphor drive Neutrino, its built-in emulated machine. No hardware needed.">
 <!-- chrome:head -->
 <meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
@@ -54,7 +54,7 @@
 <main>
   <section class="opening">
     <h1>Try it without a machine</h1>
-    <p>The planner runs in your browser today. The app runs its own virtual machine on your desktop. Neither needs a board.</p>
+    <p>The planner runs in your browser today. The app runs its own emulated machine, Neutrino, on your desktop. Neither needs a board.</p>
   </section>
 
   <section aria-labelledby="s-playground">
@@ -71,16 +71,16 @@
   </section>
 
   <section aria-labelledby="s-virtual">
-    <h2 class="xl" id="s-virtual">Phosphor and the Virtual machine</h2>
+    <h2 class="xl" id="s-virtual">Phosphor and Neutrino</h2>
     <figure class="capture">
       <video controls muted loop playsinline preload="none" width="1280" height="800" poster="/images/phosphor-virtual.jpg" aria-describedby="cap-virtual">
         <source src="/images/phosphor-virtual.webm" type="video/webm">
       </video>
-      <figcaption id="cap-virtual">Phosphor main 1775961 · connected to the built-in Virtual · Home, speed 55, Advanced pattern running · 1280 × 800, 18 s, recorded headless, no sound</figcaption>
+      <figcaption id="cap-virtual">Phosphor main 1775961 · connected to Neutrino, the built-in machine · Home, speed 55, Advanced pattern running · 1280 × 800, 18 s, recorded headless, no sound</figcaption>
     </figure>
     <!-- Phosphor README.md "Neutrino, the built-in machine (the hub firmware as wasm)"; src/model/integral/ -->
-    <p>The Virtual is the machine's firmware compiled to WebAssembly, running inside Phosphor. It uses the same Valence protocol as a real machine, so everything you see in the clip is the real protocol, the real catalog and the real planner, minus the motor.</p>
-    <p>You get it with Phosphor: connect to "Virtual" in the machine list. Phosphor isn't released yet; see <a href="/downloads/">Downloads</a>.</p>
+    <p>Neutrino is the machine's firmware compiled to WebAssembly, running inside Phosphor. It uses the same Valence protocol as a real machine, so everything you see in the clip is the real protocol, the real catalog and the real planner, minus the motor.</p>
+    <p>You get it with Phosphor: connect to "Neutrino" in the machine list. Phosphor isn't released yet; see <a href="/downloads/">Downloads</a>.</p>
     <p>A version of this that runs on this website is WIP.</p>
   </section>
 </main>

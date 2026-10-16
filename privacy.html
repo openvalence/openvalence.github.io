@@ -85,7 +85,7 @@
       <div><dt>Stash</dt><dd>If you enter a Stash server in the funscript player, the app sends requests to that address with the API key you gave it, and streams video from it. That is your server, on whatever network you put it on; its own logs are its business.</dd></div>
       <div><dt>Plugins and the pages they load</dt><dd>The app allows plugins to fetch <code>http</code> and <code>https</code> URLs. The plugins that ship with the app only contact addresses you configured. A plugin you install from elsewhere can contact whatever its author wrote it to; read its manifest before enabling it.</dd></div>
       <div><dt>Other programs on your computer</dt><dd>Phosphor runs a ButtplugIO server so that other software can drive the machine and your toys through it. It listens on the loopback address only (<code>127.0.0.1</code>, port 12345 by default), so only programs on the same computer can reach it. It never listens on your network unless you change that setting.</dd></div>
-      <div><dt>The Virtual machine</dt><dd>It runs inside the app, as WebAssembly. Nothing it does leaves the computer.</dd></div>
+      <div><dt>Neutrino, the built-in machine</dt><dd>It runs inside the app, as WebAssembly. Nothing it does leaves the computer.</dd></div>
     </dl>
     <p>The app does not check for updates by itself. Updates arrive through whatever installed it: Flathub, or a download from GitHub.</p>
   </section>
