@@ -40,14 +40,14 @@
   </a>
   <nav class="chips" aria-label="Site">
     <a class="chip" href="/valence/">Valence</a>
-    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/components/" aria-current="page">Components</a>
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
@@ -59,7 +59,7 @@
   </section>
 
   <section class="band" aria-labelledby="s-spoke">
-    <h2 class="xl" id="s-spoke">Accessories talk to the hub. Only the hub.</h2>
+    <h2 class="xl" id="s-spoke">Accessory network</h2>
     <!-- Isotope docs/DESIGN.md: hub and spoke, 1 s beacon, 5 s fail-safe, at most 19 accessories, 3 typical -->
     <figure class="diagram spoke on-band">
       <svg viewBox="0 0 560 300" role="img" aria-labelledby="iso-t iso-d"><title id="iso-t">Hub and spoke</title><desc id="iso-d">A client such as Phosphor talks Valence to the hub. Three accessories, a pump, a motorized stand and any other accessory, each talk only to the hub over ESP-NOW. The hub sends a beacon once a second; an accessory that hears nothing for 5 seconds goes to its safe value.</desc>
@@ -75,34 +75,34 @@
         <rect class="d-box" x="200" y="230" width="160" height="56" rx="6"/><text class="d-t" x="280" y="252" text-anchor="middle">Motorized stand</text><text class="d-s" x="280" y="267" text-anchor="middle">no beacon for 5 s:</text><text class="d-s" x="280" y="279" text-anchor="middle">goes to its safe value</text>
         <rect class="d-box" x="384" y="230" width="160" height="56" rx="6" stroke-dasharray="4 3"/><text class="d-t" x="464" y="252" text-anchor="middle">Your accessory</text><text class="d-s" x="464" y="267" text-anchor="middle">up to 19 per hub,</text><text class="d-s" x="464" y="279" text-anchor="middle">3 is typical</text>
       </svg>
-      <figcaption>Accessories never talk to a client or to each other. Planned design; nothing here runs yet.</figcaption>
+      <figcaption>Accessories talk only to the hub, never to a client or to each other. Planned design.</figcaption>
     </figure>
   </section>
 
   <section class="aside" aria-labelledby="s-status">
-    <h2 id="s-status">Nothing runs yet.</h2>
+    <h2 id="s-status">Status</h2>
     <div>
       <!-- Isotope README.md banner "Nothing here runs yet"; "License: Not chosen" -->
-      <p>WIP: a design home. The repo is public. It holds the design document and validation plans; there is no firmware, generator, flasher or builder. Nothing is built until the radio numbers it depends on are measured on dev boards. No license is chosen yet, so nothing in the repo is licensed for reuse.</p>
+      <p>The repo holds the design document and validation plans. There is no firmware yet; building starts once the radio numbers it depends on are measured on dev boards. No license is chosen yet, so nothing in the repo is licensed for reuse.</p>
       <!-- Isotope docs/DESIGN.md §13 "The hub side": Nucleus today runs the stock esp_hosted slave image, which has no ESP-NOW -->
-      <p>The hub side is not built either. <a href="/nucleus/">Nucleus</a> runs Espressif's stock radio image today, which has no ESP-NOW, so the hub needs a change before any accessory can join.</p>
+      <p><a href="/nucleus/">Nucleus</a> runs Espressif's stock radio image, which has no ESP-NOW, so the hub also needs work before an accessory can join.</p>
     </div>
   </section>
 
   <section aria-labelledby="s-works">
-    <h2 class="xl" id="s-works">How it will work.</h2>
+    <h2 class="xl" id="s-works">Design</h2>
     <ul class="facts three">
-      <li><b>Hub and spoke</b><p>Accessories talk only to the hub. They never talk to a client or to each other. A client such as <a href="/phosphor/">Phosphor</a> sees accessory channels like any other channel in the hub's catalog. So no client needs accessory-specific code.</p></li>
-      <li><b>Join and declare</b><p>You open a pairing window on the hub. The accessory sends a join request, then declares its own channels. The hub stores them. So adding an accessory needs no change to the hub or the client.</p></li>
-      <li><b>The hub runs the logic</b><p>The relationships that drive an accessory live in the hub, not in the client. So an accessory behaves the same from any client.</p></li>
-      <li><span class="num">5<small>s</small></span><b>Fails safe on its own</b><p>The hub sends a beacon once a second. With no beacon for 5 seconds, or on a goodbye or an e-stop, each actuator goes to the safe value it declared. So a lost hub leaves each actuator at a value you chose in advance.</p></li>
-      <li><b>Unencrypted</b><p>A deliberate choice, with obligations: the accessory clamps every actuating value, and the hub never treats accessory telemetry as safety-grade. So nothing safety-critical hangs on an accessory.</p></li>
+      <li><b>Hub and spoke</b><p>Accessories talk only to the hub. A client such as <a href="/phosphor/">Phosphor</a> sees accessory channels like any other channel in the hub's catalog, so it needs no accessory-specific code.</p></li>
+      <li><b>Join and declare</b><p>You open a pairing window on the hub. The accessory sends a join request, then declares its own channels, and the hub stores them. Adding an accessory needs no change to the hub or the client.</p></li>
+      <li><b>The hub runs the logic</b><p>The relationships that drive an accessory live in the hub, so an accessory behaves the same from any client.</p></li>
+      <li><span class="num">5<small>s</small></span><b>Fails safe on its own</b><p>The hub sends a beacon once a second. With no beacon for 5 seconds, or on a goodbye or an e-stop, each actuator goes to the safe value it declared in advance.</p></li>
+      <li><b>Unencrypted</b><p>Accessory traffic is not encrypted. To make up for it, the accessory clamps every actuating value, and the hub never treats accessory telemetry as safety-grade.</p></li>
       <li><span class="num">19</span><b>Small fleets</b><p>A hub addresses at most 19 accessories; 3 is typical. The limit comes from ESP-NOW's peer table.</p></li>
     </ul>
   </section>
 
   <section aria-labelledby="s-order">
-    <h2 class="xl" id="s-order">Build order.</h2>
+    <h2 class="xl" id="s-order">Build order</h2>
     <!-- Isotope README.md "The order things get built" -->
     <ol class="chain steps">
       <li><div class="blk"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#doc"/></svg><span><strong>Config and generator</strong></span><p class="tip">A declarative config, shaped like ESPHome's, is the one place an accessory is described. The generator turns it into an image.</p></div></li>
@@ -112,7 +112,7 @@
   </section>
 
   <section class="aside" aria-labelledby="s-fit">
-    <h2 id="s-fit">How it fits.</h2>
+    <h2 id="s-fit">Related</h2>
     <div>
       <!-- Isotope README.md "Its relatives"; Hardware flagship/FEATURES.md "Accessories" -->
       <p>Isotope uses <a href="/Valence/">Valence</a> and takes every wire number from the spec. Anything it needs that the spec lacks goes through an RFC first. The hub is <a href="/nucleus/">Nucleus</a>. A plain on/off or PWM load, like a pump, does not need Isotope: the <a href="/hardware/">Flagship PCB</a> has a pin for it. See the <a href="/diagrams/">diagrams</a> and <a href="/components/">Components</a> for the whole system.</p>

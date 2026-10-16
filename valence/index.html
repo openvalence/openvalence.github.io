@@ -44,28 +44,28 @@
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
 <main>
   <section class="opening">
-    <h1>Valence is the web for motion machines</h1>
-    <p class="lede">The machine serves its own control panel, and any app can open it.</p>
-    <p class="fine">The protocol. Spec v1.0-draft.</p>
+    <h1>Valence</h1>
+    <p class="lede">The protocol for motion machines. The machine describes its own controls, and any app can draw them.</p>
+    <p class="fine">Spec v1.0-draft.</p>
   </section>
 
   <section aria-labelledby="s-web">
-    <h2 class="xl" id="s-web">You already know how this works.</h2>
-    <p class="big-line">You type an address, a server sends a page, your browser draws it. The server doesn't care which browser you use. Valence does the same job for a machine.</p>
+    <h2 class="xl" id="s-web">Compared to the web</h2>
+    <p class="big-line">On the web, a server sends a page and any browser can draw it. Valence works the same way for a machine.</p>
     <div class="pairs mt">
       <span class="head">On the web</span><span class="head"></span><span class="head v">In Valence</span>
       <dl>
       <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#server"/></svg>Website</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#machine"/></svg><span><b>The machine</b>Its firmware runs a hub that holds the machine's state.</span></dd></div>
-      <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#browser"/></svg>Browser</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#app"/></svg><span><b>The app</b>Phosphor, a script, a plugin, a hardware remote. Any number at once, all kept in sync.</span></dd></div>
+      <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#browser"/></svg>Browser</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#app"/></svg><span><b>The app</b>Phosphor, a script, a plugin or a hardware remote. Any number can connect at once and stay in sync.</span></dd></div>
       <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#doc"/></svg>HTTP and HTML</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#wave"/></svg><span><b>Valence</b>The wire format, plus the catalog the machine sends to describe itself.</span></dd></div>
       <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#shield"/></svg>Server-side checks</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#lock"/></svg><span><b>Machine-side limits</b>The machine checks every request, whatever the app thinks.</span></dd></div>
       </dl>
@@ -73,9 +73,9 @@
   </section>
 
   <section class="band" aria-labelledby="s-diff">
-    <h2 class="xl" id="s-diff">The machine sends a description. The app draws it.</h2>
+    <h2 class="xl" id="s-diff">The catalog</h2>
     <!-- SPEC §1.2 item 7 (no widget hints, no layout, no ordering, no styling); §8 intro and §8.8 (the catalog builds the whole settings and control surface) -->
-    <p class="lede">A website sends a finished page. A Valence machine sends what each setting is, its units, its range, and who may change it. No layout, no colors, no widget hints.</p>
+    <p class="lede">A Valence machine sends a catalog: what each setting is, its unit, its range and who may change it. It sends no layout, colors or widget hints.</p>
     <!-- Nucleus flagship_p4/src/hub/ValenceCatalog.h: jog_speed, f32, mm/s, min ceiling::speed_min 1, max ceiling::speed_max 2000, default factory::jog_speed 50, group "Jog limits", desc "Speed ceiling for manual jogs" -->
     <figure class="morph mt">
       <div class="entry" aria-label="A catalog entry as the machine sends it">
@@ -95,30 +95,30 @@
       </div>
       <figcaption>Left: one setting as Nucleus declares it. Right: one way an app can draw it. Another app could draw a knob or a number box from the same entry.</figcaption>
     </figure>
-    <p class="big-line">So a setting added in the firmware shows up in every app the next time it connects. Nobody ships an app update for it.</p>
+    <p class="big-line">A setting added in the firmware shows up in every app the next time it connects, with no app update.</p>
   </section>
 
   <section class="aside" aria-labelledby="s-safety">
     <div>
-      <h2 class="xl" id="s-safety">The machine trusts no app.</h2>
-      <p>Your app is one client of many, and any client can be wrong: an old version, a buggy plugin, a script with a bad number in it.</p>
+      <h2 class="xl" id="s-safety">Safety</h2>
+      <p>The machine checks every request, because any client can be wrong: an old version, a buggy plugin or a script with a bad number in it.</p>
     </div>
     <ul class="facts">
       <!-- SPEC §1.2 item 1: hub-authoritative, echoes report applied (post-clamp) values -->
       <li><b>One source of truth</b><p>The machine holds the only real state. Apps send requests. The machine clamps each one to its limits and tells every app what it actually did.</p></li>
       <!-- SPEC §11.4: sole-caller rule; Nucleus .claude/rules/architecture.md: MotionArbiter is the only component that commands motion -->
-      <li><b>No side door</b><p>One component on the machine drives the motor. Every request goes through it.</p></li>
+      <li><b>One path to the motor</b><p>One component on the machine drives the motor. Every request goes through it.</p></li>
       <!-- SPEC §11.3 deadman default 600 ms; releases ownership -->
-      <li><span class="num">600<small>ms</small></span><b>Go quiet, lose control</b><p>If an app goes quiet, it loses control of motion. 600 ms is the default.</p></li>
+      <li><span class="num">600<small>ms</small></span><b>Deadman timeout</b><p>An app that goes quiet for 600 ms, the default, loses control of motion.</p></li>
       <!-- SPEC §11.1, §11.2: pause and estop are role-exempt -->
-      <li><b>Anyone can stop it</b><p>Even an app that is only watching. Starting it takes control access. The spec puts it this way: "you may always stop the machine; you may not always start it."</p></li>
+      <li><b>Anyone can stop it</b><p>Even an app that is only watching can stop the machine. Starting it takes control access. The spec puts it this way: "you may always stop the machine; you may not always start it."</p></li>
       <!-- SPEC §11.2 honesty clause H1 -->
-      <li><b>The hardware e-stop wins</b><p>A hardware e-stop is still the last word. The protocol's stop is a convenience, not a replacement for one.</p></li>
+      <li><b>Hardware e-stop</b><p>The protocol's stop does not replace a hardware e-stop, which always has the last word.</p></li>
     </ul>
   </section>
 
   <section aria-labelledby="s-tiers">
-    <h2 class="xl" id="s-tiers">Watch. Control. Configure.</h2>
+    <h2 class="xl" id="s-tiers">Access tiers</h2>
     <!-- SPEC §12.2 (ratified): watch 0, control 1, configure 2; §12.3 pairing -->
     <ul class="facts three">
       <li><b>Watch</b><p>Sees everything and can stop the machine. Needs no pairing.</p></li>
@@ -129,7 +129,7 @@
   </section>
 
   <section class="aside" aria-labelledby="s-repo">
-    <h2 id="s-repo">What's in the repo.</h2>
+    <h2 id="s-repo">What's in the repo</h2>
     <div>
       <!-- Valence README.md, Layout table and License -->
       <ul class="facts">
@@ -145,7 +145,7 @@
   </section>
 
   <section aria-labelledby="s-build">
-    <h2 class="xl" id="s-build">Build on it.</h2>
+    <h2 class="xl" id="s-build">Developer docs</h2>
     <ul class="index">
       <li><h3><a href="/Valence/latest/build/quickstart/">Quickstart</a></h3><p>Talk to a hub in a few lines.</p><span class="lic">docs</span></li>
       <li><h3><a href="/Valence/latest/build/hub/">Build a hub</a></h3><p>Make your own machine work with Valence.</p><span class="lic">docs</span></li>

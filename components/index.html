@@ -57,28 +57,28 @@
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
 <main>
   <section class="opening">
     <h1>The parts</h1>
-    <p class="lede">A protocol, the firmware that runs it, an app that drives it, a planner that turns it into motion, a PCB to run it on, and accessories, someday.</p>
+    <p class="lede">A protocol, its firmware, an app, a motion planner, a PCB and accessory firmware.</p>
     <p>Each one is its own repo: six of ours and a fork. The <a href="/diagrams/#system">system diagram</a> shows how they connect.</p>
   </section>
 
   <section aria-labelledby="s-list">
-    <h2 class="xl" id="s-list">Seven repos. One machine.</h2>
+    <h2 class="xl" id="s-list">Repositories</h2>
     <ul class="index">
-      <li><h3><a href="/valence/">Valence</a></h3><p>The protocol. The machine describes itself, apps draw it, the machine enforces its own limits.</p><span class="lic">spec v1.0-draft</span></li>
+      <li><h3><a href="/valence/">Valence</a></h3><p>The protocol. The machine describes itself and enforces its own limits; apps build their controls from the description.</p><span class="lic">spec v1.0-draft</span></li>
       <li><h3><a href="/nucleus/">Nucleus</a></h3><p>Firmware for the OSSM Flagship PCB. Runs the Valence hub, the planner and the quadrature output on an ESP32-P4.</p><span class="lic">works on the bench</span></li>
       <li><h3><a href="/phosphor/">Phosphor</a></h3><p>The app. A UI builder with plugins, a funscript player and Neutrino, a built-in emulated machine.</p><span class="lic">pre-release builds</span>
         <div class="thumb"><picture><source srcset="/images/phosphor/dash-light-640.webp" data-hi="/images/phosphor/dash-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark-640.webp" data-hi="/images/phosphor/dash-dark.webp" width="640" height="400" alt="" loading="lazy" decoding="async"></picture></div></li>
-      <li><h3><a href="/kinetic/">Kinetic</a></h3><p>The motion planner. Timed knots in, jerk-limited motion out, same bits on every target. Runs in Nucleus and <a href="/Kinetic/">in your browser</a>.</p><span class="lic">in use</span></li>
+      <li><h3><a href="/kinetic/">Kinetic</a></h3><p>The motion planner. Turns timed knots into jerk-limited motion with bit-identical results on every target. Runs in Nucleus and <a href="/Kinetic/">in your browser</a>.</p><span class="lic">in use</span></li>
       <li><h3><a href="/hardware/">Hardware</a></h3><p>The OSSM Flagship PCB, in KiCad.</p><span class="lic">in design</span>
         <div class="thumb"><img src="/images/hardware/pcb-angle-600.webp" data-hi="/images/hardware/pcb-angle.webp" width="600" height="409" alt="" loading="lazy" decoding="async"></div></li>
       <li><h3><a href="/isotope/">Isotope</a></h3><p>Firmware for small accessories that join the machine over ESP-NOW.</p><span class="lic">WIP, design only</span></li>
@@ -87,7 +87,7 @@
   </section>
 
   <section class="aside" aria-labelledby="s-lic">
-    <h2 id="s-lic">Licenses.</h2>
+    <h2 id="s-lic">Licenses</h2>
     <!-- licensing rulings 2026-10-03; Nucleus README License; Valence README License; Isotope README License -->
     <ul class="facts">
       <li><b>Software</b><p><span class="nb">Apache-2.0</span>. The Advanced pattern, derived from fray-d's OSSM-Lite, stays <span class="nb">CERN-OHL-S-2.0</span>.</p></li>

@@ -40,14 +40,14 @@
   </a>
   <nav class="chips" aria-label="Site">
     <a class="chip" href="/valence/">Valence</a>
-    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/components/" aria-current="page">Components</a>
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
@@ -64,7 +64,7 @@
   </figure>
 
   <section class="aside" aria-labelledby="s-status">
-    <h2 id="s-status">In design. <span class="tag">WIP</span></h2>
+    <h2 id="s-status">Status <span class="tag">WIP</span></h2>
     <div>
       <!-- Hardware origin/main: flagship/ has KiCad project, BOM.md, FEATURES.md, SPEC.md, stackup.md; no gerbers or fabrication outputs in the tree; SPEC.md 2026-09-22 "parts purchase on hold" -->
       <p class="big-line">These renders come straight from the KiCad project as it stands today, so parts can still move. No fabrication files are published and no boards are for sale.</p>
@@ -76,7 +76,7 @@
   </section>
 
   <section aria-labelledby="s-tour">
-    <h2 class="xl" id="s-tour">Look around.</h2>
+    <h2 class="xl" id="s-tour">Main parts</h2>
     <p>Hover or tap a number to see what that part does.</p>
     <!-- hotspots.json (scratch): footprint centers from the .kicad_pcb mapped through the Edge.Cuts box; texts from flagship/FEATURES.md and SPEC.md -->
     <div class="board">
@@ -117,7 +117,7 @@
   </section>
 
   <section aria-labelledby="s-sides">
-    <h2 class="xl" id="s-sides">Front and back.</h2>
+    <h2 class="xl" id="s-sides">Top and bottom</h2>
     <ul class="renders">
       <li><figure><img src="/images/hardware/pcb-top-600.webp" data-hi="/images/hardware/pcb-top.webp" width="600" height="600" alt="The top side of the OSSM Flagship PCB, straight on." loading="lazy" decoding="async"><figcaption>Top: compute and the power stage</figcaption></figure></li>
       <li><figure><img src="/images/hardware/pcb-bottom-600.webp" data-hi="/images/hardware/pcb-bottom.webp" width="600" height="600" alt="The bottom side of the OSSM Flagship PCB, straight on, with the 40 by 40 mm heatsink in the middle and connectors around the edge." loading="lazy" decoding="async"><figcaption>Bottom: the 40 x 40 mm heatsink and most connectors</figcaption></figure></li>
@@ -127,46 +127,46 @@
 
   <section class="aside" aria-labelledby="s-drive">
     <div>
-      <h2 id="s-drive">Drive interface.</h2>
+      <h2 id="s-drive">Drive interface</h2>
       <!-- Hardware origin/main flagship/FEATURES.md:3-6 (60AIM40F 200 W, 60AIM40 350 W); "Drive interface"; flagship/SPEC.md "Fixed facts" -->
       <p>The target is the YZ 60AIM40F integrated servo (200 W). The PCB is also built to drive the 350 W 60AIM40. It talks to the drive three ways.</p>
     </div>
     <ul class="facts">
-      <li><b>Quadrature</b><p>A and B come from the P4's low-power core, buffered to 5 V, into the drive's opto inputs. So the drive follows the motion with no extra converter.</p></li>
-      <li><b>RS485 Modbus</b><p>Used for reads such as position. The PCB also supplies the drive's 485-side 5 V. So one cable carries signal and power for the drive's comms side.</p></li>
-      <li><b>Alarm and ready inputs</b><p>The drive's alarm line and ready line go to the P4. So a drive fault reaches the firmware directly.</p></li>
+      <li><b>Quadrature</b><p>A and B come from the P4's low-power core, buffered to 5 V, straight into the drive's opto inputs.</p></li>
+      <li><b>RS485 Modbus</b><p>Used for reads such as position. The PCB also supplies the drive's 485-side 5 V, so one cable carries signal and power for the drive's comms side.</p></li>
+      <li><b>Alarm and ready inputs</b><p>The drive's alarm and ready lines go to the P4, so a drive fault reaches the firmware directly.</p></li>
     </ul>
   </section>
 
   <section class="band" aria-labelledby="s-power">
-    <h2 class="xl" id="s-power">Protection that needs no firmware.</h2>
+    <h2 class="xl" id="s-power">Hardware protection</h2>
     <!-- Hardware origin/main flagship/FEATURES.md (36 V, 10 A; 15 A fuse; LTC4364 surge stopper; regen clamp thresholds; motor switch 15.2 A for 10 ms; E-stop) -->
     <ul class="facts">
-      <li><span class="num">36<small>V</small></span><b>Bus in, 10 A continuous to the motor</b><p>A 15 A fuse is the last-resort backstop. So a dead short blows a fuse instead of the PCB.</p></li>
-      <li><span class="num">44.5<small>V</small></span><b>Regen clamp, in hardware</b><p>On at 44.5 V, off at 43.2 V, with a port for an external brake resistor and no firmware involved. So regen is handled even if the firmware is not running.</p></li>
-      <li><b>Surge stopper</b><p>With reverse-polarity and reverse-current blocking. So regen from a motor coasting down never reaches the power supply or trips its overvoltage latch.</p></li>
-      <li><b>Motor switch and power monitor</b><p>Pre-charge, latching overcurrent trips, and a monitor on a four-terminal shunt that reports bus voltage, current, power and energy. So firmware can see the load and back off before anything trips.</p></li>
-      <li><b>External E-stop input</b><p>Pressing the button, or unplugging it, cuts motor power in hardware. So a pulled E-stop cable stops the machine too.</p></li>
+      <li><span class="num">36<small>V</small></span><b>Bus in, 10 A continuous to the motor</b><p>A 15 A fuse is the last-resort backstop against a dead short.</p></li>
+      <li><span class="num">44.5<small>V</small></span><b>Regen clamp, in hardware</b><p>On at 44.5 V, off at 43.2 V, with a port for an external brake resistor. It works without the firmware running.</p></li>
+      <li><b>Surge stopper</b><p>Blocks reverse polarity and reverse current, so regen from a motor coasting down never reaches the power supply or trips its overvoltage latch.</p></li>
+      <li><b>Motor switch and power monitor</b><p>Pre-charge, latching overcurrent trips, and a monitor on a four-terminal shunt that reports bus voltage, current, power and energy, so the firmware can see the load and back off before anything trips.</p></li>
+      <li><b>External E-stop input</b><p>Pressing the button or unplugging it cuts motor power in hardware.</p></li>
     </ul>
   </section>
 
   <section aria-labelledby="s-board">
-    <h2 class="xl" id="s-board">On the PCB.</h2>
+    <h2 class="xl" id="s-board">Board features</h2>
     <!-- Hardware origin/main flagship/FEATURES.md (compute, buttons, accessories, "Board": 6 layers, both sides outside the heatsink, 3 x XT30, JST XH, Qwiic JST SH); SPEC.md 2026-09-26 outline -->
     <ul class="facts three">
       <li><b>Compute</b><p>M5Stack Stamp-P4 (ESP32-P4) with a Stamp-AddOn C6 stacked on top for Wi-Fi and BLE.</p></li>
       <li><b>HOME and PAIR</b><p>Two buttons and one status LED. No reset button.</p></li>
       <li><b>Fan and temperature</b><p>A fan header with speed control and tach, and a thermistor input.</p></li>
       <li><b>Optional accessory outputs</b><p>A fused 12 V pump output with a PWM signal, an external PWM output, a Neopixel chain, a Qwiic port and a GPIO header. Anything smarter than a switch belongs on its own board, over Valence (see <a href="/isotope/">Isotope</a>).</p></li>
-      <li><span class="num">6<small>layers</small></span><b>75 x 75 mm, heatsink on the back</b><p>Parts on both sides except under the 40 x 40 mm heatsink, which sits under the power parts. Three XT30 power connectors, JST XH for signals. So the PCB stays small and the heat has somewhere to go.</p></li>
+      <li><span class="num">6<small>layers</small></span><b>75 x 75 mm, heatsink on the back</b><p>Parts on both sides except under the 40 x 40 mm heatsink, which sits under the power parts. Three XT30 power connectors, JST XH for signals.</p></li>
     </ul>
   </section>
 
   <section class="aside" aria-labelledby="s-fit">
-    <h2 id="s-fit">How it fits.</h2>
+    <h2 id="s-fit">Related</h2>
     <div>
       <!-- Hardware README.md; Nucleus docs/board-map.md -->
-      <p>The PCB is the physical end of the system. <a href="/nucleus/">Nucleus</a> is its firmware, and <a href="/Valence/">Valence</a> is the protocol its hub uses. The <a href="/diagrams/">diagrams</a> show the connections, and <a href="/components/">Components</a> lists every part. The repo also reserves folders for cable drawings, enclosure parts and bench fixtures.</p>
+      <p><a href="/nucleus/">Nucleus</a> is the PCB's firmware, and <a href="/Valence/">Valence</a> is the protocol its hub uses. The <a href="/diagrams/">diagrams</a> show the connections, and <a href="/components/">Components</a> lists every part.</p>
       <p class="links"><a href="https://github.com/openvalence/Hardware">Repo</a> · <a href="https://github.com/openvalence/Hardware/blob/main/flagship/FEATURES.md">Features</a> · <a href="https://github.com/openvalence/Hardware/blob/main/flagship/SPEC.md">Decisions ledger</a> · <a href="/nucleus/">Nucleus</a> · <a href="/diagrams/">Diagrams</a></p>
     </div>
   </section>

@@ -3,6 +3,10 @@
 (() => {
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Narrow screens scroll the header links sideways: bring the current one into view.
+  const nav = document.querySelector('.chips'), here = nav && nav.querySelector('[aria-current]');
+  if (here && nav.scrollWidth > nav.clientWidth) nav.scrollLeft = here.offsetLeft - nav.offsetLeft - (nav.clientWidth - here.offsetWidth) / 2;
+
   // A pause button for anything that moves on its own (WCAG 2.2.2).
   function toggle(host, onPlay, onPause) {
     const b = document.createElement('button');

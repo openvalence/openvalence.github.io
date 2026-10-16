@@ -44,10 +44,10 @@
     <a class="chip" href="/phosphor/" aria-current="page">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
@@ -79,7 +79,7 @@
       <li>Scan. Machines that need setup sort first.</li>
       <li>Press Set up on your machine. Phosphor connects over Bluetooth and asks for the configure tier. The status reads "Asking for configure", then "Press Pair on the machine".</li>
       <li>Press Pair on the machine. Setup continues on approval.</li>
-      <li>Choose a network. Where the machine can list the networks it hears, Phosphor shows them strongest first with signal bars, and asks for the passphrase once. Where it cannot, you get a setup form built from the machine's own Setup settings. <span class="tag">WIP</span> The network list relies on a draft protocol change (RFC-118).</li>
+      <li>Choose a network. Where the machine can list the networks it hears, Phosphor shows them strongest first with signal bars, and asks for the passphrase once. Where it cannot, you get a setup form built from the machine's own Setup settings. <span class="tag">WIP</span> The network list depends on a draft protocol change.</li>
       <li>Phosphor sends the join, then waits up to 30 s for the machine to appear on Wi-Fi and connects to it. "Connected over Wi-Fi" means it worked.</li>
     </ol>
     <p>If the machine does not appear, the status reads "Joined, but the hub did not appear on WiFi", with Try again. The setup flow itself does not store or log the network name or passphrase; the form sends them to the machine. The wait is 30 s because a machine can reboot after it joins.</p>
@@ -94,7 +94,7 @@
       <div><dt>control</dt><dd>Send intents and streams, and drive motion.</dd></div>
       <div><dt>configure</dt><dd>Change configuration and administer access: approve or deny pairing, revoke and evict.</dd></div>
     </dl>
-    <p>Pause and E-Stop work from every tier, even watch. The rule in the spec is that you may always stop the machine, and you may not always start it. A client with the lowest access can still stop a machine it cannot drive. Controls above your tier are grayed with a reason, such as "Needs configure" or "session not authorized".</p>
+    <p>Pause and E-Stop work from every tier, even watch: a client can stop a machine it cannot drive. Controls above your tier are grayed with a reason, such as "Needs configure" or "session not authorized".</p>
   </section>
 
   <section aria-labelledby="s-pairing">
@@ -127,7 +127,7 @@
       <li>No Pair button: power-cycle three times, each within 10 s of boot.</li>
     </ol>
     <p>The window stays open for 120 s after the press. The power-cycle trick is for a machine with no Pair button.</p>
-    <p><span class="tag">WIP</span> The double press and the 5 s hold are in draft RFC-114, and they may change before release. A single Pair press that approves a configure ask on a machine that has lost its network is in draft RFC-117, and that may change too. The firmware is built as if both were accepted.</p>
+    <p><span class="tag">WIP</span> The double press, the 5 s hold, and a single press that approves a configure ask on a machine that has lost its network are protocol drafts. The firmware has them, and they may change before release.</p>
     <p>Booting a machine with Pair held puts it in config mode: Bluetooth and USB serial only, no Wi-Fi, and the first knock gets configure.</p>
   </section>
 

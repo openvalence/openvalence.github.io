@@ -44,18 +44,17 @@
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/" aria-current="page">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
 <main>
   <section class="opening">
     <h1>How it fits together</h1>
-    <p class="fine">Drawn from the spec and the code.</p>
-    <p>Three pictures: the whole system, one script action on its way to the motor, and who gets to do what. Every number here comes from the spec or the firmware as of October 2026.</p>
+    <p>The whole system, one script action on its way to the motor, and the access tiers. The numbers come from the spec and the firmware as of October 2026.</p>
   </section>
 
   <section aria-labelledby="system">
@@ -72,11 +71,11 @@
       <svg viewBox="0 0 320 571" role="img" aria-labelledby="sys-t sys-d"><title id="sys-t">The OpenValence system</title><desc id="sys-d">An app talks Valence to the machine over Wi-Fi, or over BLE for setup. On the OSSM Flagship board an ESP32-C6 radio passes the traffic over SDIO to the ESP32-P4 running Nucleus. There the Valence hub hands motion to the Kinetic planner, which keeps a 128 ms strip of positions on a 1 ms grid. Every millisecond the low-power core gets a speed, a fence and a 4 ms lease, and sends A/B quadrature to the servo drive, which turns the motor. The drive reports alarms back, and the P4 can read it over RS485.</desc><defs><marker id="sys-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L8 4L0 8z"/></marker><marker id="sys-i" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow-i" d="M0 0L8 4L0 8z"/></marker><marker id="sys-g" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow-g" d="M0 0L8 4L0 8z"/></marker></defs><rect class="d-sunk" x="8" y="116" width="304" height="324" rx="2" stroke-dasharray="4 3"/><rect class="d-box" x="20" y="220" width="280" height="208" rx="2"/><rect class="d-cli" x="20" y="8" width="280" height="52" rx="2"/><text class="d-t" x="32" y="26">Phosphor, or any app</text><text class="d-s" x="32" y="41">desktop app, the page the machine</text><text class="d-s" x="32" y="54">serves, scripts, plugins</text><path class="d-flow" d="M120 63V111" marker-end="url(#sys-a)" marker-start="url(#sys-a)"/><text class="d-r" x="132" y="78">Valence</text><text class="d-s" x="132" y="91">WebSocket over Wi-Fi</text><text class="d-s" x="132" y="104">BLE for setup and offline</text><text class="d-k" x="18" y="132">OSSM Flagship board</text><rect class="d-box" x="20" y="140" width="280" height="52" rx="2"/><text class="d-t" x="32" y="158">ESP32-C6 · radio</text><text class="d-s" x="32" y="173">Wi-Fi and BLE, Espressif&#x27;s esp_hosted</text><text class="d-s" x="32" y="186">runs none of our code</text><path class="d-flow" d="M120 195V217" marker-end="url(#sys-a)" marker-start="url(#sys-a)"/><text class="d-s" x="132" y="210">SDIO, 4-bit</text><text class="d-k" x="30" y="236">ESP32-P4 · Nucleus</text><rect class="d-hub" x="32" y="244" width="256" height="39" rx="2"/><text class="d-t" x="44" y="262">Valence hub</text><text class="d-s" x="44" y="277">sessions, catalog, limits, 5 ms tick</text><path class="d-flow" d="M160 285V303" marker-end="url(#sys-a)"/><rect class="d-box" x="32" y="305" width="256" height="39" rx="2"/><text class="d-t" x="44" y="323">Kinetic² planner</text><text class="d-s" x="44" y="338">1 ms grid, 128 ms strip of positions</text><path class="d-flow" d="M160 346V364" marker-end="url(#sys-a)"/><text class="d-s" x="170" y="354">speed + fence</text><text class="d-s" x="170" y="367">4 ms lease</text><rect class="d-box" x="32" y="366" width="256" height="52" rx="2"/><text class="d-t" x="44" y="384">LP core</text><text class="d-s" x="44" y="399">A/B quadrature from a 40 MHz crystal</text><text class="d-s" x="44" y="412">parks itself if the lease runs out</text><path class="d-flow" d="M180 443V471" marker-end="url(#sys-a)"/><text class="d-s" x="190" y="461">A/B quadrature</text><path class="d-back" d="M140 471V443" marker-end="url(#sys-i)"/><text class="d-i" x="130" y="461" text-anchor="end">alarm, RS485 reads</text><rect class="d-box" x="20" y="474" width="280" height="39" rx="2"/><text class="d-t" x="32" y="492">Servo drive</text><text class="d-s" x="32" y="507">closes the loop on the motor</text><path class="d-flow" d="M160 516V534" marker-end="url(#sys-a)"/><rect class="d-box" x="20" y="537" width="280" height="26" rx="2"/><text class="d-t" x="32" y="555">Motor and rail</text></svg>
       <figcaption>Blue is motion going out, violet is information coming back. The radio chip only moves bytes; everything that decides anything runs on the ESP32-P4.</figcaption>
     </figure>
-    <p>The planner keeps a 128 ms strip of positions, one per millisecond. If the planner stalls for less than that, the motor never notices. Below it, the low-power core gets a speed and a 4 ms lease every millisecond. If the main cores hang, the motor keeps its last speed for at most 4 ms, then stops.</p>
+    <p>The planner keeps a 128 ms strip of positions, one per millisecond. A planner stall shorter than that does not reach the motor. Below it, the low-power core gets a speed and a 4 ms lease every millisecond. If the main cores hang, the motor keeps its last speed for at most 4 ms, then stops.</p>
   </section>
 
   <section aria-labelledby="funscript">
-    <h2 class="xl" id="funscript">A funscript action, start to finish</h2>
+    <h2 class="xl" id="funscript">How a funscript action reaches the motor</h2>
     <!-- Sources (Phosphor main 1775961, Nucleus main 683cb62):
          01-04: plugins/factory/funscript-player funscript.js, axes.js, scale.js, clock.js (requestVideoFrameCallback, rAF fallback), scheduler.js OFFER_MAX 32, EXPECT_MS 500
          05: src/model/motion.js:77 SEG_FLOOR_MS 10, :80-85 lead = max(horizon/2, horizon - 100), :416-429 stamp on hub clock, t_off unit 100 us
@@ -92,17 +91,17 @@
     </figure>
     <p>The machine picks how far ahead it accepts motion: 250, 500 or 1000 ms, and it ships at 1000. Phosphor sends each segment up to that horizon minus 100 ms ahead, so 900 ms by default. A Wi-Fi stall shorter than that doesn't reach the stroke, because the machine already holds the next stretch.</p>
     <!-- osc.js OSC_FLOOR_MS 20, OSC_MARGIN_MS 70, OSC_CAP_MS 230; Nucleus ValenceMotion.h kOscDriveLeadUs 156000 -->
-    <p>V8 and V9, the oscillation axes, take a side road. Phosphor resamples them at the granted rate and sends them about 176 to 226 ms ahead on their own stream, and the planner adds them on top of the stroke.</p>
+    <p>V8 and V9, the oscillation axes, take a separate path. Phosphor resamples them at the granted rate and sends them about 176 to 226 ms ahead on their own stream, and the planner adds them on top of the stroke.</p>
   </section>
 
   <section aria-labelledby="pairing">
-    <h2 class="xl" id="pairing">Who can do what</h2>
+    <h2 class="xl" id="pairing">Access tiers and pairing</h2>
     <!-- Sources: SPEC §12.2 tiers (ratified), §12.3 pairing modes (ratified), §11.1/§11.2 pause and estop role-exempt, §12.8 /uitoken grants control never configure, §13.4.1 config mode (RFC-079) -->
     <figure class="diagram">
       <svg viewBox="0 0 320 210" role="img" aria-labelledby="pair-t pair-d"><title id="pair-t">Access tiers and the ways in</title><desc id="pair-d">Three tiers, each including the one below. Watch sees everything and is open by default. Control can also move the machine. Configure can also change setup and decide who gets in. Stop works at every tier. The first client to knock on a factory-fresh machine, or on one booted in config mode, gets configure. A pairing window, a PIN or a yes from a configure client grants a paired tier, control by default. Connecting with no token gives watch.</desc><defs><marker id="pair-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L8 4L0 8z"/></marker><marker id="pair-i" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow-i" d="M0 0L8 4L0 8z"/></marker><marker id="pair-g" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow-g" d="M0 0L8 4L0 8z"/></marker></defs><rect class="d-hub" x="8" y="8" width="262" height="65" rx="2"/><text class="d-t" x="20" y="26">configure</text><text class="d-s" x="20" y="41">setup, network, who gets in</text><text class="d-r" x="20" y="54">in: a fresh machine&#x27;s first knock,</text><text class="d-r" x="20" y="67">config mode, or a configure yes</text><rect class="d-box" x="8" y="79" width="262" height="65" rx="2"/><text class="d-t" x="20" y="97">control</text><text class="d-s" x="20" y="112">move it: patterns, scripts</text><text class="d-r" x="20" y="125">in: Pair window, PIN, or a yes</text><text class="d-r" x="20" y="138">from a configure client</text><rect class="d-box" x="8" y="150" width="262" height="52" rx="2"/><text class="d-t" x="20" y="168">watch</text><text class="d-s" x="20" y="183">see everything, stop it</text><text class="d-r" x="20" y="196">in: just connect, no token</text><rect class="d-sunk" x="278" y="8" width="34" height="194" rx="2"/><text class="d-r" transform="translate(299 105) rotate(-90)" text-anchor="middle">stop works at every tier</text></svg>
       <figcaption>Each tier includes the one below it. A paired client gets control unless it asked for configure and someone with configure said yes.</figcaption>
     </figure>
-    <p>Anyone can watch, and anyone connected can stop the machine. Moving it takes a pairing. The page the machine serves from its own address gets control through a one-time token, never configure. A factory-fresh machine gives configure to the first client that asks, because if it's your machine, you're holding it.</p>
+    <p>Anyone can watch, and anyone connected can stop the machine. Moving it takes a pairing. The page the machine serves from its own address gets control through a one-time token, never configure. A factory-fresh machine gives configure to the first client that asks, since that is normally the owner setting it up.</p>
 
     <h3>The Pair button</h3>
     <!-- Nucleus flagship_p4/src/system/ButtonGesture.h:30-42 (kDebounceMs 30, kDoublePressMs 600, kDemoteHoldMs 5000, kStuckMs 30000); hub/ValenceDevice.cpp:2197-2231; main.cpp:186-196 pairHeldAtBoot; hub/TrustStore.h:108-123 power-cycle gesture; RFC-114 and RFC-117 are drafts in Valence spec/RFC-QUEUE.md -->
@@ -112,14 +111,14 @@
       </thead>
       <tbody>
         <tr><th scope="row">Press</th><td>Opens a 120 s pairing window. The first client to ask gets in.</td><td>spec · details draft (RFC-114)</td></tr>
-        <tr><th scope="row">Double press</th><td>Says yes to the one client waiting for configure. Two waiting, and it approves neither.</td><td>draft (RFC-114)</td></tr>
+        <tr><th scope="row">Double press</th><td>Says yes to the one client waiting for configure. If two are waiting, it approves neither.</td><td>draft (RFC-114)</td></tr>
         <tr><th scope="row">Hold 5 s</th><td>Drops every paired client to watch and ends their sessions. Pairings stay on file.</td><td>draft (RFC-114)</td></tr>
         <tr><th scope="row">Hold while powering on</th><td>Config mode: Bluetooth and USB only, no Wi-Fi. The first client to ask gets configure.</td><td>spec (§13.4.1)</td></tr>
-        <tr><th scope="row">No button? Power-cycle three times</th><td>Three boots in a row, each shorter than 10 s, open the window on the next boot.</td><td>spec (§12.3)</td></tr>
+        <tr><th scope="row">Power-cycle three times (no button)</th><td>Three boots in a row, each shorter than 10 s, open the window on the next boot.</td><td>spec (§12.3)</td></tr>
         <tr><th scope="row">Press while offline</th><td>Approves the one configure request that came over Bluetooth or USB.</td><td>draft (RFC-117)</td></tr>
       </tbody>
     </table>
-    <p>Drafts are built into the firmware already, and they can still change before the spec takes them. Factory reset is a harder gesture the spec asks for; it isn't built yet.</p>
+    <p>Draft gestures are in the firmware and can change before the spec adopts them. The spec also asks for a factory-reset gesture, which is not built yet.</p>
   </section>
 </main>
 

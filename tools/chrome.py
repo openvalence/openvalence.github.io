@@ -6,6 +6,8 @@ The header's aria-current is set from the page's canonical link. Run from the re
 """
 import pathlib, re
 
+# pages without a header link of their own, and the link that stands for them
+SECTION = {f"/{c}/": "/components/" for c in ("nucleus", "kinetic", "hardware", "isotope")}
 root = pathlib.Path(__file__).resolve().parent.parent
 blocks = dict(re.findall(r"<!-- chrome:(\w+) -->\n(.*?)<!-- /chrome:\1 -->", (root / "tools/chrome.html").read_text(encoding="utf-8"), re.S))
 changed = 0
@@ -18,10 +20,12 @@ for page in sorted(root.rglob("*.html")):
     def fill(m):
         body = blocks[m.group(1)]
         if here and here != "/":
-            # the nav chip for this page, or for its section (/phosphor/docs/... marks Phosphor)
-            for href in sorted(re.findall(r'class="chip" href="(/[^"]+)"', body), key=len, reverse=True):
-                if here.startswith(href):
-                    body = body.replace(f'class="chip" href="{href}"', f'class="chip" href="{href}" aria-current="page"', 1)
+            # the header link for this page or its section (/phosphor/docs/... marks Phosphor,
+            # the component pages mark Components)
+            mark = SECTION.get(here, here)
+            for cls, href in sorted(re.findall(r'class="(chip[^"]*|get)" href="(/[^"]+)"', body), key=lambda m: len(m[1]), reverse=True):
+                if mark.startswith(href):
+                    body = body.replace(f'class="{cls}" href="{href}"', f'class="{cls}" href="{href}" aria-current="page"', 1)
                     break
         return f"<!-- chrome:{m.group(1)} -->\n{body}<!-- /chrome:{m.group(1)} -->"
     new = re.sub(r"<!-- chrome:(\w+) -->\n.*?<!-- /chrome:\1 -->", fill, text, flags=re.S)

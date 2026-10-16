@@ -44,16 +44,16 @@
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
 <main>
   <section class="opening">
-    <h1>Nothing leaves your machine unless you point it somewhere.</h1>
+    <h1>Privacy</h1>
     <p class="fine">Effective October 15, 2026.</p>
     <p>The plain version first. Phosphor has no telemetry, no crash reporting, no analytics, no accounts and no ads. I have not built any of that in, first party or third party, and there is no server of mine for the app to talk to. Everything it remembers lives in a folder on your computer. The only things it ever sends go to places you chose yourself: the machine on your network, a Stash server you entered the address of, a page a plugin loads, a Bluetooth device you connected. What those endpoints and your operating system do with traffic is outside my control, and this page says where that line is.</p>
     <p>The rest is the long version, written so that it is checkable. The source is public; every claim here can be read in the code.</p>
@@ -70,8 +70,8 @@
     <ul>
       <li>Saved hubs: the address, name and session details of machines you connected to, so the app can reconnect.</li>
       <li>Plugin settings, including, if you set one up, the URL and API key of your Stash server. The key is stored as you typed it, protected only by your operating system's user account, and it is deliberately left out of the app's settings export so it never ends up in a backup file.</li>
-      <li>Your themes, layouts, pages, enabled plugins and the simulator's saved state.</li>
-      <li>A log file (<code>Phosphor.log</code>) with technical events: connections, errors, the simulator's output. It stays on disk and is never uploaded. If you send it to me for a bug report, that is you sending it.</li>
+      <li>Your themes, layouts, pages, enabled plugins and Neutrino's saved state.</li>
+      <li>A log file (<code>Phosphor.log</code>) with technical events: connections, errors, Neutrino's output. It stays on disk and is never uploaded. If you send it to me for a bug report, that is you sending it.</li>
       <li>Media you open in the funscript player is read from where it already is. The app does not copy it anywhere.</li>
     </ul>
     <p>Uninstalling removes the application. The data folder may stay behind depending on the platform; deleting it deletes everything the app ever knew about you.</p>
@@ -84,7 +84,7 @@
       <div><dt>Your machine</dt><dd>To find a hub, the app sends a short discovery broadcast on your local network and listens for replies; it only broadcasts when you ask it to scan, or when it reconnects to a hub you saved. Once connected, the app and the hub exchange machine state over a WebSocket on your network. An emergency stop is also sent as a broadcast so it reaches the hub even if the session has dropped.</dd></div>
       <div><dt>Stash</dt><dd>If you enter a Stash server in the funscript player, the app sends requests to that address with the API key you gave it, and streams video from it. That is your server, on whatever network you put it on; its own logs are its business.</dd></div>
       <div><dt>Plugins and the pages they load</dt><dd>The app allows plugins to fetch <code>http</code> and <code>https</code> URLs. The plugins that ship with the app only contact addresses you configured. A plugin you install from elsewhere can contact whatever its author wrote it to; read its manifest before enabling it.</dd></div>
-      <div><dt>Other programs on your computer</dt><dd>Phosphor runs a ButtplugIO server so that other software can drive the machine and your toys through it. It listens on the loopback address only (<code>127.0.0.1</code>, port 12345 by default), so only programs on the same computer can reach it. It never listens on your network unless you change that setting.</dd></div>
+      <div><dt>Other programs on your computer</dt><dd>Phosphor runs a Buttplug server so that other software can drive the machine and your toys through it. It listens on the loopback address only (<code>127.0.0.1</code>, port 12345 by default), so only programs on the same computer can reach it. It never listens on your network unless you change that setting.</dd></div>
       <div><dt>Neutrino, the built-in machine</dt><dd>It runs inside the app, as WebAssembly. Nothing it does leaves the computer.</dd></div>
     </dl>
     <p>The app does not check for updates by itself. Updates arrive through whatever installed it: Flathub, or a download from GitHub.</p>
@@ -103,7 +103,7 @@
 
   <section aria-labelledby="s-outside">
     <h2 id="s-outside" data-n="06">What is outside my control</h2>
-    <p>The honest list of parties that may learn something about you while you use this software, none of which I run or receive anything from:</p>
+    <p>Parties that may learn something about you while you use this software. I run none of them and receive nothing from them:</p>
     <dl class="terms">
       <div><dt>Your operating system</dt><dd>Windows, macOS, Android and Linux distributions collect their own diagnostics about the applications you run, under their own settings and policies. On Windows the app renders through WebView2, which is Microsoft's component and follows Microsoft's telemetry settings for your account.</dd></div>
       <div><dt>Where you got the app</dt><dd>Flathub and GitHub each count installs and downloads and may show me aggregate numbers. They do not give me who you are.</dd></div>
@@ -124,7 +124,7 @@
   <section aria-labelledby="s-changes">
     <h2 id="s-changes" data-n="08">Changes and contact</h2>
     <p>If any of the above changes, this page changes with it and the date at the top moves. The page is a file in a public repository, so its history is the changelog: <a href="https://github.com/openvalence/openvalence.github.io/commits/main/privacy.html">every revision</a>.</p>
-    <p>Questions, or something here that does not match what the code does: <a href="mailto:privacy@openvalence.org">privacy@openvalence.org</a>. If the code and this page disagree, the code is the fact and this page is the bug.</p>
+    <p>Questions, or something here that does not match what the code does: <a href="mailto:privacy@openvalence.org">privacy@openvalence.org</a>. If the code and this page disagree, the code is right and this page gets fixed.</p>
   </section>
 </main>
 

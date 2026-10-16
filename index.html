@@ -69,10 +69,10 @@
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
@@ -81,7 +81,7 @@
     <h1>Open-source hardware and software for linear motion machines</h1>
     <div class="hero-row">
       <div>
-        <p class="lede">For OSSM-style machines and anything else that moves along a rail. A PCB, its firmware, a protocol and an app. All of it open source.</p>
+        <p class="lede">For OSSM-style machines and anything else that moves along a rail: a PCB, its firmware, a protocol and an app, all open source.</p>
         <p class="fine">Pre-release. Protocol spec v1.0-draft.</p>
       </div>
       <div class="btns">
@@ -96,16 +96,16 @@
             <source src="/images/phosphor/hero.webm" type="video/webm">
           </video>
         </div>
-        <figcaption>Phosphor driving Neutrino: the machine's firmware, running inside the app. Made-up script, no sound. Nothing physical moves.</figcaption>
+        <figcaption>Phosphor driving Neutrino, the machine's firmware running inside the app. Example script, no sound.</figcaption>
       </figure>
     </div>
   </section>
 
   <section aria-labelledby="s-start">
-    <h2 class="xl" id="s-start">Three ways in.</h2>
+    <h2 class="xl" id="s-start">Where to start</h2>
     <ul class="doors">
       <li>
-        <div><h3><a href="/phosphor/">You have a machine, or want one</a></h3><p>Get the app and play your first script.</p></div>
+        <div><h3><a href="/phosphor/">Use it</a></h3><p>Get the app and play your first script.</p></div>
         <ul>
           <li><a href="/downloads/">Get Phosphor</a></li>
           <li><a href="/phosphor/docs/connecting/">Connect and pair</a></li>
@@ -115,7 +115,7 @@
         </ul>
       </li>
       <li>
-        <div><h3><a href="/valence/">You want to build on it</a></h3><p>The protocol, and how to build on it.</p></div>
+        <div><h3><a href="/valence/">Build on it</a></h3><p>The protocol, the docs and the plugin API.</p></div>
         <ul>
           <li><a href="/Valence/">Spec and library docs</a></li>
           <li><a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Write a Phosphor plugin</a></li>
@@ -125,9 +125,9 @@
         </ul>
       </li>
       <li>
-        <div><h3><a href="/diagrams/">You're just curious</a></h3><p>See how the pieces fit, then play with the planner.</p></div>
+        <div><h3><a href="/diagrams/">See how it works</a></h3><p>Diagrams, the planner in your browser and the PCB.</p></div>
         <ul>
-          <li><a href="/valence/">The web, for motion machines</a></li>
+          <li><a href="/valence/">What Valence is</a></li>
           <li><a href="/demos/">Try the planner in your browser</a></li>
           <li><a href="/hardware/">Look around the PCB</a></li>
           <li><a href="#s-built">How it's built</a></li>
@@ -138,25 +138,25 @@
   </section>
 
   <section class="band" aria-labelledby="s-fits">
-    <h2 class="xl" id="s-fits">Screen to rail in eight hops.</h2>
+    <h2 class="xl" id="s-fits">System overview</h2>
     <p class="lede">The firmware runs a hub that holds the machine's state. The desktop app, browser tabs, scripts and plugins connect to the hub as clients and stay in sync with it.</p>
     <!-- Sources as on /diagrams/#system: SPEC §13.2, §13.4; Nucleus README "Chips", transport.md; MotionArbiter.h kStripLen 128, kLeaseTicks 4; motion-control.md (40 MHz XTAL, 128 ns spread); board-map.md -->
     <ol class="chain">
-      <li><div class="blk cli" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#app"/></svg><span><strong>Phosphor</strong><small>or any app</small></span><p class="tip"><b>The app.</b> Phosphor builds its pages from what the machine declares. Scripts, plugins and the page the machine serves connect the same way. <a href="/phosphor/">Phosphor</a></p></div></li>
-      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#wave"/></svg><span><strong>Valence</strong><small>the protocol</small></span><p class="tip"><b>The wire.</b> WebSocket over Wi-Fi, BLE for setup. The machine describes itself; apps send requests. <a href="/valence/">Valence</a></p></div></li>
-      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#radio"/></svg><span><strong>ESP32-C6</strong><small>radio</small></span><p class="tip"><b>The radio.</b> Moves bytes over SDIO and runs Espressif's stock image, none of our code. So you only ever flash one chip. <a href="/nucleus/#s-chips">Chips</a></p></div></li>
-      <li><div class="blk hub" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><span><strong>Hub</strong><small>Nucleus on the ESP32-P4</small></span><p class="tip"><b>The hub.</b> Holds the only real state, clamps every request to the machine's limits and tells every app what it actually did. <a href="/nucleus/">Nucleus</a></p></div></li>
-      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#curve"/></svg><span><strong>Kinetic²</strong><small>planner</small></span><p class="tip"><b>The planner.</b> Turns timed knots into a 128 ms strip of positions on a 1 ms grid. So a short planner stall never reaches the motor. <a href="/kinetic/">Kinetic</a></p></div></li>
-      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#quad"/></svg><span><strong>LP core</strong><small>quadrature out</small></span><p class="tip"><b>The LP core.</b> Sends A/B quadrature from a 40 MHz crystal and parks itself if its 4 ms lease runs out. <a href="/nucleus/#s-motion">Motion</a></p></div></li>
-      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#drive"/></svg><span><strong>Servo drive</strong><small>closes the loop</small></span><p class="tip"><b>The drive.</b> Follows the quadrature and closes the loop on the motor. Alarms come back to the P4, RS485 carries reads. <a href="/hardware/#s-drive">Drive interface</a></p></div></li>
-      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#rail"/></svg><span><strong>Motor and rail</strong><small>where it ends up</small></span><p class="tip"><b>The rail.</b> The firmware homes it and holds every move inside the rail window; the PCB's E-stop cuts motor power in hardware. <a href="/hardware/">Hardware</a></p></div></li>
-      <li aria-hidden="true" class="hint-li"><p class="hint">Hover or tap a hop. The hub is the one in charge.</p></li>
+      <li><div class="blk cli" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#app"/></svg><span><strong>Phosphor</strong><small>or any app</small></span><p class="tip">Phosphor builds its pages from what the machine declares. Scripts, plugins and the page the machine serves connect the same way. <a href="/phosphor/">Phosphor</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#wave"/></svg><span><strong>Valence</strong><small>the protocol</small></span><p class="tip">WebSocket over Wi-Fi, BLE for setup. The machine describes itself; apps send requests. <a href="/valence/">Valence</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#radio"/></svg><span><strong>ESP32-C6</strong><small>radio</small></span><p class="tip">Moves bytes over SDIO and runs Espressif's stock firmware, so the P4 is the only chip you flash. <a href="/nucleus/#s-chips">Chips</a></p></div></li>
+      <li><div class="blk hub" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><span><strong>Hub</strong><small>Nucleus on the ESP32-P4</small></span><p class="tip">Holds the machine's state, clamps every request to the machine's limits and reports back what it actually did. <a href="/nucleus/">Nucleus</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#curve"/></svg><span><strong>Kinetic²</strong><small>planner</small></span><p class="tip">Turns timed knots into a 128 ms strip of positions on a 1 ms grid, so a short planner stall doesn't reach the motor. <a href="/kinetic/">Kinetic</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#quad"/></svg><span><strong>LP core</strong><small>quadrature out</small></span><p class="tip">Sends A/B quadrature from a 40 MHz crystal and parks itself if its 4 ms lease runs out. <a href="/nucleus/#s-motion">Motion</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#drive"/></svg><span><strong>Servo drive</strong><small>closes the loop</small></span><p class="tip">Follows the quadrature and closes the loop on the motor. Alarms come back to the P4, RS485 carries reads. <a href="/hardware/#s-drive">Drive interface</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#rail"/></svg><span><strong>Motor and rail</strong><small>where it ends up</small></span><p class="tip">The firmware homes it and holds every move inside the rail window; the PCB's E-stop cuts motor power in hardware. <a href="/hardware/">Hardware</a></p></div></li>
+      <li aria-hidden="true" class="hint-li"><p class="hint">Hover or tap a block for details.</p></li>
     </ol>
     <p class="links"><a href="/diagrams/">All the diagrams</a> · <a href="/diagrams/#funscript">A funscript action, start to finish</a></p>
   </section>
 
   <section aria-labelledby="s-measured">
-    <h2 class="xl" id="s-measured">Receipts.</h2>
+    <h2 class="xl" id="s-measured">Measurements</h2>
     <dl class="numbers">
       <!-- Nucleus .claude/rules/motion-control.md, "The LP-core emitter": Rigol DHO4204 single-shot captures at 8 ns per sample, 2026-09-20; the 5-cycle poll loop at 40 MHz is 125 ns, peak-to-peak spread 128 ns (16 samples); at a prime rate intervals take two values and the mean does not drift -->
       <div>
@@ -178,7 +178,7 @@
   </section>
 
   <section aria-labelledby="s-parts">
-    <h2 class="xl" id="s-parts">Seven repos. One machine.</h2>
+    <h2 class="xl" id="s-parts">Repositories</h2>
     <ul class="index">
       <li><h3><a href="/valence/">Valence</a></h3><p>The protocol: spec, registry, reference library, clients, tools, documentation.</p><span class="lic">MIT · spec text CC BY 4.0</span></li>
       <li><h3><a href="/nucleus/">Nucleus</a></h3><p>Firmware for the OSSM Flagship PCB: an ESP32-P4 with an ESP32-C6 for Wi-Fi, built on ESP-IDF. The P4's low-power (LP) core generates the quadrature output.</p><span class="lic">Apache-2.0</span></li>
@@ -187,13 +187,13 @@
       <li><h3><a href="/kinetic/">Kinetic</a></h3><p>The motion planner: jerk-limited trajectories from timed knots. Header-only C++, deterministic across targets.</p><span class="lic">Apache-2.0</span></li>
       <li><h3><a href="/hardware/">Hardware</a></h3><p>The OSSM Flagship PCB and everything physical around it, in KiCad.</p><span class="lic">CERN-OHL-S-2.0</span>
         <div class="thumb"><img src="/images/hardware/pcb-angle-600.webp" data-hi="/images/hardware/pcb-angle.webp" width="600" height="409" alt="" loading="lazy" decoding="async"></div></li>
-      <li><h3><a href="/isotope/">Isotope</a></h3><p>Accessory firmware for the ESP-NOW network around Nucleus. WIP: design stage, nothing runs yet.</p><span class="lic">no license yet</span></li>
+      <li><h3><a href="/isotope/">Isotope</a></h3><p>Accessory firmware for the ESP-NOW network around Nucleus. WIP, design stage.</p><span class="lic">no license yet</span></li>
       <li><h3><a href="https://github.com/openvalence/ButtplugIO">ButtplugIO</a></h3><p>A fork of buttplugio/buttplug carrying the Valence hardware manager, on branch <code>valence</code>.</p><span class="lic">BSD-3-Clause</span></li>
     </ul>
   </section>
 
   <section class="aside" aria-labelledby="s-stand">
-    <h2 id="s-stand">Where it's at.</h2>
+    <h2 id="s-stand">Status</h2>
     <div>
       <ul class="facts three">
         <li><b>Firmware</b><p>Homes the rail, plays scripts, and connects to the client over Wi-Fi.</p></li>
@@ -205,7 +205,7 @@
   </section>
 
   <section class="aside" aria-labelledby="s-built">
-    <h2 id="s-built">How it's built.</h2>
+    <h2 id="s-built">How it's built</h2>
     <div>
       <p class="big-line">One person designs this and makes every decision; coding agents write most of the code under that direction.</p>
       <p>Each repo holds its rules: a written doctrine, a registry that assigns every wire number, lint that fails the build, tests on every change, and a bench gate that requires firmware to move a real motor before a change is closed.</p>

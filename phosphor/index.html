@@ -60,10 +60,10 @@
     <a class="chip" href="/phosphor/" aria-current="page">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
@@ -71,8 +71,8 @@
   <section class="opening">
     <h1>Phosphor, the Valence client</h1>
     <!-- Phosphor README.md lines 3-18; docs/DESIGN.md §1 -->
-    <p class="lede">Your machine draws its own controls. Phosphor puts them on screen.</p>
-    <p>Phosphor is the reference client for Valence machines. It is one Svelte 5 app, delivered as a Tauri 2 desktop and mobile app and as a page a hub can serve from its own flash. It builds its pages from the catalog the machine sends, so it needs no machine-specific code.</p>
+    <p class="lede">The reference app for Valence machines, with a funscript player, Buttplug.io support, plugins and a built-in emulated machine.</p>
+    <p>One Svelte 5 app, delivered as a Tauri 2 desktop and mobile app and as a page a hub can serve from its own flash. It builds its pages from the catalog the machine sends, so it needs no machine-specific code.</p>
     <div class="btns">
       <a class="btn go" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Get Phosphor</a>
       <a class="btn" href="/phosphor/docs/">Docs</a>
@@ -83,18 +83,18 @@
   <div class="stage">
   <figure class="feature-hero">
     <div class="frame"><picture><source srcset="/images/phosphor/dash-light.webp" data-hi="/images/phosphor/hi/dash-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark.webp" data-hi="/images/phosphor/hi/dash-dark.webp" width="1280" height="800" alt="The Phosphor Dash connected to Neutrino with a pattern running, showing the large position readout, the position rail with a moving comet, the telemetry chart with two sine traces and the pattern controls." fetchpriority="high" decoding="async"></picture></div>
-    <figcaption>The Dash, connected to Neutrino, the built-in machine, with a pattern running. Phosphor main c23c98c.</figcaption>
+    <figcaption>The Dash, connected to Neutrino, the built-in machine, with a pattern running.</figcaption>
   </figure>
   </div>
 
   <section class="aside" aria-labelledby="s-status">
-    <h2 id="s-status">Pre-release.</h2>
+    <h2 id="s-status">Status</h2>
     <!-- Downloads: v0.1.641 pre-release CI build on GitHub releases (checked 2026-10-15); Phosphor/.github/workflows/build.yml -->
-    <p>CI builds installers on every push to <code>main</code>, and <a href="/downloads/">Downloads</a> links the current pre-release build. Features marked <span class="tag">WIP</span> are not finished.</p>
+    <p>Pre-release builds are on <a href="/downloads/">Downloads</a>. Features marked <span class="tag">WIP</span> are not finished.</p>
   </section>
 
   <section aria-labelledby="s-features">
-    <h2 class="xl" id="s-features">What's inside.</h2>
+    <h2 class="xl" id="s-features">Features</h2>
 
     <div class="split">
       <figure><picture><source srcset="/images/phosphor/builder-light.webp" data-hi="/images/phosphor/hi/builder-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/builder-dark.webp" data-hi="/images/phosphor/hi/builder-dark.webp" width="1280" height="800" alt="The Phosphor Dash in edit mode, with the modules palette open on the right listing control categories and the edit footer offering Undo, New nest, Modules and Layout." loading="lazy" decoding="async"></picture></figure>
@@ -117,7 +117,7 @@
         <h3>Funscript player</h3>
         <!-- docs/plugins/FUNSCRIPT.md lines 66-77 (lead cap = horizon less 100 ms; 1000 ms horizon), 93-94 (horizons 500, 1000) -->
         <p>Plays a video next to its funscript and drives the rail from it. Video comes from a file or from a Stash server you point it at.</p>
-        <p>It sends the machine segments up to the granted horizon minus 100 ms ahead: 900 ms at a 1000 ms horizon. So a Wi-Fi stall under about 900 ms never reaches the stroke, because the machine already has the next stretch.</p>
+        <p>It sends the machine segments up to the granted horizon minus 100 ms ahead: 900 ms at a 1000 ms horizon, so a shorter Wi-Fi stall doesn't reach the stroke.</p>
         <p class="links"><a href="/phosphor/docs/funscript-player/">Funscript player docs</a> · <a href="/diagrams/#funscript">The path of one action</a></p>
       </div>
     </div>
@@ -130,7 +130,7 @@
         <p>Wire catalog fields, math nodes and Buttplug outputs into chains with float, int and bool sockets.</p>
         <details class="more">
           <summary>Where a chain runs</summary>
-          <p>A single hub map between a source field and an accessory field is stored on the hub and keeps running if Phosphor closes. Every other chain runs in Phosphor, evaluated 20 times a second, and stops on Pause or E-Stop. Those chains only run while Phosphor is open.</p>
+          <p>A single hub map between a source field and an accessory field is stored on the hub and keeps running if Phosphor closes. Every other chain runs in Phosphor, 20 times a second, only while Phosphor is open, and stops on Pause or E-Stop.</p>
         </details>
         <p class="links"><a href="/phosphor/docs/node-editor/">Node editor docs</a></p>
       </div>
@@ -145,8 +145,8 @@
         <p>Phosphor ships five: the Advanced pattern card (a port of fray-d's OSSM-Lite), the funscript player, a quick-access tray, a Wi-Fi picker and a set of three small games.</p>
         <details class="more">
           <summary>What a plugin can and can't do</summary>
-          <p>A plugin has no socket or session handle. Plugins are version 1 of the API, and the API is not frozen yet.</p>
-          <p>A plugin runs with the page's full authority. The manifest lists what it intends to do, and the Plugins pane shows it, but that is a label and not a sandbox. Install plugins only from sources you would trust with a program.</p>
+          <p>A plugin has no socket or session handle. The plugin API is at version 1 and not frozen yet.</p>
+          <p>A plugin runs with the page's full authority. The manifest lists what it intends to do and the Plugins pane shows it, but nothing enforces that list. Install plugins only from sources you would trust with a program.</p>
           <p>The hub-served page loads no plugins.</p>
         </details>
         <p class="links"><a href="/phosphor/docs/plugins/">Plugin docs</a> · <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Plugin contract</a></p>
@@ -156,9 +156,9 @@
   </section>
 
   <section class="band" aria-labelledby="s-themes">
-    <h2 class="xl" id="s-themes">Twenty themes. Same stop button.</h2>
+    <h2 class="xl" id="s-themes">Themes</h2>
     <!-- src/themes/index.js lines 6-25 (20 themes); docs/THEMES.md line 19 (12 color presets), docs/DESIGN.md §10.16 lines 1559-1564 -->
-    <p>There are 20 themes, from the default Phosphor theme to Luna, Mica, Liquid Glass, Material, Blueprint and P1 Terminal. The default theme has 12 color presets. A theme restyles chrome, controls, type and icons. The stop pair, the safety edge and the warning states look the same in every theme, so a theme can change how the app looks without changing what a danger signal looks like.</p>
+    <p>There are 20 themes, from the default Phosphor theme to Luna, Mica, Liquid Glass, Material, Blueprint and P1 Terminal. The default theme has 12 color presets. A theme restyles chrome, controls, type and icons. The stop pair, the safety edge and the warning states look the same in every theme.</p>
     <ul class="swipe" tabindex="0" aria-label="Theme screenshots, scroll sideways">
       <li><figure><img src="/images/phosphor/theme-luna.webp" data-hi="/images/phosphor/hi/theme-luna.webp" width="1280" height="800" alt="The Phosphor Dash in the Luna theme connected to Neutrino with a pattern running, in a bright blue and green desktop look with glossy blue panels over a sky-and-hill backdrop." loading="lazy" decoding="async"><figcaption><b>Luna</b></figcaption></figure></li>
       <li><figure><img src="/images/phosphor/theme-glass.webp" data-hi="/images/phosphor/hi/theme-glass.webp" width="1280" height="800" alt="The Phosphor Dash in the Liquid Glass theme connected to Neutrino with a pattern running, in translucent rounded panels over a dark purple backdrop with soft colored light orbs." loading="lazy" decoding="async"><figcaption><b>Liquid Glass</b></figcaption></figure></li>
@@ -167,16 +167,16 @@
       <li><figure><img src="/images/phosphor/theme-outrun.webp" data-hi="/images/phosphor/hi/theme-outrun.webp" width="1280" height="800" alt="The Phosphor Dash in the Outrun theme connected to Neutrino with a pattern running, in neon cyan and magenta on a dark purple synthwave backdrop with a striped sun." loading="lazy" decoding="async"><figcaption><b>Outrun</b></figcaption></figure></li>
       <li><figure><img src="/images/phosphor/theme-notebook.webp" data-hi="/images/phosphor/hi/theme-notebook.webp" width="1280" height="800" alt="The Phosphor Dash in the Notebook theme connected to Neutrino with a pattern running, in hand-drawn ink styling on cream ruled paper." loading="lazy" decoding="async"><figcaption><b>Notebook</b></figcaption></figure></li>
     </ul>
-    <p>Same Dash, same Neutrino, six of the 20 themes. Scroll or swipe the row.</p>
+    <p>Six of the 20 themes. Scroll or swipe the row.</p>
   </section>
 
   <section aria-labelledby="s-more">
-    <h2 class="xl" id="s-more">More of it.</h2>
+    <h2 class="xl" id="s-more">More features</h2>
     <ul class="gallery">
       <li><figure><picture><source srcset="/images/phosphor/wifi-light.webp" data-hi="/images/phosphor/hi/wifi-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/wifi-dark.webp" data-hi="/images/phosphor/hi/wifi-dark.webp" width="1280" height="800" alt="The Phosphor Wi-Fi picker listing nearby networks with signal bars and lock icons, the connected network checked, and Other network, Advanced and Scan buttons at the bottom." loading="lazy" decoding="async"></picture><figcaption><b>Wi-Fi picker</b>One of the five plugins that ship with Phosphor.</figcaption></figure></li>
       <li><figure><picture><source srcset="/phosphor/docs/img/ts-health-light.webp" data-hi="/phosphor/docs/img/hi/ts-health-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/ts-health-dark.webp" data-hi="/phosphor/docs/img/hi/ts-health-dark.webp" width="1280" height="800" alt="The Health tab of the Log page showing the link readings, with the This device section below." loading="lazy" decoding="async"></picture><figcaption><b>Health</b>Measured facts with the number behind them. <a href="/phosphor/docs/troubleshooting/">Troubleshooting</a></figcaption></figure></li>
       <li><figure><picture><source srcset="/phosphor/docs/img/conn-estop-light.webp" data-hi="/phosphor/docs/img/hi/conn-estop-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/conn-estop-dark.webp" data-hi="/phosphor/docs/img/hi/conn-estop-dark.webp" width="1280" height="800" alt="The top strip after Halt is pressed, with the latched E-stop message, the Halted button and the E-stop latched bar." loading="lazy" decoding="async"></picture><figcaption><b>Safety strip</b>E-Stop and Pause, always on top. <a href="/phosphor/docs/connecting/">Connecting</a></figcaption></figure></li>
-      <li><figure><picture><source srcset="/phosphor/docs/img/gs-hubs-light.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/gs-hubs-dark.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with Neutrino, the built-in machine, listed under Saved hubs and the Find a hub controls below it." loading="lazy" decoding="async"></picture><figcaption><b>Neutrino</b>Listed with the hubs, ready before you own a machine. <a href="/phosphor/docs/getting-started/">Getting started</a></figcaption></figure></li>
+      <li><figure><picture><source srcset="/phosphor/docs/img/gs-hubs-light.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/gs-hubs-dark.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with Neutrino, the built-in machine, listed under Saved hubs and the Find a hub controls below it." loading="lazy" decoding="async"></picture><figcaption><b>Neutrino</b>Listed with the hubs, so you can try Phosphor without a machine. <a href="/phosphor/docs/getting-started/">Getting started</a></figcaption></figure></li>
     </ul>
 
     <ul class="facts three mt">
@@ -194,38 +194,37 @@
         <p>29 conditions in three areas, each a measured fact with one action. No telemetry, no crash reporting.</p></li>
       <li><b>Neutrino, the built-in machine</b>
         <!-- docs/DESIGN.md §10.10 lines 1113-1131, 1153-1160; docs/BUILD.md lines 19-24 -->
-        <p>The Nucleus hub firmware compiled to WebAssembly, running inside Phosphor. Nothing physical moves.</p></li>
+        <p>The Nucleus hub firmware compiled to WebAssembly, running inside Phosphor.</p></li>
     </ul>
 
     <div class="mt"></div>
     <details class="more">
-      <summary>Safety strip, the details</summary>
+      <summary>More on the safety strip</summary>
       <p>The top strip always carries E-Stop and Pause, and you cannot remove or hide them. Tapping E-Stop latches it. Releasing takes a 3 s hold. On a machine that does not cut motor power the button reads Halt instead. In the desktop app, an E-Stop press also broadcasts a stop packet to every hub on your network that supports it; that is a setting, on by default.</p>
-      <p>The strip is at the top because the bottom edge sits against the Windows taskbar, where a missed click is easy.</p>
     </details>
     <details class="more">
-      <summary>Pages from the catalog, the details</summary>
+      <summary>More on catalog pages</summary>
       <p>Phosphor's source holds no channel ids or field names from any particular machine, and a build check enforces it.</p>
     </details>
     <details class="more">
-      <summary>Buttplug, the details</summary>
+      <summary>More on Buttplug.io support</summary>
       <p>The desktop and Android apps embed a Buttplug server, spec v0 to v4, that listens on 127.0.0.1 at port 12345 by default. Only programs on the same computer can reach it. Apps with Buttplug.io support see your machine as one linear device and can drive it, and the toys it finds over Bluetooth, serial or HID each get their own module on the Dash. If an app stops or disconnects, the machine holds its last target; only the hub's E-Stop latches.</p>
-      <p>Starting the server on launch is off by default. The Buttplug pane starts and stops it and shows connected apps, devices and a log. Toys as hub relationships is an open design question <span class="tag">WIP</span>.</p>
+      <p>Starting the server on launch is off by default. The Buttplug pane starts and stops it and shows connected apps, devices and a log.</p>
     </details>
     <details class="more">
-      <summary>Health and diagnostics, the details</summary>
+      <summary>More on health and diagnostics</summary>
       <p>Phosphor tracks 29 conditions in three areas: Link, This device and Machine. Each line is a measured fact with the number that raised it, such as <code>Memory up 140 MB in 35 min</code>, and one action. When a stream pauses, Phosphor classifies the cause as this device, the network, the machine or unknown, and marks it "likely" when it cannot be sure.</p>
       <p>Everything stays on your device. There is no telemetry and no crash reporting. A report is a public GitHub issue that you submit yourself, after a review screen that lists every field in it. Some Machine conditions read "not reported by this machine" until the protocol gains the health roles they need <span class="tag">WIP</span>.</p>
     </details>
     <details class="more">
-      <summary>Neutrino, the details</summary>
+      <summary>More on Neutrino</summary>
       <p>Neutrino is a full hub with patterns, planning and telemetry, but no motor. It appears in the Hubs list as Neutrino, on every platform, with a <code>ν</code> badge; hover the badge for "Virtual machine: real Nucleus firmware, emulated in the app". You can try every page and build a Dash before you own a machine.</p>
       <p>A saved hub also offers Sim, which replays the machine's last catalog. Settings you change there can be applied to the real machine later from the Merge pane, ticked row by row.</p>
     </details>
   </section>
 
   <section aria-labelledby="s-platforms">
-    <h2 class="xl" id="s-platforms">Runs where you do.</h2>
+    <h2 class="xl" id="s-platforms">Platforms</h2>
     <!-- docs/BUILD.md lines 379-388 (CI jobs), 228-229 (Intel Macs not built), 302-353 (Android); README.md line 160; docs/DESIGN.md §10.7 lines 1058-1063 -->
     <ul class="platforms">
       <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-win"/></svg><div><h3>Windows</h3><small>pre-release build</small></div></div><p>NSIS installer, x86_64. Not code-signed yet, so SmartScreen may warn on first run.</p></li>
@@ -235,17 +234,17 @@
       <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-phone"/></svg><div><h3>Android <span class="tag">WIP</span></h3><small>local builds only</small></div></div><p>A debug APK built from source, Android 8.0 or later. CI does not build it.</p></li>
       <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-web"/></svg><div><h3>Browser</h3><small>backup surface</small></div></div><p>The page a hub serves from its own flash. No Bluetooth and no plugins.</p></li>
     </ul>
-    <p class="mt">The browser page is the zero-install way in and the guest surface. The app is the primary delivery, so a feature can ship in the app first.</p>
+    <p class="mt">The browser page needs no install. Some features reach the app before they reach the browser page.</p>
   </section>
 
   <section class="aside" aria-labelledby="s-fit">
-    <h2 id="s-fit">How it fits.</h2>
+    <h2 id="s-fit">Phosphor and Valence</h2>
     <!-- Phosphor README.md lines 164-172; docs/BUILD.md lines 19-24 -->
-    <p>Phosphor is a Valence client. The hub holds the machine's state, Phosphor sends intents, and the hub clamps them and echoes what it applied. See <a href="/diagrams/">the diagrams</a> for the whole picture and <a href="/valence/">the Valence docs</a> for the protocol. Phosphor imports the Valence JavaScript client directly, and Neutrino is built from Nucleus, so it never carries its own copy of the protocol.</p>
+    <p>Phosphor is a Valence client. The hub holds the machine's state, Phosphor sends intents, and the hub clamps them and echoes what it applied. See <a href="/diagrams/">the diagrams</a> for the whole picture and <a href="/valence/">the Valence docs</a> for the protocol.</p>
   </section>
 
   <section aria-labelledby="s-docs">
-    <h2 class="xl" id="s-docs">Read the manual.</h2>
+    <h2 class="xl" id="s-docs">Documentation</h2>
     <ul class="index">
       <li><h3><a href="/phosphor/docs/getting-started/">Getting started</a></h3><p>Install, first launch, Neutrino.</p><span class="lic">guide</span></li>
       <li><h3><a href="/phosphor/docs/connecting/">Connecting</a></h3><p>Discovery, Bluetooth setup, access tiers, pairing, E-Stop.</p><span class="lic">guide</span></li>

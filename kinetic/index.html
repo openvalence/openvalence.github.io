@@ -40,14 +40,14 @@
   </a>
   <nav class="chips" aria-label="Site">
     <a class="chip" href="/valence/">Valence</a>
-    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/components/" aria-current="page">Components</a>
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
@@ -55,8 +55,8 @@
   <section class="opening">
     <h1>Kinetic</h1>
     <!-- Kinetic README.md intro, "License" -->
-    <p class="lede">Timed knots in, jerk-limited motion out. The same bits on every chip.</p>
-    <p>A header-only C++ library with no hardware dependencies. It is the planner in <a href="/nucleus/">Nucleus</a>, and you can use it on its own. <span class="nb">Apache-2.0</span>.</p>
+    <p class="lede">The motion planner. It turns timed knots into jerk-limited motion, with bit-identical results on every chip.</p>
+    <p>A header-only C++ library with no hardware dependencies. It is the planner in <a href="/nucleus/">Nucleus</a>, and you can use it on its own. No release yet. <span class="nb">Apache-2.0</span>.</p>
     <!-- Kinetic playground/README.md: deployed at openvalence.org/Kinetic/ -->
     <div class="btns">
       <a class="btn go" href="https://openvalence.org/Kinetic/">Open the playground</a>
@@ -75,23 +75,17 @@
     </figure>
   </section>
 
-  <section class="aside" aria-labelledby="s-status">
-    <h2 id="s-status">Kinetic², the current one.</h2>
-    <!-- Kinetic README.md:8-14; gh release list is empty -->
-    <p>It plans every motion in Nucleus: the firmware, Neutrino and the native tests. There is no release yet. Kinetic 1, the first planner, lives on the <code>kinetic1</code> branch of the repo and is no longer on <code>main</code>.</p>
-  </section>
-
   <section aria-labelledby="s-model">
-    <h2 class="xl" id="s-model">Time never gives. Amplitude does.</h2>
+    <h2 class="xl" id="s-model">How it plans</h2>
     <!-- Kinetic README.md:16-29 "The model" -->
     <ul class="facts">
-      <li><b>Knots in, a sampled trajectory out</b><p>Every source becomes knots: the curve passes position <code>p</code> at time <code>t_us</code>, optionally with an end velocity. The engine never sees a wire format. So any source, from a script to a live stream, feeds the same planner.</p></li>
-      <li><b>Event-driven</b><p>The pending knots are solved when they change, at the next sample. The curve is continuous in position and velocity by construction. So the motor never gets a step in speed.</p></li>
-      <li><b>Never late, never dropped</b><p>A knot the limits cannot reach in time is moved toward the previous knot. It is never dropped and never placed late. So a script keeps its timing and gives up stroke length, not rhythm.</p></li>
-      <li><b>Limits are ceilings</b><p>The planner stays under velocity, acceleration and jerk limits and does not plan to reach them. Every trim, clamp and refusal is recorded as an anomaly you can read. So you can see exactly where a pattern asked for too much.</p></li>
+      <li><b>Knots in, a sampled trajectory out</b><p>Every source becomes knots: the curve passes position <code>p</code> at time <code>t_us</code>, optionally with an end velocity. The planner never sees a wire format, so a script and a live stream feed it the same way.</p></li>
+      <li><b>Event-driven</b><p>Pending knots are solved when they change, at the next sample. The curve is continuous in position and velocity, so the motor never gets a step in speed.</p></li>
+      <li><b>Timing comes first</b><p>A knot the limits cannot reach in time is moved toward the previous knot. It is never dropped or placed late, so a script keeps its timing and gives up some stroke length instead.</p></li>
+      <li><b>Limits are ceilings</b><p>The planner stays under the velocity, acceleration and jerk limits and does not plan to reach them. Every trim, clamp and refusal is recorded as an anomaly you can read, so you can see where a pattern asked for too much.</p></li>
     </ul>
     <!-- Kinetic README.md:74-86 "Planner options": smoothness, crisp PCHIP vs smooth Makima -->
-    <p class="mt">Free knots take one of two styles: crisp (no overshoot between monotone knots) or smooth (may overshoot, continuous acceleration), or a blend between. So you choose between exact turnarounds and softer curves.</p>
+    <p class="mt">Free knots use one of two styles, or a blend: crisp, which never overshoots between monotone knots, or smooth, which may overshoot but keeps acceleration continuous.</p>
   </section>
 
   <section class="split" aria-labelledby="s-playground">
@@ -101,7 +95,7 @@
       </div>
     </div>
     <div>
-      <h2 id="s-playground">Play with it.</h2>
+      <h2 id="s-playground">Playground</h2>
       <!-- Kinetic playground/README.md -->
       <p>The planner, compiled to WebAssembly, in your browser. Place knots on the position trace, change the planner options, and read the result: the curve, velocity, acceleration and jerk against the limits, the solved knots and every anomaly.</p>
       <p class="links"><a href="https://openvalence.org/Kinetic/">Open it full screen</a> · <a href="/Kinetic/handles.html">The handles editor</a> · <a href="/demos/">Demos</a></p>
@@ -110,8 +104,8 @@
 
   <section class="aside" aria-labelledby="s-determinism">
     <div>
-      <h2 id="s-determinism">Same plan, every chip.</h2>
-      <p>So the plan you preview in the browser is the plan the firmware runs, provided the flag is set.</p>
+      <h2 id="s-determinism">Determinism</h2>
+      <p>The plan you preview in the browser is the plan the firmware runs, as long as both are built with the same compiler flag.</p>
     </div>
     <div>
       <!-- Kinetic README.md:99-111 "Determinism" -->
@@ -126,17 +120,17 @@
   </section>
 
   <section class="aside" aria-labelledby="s-use">
-    <h2 id="s-use">Using it.</h2>
+    <h2 id="s-use">Using the library</h2>
     <div>
       <!-- Kinetic README.md:31-72 "Example"; :88-97 "Units and frames"; :113-138 "Integration"; :152-170 "WebAssembly" -->
       <p>You call <code>submit()</code> with knots and <code>positionAt()</code> on your own clock. It needs C++20 and builds with CMake or PlatformIO. A WebAssembly build with a small C interface is in the repo.</p>
       <details class="more">
         <summary>Units, and what it leaves to you</summary>
-        <p>Position is normalized 0 to 1 across the stroke window you give it, so mapping to millimeters, steps or encoder counts is your code's job. So the same plan works for any machine.</p>
+        <p>Position is normalized 0 to 1 across the stroke window you give it, so mapping to millimeters, steps or encoder counts is your code's job.</p>
         <p>Kinetic plans motion inside a window. Homing, rail limits, e-stop, arbitration and step generation belong to the machine around it, and in OpenValence that is Nucleus.</p>
       </details>
       <!-- Nucleus kinetic.pin; Kinetic README.md "Integration" -->
-      <p class="mt">Nucleus pins Kinetic by commit and its lint fails if the checkout drifts from the pin. Valence segments become knots in the firmware's motion arbiter. The <a href="/diagrams/">diagrams</a> show where the planner sits, and <a href="/components/">Components</a> lists the other parts.</p>
+      <p class="mt">In Nucleus, Valence motion segments become knots in the firmware's motion arbiter. The <a href="/diagrams/">diagrams</a> show where the planner sits, and <a href="/components/">Components</a> lists the other parts.</p>
       <p class="links"><a href="https://github.com/openvalence/Kinetic">Repo</a> · <a href="https://openvalence.org/Kinetic/">Playground</a> · <a href="/nucleus/">Nucleus</a> · <a href="/diagrams/">Diagrams</a> · <a href="/components/">Components</a></p>
     </div>
   </section>

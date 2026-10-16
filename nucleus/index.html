@@ -40,14 +40,14 @@
   </a>
   <nav class="chips" aria-label="Site">
     <a class="chip" href="/valence/">Valence</a>
-    <a class="chip" href="/components/">Components</a>
+    <a class="chip" href="/components/" aria-current="page">Components</a>
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
@@ -60,77 +60,77 @@
   </section>
 
   <section class="aside" aria-labelledby="s-status">
-    <h2 id="s-status">Works on the bench.</h2>
+    <h2 id="s-status">Status</h2>
     <!-- Nucleus README.md "Build and flash"; docs/board-map.md "The bench profile"; gh release list is empty -->
-    <p class="big-line">Not in the field yet. It runs on an ESP32-P4 dev board and bench rigs; a finished Flagship PCB does not exist yet (see <a href="/hardware/">Hardware</a>). No release, no download. When there is one, it will be on <a href="/downloads/">Downloads</a>.</p>
+    <p class="big-line">Runs on an ESP32-P4 dev board and bench rigs. The Flagship PCB is still in design (see <a href="/hardware/">Hardware</a>). No release yet; when there is one, it will be on <a href="/downloads/">Downloads</a>.</p>
   </section>
 
   <section class="band" aria-labelledby="s-motion">
-    <h2 class="xl" id="s-motion">Built so a hiccup never reaches the motor.</h2>
+    <h2 class="xl" id="s-motion">Motion timing</h2>
     <!-- Nucleus MotionArbiter.h:120-128 kStripLen=128; ValenceMotion.h:289 kMotionTickUs=1000; MotionArbiter.h:111-119 kLeaseTicks = 4; motion-control.md:252-254 (125 ns poll loop at 40 MHz, 128 ns spread); Phosphor src/model/motion.js:80-85 LEAD_MARGIN_MS=100; Nucleus StoredState.h:77-81 factory horizon 1000 ms -->
     <ul class="facts">
-      <li><span class="num">128<small>ms</small></span><b>Plan strip</b><p>The planner, <a href="/kinetic/">Kinetic²</a>, keeps the next 128 positions in mm, one per 1 ms tick. So a planner solve of up to 128 ms never leaves the steer without a plan.</p></li>
-      <li><span class="num">4<small>ms</small></span><b>Lease</b><p>If the lease is not renewed for 4 ms, the LP core parks itself and counts a lapse. So a stalled main core keeps the carriage moving at its last speed for 4 ms at most.</p></li>
-      <li><span class="num">128<small>ns</small></span><b>Edge spread</b><p>Every quadrature edge lands on a 125 ns grid. So timing error stays inside one step and never adds up over a stroke.</p></li>
-      <li><span class="num">900<small>ms</small></span><b>Wi-Fi cover</b><p>The client sends motion up to the horizon minus 100 ms ahead. So a Wi-Fi stall shorter than that never reaches the motion.</p></li>
+      <li><span class="num">128<small>ms</small></span><b>Plan strip</b><p>The planner, <a href="/kinetic/">Kinetic²</a>, keeps the next 128 positions in mm, one per 1 ms tick, so a planner solve of up to 128 ms never leaves the output without a plan.</p></li>
+      <li><span class="num">4<small>ms</small></span><b>Lease</b><p>If the lease is not renewed for 4 ms, the LP core parks itself and counts a lapse. A stalled main core can keep the carriage moving at its last speed for 4 ms at most.</p></li>
+      <li><span class="num">128<small>ns</small></span><b>Edge spread</b><p>Every quadrature edge lands on a 125 ns grid, so timing error stays inside one step and does not add up over a stroke.</p></li>
+      <li><span class="num">900<small>ms</small></span><b>Wi-Fi buffer</b><p>The client sends motion up to the horizon minus 100 ms ahead, so a shorter Wi-Fi stall doesn't reach the motion.</p></li>
     </ul>
     <details class="more">
-      <summary>The long version</summary>
+      <summary>Details</summary>
       <p>The planner keeps a strip of the next 128 positions in mm, one per 1 ms tick. Past the end of the strip the steer holds the last position and counts a planner stall.</p>
       <!-- Nucleus MotionArbiter.h:262-273 MotionEmitter::steer, fence, lease -->
       <p>Every 1 ms tick the steer reads the strip and gives the LP core three things: a velocity, a fence and a lease renewal. The fence is a pair of edge counts that no edge may cross. The lease is a 4 ms timer.</p>
-      <p>A Wi-Fi hiccup is a separate problem with a separate cover. The client sends segments up to the schedule horizon minus 100 ms ahead, which is 900 ms at the factory horizon of 1000 ms.</p>
+      <p>Wi-Fi stalls are covered separately: the client sends segments up to the schedule horizon minus 100 ms ahead, which is 900 ms at the factory horizon of 1000 ms.</p>
       <!-- motion-control.md:248-254 -->
       <p>The LP core emits A/B quadrature edges, and its signed edge count is the machine's position. Its poll loop is 5 cycles, 125 ns at 40 MHz, and every edge lands on that grid. Measured at a prime edge rate on a Rigol DHO4204, the spread is 128 ns peak to peak and the rounding does not accumulate.</p>
       <!-- architecture.md:86-94; motion-control.md:270-276: cache off about 1.0 s of every 5 s, 2,156 transitions, 0 illegal -->
-      <p>The LP core runs from its own SRAM. While the main cores erased and wrote flash with the cache off, a scope saw 2,156 transitions and 0 illegal ones. So saving settings does not glitch the motor signal.</p>
+      <p>The LP core runs from its own SRAM. While the main cores erased and wrote flash with the cache off, a scope saw 2,156 transitions and 0 illegal ones, so saving settings does not glitch the motor signal.</p>
     </details>
     <p class="links"><a href="/diagrams/#system">See it as a diagram</a></p>
   </section>
 
   <section aria-labelledby="s-chips">
-    <h2 class="xl" id="s-chips">Three chips. You flash one.</h2>
+    <h2 class="xl" id="s-chips">Chips</h2>
     <!-- Nucleus README.md:15-22 "Chips"; .claude/rules/transport.md:83-84; README.md:20-22; docs/supervisor.md:232-244 -->
     <ul class="facts three">
       <li><b>ESP32-P4</b><p>Runs everything we wrote: the Valence hub, the WebSocket server, policy and motion.</p></li>
-      <li><b>ESP32-C6</b><p>A Wi-Fi and BLE radio on an SDIO link, running Espressif's stock <code>esp_hosted</code> image. So there is no radio firmware to build or flash: you only ever flash the P4.</p></li>
-      <li><b>CH32V003</b><p>A board monitor that runs its own small firmware, programmed by the P4 and carried inside the Nucleus update. So one update covers both chips.</p></li>
+      <li><b>ESP32-C6</b><p>A Wi-Fi and BLE radio on an SDIO link, running Espressif's stock <code>esp_hosted</code> image, so there is no radio firmware to build or flash. You only flash the P4.</p></li>
+      <li><b>CH32V003</b><p>A board monitor that runs its own small firmware, programmed by the P4 and carried inside the Nucleus update, so one update covers both chips.</p></li>
     </ul>
   </section>
 
   <section class="aside" aria-labelledby="s-safety">
-    <h2 id="s-safety">One gate for motion.</h2>
+    <h2 id="s-safety">Safety</h2>
     <ul class="facts">
       <!-- architecture.md:69-77 MotionArbiter sole-caller rule -->
-      <li><b>The MotionArbiter</b><p>The only code allowed to command motion. Manual input, scripts, patterns and network sessions submit intents to it. So every safety check lives in one place: homed, commissioned, pause, e-stop, and a clamp to the rail window.</p></li>
+      <li><b>The MotionArbiter</b><p>The only code allowed to command motion. Manual input, scripts, patterns and network sessions submit intents to it, so every safety check lives in one place: homed, commissioned, pause, e-stop, and a clamp to the rail window.</p></li>
       <!-- subsystem-map.md:31,79 ValenceBoardIo (E-stop NC and NO contacts, read first on every pass); Hardware flagship/FEATURES.md:107-113 -->
-      <li><b>E-stop, twice over</b><p>The E-stop input is read first on every 10 ms pass and latches an e-stop in the hub. On the PCB, the same button also cuts motor power in hardware. So an e-stop does not depend on the firmware being healthy.</p></li>
+      <li><b>E-stop</b><p>The E-stop input is read first on every 10 ms pass and latches an e-stop in the hub. On the PCB, the same button also cuts motor power in hardware, so an e-stop does not depend on the firmware.</p></li>
     </ul>
   </section>
 
   <section aria-labelledby="s-pairing">
-    <h2 class="xl" id="s-pairing">One button does the pairing. <span class="tag">WIP</span></h2>
+    <h2 class="xl" id="s-pairing">Pairing button <span class="tag">WIP</span></h2>
     <!-- Nucleus flagship_p4/src/system/ButtonGesture.h:38-42 (kDoublePressMs 600, kDemoteHoldMs 5000; RFC-114 and RFC-117 are drafts); Valence SPEC §12.3; §13.4.1 -->
     <ul class="facts">
       <li><b>Press PAIR</b><p>Opens a 120 s pairing window.</p></li>
       <li><b>Double press</b><p>Approves the one pending request for configure access.</p></li>
       <li><b>Hold 5 s</b><p>Drops every paired client to watch access and ends their sessions.</p></li>
-      <li><b>Hold while powering on</b><p>Config mode: BLE and USB serial only, no Wi-Fi, and the first client to connect gets configure access. So you can set up a PCB that has no network.</p></li>
+      <li><b>Hold while powering on</b><p>Config mode: BLE and USB serial only, no Wi-Fi, and the first client to connect gets configure access. Use it to set up a PCB that has no network.</p></li>
     </ul>
-    <p class="mt">So you can pair, approve and lock out clients from the button alone. These gestures are in draft RFCs and may change. The access tiers are in the <a href="/Valence/">Valence docs</a>.</p>
+    <p class="mt">These gestures are drafts and may change. The access tiers are in the <a href="/Valence/">Valence docs</a>.</p>
   </section>
 
   <section class="aside" aria-labelledby="s-updates">
-    <h2 id="s-updates">A bad update doesn't brick it.</h2>
+    <h2 id="s-updates">Firmware updates and rollback</h2>
     <!-- Nucleus build-test-deploy.md:102-118 -->
     <p>An HTTP POST to <code>/ota</code> on port 80, with a token, writes the new image to the idle slot and reboots. The new image is on trial: if its hub task hangs before it proves itself, the watchdog resets the PCB and the bootloader brings back the previous image.</p>
   </section>
 
   <section class="aside" aria-labelledby="s-fit">
-    <h2 id="s-fit">How it fits.</h2>
+    <h2 id="s-fit">Related</h2>
     <div>
       <!-- Valence SPEC §1.2; Phosphor README.md (Neutrino) -->
-      <p>Nucleus is the hub in <a href="/Valence/">Valence</a>: it holds the machine's state, and clients such as <a href="/phosphor/">Phosphor</a> send intents that it clamps and echoes. Kinetic is pinned by commit, and the PCB it runs on is <a href="/hardware/">Hardware</a>. The same hub code compiles to WebAssembly and runs inside Phosphor as Neutrino, so you can try it with no PCB; see <a href="/demos/">Demos</a>. The <a href="/diagrams/">diagrams</a> show the whole system, and <a href="/components/">Components</a> lists every part.</p>
+      <p>Nucleus is the hub in <a href="/Valence/">Valence</a>: it holds the machine's state, and clients such as <a href="/phosphor/">Phosphor</a> send intents that it clamps and echoes. It plans motion with <a href="/kinetic/">Kinetic</a> and runs on the <a href="/hardware/">Flagship PCB</a>. The same hub code compiles to WebAssembly and runs inside Phosphor as Neutrino, so you can try it without a PCB; see <a href="/demos/">Demos</a>. The <a href="/diagrams/">diagrams</a> show the whole system, and <a href="/components/">Components</a> lists every part.</p>
       <p class="links"><a href="https://github.com/openvalence/Nucleus">Repo</a> · <a href="/Valence/">Valence docs</a> · <a href="/hardware/">Hardware</a> · <a href="/kinetic/">Kinetic</a> · <a href="/diagrams/">Diagrams</a> · <a href="/downloads/">Downloads</a></p>
     </div>
   </section>

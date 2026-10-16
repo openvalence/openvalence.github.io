@@ -44,10 +44,10 @@
     <a class="chip" href="/phosphor/" aria-current="page">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
@@ -60,7 +60,7 @@
   <section aria-labelledby="s-status">
     <h2 id="s-status" data-n="01">Status <span class="tag">WIP</span></h2>
     <!-- docs/GRAPH.md; Phosphor board ph-e82.13 (open), ph-e82.13.8 (open: reachable from a category page) -->
-    <p>The node editor is built and in the app, and it is still changing. For now you reach it as a module on the Dash. Nothing here is released. Check the <a href="https://github.com/openvalence/Phosphor/blob/main/docs/GRAPH.md">graph notes</a> for the current node list.</p>
+    <p>The node editor is in the app and still changing. You reach it as a module on the Dash. See the <a href="https://github.com/openvalence/Phosphor/blob/main/docs/GRAPH.md">graph notes</a> for the current node list.</p>
   </section>
 
   <section aria-labelledby="s-open">
@@ -72,7 +72,7 @@
       <li>Right-click the grid and pick <strong>Node graph</strong> from the module list.</li>
       <li>Leave edit mode. The card shows a still preview. Click it to use it, and press <strong>Open</strong> for the full size.</li>
     </ol>
-    <p>So the editor does not hijack your scroll wheel: until you click into it, the wheel scrolls the page. Escape or a click outside lets go.</p>
+    <p>Until you click into the editor, the scroll wheel scrolls the page. Escape or a click outside lets go.</p>
     <figure class="docshot"><picture><source srcset="../img/ne-graph-light.webp" data-hi="../img/hi/ne-graph-light.webp" media="(prefers-color-scheme: light)"><img src="../img/ne-graph-dark.webp" data-hi="../img/hi/ne-graph-dark.webp" width="1280" height="800" alt="The node editor with a Planned position node and the stroke window nodes wired through a Map range node to a Low-pass node." decoding="async"></picture><figcaption>The node editor at full size, with a starting graph.</figcaption></figure>
     <ol class="legend">
       <li>+ Add opens the list of nodes to add.</li>
@@ -92,7 +92,7 @@
     <h3>Source and target nodes</h3>
     <p>A <strong>field node</strong> is a setting from the connected hub, shown with its card name, description, range, unit and live value. Used as a source it reads. Used as a target it writes, through the same path as a normal control, so a refusal appears the same way. A <strong>toy node</strong> is a control of a device connected to Phosphor's built-in buttplug server. Each field or toy appears once.</p>
     <h3>Value types</h3>
-    <p>Sockets carry <code>float</code>, <code>int</code> or <code>bool</code>. There are no arrays. Types convert the way Blender's do: int to float is exact, float to int rounds, a bool is 0 or 1, and any nonzero number reads as true. A small ring at a wire's midpoint means the two ends differ in type. So you can wire almost anything to anything, and the ring tells you where a conversion happens.</p>
+    <p>Sockets carry <code>float</code>, <code>int</code> or <code>bool</code>. There are no arrays. Types convert the way Blender's do: int to float is exact, float to int rounds, a bool is 0 or 1, and any nonzero number reads as true. A small ring at a wire's midpoint means the two ends differ in type and a conversion happens there.</p>
     <h3>Operation nodes</h3>
     <p>One node per family, with the operation in a dropdown:</p>
     <table class="parts">
@@ -106,7 +106,7 @@
         <tr><th scope="row">Converter</th><td>Threshold, Slew, Low-pass, Interval, Rate limit, Scope</td></tr>
       </tbody>
     </table>
-    <p>An unconnected input uses the number you type on the node. One input takes one wire: a second wire replaces the first. A wire that would close a loop is refused with <code>refused: would loop</code>. Divide by zero, and any other undefined result, gives 0. So a patch can never produce a NaN that reaches the machine.</p>
+    <p>An unconnected input uses the number you type on the node. One input takes one wire: a second wire replaces the first. A wire that would close a loop is refused with <code>refused: would loop</code>. Divide by zero, and any other undefined result, gives 0, so a patch never sends NaN to the machine.</p>
     <p>The synth parallels: <strong>Slew</strong> limits how fast a value may rise or fall, <strong>Low-pass</strong> smooths it with a time constant, <strong>Threshold</strong> turns a value into on or off with hysteresis, <strong>Gate</strong> passes a value only while a bool is true (closed, it gives the target its safe value), and <strong>Scope</strong> plots a value over the last 10 seconds as it passes through.</p>
   </section>
 
@@ -115,8 +115,8 @@
     <!-- GRAPH.md "Where a chain runs"; src/model/graph.js:31 TICK_MS 50; DESIGN.md 10.8; Valence SPEC 8.11, 11.6 -->
     <p>A node target shows a badge, <code>hub</code> or <code>client</code>, saying where its chain runs.</p>
     <dl class="terms">
-      <div><dt>Hub</dt><dd>One map node between two catalog fields, with an accessory field as the target, becomes a relationship stored on the hub (Valence spec §8.11). The seven maps are linear clamp, invert, threshold with hysteresis, slew limit, low-pass, gate and piecewise table. So the hub keeps evaluating it after you close Phosphor.</dd></div>
-      <div><dt>Client</dt><dd>Anything else, meaning any operation node or a toy, runs inside Phosphor every 50 ms (20 Hz). So a client chain suits smoothing and mapping, not audio-rate work, and it stops when Phosphor closes.</dd></div>
+      <div><dt>Hub</dt><dd>One map node between two catalog fields, with an accessory field as the target, becomes a relationship stored on the hub (Valence spec §8.11). The seven maps are linear clamp, invert, threshold with hysteresis, slew limit, low-pass, gate and piecewise table. The hub keeps evaluating it after you close Phosphor.</dd></div>
+      <div><dt>Client</dt><dd>Anything else, meaning any operation node or a toy, runs inside Phosphor every 50 ms (20 Hz). That suits smoothing and mapping, not audio-rate work. Client chains stop when Phosphor closes.</dd></div>
     </dl>
     <p>Client chains follow the stop rules. With no hub link, or after an e-stop or a pause, every client chain disarms, and each target gets its safe value once. A machine field target has no client-side safe value, so the hub applies its own pause. A chain with a missing input disarms with the reason on the status line, for example <code>disarmed: Multiply has no a</code>. A hub edge shows its saved state only after Phosphor reads it back from the hub.</p>
   </section>
@@ -124,12 +124,12 @@
   <section aria-labelledby="s-build">
     <h2 id="s-build" data-n="05">What you can build</h2>
     <!-- GRAPH.md "Position with duration", Starting graphs; src/model/graph-presets.js:19, :41 -->
-    <p>The <strong>More</strong> menu has a <strong>Starting graph</strong> list. A starting graph is placed below what is already there as one undoable step, and you edit it like any other nodes. Two ship today:</p>
+    <p>The <strong>More</strong> menu has a <strong>Starting graph</strong> list. A starting graph is placed below what is already there as one undoable step, and you edit it like any other nodes. Two are included:</p>
     <dl class="terms">
       <div><dt>Mirror machine position to Buttplug</dt><dd>The machine's target, scaled by its window, drives a toy's position, with the update interval as the duration.</dd></div>
       <div><dt>Mirror machine plan to Buttplug</dt><dd>The hub's plan end drives a toy's position, with the plan's remaining time as the duration.</dd></div>
     </dl>
-    <p>A toy that takes a position and a duration has a <strong>Duration</strong> socket under its head. An unwired Duration is a number you set, 100 ms by default. A device's own update rate is a ceiling on top. So a Rate limit before the Interval keeps the two matched.</p>
+    <p>A toy that takes a position and a duration has a <strong>Duration</strong> socket under its head. An unwired Duration is a number you set, 100 ms by default. A device's own update rate is a ceiling on top; a Rate limit before the Interval keeps the two matched.</p>
     <p>Other patches follow from the nodes: a Low-pass between a speed setting and a toy to soften it, a Threshold and a Gate to switch one control on when another passes a level, or Math to scale one range onto another.</p>
   </section>
 
@@ -157,7 +157,7 @@
   <section aria-labelledby="s-save">
     <h2 id="s-save" data-n="07">Saving</h2>
     <!-- src/model/graph.js:689 STORAGE_KEY 'phosphor.graph', saveLocal :696; src/plugins/graph.js persist() after connect, edits, undo/redo -->
-    <p>There is no Save button. Phosphor stores the graph on your computer after each edit: nodes, wires, operations and the view. A hub edge is also written to the hub, which keeps it. So your client chains come back when you reopen Phosphor, but they only run while Phosphor is open and linked. The graph is not synced to other computers.</p>
+    <p>There is no Save button. Phosphor stores the graph on your computer after each edit: nodes, wires, operations and the view. A hub edge is also written to the hub, which keeps it. Client chains come back when you reopen Phosphor and run only while it is open and linked. The graph is not synced to other computers.</p>
     <p class="links"><a href="/phosphor/docs/">Phosphor docs</a> · <a href="/phosphor/docs/plugins/">Plugins</a> · <a href="https://github.com/openvalence/Phosphor/blob/main/docs/GRAPH.md">Graph notes</a></p>
   </section>
 </main>

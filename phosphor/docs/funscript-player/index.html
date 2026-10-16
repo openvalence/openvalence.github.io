@@ -44,10 +44,10 @@
     <a class="chip" href="/phosphor/" aria-current="page">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
@@ -89,7 +89,7 @@
     <p>Every other axis in the files is ignored, and the status says so, for example <code>Extra axes ignored: roll</code>. On a hub without an oscillator input the status reads <code>This machine has no oscillator input</code>. A side file that fails to read becomes a note in the status. It does not stop the load. A Stash scene serves one file, so it carries embedded axes only.</p>
     <h3>Bad scripts</h3>
     <p><!-- funscript.js:20 MAX_ACTIONS 1000000, MAX_SPAN_MS 60000 -->
-    A file that is not JSON, has no valid action, or has more than a million actions is refused in words, and Play stays grayed. Fixable problems play and are named in the status: unsorted actions, duplicates, positions outside 0 to 100, invalid actions dropped, very long gaps split. The <code>range</code> field inside a script is ignored. So a messy script usually still plays, and a broken one says why it will not.</p>
+    A file that is not JSON, has no valid action, or has more than a million actions is refused in words, and Play stays grayed. Fixable problems play and are named in the status: unsorted actions, duplicates, positions outside 0 to 100, invalid actions dropped, very long gaps split. The <code>range</code> field inside a script is ignored.</p>
   </section>
 
   <section aria-labelledby="s-scale">
@@ -99,9 +99,9 @@
     <ul>
       <li><strong>Auto</strong> is on by default. It reads the whole script, finds how far the machine's own curve would overshoot at each end, and fits to that. A script that overshoots only the top keeps its bottom where it is. The slider is grayed under Auto, and its value shows where the script's 0 and 100 land, for example <code>0.01–0.97</code>.</li>
       <li><!-- scale.js:14 RANGES min 0.25 max 1 -->
-      <strong>Manual</strong> is one slider from 0.25 to 1.00. It shrinks the whole script toward the middle of the window, and 1.00 changes nothing. So Manual trades stroke length for headroom, evenly at both ends.</li>
+      <strong>Manual</strong> is one slider from 0.25 to 1.00. It shrinks the whole script toward the middle of the window, and 1.00 changes nothing.</li>
     </ul>
-    <p>The fit runs in Phosphor because only the client sees the whole script. So the hub never needs to know about it.</p>
+    <p>The fit runs in Phosphor, the only side that sees the whole script.</p>
     <h3>Range and invert</h3>
     <p>The timeline has two range pills that confine the stroke to part of the window, and an Invert switch. They apply on top of Scale.</p>
   </section>
@@ -112,13 +112,13 @@
     <p>The player keeps time by the moment each video frame is shown on screen, not by the video's reported position. That keeps the picture and the stroke on the same instant. Phosphor also resyncs its clock with the hub's every 10 seconds.</p>
     <h3>Offset</h3>
     <p>Offset is in the timeline's header row. <!-- ui.js:211 OFFSET_STEP 5, OFFSET_MAX 500 -->
-    It runs from −500 to +500 ms in 5 ms steps. A positive value makes the machine move later, a negative one earlier. Zero already includes the latency the hub declares. So you start from the hub's own figure, and the offset is only for the delay you can feel: a slow display, a Bluetooth speaker. A change applies when you release the control, and the schedule restarts once.</p>
+    It runs from −500 to +500 ms in 5 ms steps. A positive value makes the machine move later, a negative one earlier. Zero already includes the latency the hub declares, so use the offset only for extra delay you can feel, such as a slow display or a Bluetooth speaker. A change applies when you release the control, and the schedule restarts once.</p>
     <h3>Auto latency</h3>
     <!-- scheduler.js:42 LAG_WINDOW 32, COMP_MAX_MS 100; scheduler.js:229 clamp(lag, 0, COMP_MAX_MS); prefs.js:36 autoLatency false; scheduler.js:12 offset in force = T.offsetMs - compMs -->
-    <p>Auto latency is off by default and experimental. It compares the hub's plan with what the player sent, takes the median of the last 32 plans, and moves the machine earlier by that much, up to 100 ms. So it can only pull the machine earlier, never push it later, and your offset still applies on top.</p>
+    <p>Auto latency is off by default and experimental. It compares the hub's plan with what the player sent, takes the median of the last 32 plans, and moves the machine earlier by that much, up to 100 ms. It never moves the machine later, and your offset still applies on top.</p>
     <h3>Wi-Fi stalls</h3>
     <!-- motion.js:84-85 LEAD_MARGIN_MS 100, leadCapMs = max(horizon/2, horizon - 100) -->
-    <p>The player sends motion ahead of time. The hub's schedule horizon is 250, 500 or 1000 ms, and Nucleus ships at 1000 ms. The player sends up to the horizon minus 100 ms ahead, which is 900 ms at the default. At a 250 ms horizon the lead is 150 ms, and at 500 ms it is 400 ms. So on the default a Wi-Fi stall shorter than about 900 ms never reaches the motion, and a hub set to 250 ms rides out only 150.</p>
+    <p>The player sends motion ahead of time. The hub's schedule horizon is 250, 500 or 1000 ms, and Nucleus ships at 1000 ms. The player sends up to the horizon minus 100 ms ahead, which is 900 ms at the default. At a 250 ms horizon the lead is 150 ms, and at 500 ms it is 400 ms. A Wi-Fi stall shorter than the lead doesn't reach the motion.</p>
   </section>
 
   <section aria-labelledby="s-play">
@@ -128,25 +128,25 @@
     <h3>Starting and stopping</h3>
     <ul>
       <!-- scheduler.js:39 PREROLL_SKIP 0.05, PREROLL_MIN_MS 400, PREROLL_STROKE_MS 1200; scheduler.js:274 -->
-      <li>If the machine is more than 5 percent of the stroke away from where the script starts, Play first moves it there in one positioning move, then starts the video. The move takes 400 ms plus 1200 ms for a full stroke. So the machine never snaps to the start, and the video waits for it.</li>
+      <li>If the machine is more than 5 percent of the stroke away from where the script starts, Play first moves it there in one positioning move, then starts the video. The move takes 400 ms plus 1200 ms for a full stroke, and the video waits for it.</li>
       <li>Pause, seeking, a stall, a media error or hiding the page each send one hold. <!-- scheduler.js:39 STOP_MS 200 -->
-      The machine follows the script for up to 200 ms, or to the next action if that comes sooner, and rests. So a stop never leaves it mid-stroke.</li>
+      The machine follows the script for up to 200 ms, or to the next action if that comes sooner, and rests.</li>
       <li>Play grays out with the reason in words: <code>no hub link</code>, <code>session not authorized</code>, <code>e-stop latched</code>, <code>paused, resume to continue</code>, <code>stop the pattern first</code>, <code>motion input in use by &lt;plugin&gt;</code>. If one of these appears mid-play, the video pauses in the same frame.</li>
       <li>Nothing resumes by itself. After a halt clears, Play comes back and waits for you.</li>
       <li>The strip's pause and e-stop work from every tier, including while the video is fullscreen.</li>
     </ul>
     <h3>Loop, A-B and seek</h3>
     <p>Loop repeats the whole video. A count of 0 loops forever. The A-B button sets a section: the first press sets A at the playhead, the second sets B and starts the loop, the third clears it. The loop wraps with no gap in the motion. <!-- prefs.js:36 seekMs 500 -->
-    A seek glides the machine to where the script will be 500 ms later by default. The Seek glide row sets it, and 0 jumps. So a seek is one smooth move.</p>
+    A seek glides the machine to where the script will be 500 ms later by default. The Seek glide row sets it, and 0 jumps.</p>
     <h3>Pause home</h3>
     <!-- prefs.js:35 home false, homeAfterMs 5000, homePoint 0.5 -->
-    <p>Off by default. When on, the machine moves to the home point (the middle of the window by default) after a pause has lasted the set time (5 seconds by default). So a paused video parks the machine at a known spot. Play, a new load or any change to Motion cancels a pending move.</p>
+    <p>Off by default. When on, the machine moves to the home point (the middle of the window by default) after a pause has lasted the set time (5 seconds by default). Play, a new load or any change to Motion cancels a pending move.</p>
     <h3>Queue and autoplay</h3>
     <p>The library column has a Library and a Queue view. Add to queue and Play next are on each row, and a drag reorders. With Autoplay on, the next queued video loads and plays when one ends. <!-- ui.js:112 AUTO_WAIT_MS 10000 -->
-    A halt, a refusal, any other act of yours between videos, or 10 seconds without the next script cancels the pending start. So a halt released between videos starts nothing.</p>
+    A halt, a refusal, any other act of yours between videos, or 10 seconds without the next script cancels the pending start.</p>
     <h3>Rate and speed</h3>
     <!-- ui.js:106 RATES -->
-    <p>Rate runs from 0.5x to 2x. The player does not slow a script down to fit the machine. The hub holds its input speed limit, and the status reads <code>Script past the input speed limit</code> when a script asks for more. So a fast script is held to the machine's limit, not slowed to fit.</p>
+    <p>Rate runs from 0.5x to 2x. The player does not slow a script down to fit the machine. The hub holds its input speed limit, and the status reads <code>Script past the input speed limit</code> when a script asks for more.</p>
   </section>
 
   <section aria-labelledby="s-stash">
@@ -159,7 +159,7 @@
       <li>Hover a row to see a small heat strip of the script's speed over time.</li>
       <li>The right-click menu on a row has Play, Play next, Add to queue and Open in Stash.</li>
     </ul>
-    <p>The video plays from Stash's direct stream, the original file. Whatever codec the file uses has to play in the app's webview. Transcodes are not supported. The player only reads from Stash: it does not write play counts back. It was checked against Stash v0.31.1.</p>
+    <p>The video plays from Stash's direct stream, the original file. Whatever codec the file uses has to play in the app's webview. Transcodes are not supported. The player only reads from Stash: it does not write play counts back. Tested with Stash v0.31.1.</p>
   </section>
 
   <section aria-labelledby="s-analyzer">
@@ -181,13 +181,13 @@
       <li>Motion stays on while the script plays.</li>
     </ol>
     <p><!-- analyzer.js:47 LAG_MIN_MS -100, LAG_MAX_MS 400, LAG_EVERY_MS 500; ui.js:105 TRACE_MS 8000 -->
-    <code>Lag n ms</code> and <code>Plan n ms</code> give the shift, between −100 and 400 ms, that best lays the measured position, and the plan, over the script across the last 8 seconds. They update twice a second. They are a scope, not a calibration. So use them to see whether the machine runs early or late, then set the offset by feel. The Kinetic line reads <code>Kinetic: wasm</code> when the planner is running. If it cannot start, it reads <code>Kinetic: fallback</code> and the curve becomes straight lines between actions.</p>
+    <code>Lag n ms</code> and <code>Plan n ms</code> give the shift, between −100 and 400 ms, that best lays the measured position, and the plan, over the script across the last 8 seconds. They update twice a second. Use them to see whether the machine runs early or late, then set the offset by feel. The Kinetic line reads <code>Kinetic: wasm</code> when the planner is running. If it cannot start, it reads <code>Kinetic: fallback</code> and the curve becomes straight lines between actions.</p>
     <p>Below the graph are the hub's tuning controls, smoothness and the speed and acceleration ceilings among them, plus the input limits. They come from whatever the hub's catalog lists. This is why the plugin declares the <code>intent</code> permission. There are two modes:</p>
     <dl class="terms">
       <div><dt>Live</dt><dd>Stores each change as you make it.</dd></div>
       <div><dt>Preview</dt><dd>Applies a change on the machine without storing it. The status reads <code>Preview: not saved</code>. <strong>Apply</strong> stores the values and <strong>Discard</strong> puts the stored ones back. Preview is the default on a hub that supports it.</dd></div>
     </dl>
-    <p>The preview planner is an ideal one: it has none of the board's task jitter or edge quantization. It matches the firmware exactly only when the firmware is built from the commit the player pins.</p>
+    <p>The preview planner is an ideal one: it has none of the board's task jitter or edge quantization. It matches the firmware exactly only when both run the same Kinetic version.</p>
   </section>
 
   <section aria-labelledby="s-keys">
@@ -217,15 +217,15 @@
     <h2 id="s-path" data-n="09">How a script action reaches the motor</h2>
     <!-- Brief "Useful verified facts" Funscript path; FUNSCRIPT.md Motion path -->
     <!-- scheduler.js:39 OFFER_MAX 32; scheduler.js:45 EXPECT_MS 500; 1 ms grid, 128 ms strip, 4 ms lease, 50 Hz: site brief, from Nucleus docs, not re-verified in code here -->
-    <p>Once a frame, the player turns the next actions into segments, up to 32 at a time, one per gap between actions. A gap over 500 ms ends in a rest. So a long pause in a script parks the machine instead of creeping. Phosphor stamps each segment with a time on the hub's clock and sends it ahead of that time. The hub plans on a 1 ms grid with Kinetic², renders a 128 ms strip, and the ESP32-P4's LP core emits A/B quadrature to the servo drive under a 4 ms lease. So the player never steps the motor: it hands the hub a schedule and the hub owns the timing. The hub returns motion telemetry at 50 Hz by default. <a href="/diagrams/#funscript">The diagram</a> draws the path.</p>
+    <p>Once a frame, the player turns the next actions into segments, up to 32 at a time, one per gap between actions. A gap over 500 ms ends in a rest, so the machine holds still through a long pause instead of creeping. Phosphor stamps each segment with a time on the hub's clock and sends it ahead of that time. The hub plans on a 1 ms grid with Kinetic², renders a 128 ms strip, and the ESP32-P4's LP core emits A/B quadrature to the servo drive under a 4 ms lease. The player hands the hub a schedule, and the hub owns the timing. The hub returns motion telemetry at 50 Hz by default. <a href="/diagrams/#funscript">The diagram</a> draws the path.</p>
   </section>
 
   <section aria-labelledby="s-status">
     <h2 id="s-status" data-n="10">Status</h2>
     <!-- FUNSCRIPT.md Multi-axis "Owed", Playback "Automatic compensation"; brief: no releases -->
-    <p>Not released yet. The player works against Neutrino, the built-in machine, and the Stash browser has been checked against a real server. Two parts are unfinished:</p>
+    <p>Part of the Phosphor pre-release. Two parts are unfinished:</p>
     <ul>
-      <li>Oscillator axes (V8, V9) <span class="tag">WIP</span>: the end-to-end check on a hub is still owed. A setting to ignore these axes per scene is not built.</li>
+      <li>Oscillator axes (V8, V9) <span class="tag">WIP</span>: not yet checked end to end on a hub. A per-scene setting to ignore them is not built.</li>
       <li>Auto latency <span class="tag">WIP</span>: experimental, off by default.</li>
     </ul>
     <p class="links"><a href="/downloads/">Downloads</a> · <a href="/phosphor/docs/">Phosphor docs</a> · <a href="https://github.com/openvalence/Phosphor/blob/main/docs/plugins/FUNSCRIPT.md">Design notes</a></p>

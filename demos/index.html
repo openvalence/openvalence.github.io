@@ -44,17 +44,17 @@
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/" aria-current="page">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
 <main>
   <section class="opening">
     <h1>Try it without a machine</h1>
-    <p>The planner runs in your browser today. The app runs its own emulated machine, Neutrino, on your desktop. Neither needs a board.</p>
+    <p>The planner runs in your browser. Phosphor includes Neutrino, an emulated machine that runs on your desktop. Neither needs a PCB.</p>
   </section>
 
   <section aria-labelledby="s-playground">
@@ -63,7 +63,7 @@
     <p>The same Kinetic² planner that runs in the firmware, compiled to WebAssembly. Click the position trace to drop a knot, tune the planner options, and see what it did: the curve, its speed, acceleration and jerk against the ceilings, and every trim it had to make.</p>
     <!-- Kinetic README.md "Determinism": bit-identical on every IEEE-754 target built with -ffp-contract=off -->
     <!-- Nucleus flagship_p4/src/CMakeLists.txt:59-62 builds with -ffp-contract=off, as does Kinetic/CMakeLists.txt:13 -->
-    <p>Kinetic gives the same bits on every target, and the firmware and the WebAssembly build use the same compiler rule for it. Same knots, same settings: the curve in your browser is the curve the machine plans.</p>
+    <p>Kinetic gives bit-identical results on every target, so with the same knots and settings, the curve in your browser is the curve the machine plans.</p>
     <figure class="shot"><a href="/Kinetic/"><img src="/images/kinetic/playground.webp" data-hi="/images/kinetic/hi/playground.webp" width="1280" height="800" alt="The Kinetic² playground: four stacked plots of position, velocity, acceleration and jerk over two seconds, with the planner options as sliders on the right." loading="lazy" decoding="async"></a><figcaption>The playground, live at openvalence.org/Kinetic. Click to open it.</figcaption></figure>
     <p class="links"><a href="/Kinetic/">Open the playground</a> · <a href="/Kinetic/handles.html">Open the handles editor</a> · <a href="/kinetic/">About Kinetic</a></p>
     <!-- Kinetic playground/handles.html: open a .funscript or the built-in script; drag a knot's handles to set angle and length -->
@@ -76,12 +76,12 @@
       <video controls muted loop playsinline preload="none" width="1280" height="800" poster="/images/phosphor-virtual.jpg" aria-describedby="cap-virtual">
         <source src="/images/phosphor-virtual.webm" type="video/webm">
       </video>
-      <figcaption id="cap-virtual">Phosphor main e1e4d8f · connected to Neutrino, the built-in machine · Home, speed 55, Advanced pattern running · 1280 × 800, 18 s, recorded headless, no sound</figcaption>
+      <figcaption id="cap-virtual">Phosphor connected to Neutrino, running the Advanced pattern at speed 55. No sound.</figcaption>
     </figure>
     <!-- Phosphor README.md "Neutrino, the built-in machine (the hub firmware as wasm)"; src/model/integral/ -->
-    <p>Neutrino is the machine's firmware compiled to WebAssembly, running inside Phosphor. It uses the same Valence protocol as a real machine, so everything you see in the clip is the real protocol, the real catalog and the real planner, minus the motor.</p>
-    <p>You get it with Phosphor: connect to "Neutrino" in the machine list. Phosphor isn't released yet; see <a href="/downloads/">Downloads</a>.</p>
-    <p>A version of this that runs on this website is WIP.</p>
+    <p>Neutrino is the machine's firmware compiled to WebAssembly, running inside Phosphor. It uses the same Valence protocol as a real machine, so the clip shows the real protocol, catalog and planner, without a motor.</p>
+    <p>It comes with Phosphor: connect to "Neutrino" in the machine list. Pre-release builds are on <a href="/downloads/">Downloads</a>.</p>
+    <p>A version that runs on this website is WIP.</p>
   </section>
 </main>
 

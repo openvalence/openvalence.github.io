@@ -44,17 +44,17 @@
     <a class="chip" href="/phosphor/" aria-current="page">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
 <main>
   <section class="opening">
     <h1>Troubleshooting</h1>
-    <p>Phosphor puts its own words on a problem. This page lists those words and what to do about each. The lines are quoted from the app, so you can search this page for what you see.</p>
+    <p>The messages Phosphor shows, quoted from the app, and what to do about each. Search this page for the one you see.</p>
   </section>
 
   <section aria-labelledby="s-find">
@@ -134,7 +134,7 @@
     <p>Some Machine lines read "not reported by this machine". The machine has to declare those readings first <span class="tag">WIP</span>.</p>
     <h3>Send a report</h3>
     <!-- docs/DESIGN.md lines 1461-1491 -->
-    <p>On an incident, Send report opens a review of every field in the report. Hold the button for 1.5 s to send. That opens a prefilled GitHub issue under your own account; Phosphor sends nothing itself. Save report writes the same data to a file without an account. The report holds numbers and version strings, and no script name, machine name, address or log text. So you can read the whole report before it leaves your computer.</p>
+    <p>On an incident, Send report opens a review of every field in the report. Hold the button for 1.5 s to send. That opens a prefilled GitHub issue under your own account; Phosphor sends nothing itself. Save report writes the same data to a file without an account. The report holds numbers and version strings, and no script name, machine name, address or log text.</p>
   </section>
 
   <section aria-labelledby="s-log">
@@ -150,14 +150,14 @@
       <li>Clear empties the list.</li>
       <li>Copy puts the shown lines on the clipboard.</li>
     </ol>
-    <p>Phosphor also writes <code>Phosphor.log</code> to disk, at Info level, in release builds too. It is never uploaded. The <a href="/privacy.html">privacy page</a> lists the app's data folders on each platform, and for the Flatpak the folder is <code>~/.var/app/org.openvalence.Phosphor</code>. If you send the file with a bug report, that is you sending it.</p>
+    <p>Phosphor also writes <code>Phosphor.log</code> to disk, at Info level, in release builds too. It is never uploaded. The <a href="/privacy.html">privacy page</a> lists the app's data folders on each platform, and for the Flatpak the folder is <code>~/.var/app/org.openvalence.Phosphor</code>.</p>
   </section>
 
   <section aria-labelledby="s-platform">
     <h2 id="s-platform" data-n="04">Platform notes</h2>
     <h3>Linux with an NVIDIA driver</h3>
     <!-- src-tauri/src/lib.rs:36-46 -->
-    <p>NVIDIA's proprietary driver cannot back WebKitGTK's DMABUF renderer. Without a workaround the window stays blank on X11, and the Wayland connection dies with protocol error 71. This was measured on one setup, a Quadro RTX 5000 with driver 610. Phosphor sets <code>WEBKIT_DISABLE_DMABUF_RENDERER=1</code> by itself when <code>/proc/driver/nvidia</code> exists, and a value you set yourself wins. If the window is still blank, start Phosphor with that variable set.</p>
+    <p>NVIDIA's proprietary driver cannot back WebKitGTK's DMABUF renderer. Without a workaround the window stays blank on X11, and the Wayland connection dies with protocol error 71. Phosphor sets <code>WEBKIT_DISABLE_DMABUF_RENDERER=1</code> by itself when <code>/proc/driver/nvidia</code> exists, and a value you set yourself wins. If the window is still blank, start Phosphor with that variable set.</p>
     <h3>Linux Flatpak</h3>
     <!-- docs/BUILD.md lines 273-279 -->
     <p>The Flatpak keeps its data in <code>~/.var/app/org.openvalence.Phosphor/data/com.phosphor.app/</code>, and a <code>.deb</code> install's folder is not visible to it. If you forced <code>GDK_BACKEND=x11</code> on a Wayland session, GTK fails to start unless the run adds <code>--socket=x11</code>.</p>

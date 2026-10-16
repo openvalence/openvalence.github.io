@@ -44,10 +44,10 @@
     <a class="chip" href="/phosphor/" aria-current="page">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
-    <a class="chip" href="/downloads/">Downloads</a>
-    <a class="chip" href="/Valence/">Docs</a>
+    <a class="chip util" href="/Valence/">Docs</a>
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
 </header>
 <!-- /chrome:header -->
 
@@ -66,10 +66,10 @@
       <div><dt>Settings</dt><dd>A card on the plugin's row in the Plugins pane.</dd></div>
       <div><dt>Menus and dock panels</dt><dd>Items in the right-click menu, and a panel in the right dock.</dd></div>
       <div><dt>Themes</dt><dd>A color preset. It carries no code and cannot change safety colors.</dd></div>
-      <div><dt>Writes</dt><dd>Settings, actions and commands, through the same path as a built-in control. So a plugin write shows the same pending, confirmed and refused states you already know.</dd></div>
+      <div><dt>Writes</dt><dd>Settings, actions and commands, through the same path as a built-in control, so a plugin write shows the same pending, confirmed and refused states.</dd></div>
       <div><dt>Motion</dt><dd>Position targets and scheduled segments, under the rules in Permissions below.</dd></div>
     </dl>
-    <p>A plugin's API object has no session, socket or transport handle, and Phosphor's tests fail if one appears. So what a plugin does to the machine goes through Valence, where the hub clamps it like any other client's request.</p>
+    <p>A plugin's API object has no session, socket or transport handle, so everything a plugin does to the machine goes through Valence, where the hub clamps it like any other client's request.</p>
   </section>
 
   <section aria-labelledby="s-ship">
@@ -131,7 +131,7 @@
       <li>Permissions lists what the plugin may do.</li>
       <li>Reload reloads the plugin.</li>
     </ol>
-    <p>A plugin that throws is recorded on its row and in the Log pane. If a card throws, it is dropped and its settings return to the standard controls. So one broken plugin does not take the page down with it.</p>
+    <p>A plugin that throws is recorded on its row and in the Log pane. If a card throws, it is dropped and its settings return to the standard controls.</p>
   </section>
 
   <section aria-labelledby="s-perm">
@@ -150,8 +150,8 @@
         <tr><th scope="row"><code>net.listen:&lt;port&gt;</code></th><td>A TCP listener on 127.0.0.1 only, never the LAN</td></tr>
       </tbody>
     </table>
-    <h3>The motion lock: one source drives</h3>
-    <p>Only one plugin may send motion at a time. When one sends scheduled motion, it holds the motion input until its last segment ends plus 500 ms. Any other plugin's motion is refused meanwhile, with <code>motion input in use by &lt;plugin&gt;</code>, and the funscript player grays Play with the same words. A running pattern gives <code>stop the pattern first</code>. So two sources never interleave into one stream, and the answer to "why won't it move" is on screen in words.</p>
+    <h3>The motion lock</h3>
+    <p>Only one plugin may send motion at a time. When one sends scheduled motion, it holds the motion input until its last segment ends plus 500 ms. Any other plugin's motion is refused meanwhile, with <code>motion input in use by &lt;plugin&gt;</code>, and the funscript player grays Play with the same words. A running pattern gives <code>stop the pattern first</code>.</p>
     <p>The hub applies its own check on top. If another source holds the rail, the refusal reads <code>refused: rail owned by &lt;source&gt;</code>. The e-stop and pause in the top strip are Phosphor's, not a plugin's, and always work.</p>
   </section>
 
@@ -159,7 +159,7 @@
     <h2 id="s-install" data-n="05">Installing a plugin</h2>
     <!-- PLUGINS.md Loading ("plugins are enabled by default once installed"; "Restart the app"), Permissions ("does not contain hostile code"); PluginsPane.svelte "Drop a plugin folder here and restart"; privacy.html; src-tauri/src/plugins.rs:32-33 -->
     <p>A plugin is a folder with a <code>manifest.json</code> and one module file. Put the folder in the plugins folder and restart Phosphor. The Plugins pane prints the folder's real path on your system. A plugin with the same name as a factory plugin replaces it.</p>
-    <p><strong>A plugin you install is enabled right away, and a plugin runs with the full authority of the app page.</strong> The permission list is a record of what the plugin says it will do. It is not a sandbox. A hostile module could open its own network connection. So install a plugin only from a source you would trust with a program, and read its manifest first. The <a href="/privacy.html">privacy page</a> says the same: the plugins that ship with the app contact only addresses you configured, and a plugin from elsewhere can contact whatever its author wrote.</p>
+    <p><strong>A plugin you install is enabled right away, and a plugin runs with the full authority of the app page.</strong> The permission list is a record of what the plugin says it will do. It is not a sandbox: a hostile module could open its own network connection. Install a plugin only from a source you would trust with a program, and read its manifest first. The <a href="/privacy.html">privacy page</a> says the same: the plugins that ship with the app contact only addresses you configured, and a plugin from elsewhere can contact whatever its author wrote.</p>
     <p>When you read a manifest, start with <code>permissions</code>. A manifest larger than 64 KiB, or a module larger than 2 MiB, is not loaded.</p>
   </section>
 
