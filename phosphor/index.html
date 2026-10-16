@@ -13,14 +13,13 @@
 <meta name="twitter:title" content="Phosphor: OpenValence">
 <meta name="twitter:description" content="Phosphor is the reference client for Valence machines. Build a dashboard from what your machine reports, add plugins, play funscripts and connect other apps.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="manifest" href="/icons/site.webmanifest">
-<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
@@ -69,9 +68,9 @@
 
 <main>
   <section class="opening">
-    <p class="kicker">client · pre-release</p>
     <h1>Phosphor, the Valence client</h1>
     <!-- Phosphor README.md lines 3-18; docs/DESIGN.md §1 -->
+    <p class="lede">Your machine draws its own controls. Phosphor puts them on screen.</p>
     <p>Phosphor is the reference client for Valence machines. It is one Svelte 5 app, delivered as a Tauri 2 desktop and mobile app and as a page a hub can serve from its own flash. It builds its pages from the catalog the machine sends, so it needs no machine-specific code.</p>
     <div class="btns">
       <a class="btn go" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Get Phosphor</a>
@@ -80,24 +79,26 @@
     </div>
   </section>
 
+  <div class="stage">
   <figure class="feature-hero">
     <div class="frame"><picture><source srcset="/images/phosphor/dash-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark.webp" width="1280" height="800" alt="The Phosphor Dash connected to the Virtual machine with a pattern running, showing the large position readout, the position rail with a moving comet, the telemetry chart with two sine traces and the pattern controls." fetchpriority="high" decoding="async"></picture></div>
-    <figcaption class="cap">The Dash, connected to the built-in Virtual with a pattern running. Phosphor main c23c98c.</figcaption>
+    <figcaption>The Dash, connected to the built-in Virtual with a pattern running. Phosphor main c23c98c.</figcaption>
   </figure>
+  </div>
 
-  <section aria-labelledby="s-status">
-    <h2 id="s-status" data-n="01">Status</h2>
+  <section class="aside" aria-labelledby="s-status">
+    <h2 id="s-status">Pre-release.</h2>
     <!-- Downloads: v0.1.641 pre-release CI build on GitHub releases (checked 2026-10-15); Phosphor/.github/workflows/build.yml -->
-    <p>Pre-release. CI builds installers on every push to <code>main</code>, and <a href="/downloads/">Downloads</a> links the current pre-release build. Features marked <span class="tag">WIP</span> are not finished.</p>
+    <p>CI builds installers on every push to <code>main</code>, and <a href="/downloads/">Downloads</a> links the current pre-release build. Features marked <span class="tag">WIP</span> are not finished.</p>
   </section>
 
   <section aria-labelledby="s-features">
-    <h2 id="s-features" data-n="02">What it does</h2>
+    <h2 class="xl" id="s-features">What's inside.</h2>
 
-    <div class="feature">
+    <div class="split">
       <figure><picture><source srcset="/images/phosphor/builder-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/builder-dark.webp" width="1280" height="800" alt="The Phosphor Dash in edit mode, with the modules palette open on the right listing control categories and the edit footer offering Undo, New nest, Modules and Layout." loading="lazy" decoding="async"></picture></figure>
       <div>
-        <h3>Build your own Dash</h3>
+        <h3>Your Dash, your layout</h3>
         <!-- docs/DESIGN.md §10.1 (lines 372-416), §10.2 (418-497), §10.6 (983-1054) -->
         <p>The Dash is a grid you arrange. In edit mode you place, move, resize and delete controls from a palette, and save the result as a named layout.</p>
         <p>A control can narrow the machine's range but never widen it, so a Dash cannot ask for more than the machine allows.</p>
@@ -109,7 +110,7 @@
       </div>
     </div>
 
-    <div class="feature flip">
+    <div class="split flip">
       <figure><picture><source srcset="/images/phosphor/funscript-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/funscript-dark.webp" width="1280" height="800" alt="The Phosphor Funscript page playing an abstract color video with transport controls, a scrolling script timeline and a settings pane, while the rail above follows the motion." loading="lazy" decoding="async"></picture></figure>
       <div>
         <h3>Funscript player</h3>
@@ -120,7 +121,7 @@
       </div>
     </div>
 
-    <div class="feature">
+    <div class="split">
       <figure><picture><source srcset="/images/phosphor/nodes-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/nodes-dark.webp" width="1280" height="800" alt="The Phosphor node editor with a small graph: the planned position and the stroke window limits wired into a Map range node, which feeds a Low-pass node." loading="lazy" decoding="async"></picture></figure>
       <div>
         <h3>Node editor</h3>
@@ -134,7 +135,7 @@
       </div>
     </div>
 
-    <div class="feature flip">
+    <div class="split flip">
       <figure><picture><source srcset="/images/phosphor/plugins-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/plugins-dark.webp" width="1280" height="800" alt="The Phosphor Plugins pane listing installed factory plugins with version, active status, enable switches, permissions and roles." loading="lazy" decoding="async"></picture></figure>
       <div>
         <h3>Plugins</h3>
@@ -151,7 +152,10 @@
       </div>
     </div>
 
-    <h3>Themes</h3>
+  </section>
+
+  <section class="band" aria-labelledby="s-themes">
+    <h2 class="xl" id="s-themes">Twenty themes. Same stop button.</h2>
     <!-- src/themes/index.js lines 6-25 (20 themes); docs/THEMES.md line 19 (12 color presets), docs/DESIGN.md §10.16 lines 1559-1564 -->
     <p>There are 20 themes, from the default Phosphor theme to Luna, Mica, Liquid Glass, Material, Blueprint and P1 Terminal. The default theme has 12 color presets. A theme restyles chrome, controls, type and icons. The stop pair, the safety edge and the warning states look the same in every theme, so a theme can change how the app looks without changing what a danger signal looks like.</p>
     <ul class="swipe" tabindex="0" aria-label="Theme screenshots, scroll sideways">
@@ -162,9 +166,11 @@
       <li><figure><img src="/images/phosphor/theme-outrun.webp" width="1280" height="800" alt="The Phosphor Dash in the Outrun theme connected to the Virtual machine with a pattern running, in neon cyan and magenta on a dark purple synthwave backdrop with a striped sun." loading="lazy" decoding="async"><figcaption><b>Outrun</b></figcaption></figure></li>
       <li><figure><img src="/images/phosphor/theme-notebook.webp" width="1280" height="800" alt="The Phosphor Dash in the Notebook theme connected to the Virtual machine with a pattern running, in hand-drawn ink styling on cream ruled paper." loading="lazy" decoding="async"><figcaption><b>Notebook</b></figcaption></figure></li>
     </ul>
-    <p class="cap">Same Dash, same Virtual, Six of the 20 themes. Scroll or swipe the row.</p>
+    <p>Same Dash, same Virtual, six of the 20 themes. Scroll or swipe the row.</p>
+  </section>
 
-    <h3>More of it</h3>
+  <section aria-labelledby="s-more">
+    <h2 class="xl" id="s-more">More of it.</h2>
     <ul class="gallery">
       <li><figure><picture><source srcset="/images/phosphor/wifi-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/wifi-dark.webp" width="1280" height="800" alt="The Phosphor Wi-Fi picker listing nearby networks with signal bars and lock icons, the connected network checked, and Other network, Advanced and Scan buttons at the bottom." loading="lazy" decoding="async"></picture><figcaption><b>Wi-Fi picker</b>One of the five plugins that ship with Phosphor.</figcaption></figure></li>
       <li><figure><picture><source srcset="/phosphor/docs/img/ts-health-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/ts-health-dark.webp" width="1280" height="800" alt="The Health tab of the Log page showing the link readings, with the This device section below." loading="lazy" decoding="async"></picture><figcaption><b>Health</b>Measured facts with the number behind them. <a href="/phosphor/docs/troubleshooting/">Troubleshooting</a></figcaption></figure></li>
@@ -172,24 +178,25 @@
       <li><figure><picture><source srcset="/phosphor/docs/img/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with the built-in Virtual machine listed under Saved hubs and the Find a hub controls below it." loading="lazy" decoding="async"></picture><figcaption><b>The Virtual</b>Listed with the hubs, ready before you own a machine. <a href="/phosphor/docs/getting-started/">Getting started</a></figcaption></figure></li>
     </ul>
 
-    <ul class="tiles">
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#grid"/></svg><b>Pages from the catalog</b>
+    <ul class="facts three mt">
+      <li><b>Pages from the catalog</b>
         <!-- Phosphor README.md lines 20-26: test/check-device-knowledge.mjs gates npm run build; docs/DESIGN.md §10.1 line 379 -->
         <p>Every setting the machine declares gets a page, even if you never build a Dash. A setting added in the firmware shows up on the next connect, with no Phosphor update.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#stop"/></svg><b>Safety strip</b>
+      <li><b>Safety strip</b>
         <!-- docs/DESIGN.md §10.3 lines 505-526; src/ui/widgets/SafetyOp.svelte:81-82; src/model/prefs.js:34 -->
         <p>E-Stop and Pause are always in the top strip and can't be hidden. Tapping E-Stop latches it; releasing takes a 3 s hold.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#plug"/></svg><b>Buttplug.io support</b>
+      <li><b>Buttplug.io support</b>
         <!-- docs/BUTTPLUG.md lines 12, 32 (127.0.0.1, port 12345), 88-92 (defaults, no start on launch); docs/DESIGN.md §10.8 lines 1067-1085 -->
         <p>An embedded Buttplug server, spec v0 to v4, on 127.0.0.1 port 12345. Apps see your machine as one linear device.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#pulse"/></svg><b>Health and diagnostics</b>
+      <li><b>Health and diagnostics</b>
         <!-- docs/DESIGN.md §10.14 lines 1397-1411 (29 conditions, three areas), 1453-1455 (local only); src/model/health/core.js:39-201 -->
         <p>29 conditions in three areas, each a measured fact with one action. No telemetry, no crash reporting.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#sim"/></svg><b>The Virtual machine</b>
+      <li><b>The Virtual machine</b>
         <!-- docs/DESIGN.md §10.10 lines 1113-1131, 1153-1160; docs/BUILD.md lines 19-24 -->
         <p>The Nucleus hub firmware compiled to WebAssembly, running inside Phosphor. Nothing physical moves.</p></li>
     </ul>
 
+    <div class="mt"></div>
     <details class="more">
       <summary>Safety strip, the details</summary>
       <p>The top strip always carries E-Stop and Pause, and you cannot remove or hide them. Tapping E-Stop latches it. Releasing takes a 3 s hold. On a machine that does not cut motor power the button reads Halt instead. In the desktop app, an E-Stop press also broadcasts a stop packet to every hub on your network that supports it; that is a setting, on by default.</p>
@@ -217,7 +224,7 @@
   </section>
 
   <section aria-labelledby="s-platforms">
-    <h2 id="s-platforms" data-n="03">Platforms</h2>
+    <h2 class="xl" id="s-platforms">Runs where you do.</h2>
     <!-- docs/BUILD.md lines 379-388 (CI jobs), 228-229 (Intel Macs not built), 302-353 (Android); README.md line 160; docs/DESIGN.md §10.7 lines 1058-1063 -->
     <ul class="platforms">
       <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-win"/></svg><div><h3>Windows</h3><small>pre-release build</small></div></div><p>NSIS installer, x86_64. Not code-signed yet, so SmartScreen may warn on first run.</p></li>
@@ -227,24 +234,24 @@
       <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-phone"/></svg><div><h3>Android <span class="tag">WIP</span></h3><small>local builds only</small></div></div><p>A debug APK built from source, Android 8.0 or later. CI does not build it.</p></li>
       <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-web"/></svg><div><h3>Browser</h3><small>backup surface</small></div></div><p>The page a hub serves from its own flash. No Bluetooth and no plugins.</p></li>
     </ul>
-    <p>The browser page is the zero-install way in and the guest surface. The app is the primary delivery, so a feature can ship in the app first.</p>
+    <p class="mt">The browser page is the zero-install way in and the guest surface. The app is the primary delivery, so a feature can ship in the app first.</p>
   </section>
 
-  <section aria-labelledby="s-fit">
-    <h2 id="s-fit" data-n="04">How it fits</h2>
+  <section class="aside" aria-labelledby="s-fit">
+    <h2 id="s-fit">How it fits.</h2>
     <!-- Phosphor README.md lines 164-172; docs/BUILD.md lines 19-24 -->
     <p>Phosphor is a Valence client. The hub holds the machine's state, Phosphor sends intents, and the hub clamps them and echoes what it applied. See <a href="/diagrams/">the diagrams</a> for the whole picture and <a href="/valence/">the Valence docs</a> for the protocol. Phosphor imports the Valence JavaScript client directly, and the Virtual is built from Nucleus, so it never carries its own copy of the protocol.</p>
   </section>
 
   <section aria-labelledby="s-docs">
-    <h2 id="s-docs" data-n="05">Phosphor docs</h2>
-    <ul class="cards">
-      <li class="card"><div class="body"><h3><a href="/phosphor/docs/getting-started/">Getting started</a></h3><p>Install, first launch, the Virtual.</p></div></li>
-      <li class="card"><div class="body"><h3><a href="/phosphor/docs/connecting/">Connecting</a></h3><p>Discovery, Bluetooth setup, access tiers, pairing, E-Stop.</p></div></li>
-      <li class="card"><div class="body"><h3><a href="/phosphor/docs/funscript-player/">Funscript player</a></h3><p>A video and its script, side by side.</p></div></li>
-      <li class="card"><div class="body"><h3><a href="/phosphor/docs/node-editor/">Node editor</a></h3><p>Wire fields and math into chains.</p></div></li>
-      <li class="card"><div class="body"><h3><a href="/phosphor/docs/plugins/">Plugins</a></h3><p>Turn plugins on and see what they ask for.</p></div></li>
-      <li class="card"><div class="body"><h3><a href="/phosphor/docs/troubleshooting/">Troubleshooting</a></h3><p>What the Health tab and the log tell you.</p></div></li>
+    <h2 class="xl" id="s-docs">Read the manual.</h2>
+    <ul class="index">
+      <li><h3><a href="/phosphor/docs/getting-started/">Getting started</a></h3><p>Install, first launch, the Virtual.</p><span class="lic">guide</span></li>
+      <li><h3><a href="/phosphor/docs/connecting/">Connecting</a></h3><p>Discovery, Bluetooth setup, access tiers, pairing, E-Stop.</p><span class="lic">guide</span></li>
+      <li><h3><a href="/phosphor/docs/funscript-player/">Funscript player</a></h3><p>Video, script, scale and the timeline.</p><span class="lic">guide</span></li>
+      <li><h3><a href="/phosphor/docs/node-editor/">Node editor</a></h3><p>Wire fields and math into chains.</p><span class="lic">guide</span></li>
+      <li><h3><a href="/phosphor/docs/plugins/">Plugins</a></h3><p>Install, enable and check what they ask for.</p><span class="lic">guide</span></li>
+      <li><h3><a href="/phosphor/docs/troubleshooting/">Troubleshooting</a></h3><p>Health, the log, and reporting a problem.</p><span class="lic">guide</span></li>
     </ul>
     <!-- README.md lines 184-186 -->
     <p class="links"><a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Plugin contract</a> on GitHub, the full reference · <a href="https://github.com/openvalence/Phosphor">Repo</a> · <a href="/downloads/">Downloads</a> · Apache-2.0, except the Advanced pattern plugin, which stays <span class="nb">CERN-OHL-S-2.0</span></p>

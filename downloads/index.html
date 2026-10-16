@@ -13,14 +13,13 @@
 <meta name="twitter:title" content="Phosphor Pre-Release CI Builds: Downloads">
 <meta name="twitter:description" content="Phosphor pre-release CI builds for Windows, macOS and Linux. Try the app with no machine in the built-in Virtual, the Neutrino firmware emulator.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="manifest" href="/icons/site.webmanifest">
-<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
@@ -69,15 +68,14 @@
 
 <main>
   <section class="opening">
-    <p class="kicker">downloads · pre-release CI builds</p>
     <h1>Downloads</h1>
     <!-- Release v0.1.641 = CI run 38814948678 at main c23c98c, checked 2026-10-15; no Android APK is built -->
-    <p><strong>Pre-release CI build.</strong> These files come straight from the build server for Phosphor 0.1.641. Expect rough edges.</p>
+    <p class="lede"><strong>Pre-release CI build.</strong> These files come straight from the build server for Phosphor 0.1.641. Expect rough edges.</p>
     <p>Try it with no machine: Phosphor has a built-in Virtual machine, the Neutrino firmware emulator, running the same firmware code as the real one.</p>
   </section>
 
   <section aria-labelledby="s-phosphor">
-    <h2 id="s-phosphor" data-n="01">Phosphor 0.1.641 <span class="tag">pre-release</span></h2>
+    <h2 class="xl" id="s-phosphor">Phosphor 0.1.641 <span class="tag">pre-release</span></h2>
     <ul class="platforms">
       <li>
         <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-win"/></svg><div><h3>Windows</h3><small>Windows 10 and 11, 64-bit</small></div></div>
@@ -131,9 +129,9 @@
   </section>
 
   <section aria-labelledby="s-firmware">
-    <h2 id="s-firmware" data-n="02">Firmware</h2>
+    <h2 class="xl" id="s-firmware">Firmware.</h2>
     <ul class="platforms">
-      <li>
+      <li class="wide">
         <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><div><h3>Nucleus <span class="tag">not released</span></h3><small>for the OSSM Flagship PCB</small></div></div>
         <p>No prebuilt images yet. The PCB isn't for sale yet either, so for now the firmware is a build-it-yourself affair: ESP-IDF through PlatformIO, steps in the <a href="https://github.com/openvalence/Nucleus#build-and-flash">Nucleus README</a>.</p>
         <p class="links"><a href="https://github.com/openvalence/Nucleus/releases">Nucleus releases</a></p>
@@ -141,17 +139,17 @@
     </ul>
   </section>
 
-  <section aria-labelledby="s-nohw">
-    <h2 id="s-nohw" data-n="03">No hardware?</h2>
-    <ul class="tiles">
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#sim"/></svg><b>The Virtual</b><p>Install Phosphor and pick the hub with the "ν virtual" badge. Nothing physical moves.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#curve"/></svg><b>The planner</b><p>The <a href="/Kinetic/">Kinetic playground</a> runs the motion planner in your browser with nothing to install.</p></li>
+  <section class="band" aria-labelledby="s-nohw">
+    <h2 class="xl" id="s-nohw">No machine yet?</h2>
+    <ul class="facts">
+      <li><b>The Virtual</b><p>Install Phosphor and pick the hub with the "ν virtual" badge. Nothing physical moves.</p></li>
+      <li><b>The planner</b><p>The <a href="/Kinetic/">Kinetic playground</a> runs the motion planner in your browser with nothing to install.</p></li>
     </ul>
-    <p>More on the <a href="/demos/">demos page</a>.</p>
+    <p class="mt">More on the <a href="/demos/">demos page</a>.</p>
   </section>
 
-  <section aria-labelledby="s-verify">
-    <h2 id="s-verify" data-n="04">Checking a download</h2>
+  <section class="aside" aria-labelledby="s-verify">
+    <h2 id="s-verify">Check what you got.</h2>
     <p>Only download from <a href="https://github.com/openvalence">github.com/openvalence</a>. This site never hosts binaries. Compare your file against <a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/SHA256SUMS.txt">SHA256SUMS.txt</a> with <code>sha256sum -c SHA256SUMS.txt</code> on Linux and macOS (<code>shasum -a 256</code>), or <code>Get-FileHash</code> in PowerShell.</p>
   </section>
 </main>

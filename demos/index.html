@@ -13,14 +13,13 @@
 <meta name="twitter:title" content="Demos: OpenValence">
 <meta name="twitter:description" content="Run the Kinetic motion planner in your browser, shape a funscript with Bézier handles, and watch Phosphor drive its built-in Virtual machine. No hardware needed.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="manifest" href="/icons/site.webmanifest">
-<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
@@ -53,13 +52,12 @@
 
 <main>
   <section class="opening">
-    <p class="kicker">demos · no hardware needed</p>
     <h1>Try it without a machine</h1>
     <p>The planner runs in your browser today. The app runs its own virtual machine on your desktop. Neither needs a board.</p>
   </section>
 
   <section aria-labelledby="s-playground">
-    <h2 id="s-playground" data-n="01">Kinetic playground</h2>
+    <h2 class="xl" id="s-playground">Kinetic playground</h2>
     <!-- Kinetic playground/README.md; .github/workflows/pages.yml builds kinetic2.wasm and deploys playground/ to https://openvalence.org/Kinetic/ -->
     <p>The same Kinetic² planner that runs in the firmware, compiled to WebAssembly. Click the position trace to drop a knot, tune the planner options, and see what it did: the curve, its speed, acceleration and jerk against the ceilings, and every trim it had to make.</p>
     <!-- Kinetic README.md "Determinism": bit-identical on every IEEE-754 target built with -ffp-contract=off -->
@@ -72,7 +70,7 @@
   </section>
 
   <section aria-labelledby="s-virtual">
-    <h2 id="s-virtual" data-n="02">Phosphor and the Virtual machine</h2>
+    <h2 class="xl" id="s-virtual">Phosphor and the Virtual machine</h2>
     <figure class="capture">
       <video controls muted loop playsinline preload="none" width="1280" height="800" poster="/images/phosphor-virtual.jpg" aria-describedby="cap-virtual">
         <source src="/images/phosphor-virtual.webm" type="video/webm">

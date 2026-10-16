@@ -18,8 +18,7 @@ Plain HTML, no build step:
 - `images/`: screenshots and clips (`images/phosphor/`, light and dark), PCB renders from the KiCad project (`images/hardware/`), the playground shot (`images/kinetic/`), the demo capture and the social card (`og.png`)
 - `sitemap.xml`, `robots.txt`
 
-The colors and type are Phosphor's default chassis (Phosphor `src/style.css`);
-keep them matched to it. Every page carries the same head, header and footer
+The site has its own look, separate from Phosphor's: Archivo (wide, heavy) for display type, the system face for text, Martian Mono for numbers, and one accent, ultramarine `#2E4BFF`, used as solid bands. The tokens sit at the top of `style.css`. Every page carries the same head, header and footer
 between `<!-- chrome:* -->` markers. Edit them in `tools/chrome.html`, then run
 `python tools/chrome.py` to copy them into every page. Add a new page's URL to
 `sitemap.xml`.

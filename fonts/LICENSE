@@ -1,10 +1,10 @@
-ChakraPetch-400.woff2, ChakraPetch-500.woff2:
-Copyright 2018 The Chakra Petch Project Authors (https://github.com/m4rc1e/Chakra-Petch.git)
+Archivo.woff2:
+Copyright 2020 The Archivo Project Authors (https://github.com/Omnibus-Type/Archivo)
 
 MartianMono.woff2:
 Copyright 2020 The Martian Mono Project Authors (https://github.com/evilmartians/mono)
 
-All three files are subset to Latin and converted to WOFF2; no glyph is altered.
+Both files are subset to Latin and converted to WOFF2; no glyph is altered.
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

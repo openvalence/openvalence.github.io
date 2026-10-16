@@ -13,14 +13,13 @@
 <meta name="twitter:title" content="Hardware: OpenValence">
 <meta name="twitter:description" content="The OSSM Flagship is a 75 x 75 mm open-source controller PCB: ESP32-P4 plus ESP32-C6, quadrature and RS485 to a servo drive. KiCad 10, still in design.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="manifest" href="/icons/site.webmanifest">
-<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
@@ -53,33 +52,35 @@
 
 <main>
   <section class="opening">
-    <p class="kicker">component · hardware · in design</p>
     <h1>OSSM Flagship PCB</h1>
     <!-- Hardware origin/main flagship/FEATURES.md intro; SPEC.md 2026-09-26 "Board outline 75 x 75 mm" (85 mm inner-diameter housing) supersedes FEATURES' 58 x 58 -->
-    <p>A 75 x 75 mm controller PCB that sits in an 85 mm round housing. It takes a 36 V supply, powers and commands a servo drive, and talks to the outside world through an ESP32-P4 with a stacked ESP32-C6. It runs <a href="/nucleus/">Nucleus</a>. The design is under <span class="nb">CERN-OHL-S-2.0</span>.</p>
+    <p class="lede">A 75 x 75 mm controller PCB that sits in an 85 mm round housing. It takes a 36 V supply, powers and commands a servo drive, and talks to the outside world through an ESP32-P4 with a stacked ESP32-C6.</p>
+    <p>It runs <a href="/nucleus/">Nucleus</a>. The design is under <span class="nb">CERN-OHL-S-2.0</span>.</p>
   </section>
 
   <figure class="stage-pcb">
-    <img src="/images/hardware/pcb-angle.webp" srcset="/images/hardware/pcb-angle-600.webp 600w, /images/hardware/pcb-angle-1000.webp 1000w, /images/hardware/pcb-angle.webp 1600w" sizes="(max-width: 1060px) 92vw, 980px" width="1600" height="1116" alt="A three-quarter render of the OSSM Flagship PCB: a black six-layer board with gold pads, the ESP32-P4 module near one edge, two large power resistors and the power stage across the middle, white JST connectors along the side." fetchpriority="high" decoding="async">
+    <img src="/images/hardware/pcb-angle.webp" srcset="/images/hardware/pcb-angle-600.webp 600w, /images/hardware/pcb-angle-1000.webp 1000w, /images/hardware/pcb-angle.webp 1600w" sizes="(max-width: 1160px) 92vw, 1100px" width="1600" height="1116" alt="A three-quarter render of the OSSM Flagship PCB: a black six-layer board with gold pads, the ESP32-P4 module near one edge, two large power resistors and the power stage across the middle, white JST connectors along the side." fetchpriority="high" decoding="async">
   </figure>
 
-  <section aria-labelledby="s-status">
-    <h2 id="s-status" data-n="01">Status <span class="tag">WIP</span></h2>
-    <!-- Hardware origin/main: flagship/ has KiCad project, BOM.md, FEATURES.md, SPEC.md, stackup.md; no gerbers or fabrication outputs in the tree; SPEC.md 2026-09-22 "parts purchase on hold" -->
-    <p>In design. These renders come straight from the KiCad project as it stands today, so parts can still move. No fabrication files are published and no boards are for sale.</p>
-    <details class="more">
-      <summary>What's in the repo</summary>
-      <p>The KiCad 10 project, the parts list, the stackup and a dated ledger of design decisions. Where <code>FEATURES.md</code> and <code>SPEC.md</code> disagree, <code>SPEC.md</code> wins.</p>
-    </details>
+  <section class="aside" aria-labelledby="s-status">
+    <h2 id="s-status">In design. <span class="tag">WIP</span></h2>
+    <div>
+      <!-- Hardware origin/main: flagship/ has KiCad project, BOM.md, FEATURES.md, SPEC.md, stackup.md; no gerbers or fabrication outputs in the tree; SPEC.md 2026-09-22 "parts purchase on hold" -->
+      <p class="big-line">These renders come straight from the KiCad project as it stands today, so parts can still move. No fabrication files are published and no boards are for sale.</p>
+      <details class="more">
+        <summary>What's in the repo</summary>
+        <p>The KiCad 10 project, the parts list, the stackup and a dated ledger of design decisions. Where <code>FEATURES.md</code> and <code>SPEC.md</code> disagree, <code>SPEC.md</code> wins.</p>
+      </details>
+    </div>
   </section>
 
   <section aria-labelledby="s-tour">
-    <h2 id="s-tour" data-n="02">Look around</h2>
+    <h2 class="xl" id="s-tour">Look around.</h2>
     <p>Hover or tap a number to see what that part does.</p>
-    <!-- images/hardware/hotspots.json: footprint centers from the .kicad_pcb mapped through the Edge.Cuts box; texts from flagship/FEATURES.md and SPEC.md -->
+    <!-- hotspots.json (scratch): footprint centers from the .kicad_pcb mapped through the Edge.Cuts box; texts from flagship/FEATURES.md and SPEC.md -->
     <div class="board">
       <figure class="spots">
-        <img src="/images/hardware/pcb-top.webp" srcset="/images/hardware/pcb-top-600.webp 600w, /images/hardware/pcb-top-900.webp 900w, /images/hardware/pcb-top.webp 1200w" sizes="(max-width: 900px) 92vw, 640px" width="1200" height="1200" alt="Top view of the OSSM Flagship PCB with numbered markers on its main parts." loading="lazy" decoding="async">
+        <img src="/images/hardware/pcb-top.webp" srcset="/images/hardware/pcb-top-600.webp 600w, /images/hardware/pcb-top-900.webp 900w, /images/hardware/pcb-top.webp 1200w" sizes="(max-width: 900px) 92vw, 700px" width="1200" height="1200" alt="Top view of the OSSM Flagship PCB with numbered markers on its main parts." loading="lazy" decoding="async">
         <a class="spot" href="#part-p4" aria-label="1: ESP32-P4 module (main processor)" style="left:50.0%;top:76.03%"><span aria-hidden="true">1</span><span class="bub">ESP32-P4 module (main processor)</span></a>
         <a class="spot" href="#part-surge-stopper" aria-label="2: Surge stopper (input protection)" style="left:48.32%;top:8.92%"><span aria-hidden="true">2</span><span class="bub">Surge stopper (input protection)</span></a>
         <a class="spot" href="#part-input-fet" aria-label="3: Input power FET (surge stopper)" style="left:51.94%;top:28.68%"><span aria-hidden="true">3</span><span class="bub">Input power FET (surge stopper)</span></a>
@@ -115,54 +116,58 @@
   </section>
 
   <section aria-labelledby="s-sides">
-    <h2 id="s-sides" data-n="03">Front and back</h2>
+    <h2 class="xl" id="s-sides">Front and back.</h2>
     <ul class="renders">
-      <li><figure><img src="/images/hardware/pcb-top-600.webp" width="600" height="600" alt="The top side of the OSSM Flagship PCB, straight on." loading="lazy" decoding="async"><figcaption>Top · compute and the power stage</figcaption></figure></li>
-      <li><figure><img src="/images/hardware/pcb-bottom-600.webp" width="600" height="600" alt="The bottom side of the OSSM Flagship PCB, straight on, with the 40 by 40 mm heatsink in the middle and connectors around the edge." loading="lazy" decoding="async"><figcaption>Bottom · the 40 x 40 mm heatsink and most connectors</figcaption></figure></li>
+      <li><figure><img src="/images/hardware/pcb-top-600.webp" width="600" height="600" alt="The top side of the OSSM Flagship PCB, straight on." loading="lazy" decoding="async"><figcaption>Top: compute and the power stage</figcaption></figure></li>
+      <li><figure><img src="/images/hardware/pcb-bottom-600.webp" width="600" height="600" alt="The bottom side of the OSSM Flagship PCB, straight on, with the 40 by 40 mm heatsink in the middle and connectors around the edge." loading="lazy" decoding="async"><figcaption>Bottom: the 40 x 40 mm heatsink and most connectors</figcaption></figure></li>
     </ul>
     <p class="links"><a href="/images/hardware/pcb-top.webp">Top, 1200 px</a> · <a href="/images/hardware/pcb-bottom.webp">Bottom, 1200 px</a> · <a href="/images/hardware/pcb-angle.webp">Angled, 1600 px</a></p>
   </section>
 
-  <section aria-labelledby="s-drive">
-    <h2 id="s-drive" data-n="04">Drive interface</h2>
-    <!-- Hardware origin/main flagship/FEATURES.md:3-6 (60AIM40F 200 W, 60AIM40 350 W); "Drive interface"; flagship/SPEC.md "Fixed facts" -->
-    <p>The target is the YZ 60AIM40F integrated servo (200 W). The PCB is also built to drive the 350 W 60AIM40. It talks to the drive three ways:</p>
-    <ul class="tiles">
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#quad"/></svg><b>Quadrature</b><p>A and B come from the P4's low-power core, buffered to 5 V, into the drive's opto inputs. So the drive follows the motion with no extra converter.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#link"/></svg><b>RS485 Modbus</b><p>Used for reads such as position. The PCB also supplies the drive's 485-side 5 V. So one cable carries signal and power for the drive's comms side.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#pulse"/></svg><b>Alarm and ready inputs</b><p>The drive's alarm line and ready line go to the P4. So a drive fault reaches the firmware directly.</p></li>
+  <section class="aside" aria-labelledby="s-drive">
+    <div>
+      <h2 id="s-drive">Drive interface.</h2>
+      <!-- Hardware origin/main flagship/FEATURES.md:3-6 (60AIM40F 200 W, 60AIM40 350 W); "Drive interface"; flagship/SPEC.md "Fixed facts" -->
+      <p>The target is the YZ 60AIM40F integrated servo (200 W). The PCB is also built to drive the 350 W 60AIM40. It talks to the drive three ways.</p>
+    </div>
+    <ul class="facts">
+      <li><b>Quadrature</b><p>A and B come from the P4's low-power core, buffered to 5 V, into the drive's opto inputs. So the drive follows the motion with no extra converter.</p></li>
+      <li><b>RS485 Modbus</b><p>Used for reads such as position. The PCB also supplies the drive's 485-side 5 V. So one cable carries signal and power for the drive's comms side.</p></li>
+      <li><b>Alarm and ready inputs</b><p>The drive's alarm line and ready line go to the P4. So a drive fault reaches the firmware directly.</p></li>
     </ul>
   </section>
 
-  <section aria-labelledby="s-power">
-    <h2 id="s-power" data-n="05">Power and protection</h2>
+  <section class="band" aria-labelledby="s-power">
+    <h2 class="xl" id="s-power">Protection that needs no firmware.</h2>
     <!-- Hardware origin/main flagship/FEATURES.md (36 V, 10 A; 15 A fuse; LTC4364 surge stopper; regen clamp thresholds; motor switch 15.2 A for 10 ms; E-stop) -->
-    <ul class="tiles">
-      <li><span class="big">36<small>V</small></span><b>Bus in, 10 A continuous to the motor</b><p>A 15 A fuse is the last-resort backstop. So a dead short blows a fuse instead of the PCB.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#shield"/></svg><b>Surge stopper</b><p>With reverse-polarity and reverse-current blocking. So regen from a motor coasting down never reaches the power supply or trips its overvoltage latch.</p></li>
-      <li><span class="big">44.5<small>V</small></span><b>Regen clamp, in hardware</b><p>On at 44.5 V, off at 43.2 V, with a port for an external brake resistor and no firmware involved. So regen is handled even if the firmware is not running.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#bolt"/></svg><b>Motor switch and power monitor</b><p>Pre-charge, latching overcurrent trips, and a monitor on a four-terminal shunt that reports bus voltage, current, power and energy. So firmware can see the load and back off before anything trips.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#stop"/></svg><b>External E-stop input</b><p>Pressing the button, or unplugging it, cuts motor power in hardware. So a pulled E-stop cable stops the machine too.</p></li>
+    <ul class="facts">
+      <li><span class="num">36<small>V</small></span><b>Bus in, 10 A continuous to the motor</b><p>A 15 A fuse is the last-resort backstop. So a dead short blows a fuse instead of the PCB.</p></li>
+      <li><span class="num">44.5<small>V</small></span><b>Regen clamp, in hardware</b><p>On at 44.5 V, off at 43.2 V, with a port for an external brake resistor and no firmware involved. So regen is handled even if the firmware is not running.</p></li>
+      <li><b>Surge stopper</b><p>With reverse-polarity and reverse-current blocking. So regen from a motor coasting down never reaches the power supply or trips its overvoltage latch.</p></li>
+      <li><b>Motor switch and power monitor</b><p>Pre-charge, latching overcurrent trips, and a monitor on a four-terminal shunt that reports bus voltage, current, power and energy. So firmware can see the load and back off before anything trips.</p></li>
+      <li><b>External E-stop input</b><p>Pressing the button, or unplugging it, cuts motor power in hardware. So a pulled E-stop cable stops the machine too.</p></li>
     </ul>
   </section>
 
   <section aria-labelledby="s-board">
-    <h2 id="s-board" data-n="06">On the PCB</h2>
+    <h2 class="xl" id="s-board">On the PCB.</h2>
     <!-- Hardware origin/main flagship/FEATURES.md (compute, buttons, accessories, "Board": 6 layers, both sides outside the heatsink, 3 x XT30, JST XH, Qwiic JST SH); SPEC.md 2026-09-26 outline -->
-    <ul class="tiles">
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><b>Compute</b><p>M5Stack Stamp-P4 (ESP32-P4) with a Stamp-AddOn C6 stacked on top for Wi-Fi and BLE.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#grid"/></svg><b>HOME and PAIR</b><p>Two buttons and one status LED. No reset button.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#fan"/></svg><b>Fan and temperature</b><p>A fan header with speed control and tach, and a thermistor input.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#drop"/></svg><b>Optional accessory outputs</b><p>A fused 12 V pump output with a PWM signal, an external PWM output, a Neopixel chain, a Qwiic port and a GPIO header. Anything smarter than a switch belongs on its own board, over Valence (see <a href="/isotope/">Isotope</a>).</p></li>
-      <li><span class="big">6<small>layers</small></span><b>75 x 75 mm, heatsink on the back</b><p>Parts on both sides except under the 40 x 40 mm heatsink, which sits under the power parts. Three XT30 power connectors, JST XH for signals. So the PCB stays small and the heat has somewhere to go.</p></li>
+    <ul class="facts three">
+      <li><b>Compute</b><p>M5Stack Stamp-P4 (ESP32-P4) with a Stamp-AddOn C6 stacked on top for Wi-Fi and BLE.</p></li>
+      <li><b>HOME and PAIR</b><p>Two buttons and one status LED. No reset button.</p></li>
+      <li><b>Fan and temperature</b><p>A fan header with speed control and tach, and a thermistor input.</p></li>
+      <li><b>Optional accessory outputs</b><p>A fused 12 V pump output with a PWM signal, an external PWM output, a Neopixel chain, a Qwiic port and a GPIO header. Anything smarter than a switch belongs on its own board, over Valence (see <a href="/isotope/">Isotope</a>).</p></li>
+      <li><span class="num">6<small>layers</small></span><b>75 x 75 mm, heatsink on the back</b><p>Parts on both sides except under the 40 x 40 mm heatsink, which sits under the power parts. Three XT30 power connectors, JST XH for signals. So the PCB stays small and the heat has somewhere to go.</p></li>
     </ul>
   </section>
 
-  <section aria-labelledby="s-fit">
-    <h2 id="s-fit" data-n="07">How it fits</h2>
-    <!-- Hardware README.md; Nucleus docs/board-map.md -->
-    <p>The PCB is the physical end of the system. <a href="/nucleus/">Nucleus</a> is its firmware, and <a href="/Valence/">Valence</a> is the protocol its hub uses. The <a href="/diagrams/">diagrams</a> show the connections, and <a href="/components/">Components</a> lists every part. The repo also reserves folders for cable drawings, enclosure parts and bench fixtures.</p>
-    <p class="links"><a href="https://github.com/openvalence/Hardware">Repo</a> · <a href="https://github.com/openvalence/Hardware/blob/main/flagship/FEATURES.md">Features</a> · <a href="https://github.com/openvalence/Hardware/blob/main/flagship/SPEC.md">Decisions ledger</a> · <a href="/nucleus/">Nucleus</a> · <a href="/diagrams/">Diagrams</a></p>
+  <section class="aside" aria-labelledby="s-fit">
+    <h2 id="s-fit">How it fits.</h2>
+    <div>
+      <!-- Hardware README.md; Nucleus docs/board-map.md -->
+      <p>The PCB is the physical end of the system. <a href="/nucleus/">Nucleus</a> is its firmware, and <a href="/Valence/">Valence</a> is the protocol its hub uses. The <a href="/diagrams/">diagrams</a> show the connections, and <a href="/components/">Components</a> lists every part. The repo also reserves folders for cable drawings, enclosure parts and bench fixtures.</p>
+      <p class="links"><a href="https://github.com/openvalence/Hardware">Repo</a> · <a href="https://github.com/openvalence/Hardware/blob/main/flagship/FEATURES.md">Features</a> · <a href="https://github.com/openvalence/Hardware/blob/main/flagship/SPEC.md">Decisions ledger</a> · <a href="/nucleus/">Nucleus</a> · <a href="/diagrams/">Diagrams</a></p>
+    </div>
   </section>
 </main>
 

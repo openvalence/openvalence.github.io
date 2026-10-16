@@ -13,14 +13,13 @@
 <meta name="twitter:title" content="Diagrams: OpenValence">
 <meta name="twitter:description" content="How OpenValence fits together: the system from app to servo drive, the path of a funscript action to the motor, and the access tiers with the pair button.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="manifest" href="/icons/site.webmanifest">
-<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
@@ -53,13 +52,13 @@
 
 <main>
   <section class="opening">
-    <p class="kicker">diagrams · drawn from the spec and the code</p>
     <h1>How it fits together</h1>
+    <p class="fine">Drawn from the spec and the code.</p>
     <p>Three pictures: the whole system, one script action on its way to the motor, and who gets to do what. Every number here comes from the spec or the firmware as of October 2026.</p>
   </section>
 
   <section aria-labelledby="system">
-    <h2 id="system" data-n="01">The system</h2>
+    <h2 class="xl" id="system">The system</h2>
     <!-- Sources:
          app link: SPEC §13.2 (WebSocket), §13.4 (BLE GATT); Nucleus .claude/rules/transport.md (BLE only for config mode, offline over 30 s, or no credentials)
          C6: Nucleus README "Chips", transport.md (esp_hosted over SDIO 3.0, 4-bit, 40 MHz)
@@ -76,7 +75,7 @@
   </section>
 
   <section aria-labelledby="funscript">
-    <h2 id="funscript" data-n="02">A funscript action, start to finish</h2>
+    <h2 class="xl" id="funscript">A funscript action, start to finish</h2>
     <!-- Sources (Phosphor main 1775961, Nucleus main 683cb62):
          01-04: plugins/factory/funscript-player funscript.js, axes.js, scale.js, clock.js (requestVideoFrameCallback, rAF fallback), scheduler.js OFFER_MAX 32, EXPECT_MS 500
          05: src/model/motion.js:77 SEG_FLOOR_MS 10, :80-85 lead = max(horizon/2, horizon - 100), :416-429 stamp on hub clock, t_off unit 100 us
@@ -96,7 +95,7 @@
   </section>
 
   <section aria-labelledby="pairing">
-    <h2 id="pairing" data-n="03">Who can do what</h2>
+    <h2 class="xl" id="pairing">Who can do what</h2>
     <!-- Sources: SPEC §12.2 tiers (ratified), §12.3 pairing modes (ratified), §11.1/§11.2 pause and estop role-exempt, §12.8 /uitoken grants control never configure, §13.4.1 config mode (RFC-079) -->
     <figure class="diagram">
       <svg viewBox="0 0 320 210" role="img" aria-labelledby="pair-t pair-d"><title id="pair-t">Access tiers and the ways in</title><desc id="pair-d">Three tiers, each including the one below. Watch sees everything and is open by default. Control can also move the machine. Configure can also change setup and decide who gets in. Stop works at every tier. The first client to knock on a factory-fresh machine, or on one booted in config mode, gets configure. A pairing window, a PIN or a yes from a configure client grants a paired tier, control by default. Connecting with no token gives watch.</desc><defs><marker id="pair-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L8 4L0 8z"/></marker><marker id="pair-i" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow-i" d="M0 0L8 4L0 8z"/></marker><marker id="pair-g" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow-g" d="M0 0L8 4L0 8z"/></marker></defs><rect class="d-hub" x="8" y="8" width="262" height="65" rx="2"/><text class="d-t" x="20" y="26">configure</text><text class="d-s" x="20" y="41">setup, network, who gets in</text><text class="d-r" x="20" y="54">in: a fresh machine&#x27;s first knock,</text><text class="d-r" x="20" y="67">config mode, or a configure yes</text><rect class="d-box" x="8" y="79" width="262" height="65" rx="2"/><text class="d-t" x="20" y="97">control</text><text class="d-s" x="20" y="112">move it: patterns, scripts</text><text class="d-r" x="20" y="125">in: Pair window, PIN, or a yes</text><text class="d-r" x="20" y="138">from a configure client</text><rect class="d-box" x="8" y="150" width="262" height="52" rx="2"/><text class="d-t" x="20" y="168">watch</text><text class="d-s" x="20" y="183">see everything, stop it</text><text class="d-r" x="20" y="196">in: just connect, no token</text><rect class="d-sunk" x="278" y="8" width="34" height="194" rx="2"/><text class="d-r" transform="translate(299 105) rotate(-90)" text-anchor="middle">stop works at every tier</text></svg>

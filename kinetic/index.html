@@ -13,14 +13,13 @@
 <meta name="twitter:title" content="Kinetic: OpenValence">
 <meta name="twitter:description" content="Kinetic is a header-only C++ motion planner. Give it knots, get a jerk-limited trajectory back, bit-identical on every IEEE-754 target. Try it in your browser.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="manifest" href="/icons/site.webmanifest">
-<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
@@ -54,10 +53,10 @@
 
 <main>
   <section class="opening">
-    <p class="kicker">component · motion planner</p>
     <h1>Kinetic</h1>
     <!-- Kinetic README.md intro, "License" -->
-    <p>Kinetic is a header-only C++ library that plans jerk-limited trajectories. It has no hardware dependencies and its output is deterministic. It is the planner in <a href="/nucleus/">Nucleus</a>, and you can use it on its own. <span class="nb">Apache-2.0</span>.</p>
+    <p class="lede">Timed knots in, jerk-limited motion out. The same bits on every chip.</p>
+    <p>A header-only C++ library with no hardware dependencies. It is the planner in <a href="/nucleus/">Nucleus</a>, and you can use it on its own. <span class="nb">Apache-2.0</span>.</p>
     <!-- Kinetic playground/README.md: deployed at openvalence.org/Kinetic/ -->
     <div class="btns">
       <a class="btn go" href="https://openvalence.org/Kinetic/">Open the playground</a>
@@ -66,72 +65,80 @@
     </div>
   </section>
 
-  <figure class="knots">
-    <div class="stage">
-      <svg viewBox="0 0 680 232" role="img" aria-labelledby="kn-t kn-d" data-knots='[[0, 0.12], [0.55, 0.88], [1.0, 0.22], [1.35, 0.8], [1.9, 0.1], [2.3, 0.95], [2.75, 0.35], [3.05, 0.62], [3.4, 0.18], [4.1, 0.9], [4.6, 0.3], [5.0, 0.72], [5.6, 0.12]]' data-box='[40,588,16,206]'><title id="kn-t">Knots in, a smooth trajectory out</title><desc id="kn-d">Thirteen timed knots over 5.6 seconds, alternating high and low positions like a script. A smooth curve passes through every knot with no overshoot, and a carriage on a rail at the right follows the curve.</desc><path class="grid" d="M40.0 16V206"/><text class="axis" x="40.0" y="222" text-anchor="middle">0 s</text><path class="grid" d="M137.9 16V206"/><text class="axis" x="137.9" y="222" text-anchor="middle">1 s</text><path class="grid" d="M235.7 16V206"/><text class="axis" x="235.7" y="222" text-anchor="middle">2 s</text><path class="grid" d="M333.6 16V206"/><text class="axis" x="333.6" y="222" text-anchor="middle">3 s</text><path class="grid" d="M431.4 16V206"/><text class="axis" x="431.4" y="222" text-anchor="middle">4 s</text><path class="grid" d="M529.3 16V206"/><text class="axis" x="529.3" y="222" text-anchor="middle">5 s</text><path class="grid" d="M40 206.0H588"/><path class="grid" d="M40 111.0H588"/><path class="grid" d="M40 16.0H588"/><text class="axis" x="34" y="19.0" text-anchor="end">top</text><text class="axis" x="34" y="209.0" text-anchor="end">0</text><path class="seg" d="M40.0 183.2 93.8 38.8 137.9 164.2 172.1 54.0 225.9 187.0 265.1 25.5 309.1 139.5 338.5 88.2 372.7 171.8 441.2 35.0 490.1 149.0 529.3 69.2 588.0 183.2"/><path class="curve" d="M40.0 183.2 41.4 182.9 42.7 182.1 44.1 180.8 45.5 179.0 46.9 176.8 48.2 174.1 49.6 171.1 51.0 167.7 52.3 163.9 53.7 159.9 55.1 155.6 56.4 151.0 57.8 146.2 59.2 141.3 60.5 136.1 61.9 130.9 63.3 125.5 64.7 120.0 66.0 114.5 67.4 109.0 68.8 103.5 70.1 98.1 71.5 92.7 72.9 87.4 74.2 82.2 75.6 77.2 77.0 72.3 78.4 67.7 79.7 63.3 81.1 59.2 82.5 55.4 83.8 51.9 85.2 48.7 86.6 45.9 88.0 43.6 89.3 41.7 90.7 40.2 92.1 39.3 93.4 38.8 94.8 39.0 96.2 39.8 97.5 41.3 98.9 43.4 100.3 46.1 101.6 49.3 103.0 52.9 104.4 57.0 105.8 61.5 107.1 66.2 108.5 71.3 109.9 76.6 111.2 82.1 112.6 87.8 114.0 93.6 115.4 99.4 116.7 105.3 118.1 111.1 119.5 116.8 120.8 122.5 122.2 127.9 123.6 133.2 124.9 138.2 126.3 142.9 127.7 147.2 129.1 151.2 130.4 154.7 131.8 157.7 133.2 160.2 134.5 162.2 135.9 163.5 137.3 164.1 138.6 164.0 140.0 162.9 141.4 160.9 142.8 158.1 144.1 154.5 145.5 150.2 146.9 145.4 148.2 140.0 149.6 134.2 151.0 128.1 152.3 121.8 153.7 115.2 155.1 108.6 156.4 102.0 157.8 95.5 159.2 89.2 160.6 83.1 161.9 77.4 163.3 72.1 164.7 67.3 166.0 63.1 167.4 59.6 168.8 56.9 170.2 55.0 171.5 54.1 172.9 54.1 174.3 54.6 175.6 55.6 177.0 57.1 178.4 59.0 179.7 61.3 181.1 63.9 182.5 66.9 183.8 70.2 185.2 73.8 186.6 77.7 188.0 81.8 189.3 86.1 190.7 90.7 192.1 95.3 193.4 100.1 194.8 105.0 196.2 110.0 197.6 115.1 198.9 120.1 200.3 125.2 201.7 130.3 203.0 135.3 204.4 140.2 205.8 145.0 207.1 149.7 208.5 154.2 209.9 158.6 211.2 162.7 212.6 166.6 214.0 170.3 215.4 173.6 216.7 176.7 218.1 179.4 219.5 181.7 220.8 183.7 222.2 185.2 223.6 186.3 225.0 186.9 226.3 187.0 227.7 186.0 229.1 184.1 230.4 181.1 231.8 177.2 233.2 172.5 234.5 167.0 235.9 160.9 237.3 154.1 238.7 146.9 240.0 139.3 241.4 131.3 242.8 123.1 244.1 114.7 245.5 106.2 246.9 97.8 248.2 89.4 249.6 81.2 251.0 73.2 252.3 65.6 253.7 58.4 255.1 51.6 256.5 45.5 257.8 40.0 259.2 35.3 260.6 31.4 261.9 28.4 263.3 26.5 264.7 25.5 266.0 25.7 267.4 26.4 268.8 27.8 270.2 29.7 271.5 32.1 272.9 35.0 274.3 38.3 275.6 42.0 277.0 46.1 278.4 50.4 279.8 55.1 281.1 59.9 282.5 64.9 283.9 70.0 285.2 75.3 286.6 80.6 288.0 85.9 289.3 91.2 290.7 96.4 292.1 101.5 293.5 106.5 294.8 111.3 296.2 115.8 297.6 120.1 298.9 124.0 300.3 127.6 301.7 130.8 303.0 133.6 304.4 135.9 305.8 137.6 307.2 138.8 308.5 139.4 309.9 139.4 311.3 138.7 312.6 137.5 314.0 135.7 315.4 133.5 316.7 130.9 318.1 128.0 319.5 124.8 320.9 121.4 322.2 117.9 323.6 114.4 325.0 110.8 326.3 107.2 327.7 103.8 329.1 100.6 330.4 97.6 331.8 94.9 333.2 92.6 334.6 90.7 335.9 89.3 337.3 88.4 338.7 88.2 340.0 88.7 341.4 89.9 342.8 91.8 344.1 94.3 345.5 97.4 346.9 100.9 348.2 104.8 349.6 109.0 351.0 113.6 352.4 118.3 353.7 123.2 355.1 128.2 356.5 133.2 357.8 138.2 359.2 143.1 360.6 147.8 361.9 152.2 363.3 156.4 364.7 160.2 366.1 163.6 367.4 166.4 368.8 168.8 370.2 170.5 371.5 171.5 372.9 171.8 374.3 171.6 375.7 171.1 377.0 170.2 378.4 169.1 379.8 167.8 381.1 166.1 382.5 164.2 383.9 162.1 385.2 159.8 386.6 157.2 388.0 154.4 389.4 151.5 390.7 148.4 392.1 145.2 393.5 141.8 394.8 138.2 396.2 134.6 397.6 130.8 398.9 127.0 400.3 123.1 401.7 119.1 403.1 115.1 404.4 111.0 405.8 106.9 407.2 102.8 408.5 98.7 409.9 94.6 411.3 90.6 412.6 86.6 414.0 82.6 415.4 78.7 416.8 74.9 418.1 71.2 419.5 67.6 420.9 64.1 422.2 60.7 423.6 57.5 425.0 54.4 426.3 51.5 427.7 48.9 429.1 46.4 430.5 44.1 431.8 42.0 433.2 40.2 434.6 38.6 435.9 37.3 437.3 36.3 438.7 35.6 440.0 35.1 441.4 35.0 442.8 35.3 444.2 36.2 445.5 37.5 446.9 39.2 448.3 41.4 449.6 44.0 451.0 46.9 452.4 50.1 453.7 53.6 455.1 57.4 456.5 61.4 457.8 65.6 459.2 70.0 460.6 74.5 462.0 79.1 463.3 83.8 464.7 88.6 466.1 93.4 467.4 98.1 468.8 102.9 470.2 107.6 471.6 112.1 472.9 116.6 474.3 120.9 475.7 124.9 477.0 128.8 478.4 132.5 479.8 135.8 481.1 138.8 482.5 141.5 483.9 143.9 485.2 145.8 486.6 147.3 488.0 148.4 489.4 148.9 490.7 148.9 492.1 148.4 493.5 147.4 494.8 145.8 496.2 143.8 497.6 141.5 498.9 138.7 500.3 135.6 501.7 132.3 503.1 128.7 504.4 124.9 505.8 120.9 507.2 116.8 508.5 112.7 509.9 108.5 511.3 104.3 512.6 100.2 514.0 96.1 515.4 92.2 516.8 88.5 518.1 85.0 519.5 81.7 520.9 78.7 522.2 76.0 523.6 73.7 525.0 71.9 526.4 70.5 527.7 69.6 529.1 69.2 530.5 69.3 531.8 69.8 533.2 70.7 534.6 71.8 535.9 73.3 537.3 75.0 538.7 77.0 540.0 79.3 541.4 81.8 542.8 84.5 544.2 87.4 545.5 90.5 546.9 93.8 548.3 97.2 549.6 100.8 551.0 104.5 552.4 108.2 553.8 112.1 555.1 116.0 556.5 119.9 557.9 123.9 559.2 127.9 560.6 131.9 562.0 135.8 563.3 139.8 564.7 143.6 566.1 147.4 567.5 151.1 568.8 154.7 570.2 158.1 571.6 161.4 572.9 164.5 574.3 167.5 575.7 170.2 577.0 172.8 578.4 175.1 579.8 177.1 581.2 178.9 582.5 180.4 583.9 181.6 585.3 182.5 586.6 183.0 588.0 183.2"/><circle class="knot" cx="40.0" cy="183.2" r="4.5"/><circle class="knot" cx="93.8" cy="38.8" r="4.5"/><circle class="knot" cx="137.9" cy="164.2" r="4.5"/><circle class="knot" cx="172.1" cy="54.0" r="4.5"/><circle class="knot" cx="225.9" cy="187.0" r="4.5"/><circle class="knot" cx="265.1" cy="25.5" r="4.5"/><circle class="knot" cx="309.1" cy="139.5" r="4.5"/><circle class="knot" cx="338.5" cy="88.2" r="4.5"/><circle class="knot" cx="372.7" cy="171.8" r="4.5"/><circle class="knot" cx="441.2" cy="35.0" r="4.5"/><circle class="knot" cx="490.1" cy="149.0" r="4.5"/><circle class="knot" cx="529.3" cy="69.2" r="4.5"/><circle class="knot" cx="588.0" cy="183.2" r="4.5"/><line class="now" x1="235.7" x2="235.7" y1="16" y2="206"/><circle class="head" cx="235.7" cy="161.8" r="5"/><rect class="rail" x="626" y="12" width="16" height="198" rx="2"/><rect class="car" x="620" y="154.8" width="28" height="14" rx="2"/><text class="axis" x="634" y="222" text-anchor="middle">rail</text></svg>
-    </div>
-    <div class="keyrow" aria-hidden="true"><span><i class="k"></i>knot: a position at a time</span><span><i class="s"></i>the script as written</span><span><i class="c"></i>the curve through it</span></div>
-    <figcaption>Knots in, a smooth curve out. This sketch joins made-up knots with the crisp style, which never overshoots between monotone knots. The real planner also keeps under its speed, acceleration and jerk ceilings; the playground shows all of it.</figcaption>
-  </figure>
+  <section class="band" aria-label="The planner, sketched">
+    <figure class="knots">
+      <div class="stage-k">
+        <svg viewBox="0 0 680 232" role="img" aria-labelledby="kn-t kn-d" data-knots='[[0, 0.12], [0.55, 0.88], [1.0, 0.22], [1.35, 0.8], [1.9, 0.1], [2.3, 0.95], [2.75, 0.35], [3.05, 0.62], [3.4, 0.18], [4.1, 0.9], [4.6, 0.3], [5.0, 0.72], [5.6, 0.12]]' data-box='[40,588,16,206]'><title id="kn-t">Knots in, a smooth trajectory out</title><desc id="kn-d">Thirteen timed knots over 5.6 seconds, alternating high and low positions like a script. A smooth curve passes through every knot with no overshoot, and a carriage on a rail at the right follows the curve.</desc><path class="grid" d="M40.0 16V206"/><text class="axis" x="40.0" y="222" text-anchor="middle">0 s</text><path class="grid" d="M137.9 16V206"/><text class="axis" x="137.9" y="222" text-anchor="middle">1 s</text><path class="grid" d="M235.7 16V206"/><text class="axis" x="235.7" y="222" text-anchor="middle">2 s</text><path class="grid" d="M333.6 16V206"/><text class="axis" x="333.6" y="222" text-anchor="middle">3 s</text><path class="grid" d="M431.4 16V206"/><text class="axis" x="431.4" y="222" text-anchor="middle">4 s</text><path class="grid" d="M529.3 16V206"/><text class="axis" x="529.3" y="222" text-anchor="middle">5 s</text><path class="grid" d="M40 206.0H588"/><path class="grid" d="M40 111.0H588"/><path class="grid" d="M40 16.0H588"/><text class="axis" x="34" y="19.0" text-anchor="end">top</text><text class="axis" x="34" y="209.0" text-anchor="end">0</text><path class="seg" d="M40.0 183.2 93.8 38.8 137.9 164.2 172.1 54.0 225.9 187.0 265.1 25.5 309.1 139.5 338.5 88.2 372.7 171.8 441.2 35.0 490.1 149.0 529.3 69.2 588.0 183.2"/><path class="curve" d="M40.0 183.2 41.4 182.9 42.7 182.1 44.1 180.8 45.5 179.0 46.9 176.8 48.2 174.1 49.6 171.1 51.0 167.7 52.3 163.9 53.7 159.9 55.1 155.6 56.4 151.0 57.8 146.2 59.2 141.3 60.5 136.1 61.9 130.9 63.3 125.5 64.7 120.0 66.0 114.5 67.4 109.0 68.8 103.5 70.1 98.1 71.5 92.7 72.9 87.4 74.2 82.2 75.6 77.2 77.0 72.3 78.4 67.7 79.7 63.3 81.1 59.2 82.5 55.4 83.8 51.9 85.2 48.7 86.6 45.9 88.0 43.6 89.3 41.7 90.7 40.2 92.1 39.3 93.4 38.8 94.8 39.0 96.2 39.8 97.5 41.3 98.9 43.4 100.3 46.1 101.6 49.3 103.0 52.9 104.4 57.0 105.8 61.5 107.1 66.2 108.5 71.3 109.9 76.6 111.2 82.1 112.6 87.8 114.0 93.6 115.4 99.4 116.7 105.3 118.1 111.1 119.5 116.8 120.8 122.5 122.2 127.9 123.6 133.2 124.9 138.2 126.3 142.9 127.7 147.2 129.1 151.2 130.4 154.7 131.8 157.7 133.2 160.2 134.5 162.2 135.9 163.5 137.3 164.1 138.6 164.0 140.0 162.9 141.4 160.9 142.8 158.1 144.1 154.5 145.5 150.2 146.9 145.4 148.2 140.0 149.6 134.2 151.0 128.1 152.3 121.8 153.7 115.2 155.1 108.6 156.4 102.0 157.8 95.5 159.2 89.2 160.6 83.1 161.9 77.4 163.3 72.1 164.7 67.3 166.0 63.1 167.4 59.6 168.8 56.9 170.2 55.0 171.5 54.1 172.9 54.1 174.3 54.6 175.6 55.6 177.0 57.1 178.4 59.0 179.7 61.3 181.1 63.9 182.5 66.9 183.8 70.2 185.2 73.8 186.6 77.7 188.0 81.8 189.3 86.1 190.7 90.7 192.1 95.3 193.4 100.1 194.8 105.0 196.2 110.0 197.6 115.1 198.9 120.1 200.3 125.2 201.7 130.3 203.0 135.3 204.4 140.2 205.8 145.0 207.1 149.7 208.5 154.2 209.9 158.6 211.2 162.7 212.6 166.6 214.0 170.3 215.4 173.6 216.7 176.7 218.1 179.4 219.5 181.7 220.8 183.7 222.2 185.2 223.6 186.3 225.0 186.9 226.3 187.0 227.7 186.0 229.1 184.1 230.4 181.1 231.8 177.2 233.2 172.5 234.5 167.0 235.9 160.9 237.3 154.1 238.7 146.9 240.0 139.3 241.4 131.3 242.8 123.1 244.1 114.7 245.5 106.2 246.9 97.8 248.2 89.4 249.6 81.2 251.0 73.2 252.3 65.6 253.7 58.4 255.1 51.6 256.5 45.5 257.8 40.0 259.2 35.3 260.6 31.4 261.9 28.4 263.3 26.5 264.7 25.5 266.0 25.7 267.4 26.4 268.8 27.8 270.2 29.7 271.5 32.1 272.9 35.0 274.3 38.3 275.6 42.0 277.0 46.1 278.4 50.4 279.8 55.1 281.1 59.9 282.5 64.9 283.9 70.0 285.2 75.3 286.6 80.6 288.0 85.9 289.3 91.2 290.7 96.4 292.1 101.5 293.5 106.5 294.8 111.3 296.2 115.8 297.6 120.1 298.9 124.0 300.3 127.6 301.7 130.8 303.0 133.6 304.4 135.9 305.8 137.6 307.2 138.8 308.5 139.4 309.9 139.4 311.3 138.7 312.6 137.5 314.0 135.7 315.4 133.5 316.7 130.9 318.1 128.0 319.5 124.8 320.9 121.4 322.2 117.9 323.6 114.4 325.0 110.8 326.3 107.2 327.7 103.8 329.1 100.6 330.4 97.6 331.8 94.9 333.2 92.6 334.6 90.7 335.9 89.3 337.3 88.4 338.7 88.2 340.0 88.7 341.4 89.9 342.8 91.8 344.1 94.3 345.5 97.4 346.9 100.9 348.2 104.8 349.6 109.0 351.0 113.6 352.4 118.3 353.7 123.2 355.1 128.2 356.5 133.2 357.8 138.2 359.2 143.1 360.6 147.8 361.9 152.2 363.3 156.4 364.7 160.2 366.1 163.6 367.4 166.4 368.8 168.8 370.2 170.5 371.5 171.5 372.9 171.8 374.3 171.6 375.7 171.1 377.0 170.2 378.4 169.1 379.8 167.8 381.1 166.1 382.5 164.2 383.9 162.1 385.2 159.8 386.6 157.2 388.0 154.4 389.4 151.5 390.7 148.4 392.1 145.2 393.5 141.8 394.8 138.2 396.2 134.6 397.6 130.8 398.9 127.0 400.3 123.1 401.7 119.1 403.1 115.1 404.4 111.0 405.8 106.9 407.2 102.8 408.5 98.7 409.9 94.6 411.3 90.6 412.6 86.6 414.0 82.6 415.4 78.7 416.8 74.9 418.1 71.2 419.5 67.6 420.9 64.1 422.2 60.7 423.6 57.5 425.0 54.4 426.3 51.5 427.7 48.9 429.1 46.4 430.5 44.1 431.8 42.0 433.2 40.2 434.6 38.6 435.9 37.3 437.3 36.3 438.7 35.6 440.0 35.1 441.4 35.0 442.8 35.3 444.2 36.2 445.5 37.5 446.9 39.2 448.3 41.4 449.6 44.0 451.0 46.9 452.4 50.1 453.7 53.6 455.1 57.4 456.5 61.4 457.8 65.6 459.2 70.0 460.6 74.5 462.0 79.1 463.3 83.8 464.7 88.6 466.1 93.4 467.4 98.1 468.8 102.9 470.2 107.6 471.6 112.1 472.9 116.6 474.3 120.9 475.7 124.9 477.0 128.8 478.4 132.5 479.8 135.8 481.1 138.8 482.5 141.5 483.9 143.9 485.2 145.8 486.6 147.3 488.0 148.4 489.4 148.9 490.7 148.9 492.1 148.4 493.5 147.4 494.8 145.8 496.2 143.8 497.6 141.5 498.9 138.7 500.3 135.6 501.7 132.3 503.1 128.7 504.4 124.9 505.8 120.9 507.2 116.8 508.5 112.7 509.9 108.5 511.3 104.3 512.6 100.2 514.0 96.1 515.4 92.2 516.8 88.5 518.1 85.0 519.5 81.7 520.9 78.7 522.2 76.0 523.6 73.7 525.0 71.9 526.4 70.5 527.7 69.6 529.1 69.2 530.5 69.3 531.8 69.8 533.2 70.7 534.6 71.8 535.9 73.3 537.3 75.0 538.7 77.0 540.0 79.3 541.4 81.8 542.8 84.5 544.2 87.4 545.5 90.5 546.9 93.8 548.3 97.2 549.6 100.8 551.0 104.5 552.4 108.2 553.8 112.1 555.1 116.0 556.5 119.9 557.9 123.9 559.2 127.9 560.6 131.9 562.0 135.8 563.3 139.8 564.7 143.6 566.1 147.4 567.5 151.1 568.8 154.7 570.2 158.1 571.6 161.4 572.9 164.5 574.3 167.5 575.7 170.2 577.0 172.8 578.4 175.1 579.8 177.1 581.2 178.9 582.5 180.4 583.9 181.6 585.3 182.5 586.6 183.0 588.0 183.2"/><circle class="knot" cx="40.0" cy="183.2" r="4.5"/><circle class="knot" cx="93.8" cy="38.8" r="4.5"/><circle class="knot" cx="137.9" cy="164.2" r="4.5"/><circle class="knot" cx="172.1" cy="54.0" r="4.5"/><circle class="knot" cx="225.9" cy="187.0" r="4.5"/><circle class="knot" cx="265.1" cy="25.5" r="4.5"/><circle class="knot" cx="309.1" cy="139.5" r="4.5"/><circle class="knot" cx="338.5" cy="88.2" r="4.5"/><circle class="knot" cx="372.7" cy="171.8" r="4.5"/><circle class="knot" cx="441.2" cy="35.0" r="4.5"/><circle class="knot" cx="490.1" cy="149.0" r="4.5"/><circle class="knot" cx="529.3" cy="69.2" r="4.5"/><circle class="knot" cx="588.0" cy="183.2" r="4.5"/><line class="now" x1="235.7" x2="235.7" y1="16" y2="206"/><circle class="head" cx="235.7" cy="161.8" r="5"/><rect class="rail" x="626" y="12" width="16" height="198" rx="2"/><rect class="car" x="620" y="154.8" width="28" height="14" rx="2"/><text class="axis" x="634" y="222" text-anchor="middle">rail</text></svg>
+      </div>
+      <div class="keyrow" aria-hidden="true"><span><i class="k"></i>knot: a position at a time</span><span><i class="s"></i>the script as written</span><span><i class="c"></i>the curve through it</span></div>
+      <figcaption>A sketch: made-up knots joined in the crisp style, which never overshoots between monotone knots. The real planner also keeps under its speed, acceleration and jerk ceilings; the playground shows all of it.</figcaption>
+    </figure>
+  </section>
 
-  <section aria-labelledby="s-status">
-    <h2 id="s-status" data-n="01">Status</h2>
+  <section class="aside" aria-labelledby="s-status">
+    <h2 id="s-status">Kinetic², the current one.</h2>
     <!-- Kinetic README.md:8-14; gh release list is empty -->
-    <p>This page covers Kinetic², the current planner. It plans every motion in Nucleus: the firmware, the Virtual and the native tests. There is no release yet. Kinetic 1, the first planner, lives on the <code>kinetic1</code> branch of the repo and is no longer on <code>main</code>.</p>
+    <p>It plans every motion in Nucleus: the firmware, the Virtual and the native tests. There is no release yet. Kinetic 1, the first planner, lives on the <code>kinetic1</code> branch of the repo and is no longer on <code>main</code>.</p>
   </section>
 
   <section aria-labelledby="s-model">
-    <h2 id="s-model" data-n="02">The model</h2>
+    <h2 class="xl" id="s-model">Time never gives. Amplitude does.</h2>
     <!-- Kinetic README.md:16-29 "The model" -->
-    <ul class="tiles">
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#curve"/></svg><b>Knots in, a sampled trajectory out</b><p>Every source becomes knots: the curve passes position <code>p</code> at time <code>t_us</code>, optionally with an end velocity. The engine never sees a wire format. So any source, from a script to a live stream, feeds the same planner.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#pulse"/></svg><b>Event-driven</b><p>The pending knots are solved when they change, at the next sample. The curve is continuous in position and velocity by construction. So the motor never gets a step in speed.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#timer"/></svg><b>Time never gives, amplitude does</b><p>A knot the limits cannot reach in time is moved toward the previous knot. It is never dropped and never placed late. So a script keeps its timing and gives up stroke length, not rhythm.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#shield"/></svg><b>Limits are ceilings</b><p>The planner stays under velocity, acceleration and jerk limits and does not plan to reach them. Every trim, clamp and refusal is recorded as an anomaly you can read. So you can see exactly where a pattern asked for too much.</p></li>
+    <ul class="facts">
+      <li><b>Knots in, a sampled trajectory out</b><p>Every source becomes knots: the curve passes position <code>p</code> at time <code>t_us</code>, optionally with an end velocity. The engine never sees a wire format. So any source, from a script to a live stream, feeds the same planner.</p></li>
+      <li><b>Event-driven</b><p>The pending knots are solved when they change, at the next sample. The curve is continuous in position and velocity by construction. So the motor never gets a step in speed.</p></li>
+      <li><b>Never late, never dropped</b><p>A knot the limits cannot reach in time is moved toward the previous knot. It is never dropped and never placed late. So a script keeps its timing and gives up stroke length, not rhythm.</p></li>
+      <li><b>Limits are ceilings</b><p>The planner stays under velocity, acceleration and jerk limits and does not plan to reach them. Every trim, clamp and refusal is recorded as an anomaly you can read. So you can see exactly where a pattern asked for too much.</p></li>
     </ul>
     <!-- Kinetic README.md:74-86 "Planner options": smoothness, crisp PCHIP vs smooth Makima -->
-    <p>Free knots take one of two styles: crisp (no overshoot between monotone knots) or smooth (may overshoot, continuous acceleration), or a blend between. So you choose between exact turnarounds and softer curves.</p>
+    <p class="mt">Free knots take one of two styles: crisp (no overshoot between monotone knots) or smooth (may overshoot, continuous acceleration), or a blend between. So you choose between exact turnarounds and softer curves.</p>
   </section>
 
-  <section aria-labelledby="s-playground">
-    <h2 id="s-playground" data-n="03">Playground</h2>
-    <!-- Kinetic playground/README.md -->
-    <p>The planner, compiled to WebAssembly, in your browser. Place knots on the position trace, change the planner options, and read the result: the curve, velocity, acceleration and jerk against the limits, the solved knots and every anomaly.</p>
-    <div class="embed" data-embed="https://openvalence.org/Kinetic/" data-title="Kinetic² playground" data-label="Run the playground here">
-      <img src="/images/kinetic/playground.webp" width="1280" height="800" alt="The Kinetic² playground: four stacked plots of position, velocity, acceleration and jerk over two seconds, with the planner options as sliders on the right." loading="lazy" decoding="async">
+  <section class="split" aria-labelledby="s-playground">
+    <div class="media">
+      <div class="embed" data-embed="https://openvalence.org/Kinetic/" data-title="Kinetic² playground" data-label="Run the playground here">
+        <img src="/images/kinetic/playground.webp" width="1280" height="800" alt="The Kinetic² playground: four stacked plots of position, velocity, acceleration and jerk over two seconds, with the planner options as sliders on the right." loading="lazy" decoding="async">
+      </div>
     </div>
-    <p class="links"><a href="https://openvalence.org/Kinetic/">Open it full screen</a> · <a href="/Kinetic/handles.html">The handles editor</a> · <a href="/demos/">Demos</a></p>
+    <div>
+      <h2 id="s-playground">Play with it.</h2>
+      <!-- Kinetic playground/README.md -->
+      <p>The planner, compiled to WebAssembly, in your browser. Place knots on the position trace, change the planner options, and read the result: the curve, velocity, acceleration and jerk against the limits, the solved knots and every anomaly.</p>
+      <p class="links"><a href="https://openvalence.org/Kinetic/">Open it full screen</a> · <a href="/Kinetic/handles.html">The handles editor</a> · <a href="/demos/">Demos</a></p>
+    </div>
   </section>
 
-  <section aria-labelledby="s-determinism">
-    <h2 id="s-determinism" data-n="04">Deterministic</h2>
-    <!-- Kinetic README.md:99-111 "Determinism" -->
-    <dl class="figures one">
-      <div><dt>difference between native, WebAssembly and ESP32-P4 builds of the same plan, with -ffp-contract=off</dt><dd>0<span class="unit">ULP</span></dd></div>
-    </dl>
-    <p>So the plan you preview in the browser is the plan the firmware runs, provided the flag is set.</p>
-    <details class="more">
-      <summary>How that holds</summary>
-      <p>Quantities are <code>float</code>; time is <code>uint64_t</code> microseconds that you supply. The same calls give bit-identical results on every IEEE-754 target, as long as everything that compiles the planner uses <code>-ffp-contract=off</code> and not <code>-ffast-math</code>. Without the flag, GCC fuses multiply-adds on targets such as the ESP32-P4 and the results drift by a few ULPs from native and WebAssembly builds. The test suite pins a fingerprint of the rendered motion.</p>
-    </details>
+  <section class="aside" aria-labelledby="s-determinism">
+    <div>
+      <h2 id="s-determinism">Same plan, every chip.</h2>
+      <p>So the plan you preview in the browser is the plan the firmware runs, provided the flag is set.</p>
+    </div>
+    <div>
+      <!-- Kinetic README.md:99-111 "Determinism" -->
+      <dl class="figures one">
+        <div><dt>Difference between native, WebAssembly and ESP32-P4 builds of the same plan, with -ffp-contract=off.</dt><dd>0<span class="unit">ULP</span></dd></div>
+      </dl>
+      <details class="more">
+        <summary>How that holds</summary>
+        <p>Quantities are <code>float</code>; time is <code>uint64_t</code> microseconds that you supply. The same calls give bit-identical results on every IEEE-754 target, as long as everything that compiles the planner uses <code>-ffp-contract=off</code> and not <code>-ffast-math</code>. Without the flag, GCC fuses multiply-adds on targets such as the ESP32-P4 and the results drift by a few ULPs from native and WebAssembly builds. The test suite pins a fingerprint of the rendered motion.</p>
+      </details>
+    </div>
   </section>
 
-  <section aria-labelledby="s-use">
-    <h2 id="s-use" data-n="05">Using it</h2>
-    <!-- Kinetic README.md:31-72 "Example"; :88-97 "Units and frames"; :113-138 "Integration"; :152-170 "WebAssembly" -->
-    <p>You call <code>submit()</code> with knots and <code>positionAt()</code> on your own clock. It needs C++20 and builds with CMake or PlatformIO. A WebAssembly build with a small C interface is in the repo.</p>
-    <details class="more">
-      <summary>Units, and what it leaves to you</summary>
-      <p>Position is normalized 0 to 1 across the stroke window you give it, so mapping to millimeters, steps or encoder counts is your code's job. So the same plan works for any machine.</p>
-      <p>Kinetic plans motion inside a window. Homing, rail limits, e-stop, arbitration and step generation belong to the machine around it, and in OpenValence that is Nucleus.</p>
-    </details>
-  </section>
-
-  <section aria-labelledby="s-fit">
-    <h2 id="s-fit" data-n="06">How it fits</h2>
-    <!-- Nucleus kinetic.pin; Kinetic README.md "Integration" -->
-    <p>Nucleus pins Kinetic by commit and its lint fails if the checkout drifts from the pin. Valence segments become knots in the firmware's motion arbiter. The <a href="/diagrams/">diagrams</a> show where the planner sits, and <a href="/components/">Components</a> lists the other parts.</p>
-    <p class="links"><a href="https://github.com/openvalence/Kinetic">Repo</a> · <a href="https://openvalence.org/Kinetic/">Playground</a> · <a href="/nucleus/">Nucleus</a> · <a href="/diagrams/">Diagrams</a> · <a href="/components/">Components</a></p>
+  <section class="aside" aria-labelledby="s-use">
+    <h2 id="s-use">Using it.</h2>
+    <div>
+      <!-- Kinetic README.md:31-72 "Example"; :88-97 "Units and frames"; :113-138 "Integration"; :152-170 "WebAssembly" -->
+      <p>You call <code>submit()</code> with knots and <code>positionAt()</code> on your own clock. It needs C++20 and builds with CMake or PlatformIO. A WebAssembly build with a small C interface is in the repo.</p>
+      <details class="more">
+        <summary>Units, and what it leaves to you</summary>
+        <p>Position is normalized 0 to 1 across the stroke window you give it, so mapping to millimeters, steps or encoder counts is your code's job. So the same plan works for any machine.</p>
+        <p>Kinetic plans motion inside a window. Homing, rail limits, e-stop, arbitration and step generation belong to the machine around it, and in OpenValence that is Nucleus.</p>
+      </details>
+      <!-- Nucleus kinetic.pin; Kinetic README.md "Integration" -->
+      <p class="mt">Nucleus pins Kinetic by commit and its lint fails if the checkout drifts from the pin. Valence segments become knots in the firmware's motion arbiter. The <a href="/diagrams/">diagrams</a> show where the planner sits, and <a href="/components/">Components</a> lists the other parts.</p>
+      <p class="links"><a href="https://github.com/openvalence/Kinetic">Repo</a> · <a href="https://openvalence.org/Kinetic/">Playground</a> · <a href="/nucleus/">Nucleus</a> · <a href="/diagrams/">Diagrams</a> · <a href="/components/">Components</a></p>
+    </div>
   </section>
 </main>
 

@@ -13,14 +13,13 @@
 <meta name="twitter:title" content="Components: OpenValence">
 <meta name="twitter:description" content="The parts of OpenValence: the Valence protocol, Nucleus firmware, the Phosphor app, the Kinetic planner, the OSSM Flagship board and Isotope accessories.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="manifest" href="/icons/site.webmanifest">
-<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
@@ -66,49 +65,30 @@
 
 <main>
   <section class="opening">
-    <p class="kicker">components · six repos</p>
     <h1>The parts</h1>
-    <p>A protocol, the firmware that runs it, an app that drives it, a planner that turns it into motion, a PCB to run it on, and accessories, someday. Each one is its own repo. The <a href="/diagrams/#system">system diagram</a> shows how they connect.</p>
+    <p class="lede">A protocol, the firmware that runs it, an app that drives it, a planner that turns it into motion, a PCB to run it on, and accessories, someday.</p>
+    <p>Each one is its own repo: six of ours and a fork. The <a href="/diagrams/#system">system diagram</a> shows how they connect.</p>
   </section>
 
   <section aria-labelledby="s-list">
-    <h2 id="s-list" data-n="01">Components</h2>
-    <ul class="cards">
-      <li class="card">
-        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#wave"/></svg></div>
-        <div class="body"><h3><a href="/valence/">Valence</a></h3><p>The protocol. The machine describes itself, apps draw it, the machine enforces its own limits.</p><p class="meta"><span class="tag">spec v1.0-draft</span></p></div>
-      </li>
-      <li class="card">
-        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg></div>
-        <div class="body"><h3><a href="/nucleus/">Nucleus</a></h3><p>Firmware for the OSSM Flagship PCB. Runs the Valence hub, the planner and the quadrature output on an ESP32-P4.</p><p class="meta"><span class="tag ok">works on the bench</span></p></div>
-      </li>
-      <li class="card">
-        <div class="art"><picture><source srcset="/images/phosphor/dash-light-640.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark-640.webp" width="640" height="400" alt="" loading="lazy" decoding="async"></picture></div>
-        <div class="body"><h3><a href="/phosphor/">Phosphor</a></h3><p>The app. A UI builder with plugins, a funscript player and a built-in Virtual machine.</p><p class="meta"><span class="tag">pre-release builds</span></p></div>
-      </li>
-      <li class="card">
-        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#curve"/></svg></div>
-        <div class="body"><h3><a href="/kinetic/">Kinetic</a></h3><p>The motion planner. Timed knots in, jerk-limited motion out, same bits on every target.</p><p class="meta"><span class="tag ok">runs in Nucleus</span> and <a href="/Kinetic/">in your browser</a></p></div>
-      </li>
-      <li class="card">
-        <div class="art contain"><img src="/images/hardware/pcb-angle-600.webp" width="600" height="418" alt="" loading="lazy" decoding="async"></div>
-        <div class="body"><h3><a href="/hardware/">Hardware</a></h3><p>The OSSM Flagship PCB, in KiCad.</p><p class="meta"><span class="tag">in design</span></p></div>
-      </li>
-      <li class="card">
-        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#beacon"/></svg></div>
-        <div class="body"><h3><a href="/isotope/">Isotope</a></h3><p>Firmware for small accessories that join the machine over ESP-NOW.</p><p class="meta"><span class="tag">WIP, design only</span></p></div>
-      </li>
-      <li class="card">
-        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#plug"/></svg></div>
-        <div class="body"><h3><a href="https://github.com/openvalence/ButtplugIO">ButtplugIO</a></h3><p>A fork of buttplugio/buttplug carrying the Valence hardware manager, on branch <code>valence</code>.</p><p class="meta"><span class="tag">fork</span></p></div>
-      </li>
+    <h2 class="xl" id="s-list">Seven repos. One machine.</h2>
+    <ul class="index">
+      <li><h3><a href="/valence/">Valence</a></h3><p>The protocol. The machine describes itself, apps draw it, the machine enforces its own limits.</p><span class="lic">spec v1.0-draft</span></li>
+      <li><h3><a href="/nucleus/">Nucleus</a></h3><p>Firmware for the OSSM Flagship PCB. Runs the Valence hub, the planner and the quadrature output on an ESP32-P4.</p><span class="lic">works on the bench</span></li>
+      <li><h3><a href="/phosphor/">Phosphor</a></h3><p>The app. A UI builder with plugins, a funscript player and a built-in Virtual machine.</p><span class="lic">pre-release builds</span>
+        <div class="thumb"><picture><source srcset="/images/phosphor/dash-light-640.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark-640.webp" width="640" height="400" alt="" loading="lazy" decoding="async"></picture></div></li>
+      <li><h3><a href="/kinetic/">Kinetic</a></h3><p>The motion planner. Timed knots in, jerk-limited motion out, same bits on every target. Runs in Nucleus and <a href="/Kinetic/">in your browser</a>.</p><span class="lic">in use</span></li>
+      <li><h3><a href="/hardware/">Hardware</a></h3><p>The OSSM Flagship PCB, in KiCad.</p><span class="lic">in design</span>
+        <div class="thumb"><img src="/images/hardware/pcb-angle-600.webp" width="600" height="418" alt="" loading="lazy" decoding="async"></div></li>
+      <li><h3><a href="/isotope/">Isotope</a></h3><p>Firmware for small accessories that join the machine over ESP-NOW.</p><span class="lic">WIP, design only</span></li>
+      <li><h3><a href="https://github.com/openvalence/ButtplugIO">ButtplugIO</a></h3><p>A fork of buttplugio/buttplug carrying the Valence hardware manager, on branch <code>valence</code>.</p><span class="lic">fork</span></li>
     </ul>
   </section>
 
-  <section aria-labelledby="s-lic">
-    <h2 id="s-lic" data-n="02">Licenses</h2>
+  <section class="aside" aria-labelledby="s-lic">
+    <h2 id="s-lic">Licenses.</h2>
     <!-- licensing rulings 2026-10-03; Nucleus README License; Valence README License; Isotope README License -->
-    <ul class="tiles">
+    <ul class="facts">
       <li><b>Software</b><p><span class="nb">Apache-2.0</span>. The Advanced pattern, derived from fray-d's OSSM-Lite, stays <span class="nb">CERN-OHL-S-2.0</span>.</p></li>
       <li><b>Valence</b><p>The spec text is <span class="nb">CC BY 4.0</span>, the library and tools are <span class="nb">MIT</span>.</p></li>
       <li><b>Hardware</b><p><span class="nb">CERN-OHL-S-2.0</span>.</p></li>

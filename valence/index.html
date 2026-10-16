@@ -13,14 +13,13 @@
 <meta name="twitter:title" content="What Valence is: OpenValence">
 <meta name="twitter:description" content="Valence is the web for motion machines: the machine serves its own control panel, any app can open it, and the machine enforces its own limits.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="manifest" href="/icons/site.webmanifest">
-<link rel="preload" href="/fonts/ChakraPetch-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/MartianMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
@@ -53,15 +52,15 @@
 
 <main>
   <section class="opening">
-    <p class="kicker">component · protocol · spec v1.0-draft</p>
     <h1>Valence is the web for motion machines</h1>
-    <p>The machine serves its own control panel, and any app can open it.</p>
+    <p class="lede">The machine serves its own control panel, and any app can open it.</p>
+    <p class="fine">The protocol. Spec v1.0-draft.</p>
   </section>
 
   <section aria-labelledby="s-web">
-    <h2 id="s-web" data-n="01">The short version</h2>
-    <p>You already know how this works. You type an address, a server sends a page, your browser draws it. The server doesn't care which browser you use. Valence does the same job for a machine.</p>
-    <div class="pairs">
+    <h2 class="xl" id="s-web">You already know how this works.</h2>
+    <p class="big-line">You type an address, a server sends a page, your browser draws it. The server doesn't care which browser you use. Valence does the same job for a machine.</p>
+    <div class="pairs mt">
       <span class="head">On the web</span><span class="head"></span><span class="head v">In Valence</span>
       <dl>
       <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#server"/></svg>Website</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#machine"/></svg><span><b>The machine</b>Its firmware runs a hub that holds the machine's state.</span></dd></div>
@@ -72,12 +71,12 @@
     </div>
   </section>
 
-  <section aria-labelledby="s-diff">
-    <h2 id="s-diff" data-n="02">The one difference</h2>
+  <section class="band" aria-labelledby="s-diff">
+    <h2 class="xl" id="s-diff">The machine sends a description. The app draws it.</h2>
     <!-- SPEC §1.2 item 7 (no widget hints, no layout, no ordering, no styling); §8 intro and §8.8 (the catalog builds the whole settings and control surface) -->
-    <p>A website sends a finished page. A Valence machine sends a description: what each setting is, its units, its range, and who may change it. No layout, no colors, no widget hints. The app decides how it looks.</p>
+    <p class="lede">A website sends a finished page. A Valence machine sends what each setting is, its units, its range, and who may change it. No layout, no colors, no widget hints.</p>
     <!-- Nucleus flagship_p4/src/hub/ValenceCatalog.h: jog_speed, f32, mm/s, min ceiling::speed_min 1, max ceiling::speed_max 2000, default factory::jog_speed 50, group "Jog limits", desc "Speed ceiling for manual jogs" -->
-    <figure class="morph">
+    <figure class="morph mt">
       <div class="entry" aria-label="A catalog entry as the machine sends it">
         <span class="k">name</span> <b>jog_speed</b><br>
         <span class="k">desc</span> <b>Speed ceiling for manual jogs</b><br>
@@ -95,61 +94,65 @@
       </div>
       <figcaption>Left: one setting as Nucleus declares it. Right: one way an app can draw it. Another app could draw a knob or a number box from the same entry.</figcaption>
     </figure>
-    <p>So a setting added in the firmware shows up in every app the next time it connects, with its label, units and limits. Nobody ships an app update for it.</p>
+    <p class="big-line">So a setting added in the firmware shows up in every app the next time it connects. Nobody ships an app update for it.</p>
   </section>
 
-  <section aria-labelledby="s-safety">
-    <h2 id="s-safety" data-n="03">Why safety lives in the machine</h2>
-    <p>Your app is one client of many, and any client can be wrong: an old version, a buggy plugin, a script with a bad number in it. So the machine trusts none of them.</p>
-    <ul class="tiles">
+  <section class="aside" aria-labelledby="s-safety">
+    <div>
+      <h2 class="xl" id="s-safety">The machine trusts no app.</h2>
+      <p>Your app is one client of many, and any client can be wrong: an old version, a buggy plugin, a script with a bad number in it.</p>
+    </div>
+    <ul class="facts">
       <!-- SPEC §1.2 item 1: hub-authoritative, echoes report applied (post-clamp) values -->
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><b>One source of truth</b><p>The machine holds the only real state. Apps send requests. The machine clamps each one to its limits and tells every app what it actually did.</p></li>
+      <li><b>One source of truth</b><p>The machine holds the only real state. Apps send requests. The machine clamps each one to its limits and tells every app what it actually did.</p></li>
       <!-- SPEC §11.4: sole-caller rule; Nucleus .claude/rules/architecture.md: MotionArbiter is the only component that commands motion -->
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#lock"/></svg><b>No side door</b><p>One component on the machine drives the motor. Every request goes through it.</p></li>
+      <li><b>No side door</b><p>One component on the machine drives the motor. Every request goes through it.</p></li>
       <!-- SPEC §11.3 deadman default 600 ms; releases ownership -->
-      <li><span class="big">600<small>ms</small></span><b>Go quiet, lose control</b><p>If an app goes quiet, it loses control of motion. 600 ms is the default.</p></li>
+      <li><span class="num">600<small>ms</small></span><b>Go quiet, lose control</b><p>If an app goes quiet, it loses control of motion. 600 ms is the default.</p></li>
       <!-- SPEC §11.1, §11.2: pause and estop are role-exempt -->
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#stop"/></svg><b>Anyone can stop it</b><p>Even an app that is only watching. Starting it takes control access. The spec puts it this way: "you may always stop the machine; you may not always start it."</p></li>
+      <li><b>Anyone can stop it</b><p>Even an app that is only watching. Starting it takes control access. The spec puts it this way: "you may always stop the machine; you may not always start it."</p></li>
       <!-- SPEC §11.2 honesty clause H1 -->
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#bolt"/></svg><b>Hardware e-stop wins</b><p>A hardware e-stop is still the last word. The protocol's stop is a convenience, not a replacement for one.</p></li>
+      <li><b>The hardware e-stop wins</b><p>A hardware e-stop is still the last word. The protocol's stop is a convenience, not a replacement for one.</p></li>
     </ul>
   </section>
 
   <section aria-labelledby="s-tiers">
-    <h2 id="s-tiers" data-n="04">Who can do what</h2>
+    <h2 class="xl" id="s-tiers">Watch. Control. Configure.</h2>
     <!-- SPEC §12.2 (ratified): watch 0, control 1, configure 2; §12.3 pairing -->
-    <ul class="tiles">
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#eye"/></svg><b>Watch</b><p>Sees everything and can stop the machine. Needs no pairing.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#rail"/></svg><b>Control</b><p>Everything Watch can do, and it can move the machine. Needs pairing.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#palette"/></svg><b>Configure</b><p>Everything Control can do, plus setup and deciding who else gets in. Needs pairing.</p></li>
+    <ul class="facts three">
+      <li><b>Watch</b><p>Sees everything and can stop the machine. Needs no pairing.</p></li>
+      <li><b>Control</b><p>Everything Watch can do, and it can move the machine. Needs pairing.</p></li>
+      <li><b>Configure</b><p>Everything Control can do, plus setup and deciding who else gets in. Needs pairing.</p></li>
     </ul>
-    <p>The <a href="/diagrams/#pairing">pairing diagram</a> shows how you get each one.</p>
+    <p class="mt">The <a href="/diagrams/#pairing">pairing diagram</a> shows how you get each one.</p>
   </section>
 
-  <section aria-labelledby="s-repo">
-    <h2 id="s-repo" data-n="05">What's in the repo</h2>
-    <!-- Valence README.md, Layout table and License -->
-    <ul class="tiles">
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#doc"/></svg><b>The spec</b><p>The protocol, in one document, plus the registry that assigns every wire number. <span class="nb">CC BY 4.0</span>.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#code"/></svg><b>The library</b><p>A C++20 reference implementation. Header-only, no hardware, no dependencies. <span class="nb">MIT</span>.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#app"/></svg><b>Clients</b><p>A JavaScript client and Valence Connect, a plugin for MultiFunPlayer.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#sim"/></svg><b>Valence Bench</b><p>A reference hub that runs with no hardware, for testing a client.</p></li>
-      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#search"/></svg><b>Tools</b><p>A wire-level conformance probe, a tracer, a soak tester.</p></li>
-    </ul>
-    <!-- SPEC header: v1.0-draft; README: name reserved for conformant implementations (NOTICE) -->
-    <p>Status: pre-release. The spec is v1.0-draft and changes through RFCs. Wire numbers are not frozen yet. The name "Valence" is reserved for implementations that pass conformance.</p>
+  <section class="aside" aria-labelledby="s-repo">
+    <h2 id="s-repo">What's in the repo.</h2>
+    <div>
+      <!-- Valence README.md, Layout table and License -->
+      <ul class="facts">
+        <li><b>The spec</b><p>The protocol, in one document, plus the registry that assigns every wire number. <span class="nb">CC BY 4.0</span>.</p></li>
+        <li><b>The library</b><p>A C++20 reference implementation. Header-only, no hardware, no dependencies. <span class="nb">MIT</span>.</p></li>
+        <li><b>Clients</b><p>A JavaScript client and Valence Connect, a plugin for MultiFunPlayer.</p></li>
+        <li><b>Valence Bench</b><p>A reference hub that runs with no hardware, for testing a client.</p></li>
+        <li><b>Tools</b><p>A wire-level conformance probe, a tracer, a soak tester.</p></li>
+      </ul>
+      <!-- SPEC header: v1.0-draft; README: name reserved for conformant implementations (NOTICE) -->
+      <p class="mt">Status: pre-release. The spec is v1.0-draft and changes through RFCs. Wire numbers are not frozen yet. The name "Valence" is reserved for implementations that pass conformance.</p>
+    </div>
   </section>
 
   <section aria-labelledby="s-build">
-    <h2 id="s-build" data-n="06">Build on it</h2>
-    <ul class="cards">
-      <li class="card"><div class="body"><h3><a href="/Valence/latest/build/quickstart/">Quickstart</a></h3><p>Talk to a hub in a few lines.</p></div></li>
-      <li class="card"><div class="body"><h3><a href="/Valence/latest/build/hub/">Build a hub</a></h3><p>Make your own machine work with Valence.</p></div></li>
-      <li class="card"><div class="body"><h3><a href="/Valence/latest/build/plugins/">Plugins</a></h3><p>Draw your own controls. Also see <a class="nb" href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Phosphor's plugin contract</a>.</p></div></li>
-      <li class="card"><div class="body"><h3><a href="/Valence/latest/spec/">The spec</a></h3><p>Rendered, with <a href="https://github.com/openvalence/Valence/blob/main/spec/SPEC.md">the source</a> on GitHub.</p></div></li>
-      <li class="card"><div class="body"><h3><a href="/Valence/latest/community/contributing/">Contributing</a></h3><p>How changes land, and <a href="/Valence/latest/community/rfc-process/">the RFC process</a>.</p></div></li>
+    <h2 class="xl" id="s-build">Build on it.</h2>
+    <ul class="index">
+      <li><h3><a href="/Valence/latest/build/quickstart/">Quickstart</a></h3><p>Talk to a hub in a few lines.</p><span class="lic">docs</span></li>
+      <li><h3><a href="/Valence/latest/build/hub/">Build a hub</a></h3><p>Make your own machine work with Valence.</p><span class="lic">docs</span></li>
+      <li><h3><a href="/Valence/latest/build/plugins/">Plugins</a></h3><p>Draw your own controls. Also see <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Phosphor's plugin contract</a>.</p><span class="lic">docs</span></li>
+      <li><h3><a href="/Valence/latest/spec/">The spec</a></h3><p>Rendered, with <a href="https://github.com/openvalence/Valence/blob/main/spec/SPEC.md">the source</a> on GitHub.</p><span class="lic">CC BY 4.0</span></li>
+      <li><h3><a href="/Valence/latest/community/contributing/">Contributing</a></h3><p>How changes land, and <a href="/Valence/latest/community/rfc-process/">the RFC process</a>.</p><span class="lic">docs</span></li>
     </ul>
-    <p class="links"><a href="https://github.com/openvalence/Valence">Repo</a> · <a href="/Valence/">Docs</a> · <a href="/diagrams/">Diagrams</a> · <a href="/components/">All components</a></p>
+    <p class="links mt"><a href="https://github.com/openvalence/Valence">Repo</a> · <a href="/Valence/">Docs</a> · <a href="/diagrams/">Diagrams</a> · <a href="/components/">All components</a></p>
   </section>
 </main>
 
