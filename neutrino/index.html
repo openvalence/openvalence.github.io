@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neutrino: OpenValence</title>
+<meta name="description" content="Neutrino is the Nucleus hub firmware compiled to WebAssembly and built into Phosphor. Try the app, the Kinetic planner and Valence with no PCB or motor.">
+<link rel="canonical" href="https://openvalence.org/neutrino/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/neutrino/">
+<meta property="og:title" content="Neutrino: OpenValence">
+<meta property="og:description" content="Neutrino is the Nucleus hub firmware compiled to WebAssembly and built into Phosphor. Try the app, the Kinetic planner and Valence with no PCB or motor.">
+<meta name="twitter:title" content="Neutrino: OpenValence">
+<meta name="twitter:description" content="Neutrino is the Nucleus hub firmware compiled to WebAssembly and built into Phosphor. Try the app, the Kinetic planner and Valence with no PCB or motor.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
+<script>
+// The theme before first paint; site.js follows "themechange". Constraints: stays inline and above
+// the stylesheet; the theme-color metas stay first, dark then light. localStorage.theme is kept only
+// while it differs from the default (the system, or Dark Reader's scheme once seen in this tab);
+// darkreader-lock stands Dark Reader's dynamic mode down.
+(() => {
+  const d = document.documentElement, sys = matchMedia('(prefers-color-scheme: light)');
+  const get = (s, k) => { try { return window[s].getItem(k); } catch (e) {} };
+  const put = (s, k, v) => { try { v ? window[s].setItem(k, v) : window[s].removeItem(k); } catch (e) {} };
+  let dr = get('sessionStorage', 'darkreader');
+  const auto = () => dr || (sys.matches ? 'light' : 'dark');
+  const lock = () => document.querySelector('meta[name=darkreader-lock]') || document.head.append(Object.assign(document.createElement('meta'), { name: 'darkreader-lock' }));
+  const label = () => {
+    const b = document.querySelector('.theme'), to = d.dataset.theme === 'light' ? 'dark' : 'light';
+    if (b) { b.title = `Switch to ${to} theme`; b.setAttribute('aria-label', b.title); }
+  };
+  const apply = () => {
+    const t = get('localStorage', 'theme') || auto(), [dk, lt] = document.querySelectorAll('meta[name=theme-color]');
+    d.dataset.theme = t;
+    dk.media = t === 'dark' ? 'all' : 'not all';
+    lt.media = t === 'light' ? 'all' : 'not all';
+    label();
+    dispatchEvent(new Event('themechange'));
+  };
+  addEventListener('click', (e) => {
+    if (!e.target.closest || !e.target.closest('.theme')) return;
+    const t = d.dataset.theme === 'light' ? 'dark' : 'light';
+    put('localStorage', 'theme', t === auto() ? '' : t);
+    apply();
+  });
+  new MutationObserver(() => {
+    if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;
+    dr = d.getAttribute('data-darkreader-scheme') === 'dimmed' ? 'light' : 'dark';
+    put('sessionStorage', 'darkreader', dr);
+    lock();
+    apply();
+  }).observe(d, { attributeFilter: ['data-darkreader-mode'] });
+  if (dr) lock();
+  sys.addEventListener('change', apply);
+  document.addEventListener('DOMContentLoaded', label);
+  d.classList.add('js');
+  apply();
+})();
+</script>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<script src="/site.js" defer></script>
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <div class="menu">
+      <a class="chip" href="/components/" aria-current="page">Components</a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-parts" aria-label="Components menu"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chev"/></svg></button>
+      <div class="menu-panel" id="menu-parts">
+        <ul>
+          <li><a class="item" href="/nucleus/"><b>Nucleus</b><span>Firmware for the OSSM Flagship PCB</span></a></li>
+          <li><a class="item" href="/neutrino/" aria-current="page"><b>Neutrino</b><span>The hub firmware, emulated inside Phosphor</span></a></li>
+          <li><a class="item" href="/kinetic/"><b>Kinetic</b><span>The motion planner: knots in, smooth motion out</span></a></li>
+          <li><a class="item" href="/isotope/"><b>Isotope <i>WIP</i></b><span>Accessory firmware that joins over <span class="nb">ESP-NOW</span></span></a></li>
+          <li><a class="item" href="/hardware/"><b>OSSM Flagship PCB <i>WIP</i></b><span>The controller board, in KiCad</span></a></li>
+        </ul>
+        <a class="item all" href="/components/">All components</a>
+      </div>
+    </div>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip util" href="/Valence/">Docs</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
+  <button class="theme" type="button" aria-label="Switch theme"><svg class="ico sun" aria-hidden="true"><use href="/icons/ui.svg#sun"/></svg><svg class="ico moon" aria-hidden="true"><use href="/icons/ui.svg#moon"/></svg></button>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <h1>Neutrino</h1>
+    <!-- Nucleus sim/valencesim/README.md (parity table); wasm/CMakeLists.txt; src/SimCore.h:70 kHubName "Neutrino"; Phosphor docs/BUILD.md "The built-in machine" -->
+    <p class="lede">The Nucleus hub firmware compiled to WebAssembly and built into Phosphor. It acts like a real machine over Valence, with no PCB and no motor.</p>
+    <p class="fine">Lives in the <a href="https://github.com/openvalence/Nucleus/tree/main/sim/valencesim">Nucleus repo</a>. <span class="nb">Apache-2.0</span>.</p>
+  </section>
+
+  <section class="aside" aria-labelledby="s-status">
+    <h2 id="s-status">Status</h2>
+    <!-- Phosphor docs/BUILD.md:21-23, src/main.js:95-106 (shell only); bead ph-5u0g.1 (Android, in progress) -->
+    <p class="big-line">In every Phosphor pre-release build for Windows, macOS and Linux. Android is WIP.</p>
+  </section>
+
+  <section aria-labelledby="s-why">
+    <h2 class="xl" id="s-why">What it's for</h2>
+    <ul class="facts three">
+      <li><b>Try Phosphor</b><p>Build a Dash, run patterns and play funscripts before you own a machine.</p></li>
+      <li><b>Build clients</b><p>Write a Valence app or plugin against a hub that answers like the real one.</p></li>
+      <!-- Phosphor package.json "check": test/integral-pin.mjs, test/valence-sim.mjs --integral; docs/BUILD.md:390-394 -->
+      <li><b>Test every build</b><p>Phosphor's checks boot Neutrino and run the protocol suite against it before CI builds the app.</p></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s-same">
+    <h2 class="xl" id="s-same">The same code as the PCB</h2>
+    <!-- Nucleus sim/valencesim/wasm/CMakeLists.txt:28-39 compiles flagship_p4/src motion/MotionArbiter.cpp, patterns/PatternEngine.cpp, patterns/advanced/AdvancedPattern.cpp, hub/ValenceDevice.cpp, hub/ValenceEstopDatagram.cpp verbatim; MotionArbiter.h:60-68 kinetic2::Engine; README.md "Parity is one-way" -->
+    <p>Neutrino compiles the firmware's own source files: the Valence hub, the catalog, the motion arbiter with every safety gate, the pattern generators and the <a href="/kinetic/">Kinetic²</a> planner. Only the parts that touch hardware are swapped for stand-ins, and the firmware is never changed to suit Neutrino.</p>
+    <div class="lanes" role="group" aria-label="Phosphor with the PCB and with Neutrino">
+      <div class="lane">
+        <p class="lane-h">With the PCB</p>
+        <ol>
+          <li><b>Phosphor</b><span>on your computer</span></li>
+          <li class="link"><span>Wi-Fi</span></li>
+          <li class="hub"><b>Nucleus</b><span>hub and Kinetic² on the ESP32-P4</span></li>
+          <li class="link"><span>quadrature</span></li>
+          <li><b>Servo drive</b><span>and the motor</span></li>
+        </ol>
+      </div>
+      <div class="lane">
+        <p class="lane-h">With Neutrino</p>
+        <ol>
+          <li><b>Phosphor</b><span>the same app</span></li>
+          <li class="link"><span>inside the app</span></li>
+          <li class="hub"><b>Neutrino</b><span>the same hub and Kinetic² code, as WebAssembly</span></li>
+          <li class="link"><span>ideal steps</span></li>
+          <li><b>A step count</b><span>no drive, no motor</span></li>
+        </ol>
+      </div>
+    </div>
+    <table class="parts vs mt">
+      <thead><tr><th scope="col">Part</th><th scope="col">On the PCB</th><th scope="col">In Neutrino</th></tr></thead>
+      <tbody>
+        <!-- README.md parity table rows Hub, Catalog, Delegate, Motion planner, Arbiter, Generators -->
+        <tr><th scope="row">Hub, catalog, patterns, planner</th><td>Nucleus firmware</td><td>The same source files. The catalog has the same etag as the board's.</td></tr>
+        <!-- README.md rows "Emitter and position truth"; src/IdealEmitter.h -->
+        <tr><th scope="row">Motor output</th><td>The LP core sends quadrature to the servo drive</td><td>An ideal emitter that hits every step on time. Position is its step count.</td></tr>
+        <!-- Phosphor src/model/integral-bridge.js:11-13, 99-126; integral.cpp:7-8 -->
+        <tr><th scope="row">Link</th><td>WebSocket over Wi-Fi</td><td>Messages between Phosphor and a worker thread, one Valence frame each. No network socket.</td></tr>
+        <!-- Phosphor src/shell/virtual.svelte.js:32, 67-77; integral.cpp:46-94 -->
+        <tr><th scope="row">Settings and presets</th><td>Flash</td><td>Phosphor's app storage, kept between runs.</td></tr>
+        <!-- README.md rows "Saved networks", "WiFi scan"; src/SimCore.h:141-149 -->
+        <tr><th scope="row">Wi-Fi</th><td>The ESP32-C6 radio</td><td>One saved network called <code>virtual</code> and a made-up scan list. Joining does nothing.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section aria-labelledby="s-run">
+    <h2 class="xl" id="s-run">How it runs in Phosphor</h2>
+    <!-- Phosphor src/shell/virtual.svelte.js:44-57, 96, 106; src/model/integral-bridge.js:29-30, 59; integral.worker.js; DESIGN.md "the built-in machine" -->
+    <ol>
+      <li>Phosphor carries the WebAssembly build inside the app, about 660 KB.</li>
+      <li>When you press Connect, it starts Neutrino in a worker thread, homed and with its pairing window open, so Phosphor pairs with it the way it pairs with a real machine.</li>
+      <li>The worker runs the hub on its own clock: a motion pass every 1 ms, the same tick as the PCB's, and a hub pass every 5 ms.</li>
+      <li>Phosphor talks to it through the same connection code it uses for a real hub. Nothing goes out on the network.</li>
+      <li>Disconnecting stops Neutrino. Its settings, presets and pairings are saved for the next run.</li>
+    </ol>
+    <figure class="capture">
+      <video controls muted loop playsinline preload="none" width="1280" height="800" poster="/images/phosphor-virtual.jpg" aria-describedby="cap-run">
+        <source src="/images/phosphor-virtual.webm" type="video/webm">
+      </video>
+      <figcaption id="cap-run">Phosphor connected to Neutrino, running the Advanced pattern at speed 55. No sound.</figcaption>
+    </figure>
+  </section>
+
+  <section aria-labelledby="s-use">
+    <h2 class="xl" id="s-use">Try it</h2>
+    <!-- Phosphor src/model/builtin.js:8-10; src/shell/HubsPane.svelte:116-129; settings-pane.js:33 -->
+    <ol>
+      <li>Install Phosphor from <a href="/downloads/">Downloads</a> and open the Hubs page.</li>
+      <li>Under Saved hubs, find the row named Neutrino with the <code>ν</code> badge. Hover the badge to read "Virtual machine: real Nucleus firmware, emulated in the app".</li>
+      <li>Press Connect.</li>
+    </ol>
+    <p>Neutrino is never saved as a hub and never connects on its own. The <a href="/phosphor/docs/getting-started/">getting started guide</a> walks through the first session.</p>
+    <figure class="docshot"><picture><source srcset="/phosphor/docs/img/gs-hubs-light.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/gs-hubs-dark.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-dark.webp" width="1280" height="800" alt="The Phosphor Hubs page before connecting, with Neutrino listed under Saved hubs, its ν badge, the line The hub as software, and a Connect button." loading="lazy" decoding="async"></picture>
+      <figcaption>The Hubs page. Neutrino is the row at 1, and 2 is its Connect button.</figcaption></figure>
+  </section>
+
+  <section aria-labelledby="s-dev">
+    <h2 class="xl" id="s-dev">For developers</h2>
+    <!-- Nucleus sim/valencesim/README.md "Build" (Linux and macOS form; Windows adds WinLibs MinGW and -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc); src/main.cpp:131-132, 233-246, 313-319 -->
+    <p>A native build of the same code runs as a standalone hub on your desktop, for client tests and the bench. Check out Valence and Kinetic beside Nucleus, then from the Nucleus folder:</p>
+    <pre tabindex="0"><code>cmake -S sim/valencesim -B sim/valencesim/build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build sim/valencesim/build
+sim/valencesim/build/valencesim --homed --pairing-window</code></pre>
+    <p>It listens for Valence sessions over WebSocket on port 82 and answers discovery on the LAN. <code>--pairing-window</code> lets the first client that connects pair with configure access, as a PAIR press does on the PCB. On Windows, build with WinLibs MinGW-w64 and add <code>-DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc</code>. The <a href="https://github.com/openvalence/Nucleus/tree/main/sim/valencesim">README</a> lists every flag.</p>
+    <!-- README.md "The wasm front" -->
+    <p>The WebAssembly build uses Emscripten:</p>
+    <pre tabindex="0"><code>emcmake cmake -S sim/valencesim/wasm -B sim/valencesim/wasm/build -G Ninja
+cmake --build sim/valencesim/wasm/build
+node sim/valencesim/wasm/check.mjs</code></pre>
+    <!-- Phosphor README.md "Neutrino cluster" (about 1,500 real-time hubs on a 16-core, 32-thread PC); test/cluster/cluster.mjs -->
+    <p>Phosphor's Neutrino cluster runs many Neutrino hubs at once on worker threads to soak-test the hub and the client, about 1,500 of them in real time on a 16-core PC.</p>
+  </section>
+
+  <section class="aside" aria-labelledby="s-limits">
+    <h2 id="s-limits">Limits</h2>
+    <!-- README.md parity table: emitter, Drive link and DRV_ALM, push-to-pair, heap and tcp figures, mDNS; src/SimCore.cpp:23-42 -->
+    <div>
+    <ul>
+      <li>Motion is perfect. There is no drive, motor or encoder, so following error and drive alarms never show up.</li>
+      <li>No HOME button and no E-stop input. Phosphor's Halt and Pause work.</li>
+      <li>The Wi-Fi networks are made up, and memory and TCP figures read 0.</li>
+    </ul>
+    <figure class="docshot"><picture><source srcset="/images/phosphor/wifi-light.webp" data-hi="/images/phosphor/hi/wifi-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/wifi-dark.webp" data-hi="/images/phosphor/hi/wifi-dark.webp" width="1280" height="800" alt="The Phosphor Wi-Fi picker connected to Neutrino, listing made-up networks such as Workshop, Guest, Printer-Direct, Cafe and Garage, with virtual checked as connected." loading="lazy" decoding="async"></picture>
+      <figcaption>The Wi-Fi picker on Neutrino. Every network in the list is made up.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="aside" aria-labelledby="s-fit">
+    <h2 id="s-fit">Related</h2>
+    <div>
+      <p>Neutrino is <a href="/nucleus/">Nucleus</a> without the PCB. It plans with <a href="/kinetic/">Kinetic</a>, talks to clients over <a href="/valence/">Valence</a> and ships inside <a href="/phosphor/">Phosphor</a>.</p>
+      <p class="links"><a href="https://github.com/openvalence/Nucleus/tree/main/sim/valencesim">Source</a> · <a href="/demos/">Demos</a> · <a href="/downloads/">Downloads</a> · <a href="/components/">Components</a></p>
+    </div>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

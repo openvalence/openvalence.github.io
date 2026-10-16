@@ -149,6 +149,32 @@ main li { margin-bottom: 6px; }
 .theme:hover { color: var(--accent-ink); background: var(--bg-2); }
 .theme .ico { width: 21px; height: 21px; }
 html:not(.js) .theme, :root:not([data-theme=light]) .theme .moon, [data-theme=light] .theme .sun { display: none; }
+/* the Components menu: site.js opens it on hover, keyboard focus and tap, and adds .live; without
+   it, hover and focus-within open it. Below 1100 px the panel hangs from the header, not from the
+   scrolling link row, which would clip it. */
+.strip { position: relative; z-index: 10; }
+.menu { position: relative; display: flex; align-items: center; gap: 2px; }
+.menu-btn { display: grid; place-items: center; width: 24px; height: 28px; margin-right: -6px; padding: 0; border: 0; border-radius: 4px; color: var(--ink-2); background: none; cursor: pointer; }
+.menu-btn .ico { width: 15px; height: 15px; stroke-width: 2.5; transition: transform .15s; }
+.menu-btn:hover, .menu.open .menu-btn { color: var(--ink); }
+.menu.open .menu-btn .ico { transform: rotate(180deg); }
+html:not(.js) .menu-btn { display: none; }
+.menu-panel {
+  position: absolute; top: 100%; left: -18px; width: 360px; padding-top: 12px;
+  visibility: hidden; opacity: 0; transition: opacity .12s, visibility 0s .12s;
+}
+.menu.open .menu-panel, .menu:not(.live):hover .menu-panel, .menu:not(.live):focus-within .menu-panel { visibility: visible; opacity: 1; transition-delay: 0s; }
+.menu-panel ul { margin: 0; padding: 0; list-style: none; }
+.menu-panel ul, .menu-panel .all { background: var(--bg); }
+.menu-panel ul { border-top: 3px solid var(--ink); box-shadow: var(--shadow); }
+.menu-panel .item { display: block; padding: 11px 18px 12px; border-bottom: 1px solid var(--rule); color: var(--ink-2); text-decoration: none; font-size: .9rem; line-height: 1.35; }
+.menu-panel .item b { display: block; margin-bottom: 2px; font: 800 1rem/1.15 var(--display); font-stretch: 108%; }
+.menu-panel .item i { margin-left: 6px; padding: 2px 5px 1px; font: 900 .58rem/1 var(--display); font-stretch: 110%; letter-spacing: .06em; vertical-align: .2em; color: var(--bg); background: var(--ink-3); }
+.menu-panel .item:hover, .menu-panel .item[aria-current] { color: var(--ink); background: var(--bg-2); }
+.menu-panel .item:hover b, .menu-panel .item[aria-current] b { color: var(--accent-ink); }
+.menu-panel .item[aria-current] { box-shadow: inset 3px 0 var(--accent); }
+.menu-panel .all { box-shadow: var(--shadow); font: 800 .78rem/1 var(--display); font-stretch: 108%; text-transform: uppercase; letter-spacing: .04em; color: var(--ink); padding-block: 14px; }
+.menu-panel :focus-visible { outline-offset: -3px; }
 
 /* ---- page frame ---- */
 main { max-width: calc(var(--wide) + 2 * var(--gutter)); margin-inline: auto; padding: clamp(32px, 6vw, 72px) var(--gutter) 40px; }
@@ -504,11 +530,22 @@ h1 .tag, h2 .tag { font-size: .7rem; vertical-align: .6em; }
 
 /* ---- tables and term lists (docs, diagrams) ---- */
 /* tables of terms read at the prose measure: 62ch of the 18 px body face, not of the table's 16 px */
+/* ---- lanes: two signal paths side by side, the shared middle in the accent (the Neutrino page) ---- */
+.lanes { display: grid; gap: 22px; margin: 30px 0 0; }
+.lane-h { margin: 0 0 8px; font: 800 .74rem/1.3 var(--display); font-stretch: 110%; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
+.lane ol { display: grid; grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1.3fr) 96px minmax(0, 1fr); align-items: stretch; margin: 0; padding: 0; list-style: none; max-width: none; }
+.lane li { margin: 0; padding: 14px 16px; border: 2px solid var(--ink); font-size: .9rem; line-height: 1.3; }
+.lane li b { display: block; font: 900 1.1rem/1.1 var(--display); font-stretch: 110%; color: var(--ink); margin-bottom: 4px; }
+.lane li.hub { border-color: var(--accent); background: var(--accent); color: #fff; }
+.lane li.hub b { color: #fff; }
+.lane li.link { display: flex; align-items: center; justify-content: center; padding: 0 6px; border: 0; background: linear-gradient(var(--ink-3), var(--ink-3)) center / 100% 2px no-repeat; font: 400 .7rem/1.2 var(--mono); color: var(--ink-3); text-align: center; }
+.lane li.link span { padding: 3px 5px; background: var(--bg); }
 .parts { width: 100%; max-width: calc(var(--measure) * 18 / 16); border-collapse: collapse; font-size: 1rem; }
 .parts thead th { padding: 0 16px 10px 0; text-align: left; font: 900 .74rem var(--display); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
 .parts tbody th, .parts td { padding: 14px 16px 14px 0; text-align: left; vertical-align: baseline; border-top: 2px solid var(--rule); }
 .parts tbody th { width: 11rem; font: 900 1rem var(--display); color: var(--ink); }
 .parts td:last-child { padding-right: 0; font-size: .9rem; color: var(--ink-3); }
+.parts.vs td:last-child { font-size: 1rem; color: var(--ink); }
 .terms { max-width: var(--measure); margin: 0 0 18px; }
 .terms > div { padding: 12px 0; border-top: 2px solid var(--rule); }
 .terms dt { font: 900 1.02rem/1.3 var(--display); color: var(--ink); }
@@ -541,6 +578,11 @@ main pre code { overflow-wrap: normal; }
   }
   .chips::-webkit-scrollbar { display: none; }
   .chips > :last-child { padding-right: var(--gutter); }
+  .menu { position: static; }
+  .chips:has(.menu.open) { mask-image: none; }
+  .menu-panel { left: 0; right: 0; width: auto; padding: 0; }
+  .menu-panel ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); column-gap: 0; padding-inline: max(0px, calc(var(--gutter) - 18px)); border-top-width: 1px; border-top-color: var(--rule); box-shadow: none; }
+  .menu-panel .all { padding-inline: var(--gutter); border-bottom: 3px solid var(--ink); box-shadow: 0 24px 40px -24px rgba(0,0,0,.6); }
   .chain { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
@@ -585,12 +627,16 @@ main pre code { overflow-wrap: normal; }
   .morph { grid-template-columns: 1fr; }
   .morph .arrow { transform: rotate(90deg); }
   .renders { grid-template-columns: 1fr; }
+  .lane ol { grid-template-columns: 1fr; }
+  .lane li.link { min-height: 40px; background-size: 2px 100%; }
   .spot { width: 22px; height: 22px; font-size: .6rem; }
   .spot .bub { display: none; }
   .parts thead { display: none; }
   .parts, .parts tbody, .parts tr, .parts tbody th, .parts td { display: block; width: auto; }
   .parts tr { padding: 12px 0; border-top: 2px solid var(--rule); }
   .parts tbody th, .parts td { padding: 0; border: 0; }
+  .parts.vs td::before { content: 'On the PCB: '; color: var(--ink-3); }
+  .parts.vs td:last-child::before { content: 'In Neutrino: '; }
 }
 /* the wordmark, Download and the theme toggle share the top row down to 360 px */
 @media (max-width: 400px) {

@@ -8,7 +8,7 @@ The header's aria-current is set from the page's canonical link. The Kinetic rep
 import pathlib, re
 
 # pages without a header link of their own, and the link that stands for them
-SECTION = {f"/{c}/": "/components/" for c in ("nucleus", "kinetic", "hardware", "isotope")}
+SECTION = {f"/{c}/": "/components/" for c in ("nucleus", "neutrino", "kinetic", "hardware", "isotope")}
 root = pathlib.Path(__file__).resolve().parent.parent
 blocks = dict(re.findall(r"<!-- chrome:(\w+) -->\n(.*?)<!-- /chrome:\1 -->", (root / "tools/chrome.html").read_text(encoding="utf-8"), re.S))
 changed = 0
@@ -28,6 +28,8 @@ for page in sorted(root.rglob("*.html")):
                 if mark.startswith(href):
                     body = body.replace(f'class="{cls}" href="{href}"', f'class="{cls}" href="{href}" aria-current="page"', 1)
                     break
+            # the page's own entry in the Components menu
+            body = body.replace(f'class="item" href="{here}"', f'class="item" href="{here}" aria-current="page"', 1)
         return f"<!-- chrome:{m.group(1)} -->\n{body}<!-- /chrome:{m.group(1)} -->"
     new = re.sub(r"<!-- chrome:(\w+) -->\n.*?<!-- /chrome:\1 -->", fill, text, flags=re.S)
     if new != text:

@@ -97,7 +97,19 @@
   </a>
   <nav class="chips" aria-label="Site">
     <a class="chip" href="/valence/">Valence</a>
-    <a class="chip" href="/components/" aria-current="page">Components</a>
+    <div class="menu">
+      <a class="chip" href="/components/" aria-current="page">Components</a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-parts" aria-label="Components menu"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chev"/></svg></button>
+      <div class="menu-panel" id="menu-parts">
+        <ul>
+          <li><a class="item" href="/nucleus/"><b>Nucleus</b><span>Firmware for the OSSM Flagship PCB</span></a></li>
+          <li><a class="item" href="/neutrino/"><b>Neutrino</b><span>The hub firmware, emulated inside Phosphor</span></a></li>
+          <li><a class="item" href="/kinetic/"><b>Kinetic</b><span>The motion planner: knots in, smooth motion out</span></a></li>
+          <li><a class="item" href="/isotope/"><b>Isotope <i>WIP</i></b><span>Accessory firmware that joins over <span class="nb">ESP-NOW</span></span></a></li>
+          <li><a class="item" href="/hardware/"><b>OSSM Flagship PCB <i>WIP</i></b><span>The controller board, in KiCad</span></a></li>
+        </ul>
+        <a class="item all" href="/components/">All components</a>
+      </div>
+    </div>
     <a class="chip" href="/phosphor/">Phosphor</a>
     <a class="chip" href="/diagrams/">Diagrams</a>
     <a class="chip" href="/demos/">Demos</a>
@@ -120,8 +132,8 @@
     <h2 class="xl" id="s-list">Repositories</h2>
     <ul class="index">
       <li><h3><a href="/valence/">Valence</a></h3><p>The protocol. The machine describes itself and enforces its own limits; apps build their controls from the description.</p><span class="lic">spec v1.0-draft</span></li>
-      <li><h3><a href="/nucleus/">Nucleus</a></h3><p>Firmware for the OSSM Flagship PCB. Runs the Valence hub, the planner and the quadrature output on an ESP32-P4.</p><span class="lic">works on the bench</span></li>
-      <li><h3><a href="/phosphor/">Phosphor</a></h3><p>The app. A UI builder with plugins, a funscript player and Neutrino, a built-in emulated machine.</p><span class="lic">pre-release builds</span>
+      <li><h3><a href="/nucleus/">Nucleus</a></h3><p>Firmware for the OSSM Flagship PCB. Runs the Valence hub, the planner and the quadrature output on an ESP32-P4. The same hub code runs inside Phosphor as <a href="/neutrino/">Neutrino</a>.</p><span class="lic">works on the bench</span></li>
+      <li><h3><a href="/phosphor/">Phosphor</a></h3><p>The app. A UI builder with plugins, a funscript player and <a href="/neutrino/">Neutrino</a>, a built-in emulated machine.</p><span class="lic">pre-release builds</span>
         <div class="thumb"><picture><source srcset="/images/phosphor/dash-light-640.webp" data-hi="/images/phosphor/dash-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark-640.webp" data-hi="/images/phosphor/dash-dark.webp" width="640" height="400" alt="" loading="lazy" decoding="async"></picture></div></li>
       <li><h3><a href="/kinetic/">Kinetic</a></h3><p>The motion planner. Turns timed knots into jerk-limited motion with bit-identical results on every target. Runs in Nucleus and <a href="/Kinetic/">in your browser</a>.</p><span class="lic">in use</span></li>
       <li><h3><a href="/hardware/">Hardware</a></h3><p>The OSSM Flagship PCB, in KiCad.</p><span class="lic">in design</span>
