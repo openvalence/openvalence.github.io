@@ -31,7 +31,7 @@
   --text: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --mono: 'Martian Mono', ui-monospace, Consolas, monospace;
   --gutter: clamp(16px, 5vw, 64px);
-  --wide: 1280px;
+  --wide: 1440px;
   --measure: 62ch;
 
   /* names the diagrams and docs pages already use */
@@ -247,7 +247,7 @@ section > h2:first-child { scroll-margin-top: 24px; }
 
 /* ---- index rows: the parts as a spec sheet ---- */
 .index { margin: 0; padding: 0; list-style: none; max-width: none; border-bottom: 3px solid var(--ink); }
-.index > li { position: relative; margin: 0; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) minmax(0, 2.2fr); gap: 8px 36px; align-items: baseline; padding: 22px 0 24px; border-top: 3px solid var(--ink); }
+.index > li { position: relative; margin: 0; display: grid; grid-template-columns: minmax(min-content, 5fr) minmax(0, 6fr) minmax(0, 2.2fr); gap: 8px 36px; align-items: baseline; padding: 22px 0 24px; border-top: 3px solid var(--ink); }
 .index h3 { margin: 0; font-size: clamp(1.9rem, 4.2vw, 3.4rem); font-weight: 900; font-stretch: 120%; line-height: .95; letter-spacing: -.02em; }
 .index h3 a { text-decoration: none; }
 .index h3 a::after { content: ''; position: absolute; inset: 0; }
