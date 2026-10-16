@@ -119,12 +119,12 @@
         <button type="button"><span>5</span> Trim</button>
         <button type="button" aria-current="step"><span>6</span> 1 ms samples</button>
       </div>
-      <figcaption>
+      <figcaption class="steps">
         <ol class="beats" data-dur="24.5" data-offset="21">
           <!-- Kinetic 71a3c9b include/kinetic2/handles.hpp:492 classify() -->
           <li data-at="0" data-hold="2.69"><b>Knots</b> Each knot is a time and a position, classed by its chords as an end, a crest or a through point, so the planner knows where the stroke turns before it draws anything.</li>
-          <!-- handles.hpp:508 pchipAngle(), :531 band(), :558 the G2 sweeps in solveStyle() -->
-          <li data-at="3" data-hold="6.69"><b>Angles</b> Crests and ends lie flat. A through point takes pchip's angle, then four sweeps match its acceleration on both sides, inside the monotone band, so the curve never overshoots between knots that climb the same way.</li>
+          <!-- handles.hpp:508 pchipAngle(), :531 band(), :558 the G2 sweeps in solveStyle(); Kinetic README.md:74-86 "Planner options": smoothness, crisp PCHIP vs smooth Makima; bake-handles.mjs runs smoothness 0 -->
+          <li data-at="3" data-hold="6.69"><b>Angles</b> Crests and ends lie flat. A through point takes pchip's angle, then four sweeps match its acceleration on both sides, inside the monotone band. Free knots use one of two styles, or a blend: crisp, which never overshoots between monotone knots, or smooth, which may overshoot but keeps acceleration continuous. This trace is crisp.</li>
           <!-- handles.hpp:555 every length kThird; :607-617 ksAt(), nearest 1 first; :766-786 fitPiece's side rule; :744 both lengths scaled by one factor, never under the floor -->
           <li data-at="7" data-hold="11.69"><b>Handle lengths</b> Every handle starts at a third of its span. A piece over a ceiling scales both by one factor, nearest 1 first, and skips the side that cannot help: speed over wants shorter handles, acceleration or jerk over wants longer.</li>
           <!-- handles.hpp:301-333 overOf(): 11 samples in kOrder, then rootsOf() on 6, 8 and 10 segments; :74 kTol -->
@@ -134,12 +134,12 @@
           <!-- solver.hpp:32-35 the corner ramp at jmax; engine_piece.hpp:123 a sample at any time; Nucleus MotionArbiter.h:128 kStripLen 128, ValenceMotion.h:289 kMotionTickUs 1000 -->
           <li data-at="19.5" data-hold="23.9" class="on"><b>1 ms samples</b> The pieces join as one composite Bézier, with a corner ramp at jmax where two accelerations differ, and the firmware samples it every 1 ms, 128 samples ahead, so a planner stall shorter than 128 ms doesn't reach the motor.</li>
         </ol>
-        <p class="stepnote"></p>
-        <p>A trace of the real planner building one script, the same bits as its WebAssembly build, on a 100 mm window with the handles page's ceilings: 1,000 mm/s, 50,000 mm/s², 5,000,000 mm/s³.</p>
+        <div class="stepside">
+          <p class="stepnote"></p>
+          <p class="trace">A trace of the real planner building one script, the same bits as its WebAssembly build, on a 100 mm window with the handles page's ceilings: 1,000 mm/s, 50,000 mm/s², 5,000,000 mm/s³.</p>
+        </div>
       </figcaption>
     </figure>
-    <!-- Kinetic README.md:74-86 "Planner options": smoothness, crisp PCHIP vs smooth Makima -->
-    <p class="mt">Free knots use one of two styles, or a blend: crisp, which never overshoots between monotone knots, or smooth, which may overshoot but keeps acceleration continuous.</p>
   </section>
 
   <section class="split" aria-labelledby="s-playground">
