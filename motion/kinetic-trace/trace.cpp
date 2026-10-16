@@ -123,5 +123,15 @@ static void tDetail(int i, const h::HKnot& L, const h::HKnot& R, float pL, const
     std::fprintf(T, "},\"chosen\":{");
     { const float pR = R.p + dp; h::Piece q; q.T = R.t - L.t; q.D = pR - pL; q.s0 = L.vel; q.s1 = R.vel;
       q.i0 = std::fmin(h::kLMax, std::fmax(floor, L.lOut * fk)); q.i1 = std::fmin(h::kLMax, std::fmax(floor, R.lIn * fk)); curveOut(q, pL, cs); }
-    std::fprintf(T, "}}\n");
+    // every factor on the k grid at the knot as submitted, as the length walk judged it
+    std::fprintf(T, "},\"byK\":[");
+    for (int idx = 0; idx < h::kKs; ++idx) {
+        const float f = h::ksAt(idx);
+        h::Piece q; q.T = R.t - L.t; q.D = R.p - pL; q.s0 = L.vel; q.s1 = R.vel;
+        q.i0 = std::fmin(h::kLMax, std::fmax(floor, L.lOut * f)); q.i1 = std::fmin(h::kLMax, std::fmax(floor, R.lIn * f));
+        std::fprintf(T, "%s{\"f\":%.4g,", idx ? "," : "", f);
+        curveOut(q, pL, cs);
+        std::fprintf(T, "}");
+    }
+    std::fprintf(T, "]}\n");
 }

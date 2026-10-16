@@ -84,6 +84,12 @@ const data = {
   walk: Object.fromEntries([WALK, TRIM].map((i) => [i, judges[i].filter((e) => e.phase === 0).map((e) => [e.f, e.legal, r(e.rv * LIM[0], 1), r(e.ra * LIM[1], 0), r(e.rj * LIM[2], 0)])])),
   sweep: Object.fromEntries([WALK, TRIM].map((i) => [i, det[i].sweep.map(([pass, f, i0, i1, o, rv, ra, rj]) => [pass, f, r(i0, 4), r(i1, 4), r(rv, 3), r(ra, 3), r(rj, 3), o <= 1.001 ? 1 : 0])])),
   judge: { walkK1: judgeOut(det[WALK].atK1), walk: judgeOut(det[WALK].chosen), trimK1: judgeOut(det[TRIM].atK1), trim: judgeOut(det[TRIM].chosen) },
+  // the walk's other tried factors (k 1 and the chosen one are in judge), keyed by k
+  walkAt: Object.fromEntries(judges[WALK].filter((e) => e.phase === 0 && e.f !== 1 && e.f !== ends[WALK].k).map((e) => {
+    const c = det[WALK].byK.find((x) => x.f === e.f);
+    if (!c || Math.abs(c.over[1] - e.rv) > 1e-4 * e.rv) throw new Error(`no trace for k ${e.f} that matches its judge`);
+    return [e.f, judgeOut(c)];
+  })),
   chosen: { [WALK]: ends[WALK].k, [TRIM]: ends[TRIM].k },
   // the trim: the full move tested first, then 16 halvings. Per test, the judge that decided it
   // (the first legal fit, else the least over): [move mm toward the previous knot, legal,

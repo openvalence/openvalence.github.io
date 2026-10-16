@@ -77,6 +77,8 @@ function setup() {
   g.pillTx = txt(g.pill, 714, 481, '', 'kick', 13, '#fff', 'middle');
   g.scopes = {
     k1: scope('walkK1', true), walk: scope('walk', true), trimK1: scope('trimK1'), trim: scope('trim'),
+    // the walk's other tried factors, in the order it tried them (k 1 first, the chosen last)
+    tried: H.walk[WP].slice(1, -1).map((w) => scope(H.walkAt[w[0]], true)),
   };
   g.time = timeScope();
   // ---- the log ----
@@ -201,7 +203,7 @@ function buildStrip(p) {
 }
 // One judged piece: v, a, j against u, with the ceilings
 function scope(key, withMarks) {
-  const J = H.judge[key], e = el('g', { opacity: 0 }, s), o = { e, J };
+  const J = typeof key === 'string' ? H.judge[key] : key, e = el('g', { opacity: 0 }, s), o = { e, J };
   const ux = (u) => SU0 + u * (SU1 - SU0);
   o.rows = ROWS.map((R, ri) => {
     const peak = Math.max(R.lim, ...J.dense.map((d) => Math.abs(d[R.key]))), sc = R.h / (peak * 1.05);
@@ -448,7 +450,15 @@ function stripBeat(t, tr, on) {
 
 function scopeBeat(t) {
   const S = g.scopes;
-  op(S.k1.e, within(t, 8.1, 10.4, 0.25, 0.25));
+  // k 1, then each tried factor while the walk shows it (9.5 and 9.9, pieceBeat's times), then the chosen fit
+  op(S.k1.e, within(t, 8.1, 9.5, 0.25, 0.1));
+  S.tried.forEach((o, j) => {
+    op(o.e, j + 1 < S.tried.length ? within(t, 9.5 + j * 0.4, 9.9 + j * 0.4, 0.1, 0.1) : within(t, 9.5 + j * 0.4, 10.4, 0.1, 0.25));
+    o.rows.forEach((r, ri) => {
+      r.dots.forEach((d, k) => { op(d, k < 3 ? 1 : 0); if (k === 2 && ri === 0) { d.setAttribute('fill', C.ink); d.setAttribute('r', 5); } });
+      op(r.segs, 0); r.br.forEach((b) => op(b, 0)); r.roots.forEach((m) => op(m, 0)); if (r.none) op(r.none, 0);
+    });
+  });
   op(S.walk.e, within(t, 10.3, 15.5, 0.25, 0.3));
   op(S.trimK1.e, within(t, 15.6, 18.7, 0.25, 0.25));
   op(S.trim.e, within(t, 18.6, 19.5, 0.25, 0.3));
