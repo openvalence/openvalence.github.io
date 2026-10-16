@@ -149,7 +149,7 @@ main li { margin-bottom: 6px; }
 .theme:hover { color: var(--accent-ink); background: var(--bg-2); }
 .theme .ico { width: 21px; height: 21px; }
 html:not(.js) .theme, :root:not([data-theme=light]) .theme .moon, [data-theme=light] .theme .sun { display: none; }
-/* the Components menu: site.js opens it on hover, keyboard focus and tap, and adds .live; without
+/* the Components menu: site.js opens it on hover, tap and its arrow button, and adds .live; without
    it, hover and focus-within open it. Below 1100 px the panel hangs from the header, not from the
    scrolling link row, which would clip it. */
 .strip { position: relative; z-index: 10; }
