@@ -21,6 +21,7 @@
 <link rel="manifest" href="/icons/site.webmanifest">
 <link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
+<script src="/site.js" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
 <meta property="og:image:width" content="1200">
@@ -76,10 +77,10 @@
       <li><h3><a href="/valence/">Valence</a></h3><p>The protocol. The machine describes itself, apps draw it, the machine enforces its own limits.</p><span class="lic">spec v1.0-draft</span></li>
       <li><h3><a href="/nucleus/">Nucleus</a></h3><p>Firmware for the OSSM Flagship PCB. Runs the Valence hub, the planner and the quadrature output on an ESP32-P4.</p><span class="lic">works on the bench</span></li>
       <li><h3><a href="/phosphor/">Phosphor</a></h3><p>The app. A UI builder with plugins, a funscript player and a built-in Virtual machine.</p><span class="lic">pre-release builds</span>
-        <div class="thumb"><picture><source srcset="/images/phosphor/dash-light-640.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark-640.webp" width="640" height="400" alt="" loading="lazy" decoding="async"></picture></div></li>
+        <div class="thumb"><picture><source srcset="/images/phosphor/dash-light-640.webp" data-hi="/images/phosphor/dash-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark-640.webp" data-hi="/images/phosphor/dash-dark.webp" width="640" height="400" alt="" loading="lazy" decoding="async"></picture></div></li>
       <li><h3><a href="/kinetic/">Kinetic</a></h3><p>The motion planner. Timed knots in, jerk-limited motion out, same bits on every target. Runs in Nucleus and <a href="/Kinetic/">in your browser</a>.</p><span class="lic">in use</span></li>
       <li><h3><a href="/hardware/">Hardware</a></h3><p>The OSSM Flagship PCB, in KiCad.</p><span class="lic">in design</span>
-        <div class="thumb"><img src="/images/hardware/pcb-angle-600.webp" width="600" height="418" alt="" loading="lazy" decoding="async"></div></li>
+        <div class="thumb"><img src="/images/hardware/pcb-angle-600.webp" data-hi="/images/hardware/pcb-angle.webp" width="600" height="409" alt="" loading="lazy" decoding="async"></div></li>
       <li><h3><a href="/isotope/">Isotope</a></h3><p>Firmware for small accessories that join the machine over ESP-NOW.</p><span class="lic">WIP, design only</span></li>
       <li><h3><a href="https://github.com/openvalence/ButtplugIO">ButtplugIO</a></h3><p>A fork of buttplugio/buttplug carrying the Valence hardware manager, on branch <code>valence</code>.</p><span class="lic">fork</span></li>
     </ul>

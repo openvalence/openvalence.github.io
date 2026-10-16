@@ -21,6 +21,7 @@
 <link rel="manifest" href="/icons/site.webmanifest">
 <link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
+<script src="/site.js" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
 <meta property="og:image:width" content="1200">
@@ -59,7 +60,7 @@
   </section>
 
   <figure class="stage-pcb">
-    <img src="/images/hardware/pcb-angle.webp" srcset="/images/hardware/pcb-angle-600.webp 600w, /images/hardware/pcb-angle-1000.webp 1000w, /images/hardware/pcb-angle.webp 1600w" sizes="(max-width: 1160px) 92vw, 1100px" width="1600" height="1116" alt="A three-quarter render of the OSSM Flagship PCB: a black six-layer board with gold pads, the ESP32-P4 module near one edge, two large power resistors and the power stage across the middle, white JST connectors along the side." fetchpriority="high" decoding="async">
+    <img src="/images/hardware/pcb-angle.webp" data-hi="/images/hardware/hi/pcb-angle.webp" srcset="/images/hardware/pcb-angle-600.webp 600w, /images/hardware/pcb-angle-1000.webp 1000w, /images/hardware/pcb-angle.webp 1600w" sizes="(max-width: 1160px) 92vw, 1100px" width="1600" height="1090" alt="A three-quarter render of the OSSM Flagship PCB: a black six-layer board with gold pads, the ESP32-P4 module near one edge, two large power resistors and the power stage across the middle, white JST connectors along the side." fetchpriority="high" decoding="async">
   </figure>
 
   <section class="aside" aria-labelledby="s-status">
@@ -80,7 +81,7 @@
     <!-- hotspots.json (scratch): footprint centers from the .kicad_pcb mapped through the Edge.Cuts box; texts from flagship/FEATURES.md and SPEC.md -->
     <div class="board">
       <figure class="spots">
-        <img src="/images/hardware/pcb-top.webp" srcset="/images/hardware/pcb-top-600.webp 600w, /images/hardware/pcb-top-900.webp 900w, /images/hardware/pcb-top.webp 1200w" sizes="(max-width: 900px) 92vw, 700px" width="1200" height="1200" alt="Top view of the OSSM Flagship PCB with numbered markers on its main parts." loading="lazy" decoding="async">
+        <img src="/images/hardware/pcb-top.webp" data-hi="/images/hardware/hi/pcb-top.webp" srcset="/images/hardware/pcb-top-600.webp 600w, /images/hardware/pcb-top-900.webp 900w, /images/hardware/pcb-top.webp 1200w" sizes="(max-width: 900px) 92vw, 700px" width="1200" height="1200" alt="Top view of the OSSM Flagship PCB with numbered markers on its main parts." loading="lazy" decoding="async">
         <a class="spot" href="#part-p4" aria-label="1: ESP32-P4 module (main processor)" style="left:50.0%;top:76.03%"><span aria-hidden="true">1</span><span class="bub">ESP32-P4 module (main processor)</span></a>
         <a class="spot" href="#part-surge-stopper" aria-label="2: Surge stopper (input protection)" style="left:48.32%;top:8.92%"><span aria-hidden="true">2</span><span class="bub">Surge stopper (input protection)</span></a>
         <a class="spot" href="#part-input-fet" aria-label="3: Input power FET (surge stopper)" style="left:51.94%;top:28.68%"><span aria-hidden="true">3</span><span class="bub">Input power FET (surge stopper)</span></a>
@@ -118,8 +119,8 @@
   <section aria-labelledby="s-sides">
     <h2 class="xl" id="s-sides">Front and back.</h2>
     <ul class="renders">
-      <li><figure><img src="/images/hardware/pcb-top-600.webp" width="600" height="600" alt="The top side of the OSSM Flagship PCB, straight on." loading="lazy" decoding="async"><figcaption>Top: compute and the power stage</figcaption></figure></li>
-      <li><figure><img src="/images/hardware/pcb-bottom-600.webp" width="600" height="600" alt="The bottom side of the OSSM Flagship PCB, straight on, with the 40 by 40 mm heatsink in the middle and connectors around the edge." loading="lazy" decoding="async"><figcaption>Bottom: the 40 x 40 mm heatsink and most connectors</figcaption></figure></li>
+      <li><figure><img src="/images/hardware/pcb-top-600.webp" data-hi="/images/hardware/pcb-top.webp" width="600" height="600" alt="The top side of the OSSM Flagship PCB, straight on." loading="lazy" decoding="async"><figcaption>Top: compute and the power stage</figcaption></figure></li>
+      <li><figure><img src="/images/hardware/pcb-bottom-600.webp" data-hi="/images/hardware/pcb-bottom.webp" width="600" height="600" alt="The bottom side of the OSSM Flagship PCB, straight on, with the 40 by 40 mm heatsink in the middle and connectors around the edge." loading="lazy" decoding="async"><figcaption>Bottom: the 40 x 40 mm heatsink and most connectors</figcaption></figure></li>
     </ul>
     <p class="links"><a href="/images/hardware/pcb-top.webp">Top, 1200 px</a> · <a href="/images/hardware/pcb-bottom.webp">Bottom, 1200 px</a> · <a href="/images/hardware/pcb-angle.webp">Angled, 1600 px</a></p>
   </section>

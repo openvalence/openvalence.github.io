@@ -96,4 +96,57 @@
     });
     box.appendChild(b);
   }
+
+  // Sharper images after the page has loaded. The light files paint first; an image
+  // with data-hi (on the <img>, or on the <source> that matches the color scheme) is
+  // swapped for its 2x file once the page is idle and the image is near the screen.
+  // Skipped on Save-Data and 2g/3g connections.
+  const net = navigator.connection;
+  const lean = net && (net.saveData || /2g|3g/.test(net.effectiveType || ''));
+  function hiFor(img) {
+    const pic = img.parentElement && img.parentElement.tagName === 'PICTURE' ? img.parentElement : null;
+    if (pic) for (const s of pic.querySelectorAll('source')) {
+      if (!s.media || matchMedia(s.media).matches) return s.dataset.hi ? [s, s.dataset.hi] : null;
+    }
+    return img.dataset.hi ? [img, img.dataset.hi] : null;
+  }
+  function upgrade(img) {
+    const hit = hiFor(img);
+    if (!hit) return;
+    const [el, url] = hit;
+    const pre = new Image();
+    pre.src = url;
+    pre.decode().then(() => {
+      const swap = () => {
+        if (el !== img) el.srcset = url;
+        else { img.removeAttribute('srcset'); img.removeAttribute('sizes'); img.src = url; }
+      };
+      if (still || !img.offsetParent) return swap();
+      // Crossfade: the sharp copy fades in over the light one, then takes its place.
+      const g = img.cloneNode();
+      for (const a of ['srcset', 'sizes', 'loading', 'fetchpriority', 'id']) g.removeAttribute(a);
+      g.alt = '';
+      g.setAttribute('aria-hidden', 'true');
+      g.src = url;
+      Object.assign(g.style, { position: 'absolute', left: img.offsetLeft + 'px', top: img.offsetTop + 'px', width: img.offsetWidth + 'px', height: img.offsetHeight + 'px', margin: '0', opacity: '0', transition: 'opacity .35s ease', pointerEvents: 'none' });
+      img.after(g);
+      requestAnimationFrame(() => requestAnimationFrame(() => { g.style.opacity = '1'; }));
+      setTimeout(() => { swap(); img.decode().catch(() => {}).then(() => g.remove()); }, 400);
+    }).catch(() => {});
+  }
+  function sharpen() {
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) if (e.isIntersecting) { io.unobserve(e.target); upgrade(e.target); }
+    }, { rootMargin: '800px' });
+    for (const img of document.querySelectorAll('img')) if (hiFor(img)) io.observe(img);
+    for (const v of document.querySelectorAll('video[data-hi-poster]')) {
+      const p = new Image();
+      p.src = v.dataset.hiPoster;
+      p.decode().then(() => { v.poster = p.src; }).catch(() => {});
+    }
+  }
+  if (!lean) {
+    const later = () => (window.requestIdleCallback ? requestIdleCallback(sharpen, { timeout: 2000 }) : setTimeout(sharpen, 300));
+    document.readyState === 'complete' ? later() : addEventListener('load', later, { once: true });
+  }
 })();

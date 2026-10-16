@@ -21,6 +21,7 @@
 <link rel="manifest" href="/icons/site.webmanifest">
 <link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
+<script src="/site.js" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
 <meta property="og:image:width" content="1200">
@@ -84,7 +85,7 @@ npm run build:app -- --bundles nsis</code></pre>
       <li>Open Dash in the Machine section. The status slot in the top strip reads "Virtual: nothing moves".</li>
       <li>Open the Generator page, pick a pattern and start it. The rail on the Dash follows it.</li>
     </ol>
-    <figure class="docshot"><picture><source srcset="../img/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="../img/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with the built-in Virtual machine listed under Saved hubs and the Find a hub controls below it." decoding="async"></picture><figcaption>The Hubs page before connecting.</figcaption></figure>
+    <figure class="docshot"><picture><source srcset="../img/gs-hubs-light.webp" data-hi="../img/hi/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="../img/gs-hubs-dark.webp" data-hi="../img/hi/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with the built-in Virtual machine listed under Saved hubs and the Find a hub controls below it." decoding="async"></picture><figcaption>The Hubs page before connecting.</figcaption></figure>
     <ol class="legend">
       <li>The Virtual row, under Saved hubs.</li>
       <li>Connect starts it.</li>
@@ -108,7 +109,7 @@ npm run build:app -- --bundles nsis</code></pre>
   <section aria-labelledby="s-screens">
     <h2 id="s-screens" data-n="05">The main screens</h2>
     <!-- docs/DESIGN.md §10.11 lines 1183-1187, 1218-1220; src/App.svelte:128-149; src/shell/settings-pane.js:48-52; src/ui/TopStrip.svelte:242-244 -->
-    <figure class="docshot"><picture><source srcset="../img/gs-dash-light.webp" media="(prefers-color-scheme: light)"><img src="../img/gs-dash-dark.webp" width="1280" height="800" alt="The Dash connected to the Virtual machine with a pattern running, showing the top strip with the position readout, the sidebar and the Telemetry and Pattern cards." loading="lazy" decoding="async"></picture><figcaption>The Dash connected to the Virtual, with a pattern running.</figcaption></figure>
+    <figure class="docshot"><picture><source srcset="../img/gs-dash-light.webp" data-hi="../img/hi/gs-dash-light.webp" media="(prefers-color-scheme: light)"><img src="../img/gs-dash-dark.webp" data-hi="../img/hi/gs-dash-dark.webp" width="1280" height="800" alt="The Dash connected to the Virtual machine with a pattern running, showing the top strip with the position readout, the sidebar and the Telemetry and Pattern cards." loading="lazy" decoding="async"></picture><figcaption>The Dash connected to the Virtual, with a pattern running.</figcaption></figure>
     <ol class="legend">
       <li>AUTH shows your access tier. Here it reads control.</li>
       <li>The planned position, in millimeters.</li>

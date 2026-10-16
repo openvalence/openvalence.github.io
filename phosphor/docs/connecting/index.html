@@ -21,6 +21,7 @@
 <link rel="manifest" href="/icons/site.webmanifest">
 <link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
+<script src="/site.js" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
 <meta property="og:image:width" content="1200">
@@ -100,7 +101,7 @@
     <h2 id="s-pairing" data-n="05">Pairing</h2>
     <!-- Valence SPEC §12.3, §13.4.1; src/ui/PairingPane.svelte:202-205, 239-249, 265-266, 311-327, 346-347; src/ui/PairingPane.svelte:323-326 is the help text; Valence spec/registry/registry.yaml:1439 (pairing_window_default_s 120) -->
     <p>Pairing is how a client gets a tier above watch. A machine can offer several ways in: knock and approve, a numeric PIN, and push to pair. The Pairing page lists the ones this machine offers under "Modes offered", and shows whether the pairing window is open.</p>
-    <figure class="docshot"><picture><source srcset="../img/conn-pairing-light.webp" media="(prefers-color-scheme: light)"><img src="../img/conn-pairing-dark.webp" width="1280" height="800" alt="The Pairing page with the session tier, the Pair this client and Ask configure buttons, the At the machine help and the pending knocks." decoding="async"></picture><figcaption>The Pairing page on a session at the control tier.</figcaption></figure>
+    <figure class="docshot"><picture><source srcset="../img/conn-pairing-light.webp" data-hi="../img/hi/conn-pairing-light.webp" media="(prefers-color-scheme: light)"><img src="../img/conn-pairing-dark.webp" data-hi="../img/hi/conn-pairing-dark.webp" width="1280" height="800" alt="The Pairing page with the session tier, the Pair this client and Ask configure buttons, the At the machine help and the pending knocks." decoding="async"></picture><figcaption>The Pairing page on a session at the control tier.</figcaption></figure>
     <ol class="legend">
       <li>This session shows your tier.</li>
       <li>Modes offered lists the ways this machine lets a client in.</li>
@@ -134,7 +135,7 @@
     <h2 id="s-estop" data-n="06">What E-Stop does</h2>
     <!-- docs/DESIGN.md §10.3 lines 505-526; src/ui/widgets/SafetyOp.svelte:81-82; src/ui/TopStrip.svelte:242; src/shell/SettingsPane.svelte:74; docs/DESIGN.md §10.8 line 1078 -->
     <p>E-Stop is one control with two states, in the top strip on every page. Tap it to latch. The strip then reads "Halted: hold E-Stop 3 s", and holding the same button for 3 s releases it. There is no separate clear button. A machine that cuts motor power on E-Stop shows E-Stop on the button, and the tooltip says "Cut motor power". A machine that only stops motion shows Halt, so the label never promises more than the machine does.</p>
-    <figure class="docshot"><picture><source srcset="../img/conn-estop-light.webp" media="(prefers-color-scheme: light)"><img src="../img/conn-estop-dark.webp" width="1280" height="800" alt="The top strip after Halt is pressed, with the latched E-stop message, the Halted button and the E-stop latched bar." loading="lazy" decoding="async"></picture><figcaption>The top strip after Halt is tapped.</figcaption></figure>
+    <figure class="docshot"><picture><source srcset="../img/conn-estop-light.webp" data-hi="../img/hi/conn-estop-light.webp" media="(prefers-color-scheme: light)"><img src="../img/conn-estop-dark.webp" data-hi="../img/hi/conn-estop-dark.webp" width="1280" height="800" alt="The top strip after Halt is pressed, with the latched E-stop message, the Halted button and the E-stop latched bar." loading="lazy" decoding="async"></picture><figcaption>The top strip after Halt is tapped.</figcaption></figure>
     <ol class="legend">
       <li>The planned position stays on screen while the machine is halted.</li>
       <li>The status slot reads "Halted: hold Halt 3 s".</li>

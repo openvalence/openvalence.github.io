@@ -21,6 +21,7 @@
 <link rel="manifest" href="/icons/site.webmanifest">
 <link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
+<script src="/site.js" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:image" content="https://openvalence.org/images/og.png">
 <meta property="og:image:width" content="1200">
@@ -92,7 +93,7 @@
     <h2 id="s-health" data-n="02">Pauses, stutter and lag</h2>
     <!-- src/model/health/core.js:39-201 (CONDITIONS: lines, actions, thresholds); docs/DESIGN.md §10.14 lines 1397-1459; src/ui/LogPane.svelte:52-57 -->
     <p>Open Log, then the Health tab. It has three cards, Link, This device and Machine, and a list of incidents kept on this device. The same line also appears in the top strip's status slot. Each line is a measurement, followed by the one thing to try.</p>
-    <figure class="docshot"><picture><source srcset="../img/ts-health-light.webp" media="(prefers-color-scheme: light)"><img src="../img/ts-health-dark.webp" width="1280" height="800" alt="The Health tab of the Log page showing the link readings, with the This device section below." decoding="async"></picture><figcaption>The Health tab of the Log page.</figcaption></figure>
+    <figure class="docshot"><picture><source srcset="../img/ts-health-light.webp" data-hi="../img/hi/ts-health-light.webp" media="(prefers-color-scheme: light)"><img src="../img/ts-health-dark.webp" data-hi="../img/hi/ts-health-dark.webp" width="1280" height="800" alt="The Health tab of the Log page showing the link readings, with the This device section below." decoding="async"></picture><figcaption>The Health tab of the Log page.</figcaption></figure>
     <ol class="legend">
       <li>The Health tab.</li>
       <li>Status reads Good when nothing is wrong.</li>
@@ -140,7 +141,7 @@
     <h2 id="s-log" data-n="03">The log</h2>
     <!-- privacy.html s-stored; src-tauri/src/lib.rs:122-130 (release builds log to file at Info level); docs/BUILD.md lines 273-276; src/ui/LogPane.svelte:52-57, 147-150, 469 -->
     <p>The Log page has tabs for Log, Anomalies, Safety, Session, Changes and Health. The Log tab filters by Errors, Warnings, Info and Debug, and by source, and it searches. Plugin errors appear there tagged <code>plugin:&lt;name&gt;</code>.</p>
-    <figure class="docshot"><picture><source srcset="../img/ts-log-light.webp" media="(prefers-color-scheme: light)"><img src="../img/ts-log-dark.webp" width="1280" height="800" alt="The Log tab with its search field, severity filters, source filter and the Pause, Clear and Copy buttons." loading="lazy" decoding="async"></picture><figcaption>The Log tab and its filters.</figcaption></figure>
+    <figure class="docshot"><picture><source srcset="../img/ts-log-light.webp" data-hi="../img/hi/ts-log-light.webp" media="(prefers-color-scheme: light)"><img src="../img/ts-log-dark.webp" data-hi="../img/hi/ts-log-dark.webp" width="1280" height="800" alt="The Log tab with its search field, severity filters, source filter and the Pause, Clear and Copy buttons." loading="lazy" decoding="async"></picture><figcaption>The Log tab and its filters.</figcaption></figure>
     <ol class="legend">
       <li>Search, with F3 as the shortcut.</li>
       <li>Severity filters: Errors, Warnings, Info and Debug.</li>
