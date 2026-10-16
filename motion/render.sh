@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # render.sh -- renders the three pieces, both themes, and encodes the web files into
 # ../images/motion/. Usage: bash render.sh [piece ...]   (default: all three)
-# Needs Node 22+, FFmpeg, and `npm install` here first. See README.md.
+# Needs Node 22+ and FFmpeg. HF=path/to/hyperframes overrides the npx default. See README.md.
 set -euo pipefail
 cd "$(dirname "$0")"
 export HYPERFRAMES_NO_TELEMETRY=1
-HF="${HF:-node_modules/.bin/hyperframes}"
+read -ra HF <<< "${HF:-npx --yes hyperframes@0.8.163}"   # constraint: an HF path must not contain spaces
 OUT=../images/motion
 PIECES=("${@:-screen-to-rail knots-to-curve any-app}")
 mkdir -p assets renders "$OUT"
@@ -16,7 +16,7 @@ for piece in ${PIECES[@]}; do
   for theme in dark light; do
     name="$piece-$theme" frames="renders/$piece-$theme"
     rm -rf "$frames"
-    "$HF" render . --composition "$piece.html" --variables "{\"theme\":\"$theme\"}" --format png-sequence --output "$frames" --quiet
+    "${HF[@]}" render . --composition "$piece.html" --variables "{\"theme\":\"$theme\"}" --format png-sequence --output "$frames" --quiet
     crf=31; [ "$piece" = knots-to-curve ] && crf=33   # the 24.5 s piece, held under 1.2 MB
     for w in 1280 640; do
       sfx=$([ $w = 1280 ] && echo "" || echo "-$w")

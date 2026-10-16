@@ -73,8 +73,8 @@ function setup() {
   // ---- the scope ----
   g.scTitle = frame(s, 32, 456, 740, 248, '');
   g.pill = el('g', { opacity: 0 }, s);
-  g.pillBg = el('rect', { x: 668, y: 466, width: 92, height: 22, rx: 11 }, g.pill);
-  g.pillTx = txt(g.pill, 714, 481, '', 'kick', 13, '#fff', 'middle');
+  g.pillBg = el('rect', { x: 688, y: 466, width: 76, height: 22, rx: 11 }, g.pill);   // clear of the v ceiling label (646 to 682)
+  g.pillTx = txt(g.pill, 726, 481, '', 'kick', 13, '#fff', 'middle');
   g.scopes = {
     k1: scope('walkK1', true), walk: scope('walk', true), trimK1: scope('trimK1'), trim: scope('trim'),
     // the walk's other tried factors, in the order it tried them (k 1 first, the chosen last)

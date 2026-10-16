@@ -45,13 +45,15 @@ Needs Node 22+ and FFmpeg on the PATH.
 
 ```sh
 cd motion
-npm install
-npx hyperframes browser ensure     # once: downloads Chrome Headless Shell
+npx --yes hyperframes@0.8.163 browser ensure   # once: downloads Chrome Headless Shell
 bash render.sh                     # all three; or: bash render.sh knots-to-curve
 ```
 
+`render.sh` runs HyperFrames 0.8.163 through `npx`. To use an installed copy instead, set
+`HF` to its `hyperframes` executable: `HF=path/to/node_modules/.bin/hyperframes bash render.sh`.
+
 `render.sh` copies the fonts and the Phosphor screenshots into `assets/`, renders a PNG
-sequence per piece and theme into `renders/`, and encodes the web files. `node_modules/`,
+sequence per piece and theme into `renders/`, and encodes the web files.
 `assets/` and `renders/` are not tracked. It sets `HYPERFRAMES_NO_TELEMETRY=1`.
 
 To look at a piece while editing, run `bash render.sh` once (for `assets/`), serve the
