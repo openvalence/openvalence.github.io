@@ -9,12 +9,12 @@
 //   it the piece, colors come from /style.css's tokens and the loop is site.js's.
 const THEMES = {
   dark: { bg: '#0B0B0C', bg2: '#161618', bg3: '#1F1F22', ink: '#F3F3EF', ink2: '#BDBDB7', ink3: '#92928C',
-    rule: '#2C2C30', line3: '#4A4A50', accent: '#2E4BFF', accentInk: '#92A3FF', info: '#B9A6FF' },
+    rule: '#2C2C30', line3: '#4A4A50', accent: '#2E4BFF', accentInk: '#92A3FF', info: '#B9A6FF', bad: '#FF4D5E' },
   light: { bg: '#F3F2EE', bg2: '#E8E7E1', bg3: '#DCDBD4', ink: '#0B0B0C', ink2: '#34343A', ink3: '#5B5B61',
-    rule: '#CFCEC7', line3: '#A9A8A1', accent: '#2E4BFF', accentInk: '#2E4BFF', info: '#6A3FC8' },
+    rule: '#CFCEC7', line3: '#A9A8A1', accent: '#2E4BFF', accentInk: '#2E4BFF', info: '#6A3FC8', bad: '#B8182A' },
 };
 const TOKENS = { bg: '--bg', bg2: '--bg-2', bg3: '--bg-3', ink: '--ink', ink2: '--ink-2', ink3: '--ink-3',
-  rule: '--rule', line3: '--line-3', accent: '--accent', accentInk: '--accent-ink', info: '--info' };
+  rule: '--rule', line3: '--line-3', accent: '--accent', accentInk: '--accent-ink', info: '--info', bad: '--bad' };
 const NS = 'http://www.w3.org/2000/svg';
 const ASSETS = window.motionHost ? '/images/phosphor/' : 'assets/';
 let C = THEMES.dark, THEME = 'dark', themed = false;

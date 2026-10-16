@@ -17,7 +17,7 @@ for piece in ${PIECES[@]}; do
     name="$piece-$theme" frames="renders/$piece-$theme"
     rm -rf "$frames"
     "${HF[@]}" render . --composition "$piece.html" --variables "{\"theme\":\"$theme\"}" --format png-sequence --output "$frames" --quiet
-    crf=31; [ "$piece" = knots-to-curve ] && crf=33   # the 24.5 s piece, held under 1.2 MB
+    crf=31; [ "$piece" = knots-to-curve ] && crf=35   # the 70 s piece: its 1280 webm under 2 MB
     for w in 1280 640; do
       sfx=$([ $w = 1280 ] && echo "" || echo "-$w")
       vf="scale=$w:-2:flags=lanczos:out_color_matrix=bt709:out_range=tv,format=yuv420p"

@@ -26,6 +26,7 @@
   --accent-ink: #92A3FF;      /* accent as text on this background */
   --on-accent: #FFFFFF;
   --info:   #B9A6FF;          /* diagrams only: what comes back */
+  --bad:    #FF4D5E;          /* over a ceiling: the Kinetic clip and the playground debugger; text, or a fill under --bg text */
   --shadow: 0 30px 80px -30px rgba(0,0,0,.8);
   --display: 'Archivo', 'Arial Black', system-ui, sans-serif;
   --text: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -63,6 +64,7 @@
     --rule:   #CFCEC7;
     --accent-ink: #2E4BFF;
     --info:   #6A3FC8;
+    --bad:    #B8182A;
     --line-3: #A9A8A1;
     --shadow: 0 30px 70px -34px rgba(20,20,40,.45);
   }

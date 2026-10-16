@@ -2,14 +2,14 @@
 // handles-data.js for knots-to-curve.html: knot classes, angles, the length walk, the
 // judge's samples and turning points, the trim's bisection, and the 1 ms samples.
 // Usage: node bake-handles.mjs [path/to/Kinetic]   (default: ../../Kinetic)
-// Needs g++ (C++20) on the PATH. Builds Kinetic's own headers with the trace hooks in
-// kinetic-trace/patch.mjs into renders/k2i (untracked), checks that build's 1 ms
-// samples against the deployed kinetic2.wasm bit for bit, and refuses to write on a
-// mismatch.
+// Needs g++ (C++20) on the PATH. Builds kinetic-trace/trace.cpp, which defines Kinetic's
+// own trace hooks (include/kinetic2/trace.hpp), against that checkout's headers into
+// renders/k2i (untracked), checks the build's 1 ms samples against the deployed
+// kinetic2.wasm bit for bit, and refuses to write on a mismatch.
 // Constraints: units here are the engine's (window 0..1); handles-data.js is mm on a
 // 100 mm window, with the Kinetic playground handles page's ceilings (handles-model.js DEF).
 import { execFileSync } from 'node:child_process';
-import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const here = new URL('.', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
@@ -19,15 +19,11 @@ const MM = 100;                                     // the window, mm
 const LIM = [1000, 50000, 5e6];                     // mm/s, mm/s^2, mm/s^3 (handles-model.js DEF)
 // The script: p0, span, then t (s) and p (mm) per knot; the last at rest.
 const SCRIPT = [10, 3.4, [[0.45, 35], [0.8, 70], [1.15, 92], [1.5, 15], [1.62, 100], [2.0, 20], [2.08, 92], [2.6, 60], [2.9, 40], [3.3, 10]]];
-const WALK = 4, TRIM = 6;                           // the pieces the video opens up (from knot i to i + 1)
+const WALK = 4, TRIM = 6, ANG = 1;                  // the pieces the video opens up (from knot i to i + 1), the knot whose angle it works
 
 rmSync(build, { recursive: true, force: true });
 mkdirSync(build, { recursive: true });
-cpSync(join(kin, 'include'), join(build, 'include'), { recursive: true });
-cpSync(join(here, 'kinetic-trace/patch.mjs'), join(build, 'patch.mjs'));
-cpSync(join(here, 'kinetic-trace/trace.cpp'), join(build, 'trace.cpp'));
-execFileSync('node', ['patch.mjs'], { cwd: build, stdio: 'inherit' });
-execFileSync('g++', ['-std=c++20', '-O2', '-ffp-contract=off', '-static', '-Iinclude', 'trace.cpp', '-o', 'trace.exe'], { cwd: build, stdio: 'inherit' });
+execFileSync('g++', ['-std=c++20', '-O2', '-ffp-contract=off', '-static', '-I' + join(kin, 'include'), join(here, 'kinetic-trace/trace.cpp'), '-o', 'trace.exe'], { cwd: build, stdio: 'inherit' });
 const args = [LIM[0] / MM, LIM[1] / MM, LIM[2] / MM, SCRIPT[0] / MM, SCRIPT[1]];
 for (const [t, p] of SCRIPT[2]) args.push(t, p / MM);
 const L = execFileSync(join(build, 'trace.exe'), args.map(String), { encoding: 'utf8', maxBuffer: 1 << 28 }).trim().split('\n').map((l) => JSON.parse(l));
@@ -54,8 +50,11 @@ if (bad) throw new Error(`trace build differs from the deployed wasm in ${bad} s
 const r1 = L.filter((e) => e.run === 1 && e.pass === 0);
 if (L.some((e) => e.ev === 'pass' && (e.run !== 1 || e.pass !== 0))) throw new Error('more than one render pass: the video shows one');
 let round = -1, piece = -1;
-const rounds = [], judges = {}, ends = {};
+const rounds = [], judges = {}, ends = {}, terms = [], sweeps = [];
 for (const e of r1) {
+  // a solve's pchip terms and sweeps print before its solved line: they belong to round + 1
+  if (e.ev === 'pchipTerms') ((terms[round + 1] ||= {})[e.i] ||= e);
+  if (e.ev === 'sweep') ((sweeps[round + 1] ||= {})[e.i] ||= []).push(e);
   if (e.ev === 'solved' && (e.tag === 0 || e.tag === 2)) { round++; rounds[round] = { solve: e.knots }; }
   if (e.ev === 'solved' && (e.tag === 1 || e.tag === 3)) rounds[round].nudge = e.knots;
   if (e.ev === 'piece') piece = e.i;
@@ -82,8 +81,19 @@ const data = {
   final: fin.map((k) => ({ p: mm(k.p + k.dp, 3), dp: mm(k.dp, 3), vel: mm(k.vel, 1), effIn: r(k.effIn, 4), effOut: r(k.effOut, 4) })),
   // the length walk, per judged factor: [k, legal, peak v mm/s, a mm/s^2, j mm/s^3]
   walk: Object.fromEntries([WALK, TRIM].map((i) => [i, judges[i].filter((e) => e.phase === 0).map((e) => [e.f, e.legal, r(e.rv * LIM[0], 1), r(e.ra * LIM[1], 0), r(e.rj * LIM[2], 0)])])),
-  sweep: Object.fromEntries([WALK, TRIM].map((i) => [i, det[i].sweep.map(([pass, f, i0, i1, o, rv, ra, rj]) => [pass, f, r(i0, 4), r(i1, 4), r(rv, 3), r(ra, 3), r(rj, 3), o <= 1.001 ? 1 : 0])])),
-  judge: { walkK1: judgeOut(det[WALK].atK1), walk: judgeOut(det[WALK].chosen), trimK1: judgeOut(det[TRIM].atK1), trim: judgeOut(det[TRIM].chosen) },
+  sweep: Object.fromEntries([WALK, TRIM].map((i) => [i, det[i].sweep.map(([pass, f, i0, i1, o, rv, ra, rj]) => [pass, f, r(i0, 4), r(i1, 4), r(rv, 6), r(ra, 6), r(rj, 6), o <= 1.001 ? 1 : 0])])),
+  judge: { walkK1: judgeOut(det[WALK].atK1), walk: judgeOut(det[WALK].chosen), trimK1: judgeOut(det[TRIM].atK1) },
+  // knot ANG in round 0 (pchipAngle, solveStyle): spans h1 h2 s, weights w1 w2, chords mm/s, pchip mm/s, the band
+  // mm/s, and per G2 sweep [angle before, after mm/s, acceleration from the left and from the right before, after mm/s^2]
+  angle: (() => {
+    const p = terms[0][ANG], w = sweeps[0][ANG];
+    return { i: ANG, h1: r(p.h1, 3), h2: r(p.h2, 3), w1: r(p.w1, 3), w2: r(p.w2, 3), dIn: mm(p.dIn, 1), dOut: mm(p.dOut, 1), pchip: mm(p.r, 1), lo: mm(w[0].lo, 1), hi: mm(w[0].hi, 1),
+      sweeps: w.map((e) => [mm(e.v0, 1), mm(e.v, 1), mm(e.aL0, 1), mm(e.aR0, 1), mm(e.aL, 1), mm(e.aR, 1)]) };
+  })(),
+  // every through knot's angle after each sweep of round 0, mm/s (the main plot)
+  sweepV: Object.fromEntries(Object.entries(sweeps[0]).map(([i, w]) => [i, w.map((e) => mm(e.v, 1))])),
+  // round 1, the solve on the trimmed chords, at knot TRIM + 2: its chord in mm/s, pchip and the angle after the sweeps
+  resolve: (() => { const i = TRIM + 2, p = terms[1][i], w = sweeps[1][i]; return { i, dIn: mm(p.dIn, 1), pchip: mm(p.r, 1), vel: mm(w[w.length - 1].v, 1), lo: mm(w[0].lo, 1) }; })(),
   // the walk's other tried factors (k 1 and the chosen one are in judge), keyed by k
   walkAt: Object.fromEntries(judges[WALK].filter((e) => e.phase === 0 && e.f !== 1 && e.f !== ends[WALK].k).map((e) => {
     const c = det[WALK].byK.find((x) => x.f === e.f);

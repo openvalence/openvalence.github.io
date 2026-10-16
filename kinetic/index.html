@@ -85,7 +85,7 @@
       <li><b>Timing comes first</b><p>A knot the limits cannot reach in time is moved toward the previous knot. It is never dropped or placed late, so a script keeps its timing and gives up some stroke length instead.</p></li>
       <li><b>Limits are ceilings</b><p>The planner stays under the velocity, acceleration and jerk limits and does not plan to reach them. Every trim, clamp and refusal is recorded as an anomaly you can read, so you can see where a pattern asked for too much.</p></li>
     </ul>
-    <!-- motion/knots-to-curve.html; motion/handles-data.js, a trace of Kinetic 71a3c9b built by motion/bake-handles.mjs and checked bit for bit against openvalence.org/Kinetic/kinetic2.wasm -->
+    <!-- motion/knots-to-curve.html; motion/handles-data.js, a trace of Kinetic 28364a1 built by motion/bake-handles.mjs and checked bit for bit against openvalence.org/Kinetic/kinetic2.wasm -->
     <figure class="motion" data-live="/motion/handles-data.js /motion/common.js /motion/knots-to-curve.js">
       <div class="frame dark">
         <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/knots-to-curve-dark.webp" aria-label="Animation, no sound, in six steps: Kinetic² classes eleven timed knots, gives each an angle, sets two handles per piece and scales them under the speed, acceleration and jerk ceilings, checks each piece at sample points and turning points, trims one knot that is out of reach while keeping its time, then samples the finished curve every millisecond as a carriage rides it.">
@@ -108,7 +108,7 @@
         <button type="button">Prev</button>
         <button type="button" class="go">Play</button>
         <button type="button">Next</button>
-        <input type="range" min="0" max="24.5" step="0.01" value="21" aria-label="Clip position">
+        <input type="range" min="0" max="69.69" step="0.01" value="65.74" aria-label="Clip position">
         <p class="sr" aria-live="polite"></p>
       </div>
       <div class="steptabs" role="group" aria-label="Steps">
@@ -120,19 +120,19 @@
         <button type="button" aria-current="step"><span>6</span> 1 ms samples</button>
       </div>
       <figcaption class="steps">
-        <ol class="beats" data-dur="24.5" data-offset="21">
-          <!-- Kinetic 71a3c9b include/kinetic2/handles.hpp:492 classify() -->
-          <li data-at="0" data-hold="2.69"><b>Knots</b> Each knot is a time and a position, classed by its chords as an end, a crest or a through point, so the planner knows where the stroke turns before it draws anything.</li>
-          <!-- handles.hpp:508 pchipAngle(), :531 band(), :558 the G2 sweeps in solveStyle(); Kinetic README.md:74-86 "Planner options": smoothness, crisp PCHIP vs smooth Makima; bake-handles.mjs runs smoothness 0 -->
-          <li data-at="3" data-hold="6.69"><b>Angles</b> Crests and ends lie flat. A through point takes pchip's angle, then four sweeps match its acceleration on both sides, inside the monotone band. Free knots use one of two styles, or a blend: crisp, which never overshoots between monotone knots, or smooth, which may overshoot but keeps acceleration continuous. This trace is crisp.</li>
-          <!-- handles.hpp:555 every length kThird; :607-617 ksAt(), nearest 1 first; :766-786 fitPiece's side rule; :744 both lengths scaled by one factor, never under the floor -->
-          <li data-at="7" data-hold="11.69"><b>Handle lengths</b> Every handle starts at a third of its span. A piece over a ceiling scales both by one factor, nearest 1 first, and skips the side that cannot help: speed over wants shorter handles, acceleration or jerk over wants longer.</li>
-          <!-- handles.hpp:301-333 overOf(): 11 samples in kOrder, then rootsOf() on 6, 8 and 10 segments; :74 kTol -->
-          <li data-at="12" data-hold="15.19"><b>Legality check</b> Speed, acceleration and jerk are read at 11 points on the piece, then exactly at their turning points, bracketed and bisected. A piece passes within 0.1% of every ceiling.</li>
-          <!-- handles.hpp:829-910 nudge(): the move toward the previous knot, the full move tested, then 16 halvings; time never moves -->
-          <li data-at="15.5" data-hold="18.89"><b>Trim</b> When no length works, the knot moves toward the one before it by the least legal amount, found in 16 halvings, and keeps its time. Here a 72 mm stroke keeps 53.4 mm, 74%.</li>
+        <ol class="beats" data-dur="69.69" data-offset="65.74">
+          <!-- Kinetic 28364a1 include/kinetic2/handles.hpp:495 classify() -->
+          <li data-at="0" data-hold="6.23"><b>Knots</b> Each knot is a time and a position, classed by its chords as an end, a crest or a through point, so the planner knows where the stroke turns before it draws anything.</li>
+          <!-- handles.hpp:511 pchipAngle(), :536 band(), :564 the G2 sweeps in solveStyle(); Kinetic README.md:74-86 "Planner options": smoothness, crisp PCHIP vs smooth Makima; bake-handles.mjs runs smoothness 0 -->
+          <li data-at="6.58" data-hold="15.43"><b>Angles</b> Crests and ends lie flat. A through point takes pchip's angle, then four sweeps match its acceleration on both sides, inside the monotone band. Free knots use one of two styles, or a blend: crisp, which never overshoots between monotone knots, or smooth, which may overshoot but keeps acceleration continuous. This trace is crisp.</li>
+          <!-- handles.hpp:560 every length kThird; :615-625 ksAt(), nearest 1 first; :775-795 fitPiece's side rule; :752 both lengths scaled by one factor, never under the floor -->
+          <li data-at="15.78" data-hold="27.53"><b>Handle lengths</b> Every handle starts at a third of its span. A piece over a ceiling scales both by one factor, nearest 1 first, and skips the side that cannot help: speed over wants shorter handles, acceleration or jerk over wants longer.</li>
+          <!-- handles.hpp:304-336 overOf(): 11 samples in kOrder, then rootsOf() on 6, 8 and 10 segments; :77 kTol -->
+          <li data-at="27.88" data-hold="38.42"><b>Legality check</b> Speed, acceleration and jerk are read at 11 points on the piece, then exactly at their turning points, bracketed and bisected. A piece passes within 0.1% of every ceiling.</li>
+          <!-- handles.hpp:838-924 nudge(): the move toward the previous knot, the full move tested, then 16 halvings; time never moves -->
+          <li data-at="38.77" data-hold="58.59"><b>Trim</b> When no length works, the knot moves toward the one before it by the least legal amount, found in 16 halvings, and keeps its time. Here a 72 mm stroke keeps 53.4 mm, 74%.</li>
           <!-- solver.hpp:32-35 the corner ramp at jmax; engine_piece.hpp:123 a sample at any time; Nucleus MotionArbiter.h:128 kStripLen 128, ValenceMotion.h:289 kMotionTickUs 1000 -->
-          <li data-at="19.5" data-hold="23.9" class="on"><b>1 ms samples</b> The pieces join as one composite Bézier, with a corner ramp at jmax where two accelerations differ, and the firmware samples it every 1 ms, 128 samples ahead, so a planner stall shorter than 128 ms doesn't reach the motor.</li>
+          <li data-at="58.94" data-hold="69.09" class="on"><b>1 ms samples</b> The pieces join as one composite Bézier, with a corner ramp at jmax where two accelerations differ, and the firmware samples it every 1 ms, 128 samples ahead, so a planner stall shorter than 128 ms doesn't reach the motor.</li>
         </ol>
         <div class="stepside">
           <p class="stepnote"></p>

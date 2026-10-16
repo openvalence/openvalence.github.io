@@ -38,7 +38,9 @@
   // Step-through for a clip: the figure's <ol class="beats" data-dur data-offset> has one <li
   // data-at data-hold> per beat, in clip seconds (data-offset is the clip time at video 0).
   // Prev / Next hold at a stop: a beat's end state, or the live piece's own stops inside a
-  // beat (api.steps). The page's markup holds the controls, so nothing shifts when this runs.
+  // beat (api.steps). On the live piece (drive.smooth) a step runs the clip to its stop, eased,
+  // 0.4 to 1.2 s by distance, Prev backward; reduced motion and the video jump. The scrubber is
+  // immediate. The page's markup holds the controls, so nothing shifts when this runs.
   // Constraints: the drive (live piece or video) registers with use(); the stepper owns play.
   function stepper(fig, ol) {
     const dur = +ol.dataset.dur, off = +ol.dataset.offset || 0, items = [...ol.children];
@@ -46,10 +48,11 @@
     const base = items.map((li, i) => ({ beat: i, at: +li.dataset.hold }));
     const bar = fig.querySelector('.stepbar'), [prev, play, next, range] = bar.querySelectorAll('button, input');
     const tabs = [...fig.querySelectorAll('.steptabs button')], note = fig.querySelector('.stepnote'), say = bar.querySelector('[aria-live]');
-    let stops = base, drive = null, playing = !still, touched = false, u = +range.value, cur = -1;
+    let stops = base, drive = null, playing = !still, touched = false, u = +range.value, cur = -1, anim = 0;
     const host = (x) => (x - off + dur) % dur;
     const beatOf = (x) => starts.reduce((b, s, i) => (x >= s ? i : b), 0);
-    function show(x, stop) {
+    // keep: leave the note as it is (a step on its way)
+    function show(x, stop, keep) {
       u = x;
       range.value = x.toFixed(2);
       const b = stop ? stop.beat : beatOf(x);
@@ -57,26 +60,40 @@
         items.forEach((li, i) => li.classList.toggle('on', i === b));
         tabs.forEach((t, i) => (i === b ? t.setAttribute('aria-current', 'step') : t.removeAttribute('aria-current')));
       }
-      note.textContent = (stop && stop.note) || '';
+      if (!keep) note.textContent = (stop && stop.note) || '';
       range.setAttribute('aria-valuetext', `Step ${b + 1} of ${items.length}, ${x.toFixed(1)} s`);
       cur = b;
     }
     function setPlay(on) {
+      cancelAnimationFrame(anim);
       playing = on;
       play.textContent = on ? 'Pause' : 'Play';
       if (drive) on ? drive.play() : drive.pause();
     }
-    function hold(stop) {
+    // dir: 1 runs forward (through the loop's end if the stop is behind), -1 backward, 0 the short way in the clip
+    function hold(stop, dir = 0) {
       const was = cur;
       setPlay(false);
       touched = true;
-      if (drive) drive.seek(host(stop.at), true);
-      show(stop.at, stop);
       say.textContent = (stop.beat !== was ? `Step ${stop.beat + 1} of ${items.length}. ${caps[stop.beat]} ` : '') + (stop.note || '');
+      const land = () => { if (drive) drive.seek(host(stop.at), true); show(stop.at, stop); };
+      let d = stop.at - u;
+      if (dir > 0 && d < 0) d += dur; else if (dir < 0 && d > 0) d -= dur;
+      if (!drive || !drive.smooth || still || Math.abs(d) < 0.01) return land();
+      const from = u, ms = Math.min(1200, Math.max(400, 300 + Math.abs(d) * 120)), t0 = performance.now();
+      const f = (now) => {
+        const k = Math.min(1, (now - t0) / ms), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(2 - 2 * k, 3) / 2;
+        if (k >= 1) return land();
+        const x = (((from + d * e) % dur) + dur) % dur;
+        drive.seek(host(x));
+        show(x, null, true);
+        anim = requestAnimationFrame(f);
+      };
+      anim = requestAnimationFrame(f);
     }
     const step = (d) => {
       const i = d > 0 ? stops.findIndex((s) => s.at > u + 0.01) : stops.findLastIndex((s) => s.at < u - 0.01);
-      hold(stops[i >= 0 ? i : d > 0 ? 0 : stops.length - 1]);
+      hold(stops[i >= 0 ? i : d > 0 ? 0 : stops.length - 1], d);
     };
     prev.addEventListener('click', () => step(-1));
     next.addEventListener('click', () => step(1));
@@ -100,7 +117,7 @@
     });
     setPlay(playing);
     return {
-      // d: {seek(hostT, held), play(), pause()}; steps: the live piece's stops
+      // d: {seek(hostT, held), play(), pause(), smooth}; steps: the live piece's stops
       use(d, steps) {
         drive = d;
         if (steps) stops = items.flatMap((_, i) => { const s = steps.filter((x) => x.beat === i); return s.length ? s : [base[i]]; });
@@ -224,7 +241,7 @@
       video.load();
     }
     const S = fig.stepper;
-    const wanted = S ? S.use({ seek: (x, h) => { t = x; held = !!h; if (ready) api.draw(t, held); }, play: go, pause: stop }, api.steps) : toggle(box, go, stop);
+    const wanted = S ? S.use({ seek: (x, h) => { t = x; held = !!h; if (ready) api.draw(t, held); }, play: go, pause: stop, smooth: true }, api.steps) : toggle(box, go, stop);
     new IntersectionObserver(([e]) => { seen = e.isIntersecting; seen && wanted() ? go() : stop(); }, { threshold: 0.25 }).observe(box);
     scheme.addEventListener('change', build);
     build().then(() => { ready = true; if (seen && wanted()) go(); }, () => { box.remove(); fallback(fig); });
