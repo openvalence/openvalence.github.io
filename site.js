@@ -88,9 +88,9 @@
       if (d < 250) t = (t + d / 1000) % api.dur;   // longer: the tab was hidden; carry on, no jump
       api.draw(t);
       if (dt && d && d < 250 && dt.push(d) > 3 && dt.reduce((a, b) => a + b, 0) >= 1000) {
-        const p90 = dt.slice(3).sort((a, b) => a - b)[Math.floor((dt.length - 3) * 0.9)];
+        const s = dt.slice(3).sort((a, b) => a - b), med = s[s.length >> 1];
         dt = null;
-        if (p90 > 20) handover();
+        if (s[Math.floor(s.length * 0.9)] > Math.max(20, 1.5 * med)) handover();   // relative to the display, so 50 and 30 Hz screens keep the live clip
       }
       // the video sits seeked at `at`, under the live picture: start it as the clock passes
       if (at >= 0 && (t - at + api.dur) % api.dur < 0.25) {

@@ -106,17 +106,17 @@
         <p>A trace of the real planner building one script, the same bits as its WebAssembly build, on a 100 mm window with the handles page's ceilings: 1,000 mm/s, 50,000 mm/s², 5,000,000 mm/s³.</p>
         <ol class="beats">
           <!-- Kinetic 71a3c9b include/kinetic2/handles.hpp:492 classify() -->
-          <li><b>Timed knots.</b> Each knot is a time and a position, classed by its chords as an end, a crest or a through point. So the planner knows where the stroke turns before it draws a thing.</li>
+          <li><b>Knots</b> Each knot is a time and a position, classed by its chords as an end, a crest or a through point, so the planner knows where the stroke turns before it draws anything.</li>
           <!-- handles.hpp:508 pchipAngle(), :531 band(), :558 the G2 sweeps in solveStyle() -->
-          <li><b>One angle each.</b> Crests and ends lie flat. A through point takes pchip's angle, then four sweeps match its acceleration on both sides, inside the monotone band. So the curve never overshoots between knots that climb the same way.</li>
+          <li><b>Angles</b> Crests and ends lie flat. A through point takes pchip's angle, then four sweeps match its acceleration on both sides, inside the monotone band, so the curve never overshoots between knots that climb the same way.</li>
           <!-- handles.hpp:555 every length kThird; :607-617 ksAt(), nearest 1 first; :766-786 fitPiece's side rule; :744 both lengths scaled by one factor, never under the floor -->
-          <li><b>Two handles each.</b> Every handle starts at a third of its span. A piece over a ceiling scales both by one factor, nearest 1 first, and skips the side that cannot help: speed over wants shorter handles, acceleration or jerk over wants longer. So the fix is the smallest one that works.</li>
+          <li><b>Handle lengths</b> Every handle starts at a third of its span. A piece over a ceiling scales both by one factor, nearest 1 first, and skips the side that cannot help: speed over wants shorter handles, acceleration or jerk over wants longer.</li>
           <!-- handles.hpp:301-333 overOf(): 11 samples in kOrder, then rootsOf() on 6, 8 and 10 segments; :74 kTol -->
-          <li><b>The judge.</b> Speed, acceleration and jerk are read at 11 points on the piece, then exactly at their turning points, bracketed and bisected. A piece passes within 0.1% of every ceiling. So nothing slips through between the samples.</li>
+          <li><b>Legality check</b> Speed, acceleration and jerk are read at 11 points on the piece, then exactly at their turning points, bracketed and bisected. A piece passes within 0.1% of every ceiling.</li>
           <!-- handles.hpp:829-910 nudge(): the move toward the previous knot, the full move tested, then 16 halvings; time never moves -->
-          <li><b>Trimmed, never late.</b> When no length works, the knot moves toward the one before it by the least legal amount, found in 16 halvings, and keeps its time. Here a 72 mm stroke keeps 53.4 mm, 74%. So a script gives up stroke length, never rhythm.</li>
+          <li><b>Trim</b> When no length works, the knot moves toward the one before it by the least legal amount, found in 16 halvings, and keeps its time. Here a 72 mm stroke keeps 53.4 mm, 74%.</li>
           <!-- solver.hpp:32-35 the corner ramp at jmax; engine_piece.hpp:123 a sample at any time; Nucleus MotionArbiter.h:128 kStripLen 128, ValenceMotion.h:289 kMotionTickUs 1000 -->
-          <li><b>Curve out.</b> The pieces join as one composite Bézier, with a corner ramp at jmax where two accelerations differ, and the firmware samples it every 1 ms, 128 samples ahead. So a stall shorter than 128 ms never reaches the motor.</li>
+          <li><b>1 ms samples</b> The pieces join as one composite Bézier, with a corner ramp at jmax where two accelerations differ, and the firmware samples it every 1 ms, 128 samples ahead, so a planner stall shorter than 128 ms doesn't reach the motor.</li>
         </ol>
       </figcaption>
     </figure>
