@@ -46,7 +46,8 @@ const ease = (u) => (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2);
 const out = (u) => 1 - Math.pow(1 - u, 3);
 const back = (u) => 1 + 2.2 * Math.pow(u - 1, 3) + 1.2 * Math.pow(u - 1, 2);
 
-function run(setup, draw, dur) {
+// steps (optional): the site's stepper stops, [{beat, at (clip s), note}].
+function run(setup, draw, dur, steps) {
   const fonts = Promise.all([document.fonts.load('900 64px Archivo'), document.fonts.load('400 16px "Martian Mono"')]);
   if (window.motionHost) {
     // start(theme) builds the scene in #scene; site.js calls it again when the scheme changes
@@ -56,7 +57,7 @@ function run(setup, draw, dur) {
       for (const k in TOKENS) C[k] = cs.getPropertyValue(TOKENS[k]).trim();
       return setup();
     });
-    return window.motionHost({ start, draw, dur });
+    return window.motionHost({ start, draw, dur, steps });
   }
   const host = document.getElementById('scene');
   const ready = fonts

@@ -26,27 +26,129 @@
     return () => playing;
   }
 
-  // Looping clips: play only while on screen.
-  function clip(v) {
+  // Looping clips: play only while on screen. wanted: the stepper's play state, else a toggle.
+  function clip(v, wanted) {
     v.removeAttribute('controls');
-    const wanted = toggle(v.parentElement, () => v.play().catch(() => {}), () => v.pause());
+    wanted = wanted || toggle(v.parentElement, () => v.play().catch(() => {}), () => v.pause());
     new IntersectionObserver(([e]) => {
       if (e.isIntersecting && wanted()) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
     }, { threshold: 0.25 }).observe(v);
   }
 
+  // Step-through for a clip: the figure's <ol class="beats" data-dur data-offset> has one <li
+  // data-at data-hold> per beat, in clip seconds (data-offset is the clip time at video 0).
+  // Prev / Next hold at a stop: a beat's end state, or the live piece's own stops inside a
+  // beat (api.steps). The page's markup holds the controls, so nothing shifts when this runs.
+  // Constraints: the drive (live piece or video) registers with use(); the stepper owns play.
+  function stepper(fig, ol) {
+    const dur = +ol.dataset.dur, off = +ol.dataset.offset || 0, items = [...ol.children];
+    const starts = items.map((li) => +li.dataset.at), caps = items.map((li) => li.textContent.trim());
+    const base = items.map((li, i) => ({ beat: i, at: +li.dataset.hold }));
+    const bar = fig.querySelector('.stepbar'), [prev, play, next, range] = bar.querySelectorAll('button, input');
+    const tabs = [...fig.querySelectorAll('.steptabs button')], note = fig.querySelector('.stepnote'), say = bar.querySelector('[aria-live]');
+    let stops = base, drive = null, playing = !still, touched = false, u = +range.value, cur = -1;
+    const host = (x) => (x - off + dur) % dur;
+    const beatOf = (x) => starts.reduce((b, s, i) => (x >= s ? i : b), 0);
+    function show(x, stop) {
+      u = x;
+      range.value = x.toFixed(2);
+      const b = stop ? stop.beat : beatOf(x);
+      if (b !== cur) {
+        items.forEach((li, i) => li.classList.toggle('on', i === b));
+        tabs.forEach((t, i) => (i === b ? t.setAttribute('aria-current', 'step') : t.removeAttribute('aria-current')));
+      }
+      note.textContent = (stop && stop.note) || '';
+      range.setAttribute('aria-valuetext', `Step ${b + 1} of ${items.length}, ${x.toFixed(1)} s`);
+      cur = b;
+    }
+    function setPlay(on) {
+      playing = on;
+      play.textContent = on ? 'Pause' : 'Play';
+      if (drive) on ? drive.play() : drive.pause();
+    }
+    function hold(stop) {
+      const was = cur;
+      setPlay(false);
+      touched = true;
+      if (drive) drive.seek(host(stop.at), true);
+      show(stop.at, stop);
+      say.textContent = (stop.beat !== was ? `Step ${stop.beat + 1} of ${items.length}. ${caps[stop.beat]} ` : '') + (stop.note || '');
+    }
+    const step = (d) => {
+      const i = d > 0 ? stops.findIndex((s) => s.at > u + 0.01) : stops.findLastIndex((s) => s.at < u - 0.01);
+      hold(stops[i >= 0 ? i : d > 0 ? 0 : stops.length - 1]);
+    };
+    prev.addEventListener('click', () => step(-1));
+    next.addEventListener('click', () => step(1));
+    play.addEventListener('click', () => setPlay(!playing));
+    tabs.forEach((t, i) => t.addEventListener('click', () => hold(stops.find((s) => s.beat === i))));
+    range.addEventListener('input', () => {
+      setPlay(false);
+      touched = true;
+      if (drive) drive.seek(host(+range.value));
+      show(+range.value, null);
+    });
+    fig.tabIndex = 0;
+    fig.setAttribute('aria-keyshortcuts', 'ArrowLeft ArrowRight Space');
+    fig.addEventListener('keydown', (e) => {
+      if (e.target === range || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.key === 'ArrowRight') step(1);
+      else if (e.key === 'ArrowLeft') step(-1);
+      else if (e.key === ' ' && e.target === fig) setPlay(!playing);
+      else return;
+      e.preventDefault();
+    });
+    setPlay(playing);
+    return {
+      // d: {seek(hostT, held), play(), pause()}; steps: the live piece's stops
+      use(d, steps) {
+        drive = d;
+        if (steps) stops = items.flatMap((_, i) => { const s = steps.filter((x) => x.beat === i); return s.length ? s : [base[i]]; });
+        if (touched && !playing) d.seek(host(u), stops.some((s) => s.at === u));
+        return () => playing;
+      },
+      tick: (t) => { if (playing) show((t + off) % dur, null); },
+    };
+  }
+  // The video drives a stepper figure where the live piece does not run.
+  function videoDrive(fig) {
+    const S = fig.stepper, all = [...fig.querySelectorAll('video')], shown = () => all.find((v) => v.offsetParent);
+    const wanted = S.use({
+      seek(x) {
+        const v = shown();
+        if (!v) return;
+        v.pause();
+        if (v.readyState) { v.currentTime = x; return; }
+        v.addEventListener('loadedmetadata', () => { v.currentTime = x; }, { once: true });
+        if (v.preload !== 'auto') { v.preload = 'auto'; v.load(); }
+      },
+      play() { const v = shown(); if (v) { v.preload = 'auto'; v.play().catch(() => {}); } },
+      pause() { all.forEach((v) => v.pause()); },
+    });
+    for (const v of all) {
+      v.addEventListener('timeupdate', () => { if (v.offsetParent) S.tick(v.currentTime); });
+      clip(v, wanted);
+    }
+  }
+
   // A figure with data-live (the scripts of a motion/ piece) runs the piece live where the
   // device can carry it: sharp at any size, themed by the tokens. The video is the fallback:
   // weak or unknown-lean devices get it from the start, and a live run whose first second
-  // drops frames hands over to it at the same loop position. Reduced motion keeps the poster.
+  // drops frames hands over to it at the same loop position. Reduced motion keeps the poster,
+  // or, on a stepper figure, a still picture per step.
   // Constraints: one data-live figure per page (a piece's scripts share the page's globals).
-  const able = !still && !lean && (navigator.hardwareConcurrency || 0) >= 4 && (navigator.deviceMemory || 4) >= 4;
-  const liveFig = able && document.querySelector('figure[data-live]');
+  const able = !lean && (navigator.hardwareConcurrency || 0) >= 4 && (navigator.deviceMemory || 4) >= 4;
+  for (const ol of document.querySelectorAll('ol.beats[data-dur]')) { const f = ol.closest('figure'); f.stepper = stepper(f, ol); }
+  const first = document.querySelector('figure[data-live]');
+  const liveFig = able && first && (!still || first.stepper) && first;
   for (const v of document.querySelectorAll('video[data-auto]')) {
+    const f = v.closest('figure');
+    if (f && f.stepper) { v.removeAttribute('controls'); continue; }
     if (still) continue;
     v.removeAttribute('controls');
     if (!(liveFig && liveFig.contains(v))) clip(v);
   }
+  for (const f of document.querySelectorAll('figure')) if (f.stepper && f !== liveFig) videoDrive(f);
   if (liveFig) afterLoad(() => {
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return;
@@ -65,7 +167,8 @@
   function fallback(fig) {
     if (fig.dataset.live === '') return;
     fig.dataset.live = '';
-    for (const v of fig.querySelectorAll('video[data-auto]')) clip(v);
+    if (fig.stepper) videoDrive(fig);
+    else for (const v of fig.querySelectorAll('video[data-auto]')) clip(v);
   }
   function live(fig, api) {
     const shown = () => [...fig.querySelectorAll('video')].find((v) => v.offsetParent);
@@ -74,19 +177,21 @@
     box.className = 'live';
     box.innerHTML = '<svg id="scene" viewBox="0 0 1280 720" aria-hidden="true"></svg>';
     const svg = box.firstChild;
-    let t = 0, last = 0, raf = 0, ready = false, seen = false, dt = [], video = null, at = -1, onSeeked = null;
+    let t = 0, last = 0, raf = 0, ready = false, seen = false, dt = [], video = null, at = -1, onSeeked = null, held = false;
     const build = () => {
       const v = shown();
       if (!v) return Promise.resolve();
       v.after(box);
       svg.replaceChildren();
-      return api.start(scheme.matches ? 'light' : 'dark').then(() => api.draw(t));
+      return api.start(scheme.matches ? 'light' : 'dark').then(() => api.draw(t, held));
     };
     const frame = (ms) => {
       const d = last ? ms - last : 0;
       last = ms;
       if (d < 250) t = (t + d / 1000) % api.dur;   // longer: the tab was hidden; carry on, no jump
+      held = false;
       api.draw(t);
+      if (S) S.tick(t);
       if (dt && d && d < 250 && dt.push(d) > 3 && dt.reduce((a, b) => a + b, 0) >= 1000) {
         const s = dt.slice(3).sort((a, b) => a - b), med = s[s.length >> 1];
         dt = null;
@@ -118,7 +223,8 @@
       video.preload = 'auto';
       video.load();
     }
-    const wanted = toggle(box, go, stop);
+    const S = fig.stepper;
+    const wanted = S ? S.use({ seek: (x, h) => { t = x; held = !!h; if (ready) api.draw(t, held); }, play: go, pause: stop }, api.steps) : toggle(box, go, stop);
     new IntersectionObserver(([e]) => { seen = e.isIntersecting; seen && wanted() ? go() : stop(); }, { threshold: 0.25 }).observe(box);
     scheme.addEventListener('change', build);
     build().then(() => { ready = true; if (seen && wanted()) go(); }, () => { box.remove(); fallback(fig); });

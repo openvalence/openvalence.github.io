@@ -266,7 +266,7 @@ const LOG = [
   [19.5, '> render the composite Bézier'], [20.0, '> a corner ramp at jmax where'], [20.15, '  two accelerations differ'], [20.6, '> sample on the 1 ms grid'], [21.0, `  ${H.P.length} samples, ${H.P.length - 1} ms`], [21.6, '> Nucleus keeps 128 ms of them'], [21.8, '  ahead of the motor'],
 ];
 
-function draw(t) {
+function draw(t, held) {
   const beat = BEAT.findIndex((b, i) => t >= b && t < BEAT[i + 1]);
   const out = 1 - ramp(t, 24.1, 24.45);
   // headline
@@ -340,14 +340,14 @@ function draw(t) {
   g.log.forEach((e, k) => {
     const L = lines[k]; e.textContent = '';
     if (!L) return;
-    const n = Math.floor(clamp((t - L[0]) / 0.25) * L[1].length);
+    const n = held ? L[1].length : Math.floor(clamp((t - L[0]) / 0.25) * L[1].length);
     e.textContent = L[1].slice(0, Math.max(1, n));
     e.setAttribute('fill', L[1].startsWith('>') ? C.ink : C.ink2);
   });
   const last = lines.length - 1;
   g.cursor.setAttribute('x', 808 + (last >= 0 ? g.log[last].getComputedTextLength() + 4 : 0));
   g.cursor.setAttribute('y', 492 + Math.max(0, last) * 23 - 12);
-  op(g.cursor, (Math.floor(t * 2.5) % 2 ? 0.2 : 1) * out);
+  op(g.cursor, (!held && Math.floor(t * 2.5) % 2 ? 0.2 : 1) * out);
 }
 const out_ = (u) => 1 - Math.pow(1 - u, 3);
 
@@ -480,4 +480,27 @@ function scopeBeat(t) {
   if (pill) { g.pillTx.textContent = pill[0]; g.pillBg.setAttribute('fill', pill[1] ? C.accent : C.ink); g.pillTx.setAttribute('fill', pill[1] ? '#fff' : C.bg); }
 }
 
-run(setup, (t) => draw((t + OFFSET) % DUR), DUR);
+// The site's stepper (site.js): stops inside the beats where the planner iterates, at clip
+// times where the picture holds that state (the last of each beat is its end state, the same
+// as data-hold on /kinetic/). Every number is the trace's.
+const STEPS = (() => {
+  const W = H.walk[WP], WT = H.walk[TP], B = H.bisect, J = H.judge.walk, full = K[TP + 1].p - K[TP].p;
+  const peaks = (v, a, j) => `${fmt(v, 1)} mm/s, ${fmt(a)} mm/s², ${big(j)} mm/s³`;
+  const over = (v, a, j) => [[v, VMAX, 'speed'], [a, AMAX, 'acceleration'], [j, JMAX, 'jerk']].filter(([x, m]) => x > m * 1.001).map((x) => x[2]).join(' and ');
+  const hi = (k) => J.samples.reduce((m, x) => Math.abs(x[k]) > Math.abs(m[k]) ? x : m);
+  const roots = [['speed', J.rootsV, 1, 'mm/s'], ['acceleration', J.rootsA, 0, 'mm/s²'], ['jerk', J.rootsJ, 0, 'mm/s³']].map(([nm, r, d, un]) => r.length ? `${nm} at u ${r[0][0]}, ${fmt(Math.abs(r[0][1]), d)} ${un}` : `${nm} none`);
+  const step = (b, i) => `Step ${i}: move ${fmt(b[0], 3)} mm, keeps ${fmt(b[2], 3)} of ${full} mm (${fmt(b[3] * 100, 2)}%). ` + (b[1] ? `Legal${b[4] > VMAX ? ' within 0.1%' : ''}, ${fmt(b[4], 1)} mm/s.` : `Over: ${over(b[4], b[5], b[6])}, ${fmt(b[4], 1)} mm/s, ${fmt(b[5])} mm/s².`);
+  return [
+    ...W.map((w, j) => ({ beat: 2, at: [9.245, 9.645, 10.045, 11.69][j], note: `k ${w[0].toFixed(2)}: both handles ${(w[0] / 3).toFixed(3)} of the piece. ` + (w[1]
+      ? `Peaks ${peaks(w[2], w[3], w[4])}. Legal.`
+      : `Speed ${fmt(w[2], 1)} mm/s, over ${fmt(VMAX)}.` + (j ? '' : ' Speed over wants shorter handles, so k above 1 is skipped.')) })),
+    { beat: 3, at: 13.65, note: `11 samples. Highest: speed ${fmt(hi(1)[1], 1)} mm/s at u ${hi(1)[0]}, acceleration ${fmt(Math.abs(hi(2)[2]))} mm/s² at u ${hi(2)[0]}, jerk ${big(Math.abs(hi(3)[3]))} mm/s³ at u ${hi(3)[0]}.` },
+    { beat: 3, at: 15.19, note: `Turning points inside: ${roots.join('; ')}. Peaks ${peaks(J.over[1] * VMAX, J.over[2] * AMAX, J.over[3] * JMAX)}, all under. Legal.` },
+    { beat: 4, at: 16.79, note: `Piece ${TP} to ${TP + 1}: ${full} mm in ${Math.round((K[TP + 1].t - K[TP].t) * 1000)} ms. All ${WT.length} factors fail. At k 1.00: speed ${fmt(WT[0][2])} mm/s, acceleration ${fmt(WT[0][3])} mm/s², both over.` },
+    { beat: 4, at: 17.045, note: `Step 0: the full move, ${fmt(B[0][0], 3)} mm, leaves a zero stroke. ${B[0][1] ? 'Legal' : 'Over'}, so the search runs from 0 to ${fmt(B[0][0])} mm.` },
+    ...[1, 2, 3, 4].map((i) => ({ beat: 4, at: 17.045 + i * 0.095, note: step(B[i], i) })),
+    { beat: 4, at: 18.89, note: step(B[16], 16) + ` Knot ${TP + 1} keeps its time, ${K[TP + 1].t.toFixed(3)} s.` },
+  ];
+})();
+
+run(setup, (t, held) => draw((t + OFFSET) % DUR, held), DUR, STEPS);

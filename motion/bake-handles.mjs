@@ -80,15 +80,25 @@ const data = {
   kinetic: sha, window: MM, lim: LIM, floor: det[WALK].floor, walkPiece: WALK, trimPiece: TRIM,
   knots: s0.map((k, i) => ({ t: r(k.t, 3), p: mm(k.p, 1), cls: CLS[k.cls], dIn: mm(k.dIn, 1), dOut: mm(k.dOut, 1), pchip: mm(pchip[i], 1), vel: mm(k.vel, 1) })),
   final: fin.map((k) => ({ p: mm(k.p + k.dp, 3), dp: mm(k.dp, 3), vel: mm(k.vel, 1), effIn: r(k.effIn, 4), effOut: r(k.effOut, 4) })),
-  walk: Object.fromEntries([WALK, TRIM].map((i) => [i, judges[i].filter((e) => e.phase === 0).map((e) => [e.f, e.legal, r(e.rv, 3), r(e.ra, 3), r(e.rj, 3)])])),
+  // the length walk, per judged factor: [k, legal, peak v mm/s, a mm/s^2, j mm/s^3]
+  walk: Object.fromEntries([WALK, TRIM].map((i) => [i, judges[i].filter((e) => e.phase === 0).map((e) => [e.f, e.legal, r(e.rv * LIM[0], 1), r(e.ra * LIM[1], 0), r(e.rj * LIM[2], 0)])])),
   sweep: Object.fromEntries([WALK, TRIM].map((i) => [i, det[i].sweep.map(([pass, f, i0, i1, o, rv, ra, rj]) => [pass, f, r(i0, 4), r(i1, 4), r(rv, 3), r(ra, 3), r(rj, 3), o <= 1.001 ? 1 : 0])])),
   judge: { walkK1: judgeOut(det[WALK].atK1), walk: judgeOut(det[WALK].chosen), trimK1: judgeOut(det[TRIM].atK1), trim: judgeOut(det[TRIM].chosen) },
   chosen: { [WALK]: ends[WALK].k, [TRIM]: ends[TRIM].k },
-  // the trim: the full move tested first, then 16 halvings of the move (mm toward the previous knot)
+  // the trim: the full move tested first, then 16 halvings. Per test, the judge that decided it
+  // (the first legal fit, else the least over): [move mm toward the previous knot, legal,
+  // stroke kept mm, share kept, peak v mm/s, a mm/s^2, j mm/s^3]
   bisect: (() => {
-    const ph = {};
-    for (const e of judges[TRIM]) if (e.phase >= 1 && e.phase < 30) { (ph[e.phase] ||= { move: mm(Math.abs(det[TRIM].pR - det[TRIM].pL) - Math.abs(e.D), 3), legal: 0 }); if (e.legal) ph[e.phase].legal = 1; }
-    return Object.keys(ph).map(Number).sort((a, b) => a - b).map((k) => [ph[k].move, ph[k].legal]);
+    const ph = {}, full = Math.abs(det[TRIM].pR - det[TRIM].pL);
+    for (const e of judges[TRIM]) {
+      if (e.phase < 1 || e.phase >= 30) continue;
+      const b = ph[e.phase];
+      if (!b || (!b.legal && (e.legal || e.o < b.o))) ph[e.phase] = e;
+    }
+    return Object.keys(ph).map(Number).sort((a, b) => a - b).map((k) => {
+      const e = ph[k], d = Math.abs(e.D);
+      return [mm(full - d, 3), e.legal, mm(d, 3), r(d / full, 4), r(e.rv * LIM[0], 1), r(e.ra * LIM[1], 0), r(e.rj * LIM[2], 0)];
+    });
   })(),
   share: r(L.find((e) => e.ev === 'anomaly' && e.kind === 3).detail, 4),
   P: smp.P.map((x) => mm(x, 2)),

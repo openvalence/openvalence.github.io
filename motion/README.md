@@ -29,6 +29,14 @@ The figure's `data-live` lists the scripts in load order; `site.js` decides per 
   position.
 - Video: everyone else. The poster stays for reduced motion.
 
+On `/kinetic/` the clip has a stepper (`stepper()` in `site.js`): Prev, Play, Next, a
+scrubber and the six steps, with the arrow keys and Space when the figure has focus. Each
+step holds at its beat's end state (`data-hold` on the beat's `<li>`, in clip seconds); the
+live piece adds its own stops inside Handle lengths, Legality check and Trim (`STEPS` in
+`knots-to-curve.js`, passed through `run()`), and `draw(t, held)` shows those frames with the
+log fully typed. The video seeks to the same times. Reduced motion gets the stepper too:
+the live piece where the device can carry it, drawn only on a step, else the paused video.
+
 The page loads one live piece at most: the scripts share the page's globals.
 
 ## Re-render
@@ -67,6 +75,9 @@ Both Kinetic pieces draw what the real planner computed, never a sketch of it.
   deployed `kinetic2.wasm` bit for bit, so bake from the Kinetic commit the
   playground runs. A patch anchor that no longer matches fails the bake: move the
   hook, never the planner.
+
+The stepper's notes read `walk` (each factor tried, with its peaks) and `bisect` (each test
+of the trim: the move, the stroke kept and the peaks of the fit that decided it).
 
 Re-bake and re-render when the planner changes. The captions on `/kinetic/` cite
 `handles.hpp` lines and change with it.
