@@ -132,7 +132,9 @@ main li { margin-bottom: 6px; }
   padding: 22px var(--gutter);
 }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 900 1.15rem/1 var(--display); font-stretch: 115%; letter-spacing: -.01em; white-space: nowrap; }
-.brand img { display: block; width: 26px; height: 26px; }
+.brand img, .brand .ov-mark { display: block; width: 26px; height: 26px; flex: none; }
+.intro .brand img { opacity: 0; animation: mark-show 0s 2.5s forwards; }
+@keyframes mark-show { to { opacity: 1; } }
 .chips { display: flex; align-items: center; gap: 22px; margin-left: auto; }
 .chip { color: var(--ink-2); text-decoration: none; white-space: nowrap; font: 800 .82rem/1.6 var(--display); font-stretch: 108%; text-transform: uppercase; letter-spacing: .04em; }
 .chip:hover, .chip[aria-current] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 6px; }
