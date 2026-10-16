@@ -13,7 +13,8 @@
 <meta name="twitter:title" content="Open-Source Software And Hardware For Linear Motion Machines">
 <meta name="twitter:description" content="Open Source OSSM Flagship PCB, Phosphor app with Buttplug.io support and built in funscript player, Nucleus firmware with Kinetic² Motion.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B">
+<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -53,6 +54,7 @@
   ]
 }
 </script>
+<script src="/site.js" defer></script>
 </head>
 <body>
 
@@ -76,57 +78,90 @@
 <!-- /chrome:header -->
 
 <main>
-  <section class="opening">
-    <p class="kicker">pre-release protocol · spec v1.0-draft</p>
-    <h1>Open-source hardware and software for linear motion machines</h1>
-    <p>For OSSM-style machines and anything else that moves along a rail. The firmware runs a hub that holds the machine's state. The desktop app, browser tabs, scripts and plugins connect to the hub as clients and stay in sync with it. The board, its firmware, the protocol and the client are published under <span class="nb">MIT</span>, <span class="nb">CC BY 4.0</span>, <span class="nb">Apache-2.0</span> and <span class="nb">CERN-OHL-S-2.0</span>.</p>
+  <section class="hero">
+    <div>
+      <p class="kicker">pre-release protocol · spec v1.0-draft</p>
+      <h1>Open-source hardware and software for linear motion machines</h1>
+      <p class="lede">For OSSM-style machines and anything else that moves along a rail. A PCB, its firmware, a protocol and an app, every one of them open source.</p>
+      <div class="btns">
+        <a class="btn go" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Get Phosphor</a>
+        <a class="btn" href="/demos/">Try it with no machine</a>
+      </div>
+    </div>
+    <figure>
+      <div class="frame">
+        <video data-auto muted loop playsinline controls preload="none" width="1280" height="800" poster="/images/phosphor/hero-poster.webp" aria-label="Phosphor playing a funscript against the built-in Virtual machine: the timeline scrolls and the position marker follows it along the rail.">
+          <source src="/images/phosphor/hero.webm" type="video/webm">
+        </video>
+      </div>
+      <figcaption>Phosphor driving the Virtual, the machine's firmware running inside the app. Made-up script, no sound, nothing physical moves.</figcaption>
+    </figure>
   </section>
 
   <section aria-labelledby="s-start">
     <h2 id="s-start" data-n="01">Start here</h2>
-    <div class="flows">
-      <nav aria-labelledby="f-use">
-        <h3 id="f-use">You have a machine, or want one</h3>
-        <ul>
-          <li><a href="/phosphor/">What Phosphor does</a></li>
-          <li><a href="/downloads/">Get Phosphor</a></li>
-          <li><a href="/phosphor/docs/connecting/">Connect and pair</a></li>
-          <li><a href="/phosphor/docs/funscript-player/">Play a script</a></li>
-          <li><a href="/phosphor/docs/troubleshooting/">When it doesn't work</a></li>
-          <li><a href="/phosphor/docs/">All Phosphor docs</a></li>
-        </ul>
-      </nav>
-      <nav aria-labelledby="f-dev">
-        <h3 id="f-dev">You want to build on it</h3>
-        <ul>
-          <li><a href="/valence/">What Valence is</a></li>
-          <li><a href="/Valence/">Spec and library docs</a></li>
-          <li><a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Write a Phosphor plugin</a></li>
-          <li><a href="/Valence/latest/build/hub/">Make your machine speak Valence</a></li>
-          <li><a href="/components/">The repos</a></li>
-          <li><a href="/Valence/latest/community/contributing/">Contribute</a></li>
-        </ul>
-      </nav>
-      <nav aria-labelledby="f-why">
-        <h3 id="f-why">You're just curious</h3>
-        <ul>
-          <li><a href="/valence/">The web, for motion machines</a></li>
-          <li><a href="/diagrams/">Diagrams</a></li>
-          <li><a href="/demos/">Try the planner in your browser</a></li>
-          <li><a href="#s-built">How it's built</a></li>
-          <li><a href="/components/">What each part does</a></li>
-        </ul>
-      </nav>
-    </div>
+    <ul class="cards three">
+      <li class="card">
+        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#machine"/></svg></div>
+        <div class="body">
+          <h3><a href="/phosphor/">You have a machine, or want one</a></h3>
+          <p>Get the app and play your first script.</p>
+          <ul class="more">
+            <li><a href="/downloads/">Get Phosphor</a></li>
+            <li><a href="/phosphor/docs/connecting/">Connect and pair</a></li>
+            <li><a href="/phosphor/docs/funscript-player/">Play a script</a></li>
+            <li><a href="/phosphor/docs/troubleshooting/">When it doesn't work</a></li>
+            <li><a href="/phosphor/docs/">All Phosphor docs</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="card">
+        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#code"/></svg></div>
+        <div class="body">
+          <h3><a href="/valence/">You want to build on it</a></h3>
+          <p>The protocol, and how to build on it.</p>
+          <ul class="more">
+            <li><a href="/Valence/">Spec and library docs</a></li>
+            <li><a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Write a Phosphor plugin</a></li>
+            <li><a href="/Valence/latest/build/hub/">Make your machine work with Valence</a></li>
+            <li><a href="/components/">The repos</a></li>
+            <li><a href="/Valence/latest/community/contributing/">Contribute</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="card">
+        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#search"/></svg></div>
+        <div class="body">
+          <h3><a href="/diagrams/">You're just curious</a></h3>
+          <p>See how the pieces fit, then play with the planner.</p>
+          <ul class="more">
+            <li><a href="/valence/">The web, for motion machines</a></li>
+            <li><a href="/demos/">Try the planner in your browser</a></li>
+            <li><a href="/hardware/">Look around the PCB</a></li>
+            <li><a href="#s-built">How it's built</a></li>
+            <li><a href="/components/">What each part does</a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
   </section>
 
-  <section aria-labelledby="s-client">
-    <h2 id="s-client" data-n="02">The client</h2>
-    <figure class="shot">
-      <a href="/images/phosphor-dash.png"><img src="/images/phosphor-dash.png" width="1440" height="900" alt="Phosphor's Dash page: the planned position reads 393.4 mm in large blue numerals, a 0 to 500 mm rail sits below it, and the telemetry chart shows position and speed as two sine waves while the Simple Stroke pattern runs."></a>
-      <figcaption>Phosphor 0.1.0 · Dash · connected to the simulator 0.1.11, Simple Stroke running · 1440 × 900, unedited · <a href="/images/phosphor-dash.png">full size</a></figcaption>
-    </figure>
-    <p>Phosphor is the reference client. Phosphor builds its pages from the settings the hub declares; a setting added in the firmware appears in Phosphor without a Phosphor update. Plugins draw their own controls over the same protocol. It has a built-in Virtual machine, the hub firmware compiled to WebAssembly, so Phosphor runs with no hardware attached. <a href="/phosphor/">More on Phosphor</a>.</p>
+  <section aria-labelledby="s-fits">
+    <h2 id="s-fits" data-n="02">How it fits together</h2>
+    <p>The firmware runs a hub that holds the machine's state. The desktop app, browser tabs, scripts and plugins connect to the hub as clients and stay in sync with it. Here's the path from your screen to the rail.</p>
+    <!-- Sources as on /diagrams/#system: SPEC §13.2, §13.4; Nucleus README "Chips", transport.md; MotionArbiter.h kStripLen 128, kLeaseTicks 4; motion-control.md (40 MHz XTAL, 128 ns spread); board-map.md -->
+    <ol class="chain">
+      <li><div class="blk cli" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#app"/></svg><strong>Phosphor</strong><small>or any app</small><p class="tip"><b>The app.</b> Phosphor builds its pages from what the machine declares. Scripts, plugins and the page the machine serves connect the same way. <a href="/phosphor/">Phosphor</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#wave"/></svg><strong>Valence</strong><small>the protocol</small><p class="tip"><b>The wire.</b> WebSocket over Wi-Fi, BLE for setup. The machine describes itself; apps send requests. <a href="/valence/">Valence</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#radio"/></svg><strong>ESP32-C6</strong><small>radio</small><p class="tip"><b>The radio.</b> Moves bytes over SDIO and runs Espressif's stock image, none of our code. So you only ever flash one chip. <a href="/nucleus/#s-chips">Chips</a></p></div></li>
+      <li><div class="blk hub" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><strong>Hub</strong><small>Nucleus on the ESP32-P4</small><p class="tip"><b>The hub.</b> Holds the only real state, clamps every request to the machine's limits and tells every app what it actually did. <a href="/nucleus/">Nucleus</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#curve"/></svg><strong>Kinetic²</strong><small>planner</small><p class="tip"><b>The planner.</b> Turns timed knots into a 128 ms strip of positions on a 1 ms grid. So a short planner stall never reaches the motor. <a href="/kinetic/">Kinetic</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#quad"/></svg><strong>LP core</strong><small>quadrature out</small><p class="tip"><b>The LP core.</b> Sends A/B quadrature from a 40 MHz crystal and parks itself if its 4 ms lease runs out. <a href="/nucleus/#s-motion">Motion</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#drive"/></svg><strong>Servo drive</strong><small>closes the loop</small><p class="tip"><b>The drive.</b> Follows the quadrature and closes the loop on the motor. Alarms come back to the P4, RS485 carries reads. <a href="/hardware/#s-drive">Drive interface</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#rail"/></svg><strong>Motor and rail</strong><small>where it ends up</small><p class="tip"><b>The rail.</b> The firmware homes it and holds every move inside the rail window; the PCB's E-stop cuts motor power in hardware. <a href="/hardware/">Hardware</a></p></div></li>
+      <li aria-hidden="true" class="hint-li"><p class="hint">Hover or tap a block. Blue is motion going out; the hub is the one in charge.</p></li>
+    </ol>
+    <p class="links"><a href="/diagrams/">All the diagrams</a> · <a href="/diagrams/#funscript">A funscript action, start to finish</a></p>
   </section>
 
   <section aria-labelledby="s-measured">
@@ -153,53 +188,46 @@
 
   <section aria-labelledby="s-parts">
     <h2 id="s-parts" data-n="04">The parts</h2>
-    <table class="parts">
-      <thead>
-        <tr><th scope="col">Repo</th><th scope="col">What it is</th><th scope="col">License</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row"><a href="/valence/">Valence</a></th>
-          <td>The protocol: spec, registry, reference library, clients, tools, documentation.</td>
-          <td><span class="nb">MIT</span> · spec text <span class="nb">CC BY 4.0</span></td>
-        </tr>
-        <tr>
-          <th scope="row"><a href="/nucleus/">Nucleus</a></th>
-          <td>Firmware for the OSSM Flagship board: an ESP32-P4 with an ESP32-C6 for Wi-Fi. Built on ESP-IDF. The P4's low-power (LP) core generates the quadrature output.</td>
-          <td>Apache-2.0</td>
-        </tr>
-        <tr>
-          <th scope="row"><a href="/phosphor/">Phosphor</a></th>
-          <td>The reference client, for Windows, macOS and Linux (including a Flatpak), with plugins, themes and a built-in Virtual machine. Android is WIP.</td>
-          <td>Apache-2.0</td>
-        </tr>
-        <tr>
-          <th scope="row"><a href="/kinetic/">Kinetic</a></th>
-          <td>The motion planner: jerk-limited trajectories from timed knots. Header-only C++, deterministic across targets.</td>
-          <td>Apache-2.0</td>
-        </tr>
-        <tr>
-          <th scope="row"><a href="/hardware/">Hardware</a></th>
-          <td>The OSSM Flagship board and everything physical around it, in KiCad.</td>
-          <td>CERN-OHL-S-2.0</td>
-        </tr>
-        <tr>
-          <th scope="row"><a href="/isotope/">Isotope</a></th>
-          <td>Accessory firmware for the ESP-NOW network around Nucleus. WIP: design stage, nothing runs yet.</td>
-          <td>none yet</td>
-        </tr>
-        <tr>
-          <th scope="row"><a href="https://github.com/openvalence/ButtplugIO">ButtplugIO</a></th>
-          <td>A fork of buttplugio/buttplug carrying the Valence hardware manager, on branch <code>valence</code>.</td>
-          <td>BSD-3-Clause</td>
-        </tr>
-      </tbody>
-    </table>
+    <ul class="cards">
+      <li class="card">
+        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#wave"/></svg></div>
+        <div class="body"><h3><a href="/valence/">Valence</a></h3><p>The protocol: spec, registry, reference library, clients, tools, documentation.</p><p class="meta"><span class="nb">MIT</span> · spec text <span class="nb">CC BY 4.0</span></p></div>
+      </li>
+      <li class="card">
+        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg></div>
+        <div class="body"><h3><a href="/nucleus/">Nucleus</a></h3><p>Firmware for the OSSM Flagship PCB: an ESP32-P4 with an ESP32-C6 for Wi-Fi, built on ESP-IDF. The P4's low-power (LP) core generates the quadrature output.</p><p class="meta">Apache-2.0</p></div>
+      </li>
+      <li class="card">
+        <div class="art"><img src="/images/phosphor/dash-dark-640.webp" width="640" height="400" alt="" loading="lazy" decoding="async"></div>
+        <div class="body"><h3><a href="/phosphor/">Phosphor</a></h3><p>The reference client, for Windows, macOS and Linux (including a Flatpak), with plugins, themes and a built-in Virtual machine. Android is WIP.</p><p class="meta">Apache-2.0</p></div>
+      </li>
+      <li class="card">
+        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#curve"/></svg></div>
+        <div class="body"><h3><a href="/kinetic/">Kinetic</a></h3><p>The motion planner: jerk-limited trajectories from timed knots. Header-only C++, deterministic across targets.</p><p class="meta">Apache-2.0</p></div>
+      </li>
+      <li class="card">
+        <div class="art contain"><img src="/images/hardware/pcb-angle-600.webp" width="600" height="418" alt="" loading="lazy" decoding="async"></div>
+        <div class="body"><h3><a href="/hardware/">Hardware</a></h3><p>The OSSM Flagship PCB and everything physical around it, in KiCad.</p><p class="meta">CERN-OHL-S-2.0</p></div>
+      </li>
+      <li class="card">
+        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#beacon"/></svg></div>
+        <div class="body"><h3><a href="/isotope/">Isotope</a></h3><p>Accessory firmware for the ESP-NOW network around Nucleus. WIP: design stage, nothing runs yet.</p><p class="meta">no license yet</p></div>
+      </li>
+      <li class="card">
+        <div class="art"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#plug"/></svg></div>
+        <div class="body"><h3><a href="https://github.com/openvalence/ButtplugIO">ButtplugIO</a></h3><p>A fork of buttplugio/buttplug carrying the Valence hardware manager, on branch <code>valence</code>.</p><p class="meta">BSD-3-Clause</p></div>
+      </li>
+    </ul>
   </section>
 
   <section aria-labelledby="s-stand">
     <h2 id="s-stand" data-n="05">Status</h2>
-    <p>The firmware homes the rail, plays scripts, and connects to the client over Wi-Fi. Phosphor builds for Windows, macOS and Linux from one codebase. The protocol is pre-release: it changes through RFCs, and the registry assigns every wire number. The <a href="/Valence/">docs</a> cover building clients and machines; <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Phosphor's plugin contract</a> covers building control surfaces.</p>
+    <ul class="tiles">
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><b>Firmware</b><p>Homes the rail, plays scripts, and connects to the client over Wi-Fi.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#app"/></svg><b>Phosphor</b><p>Builds for Windows, macOS and Linux from one codebase. <a href="/downloads/">Pre-release builds</a>.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#doc"/></svg><b>Protocol</b><p>Pre-release. It changes through RFCs, and the registry assigns every wire number.</p></li>
+    </ul>
+    <p>The <a href="/Valence/">docs</a> cover building clients and machines; <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Phosphor's plugin contract</a> covers building control surfaces.</p>
   </section>
 
   <section aria-labelledby="s-built">

@@ -13,7 +13,8 @@
 <meta name="twitter:title" content="Phosphor Pre-Release CI Builds: Downloads">
 <meta name="twitter:description" content="Phosphor pre-release CI builds for Windows, macOS and Linux. Try the app with no machine in the built-in Virtual, the Neutrino firmware emulator.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B">
+<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -77,33 +78,76 @@
 
   <section aria-labelledby="s-phosphor">
     <h2 id="s-phosphor" data-n="01">Phosphor 0.1.641 <span class="tag">pre-release</span></h2>
-    <p>The app. Release notes and every file: <a href="https://github.com/openvalence/Phosphor/releases/tag/v0.1.641">Phosphor v0.1.641 on GitHub</a>. Checksums: <a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/SHA256SUMS.txt">SHA256SUMS.txt</a>.</p>
-    <h3>Windows</h3>
-    <p>The installer for Windows 10 and 11, 64-bit, or a single portable .exe that needs no install. Neither is signed yet, so SmartScreen shows "Windows protected your PC": choose More info, then Run anyway. The portable exe needs the WebView2 runtime, which Windows 10 and 11 already include.</p>
-    <p class="links dl"><a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-windows-x64-setup.exe">Phosphor-0.1.641-windows-x64-setup.exe</a> · 8.1 MB</p>
-    <p class="links dl"><a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-windows-x64-portable.exe">Phosphor-0.1.641-windows-x64-portable.exe</a> · 28.7 MB</p>
-    <h3>macOS</h3>
-    <p>A disk image for Apple silicon. Intel Macs are not built. The app is not notarized: drag it to Applications, right-click it and choose Open. If macOS still refuses, use System Settings > Privacy &amp; Security > Open Anyway.</p>
-    <p class="links dl"><a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-macos-arm64.dmg">Phosphor-0.1.641-macos-arm64.dmg</a> · 11.4 MB</p>
-    <h3>Linux</h3>
-    <p>Three ways in, all x86_64. The AppImage runs anywhere after <code>chmod +x</code>. The .deb is for Debian and Ubuntu. The Flatpak needs the Flathub remote for the GNOME runtime, then <code>flatpak install --user</code> on the file.</p>
-    <p class="links dl"><a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-linux-x86_64.AppImage">Phosphor-0.1.641-linux-x86_64.AppImage</a> · 86.3 MB</p>
-    <p class="links dl"><a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-linux-amd64.deb">Phosphor-0.1.641-linux-amd64.deb</a> · 12.6 MB</p>
-    <p class="links dl"><a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-linux-x86_64.flatpak">Phosphor-0.1.641-linux-x86_64.flatpak</a> · 8.2 MB</p>
-    <h3>Android</h3>
-    <p>Not in this release. CI doesn't build it yet <span class="tag">WIP</span></p>
+    <ul class="platforms">
+      <li>
+        <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-win"/></svg><div><h3>Windows</h3><small>Windows 10 and 11, 64-bit</small></div></div>
+        <ul class="files">
+          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-windows-x64-setup.exe"><b>Installer<small>Phosphor-0.1.641-windows-x64-setup.exe</small></b><small>8.1 MB</small></a></li>
+          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-windows-x64-portable.exe"><b>Portable, no install<small>Phosphor-0.1.641-windows-x64-portable.exe</small></b><small>28.7 MB</small></a></li>
+        </ul>
+        <details class="more">
+          <summary>"Windows protected your PC"?</summary>
+          <p>Neither file is signed yet, so SmartScreen shows that warning: choose More info, then Run anyway. The portable exe needs the WebView2 runtime, which Windows 10 and 11 already include.</p>
+        </details>
+      </li>
+      <li>
+        <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-mac"/></svg><div><h3>macOS</h3><small>Apple silicon. Intel Macs are not built.</small></div></div>
+        <ul class="files">
+          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-macos-arm64.dmg"><b>Disk image<small>Phosphor-0.1.641-macos-arm64.dmg</small></b><small>11.4 MB</small></a></li>
+        </ul>
+        <details class="more">
+          <summary>macOS won't open it?</summary>
+          <p>The app is not notarized: drag it to Applications, right-click it and choose Open. If macOS still refuses, use System Settings &gt; Privacy &amp; Security &gt; Open Anyway.</p>
+        </details>
+      </li>
+      <li>
+        <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-linux"/></svg><div><h3>Linux</h3><small>x86_64</small></div></div>
+        <ul class="files">
+          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-linux-x86_64.AppImage"><b>AppImage, runs anywhere<small>Phosphor-0.1.641-linux-x86_64.AppImage</small></b><small>86.3 MB</small></a></li>
+          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-linux-amd64.deb"><b>.deb, Debian and Ubuntu<small>Phosphor-0.1.641-linux-amd64.deb</small></b><small>12.6 MB</small></a></li>
+        </ul>
+        <details class="more">
+          <summary>Running the AppImage</summary>
+          <p>The AppImage runs anywhere after <code>chmod +x</code>. The .deb is for Debian and Ubuntu.</p>
+        </details>
+      </li>
+      <li>
+        <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-pkg"/></svg><div><h3>Flatpak</h3><small>Linux, x86_64</small></div></div>
+        <ul class="files">
+          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-linux-x86_64.flatpak"><b>Flatpak bundle<small>Phosphor-0.1.641-linux-x86_64.flatpak</small></b><small>8.2 MB</small></a></li>
+        </ul>
+        <details class="more">
+          <summary>Installing the bundle</summary>
+          <p>It needs the Flathub remote for the GNOME runtime, then <code>flatpak install --user</code> on the file.</p>
+        </details>
+      </li>
+      <li>
+        <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-phone"/></svg><div><h3>Android <span class="tag">WIP</span></h3><small>Not in this release</small></div></div>
+        <p>CI doesn't build it yet.</p>
+      </li>
+    </ul>
+    <p class="links">Release notes and every file: <a href="https://github.com/openvalence/Phosphor/releases/tag/v0.1.641">Phosphor v0.1.641 on GitHub</a> · Checksums: <a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/SHA256SUMS.txt">SHA256SUMS.txt</a></p>
     <p>You can build the rest from the <a href="https://github.com/openvalence/Phosphor">repo</a>. The README has the commands.</p>
   </section>
 
   <section aria-labelledby="s-firmware">
     <h2 id="s-firmware" data-n="02">Firmware</h2>
-    <p>Nucleus, for the OSSM Flagship board. <a href="https://github.com/openvalence/Nucleus/releases">Nucleus releases</a> <span class="tag">not released</span></p>
-    <p>No prebuilt images yet. The board isn't for sale yet either, so for now the firmware is a build-it-yourself affair: ESP-IDF through PlatformIO, steps in the <a href="https://github.com/openvalence/Nucleus#build-and-flash">Nucleus README</a>.</p>
+    <ul class="platforms">
+      <li>
+        <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><div><h3>Nucleus <span class="tag">not released</span></h3><small>for the OSSM Flagship PCB</small></div></div>
+        <p>No prebuilt images yet. The PCB isn't for sale yet either, so for now the firmware is a build-it-yourself affair: ESP-IDF through PlatformIO, steps in the <a href="https://github.com/openvalence/Nucleus#build-and-flash">Nucleus README</a>.</p>
+        <p class="links"><a href="https://github.com/openvalence/Nucleus/releases">Nucleus releases</a></p>
+      </li>
+    </ul>
   </section>
 
   <section aria-labelledby="s-nohw">
     <h2 id="s-nohw" data-n="03">No hardware?</h2>
-    <p>Install Phosphor and pick the hub with the "ν virtual" badge. That's the Virtual, and nothing physical moves. The <a href="/Kinetic/">Kinetic playground</a> runs the motion planner in your browser with nothing to install. More on the <a href="/demos/">demos page</a>.</p>
+    <ul class="tiles">
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#sim"/></svg><b>The Virtual</b><p>Install Phosphor and pick the hub with the "ν virtual" badge. Nothing physical moves.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#curve"/></svg><b>The planner</b><p>The <a href="/Kinetic/">Kinetic playground</a> runs the motion planner in your browser with nothing to install.</p></li>
+    </ul>
+    <p>More on the <a href="/demos/">demos page</a>.</p>
   </section>
 
   <section aria-labelledby="s-verify">

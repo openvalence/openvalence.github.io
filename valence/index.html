@@ -13,7 +13,8 @@
 <meta name="twitter:title" content="What Valence is: OpenValence">
 <meta name="twitter:description" content="Valence is the web for motion machines: the machine serves its own control panel, any app can open it, and the machine enforces its own limits.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B">
+<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -60,71 +61,93 @@
   <section aria-labelledby="s-web">
     <h2 id="s-web" data-n="01">The short version</h2>
     <p>You already know how this works. You type an address, a server sends a page, your browser draws it. The server doesn't care which browser you use. Valence does the same job for a machine.</p>
-    <table class="parts parallel">
-      <thead>
-        <tr><th scope="col">On the web</th><th scope="col">In Valence</th></tr>
-      </thead>
-      <tbody>
-        <tr><th scope="row">Website</th><td>The machine. Its firmware runs a hub that holds the machine's state.</td></tr>
-        <tr><th scope="row">Browser</th><td>The app. Phosphor, a script, a plugin, a hardware remote. Any number at once, all kept in sync.</td></tr>
-        <tr><th scope="row">HTTP and HTML</th><td>Valence: the wire format, plus the catalog the machine sends to describe itself.</td></tr>
-        <tr><th scope="row">Server-side checks</th><td>Machine-side limits. The machine checks every request, whatever the app thinks.</td></tr>
-      </tbody>
-    </table>
+    <div class="pairs">
+      <span class="head">On the web</span><span class="head"></span><span class="head v">In Valence</span>
+      <dl>
+      <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#server"/></svg>Website</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#machine"/></svg><span><b>The machine</b>Its firmware runs a hub that holds the machine's state.</span></dd></div>
+      <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#browser"/></svg>Browser</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#app"/></svg><span><b>The app</b>Phosphor, a script, a plugin, a hardware remote. Any number at once, all kept in sync.</span></dd></div>
+      <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#doc"/></svg>HTTP and HTML</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#wave"/></svg><span><b>Valence</b>The wire format, plus the catalog the machine sends to describe itself.</span></dd></div>
+      <div><dt><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#shield"/></svg>Server-side checks</dt><dd class="eq" aria-hidden="true">=</dd><dd><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#lock"/></svg><span><b>Machine-side limits</b>The machine checks every request, whatever the app thinks.</span></dd></div>
+      </dl>
+    </div>
   </section>
 
   <section aria-labelledby="s-diff">
     <h2 id="s-diff" data-n="02">The one difference</h2>
     <!-- SPEC §1.2 item 7 (no widget hints, no layout, no ordering, no styling); §8 intro and §8.8 (the catalog builds the whole settings and control surface) -->
     <p>A website sends a finished page. A Valence machine sends a description: what each setting is, its units, its range, and who may change it. No layout, no colors, no widget hints. The app decides how it looks.</p>
+    <!-- Nucleus flagship_p4/src/hub/ValenceCatalog.h: jog_speed, f32, mm/s, min ceiling::speed_min 1, max ceiling::speed_max 2000, default factory::jog_speed 50, group "Jog limits", desc "Speed ceiling for manual jogs" -->
+    <figure class="morph">
+      <div class="entry" aria-label="A catalog entry as the machine sends it">
+        <span class="k">name</span> <b>jog_speed</b><br>
+        <span class="k">desc</span> <b>Speed ceiling for manual jogs</b><br>
+        <span class="k">unit</span> <b>mm/s</b><br>
+        <span class="k">range</span> <b>1 to 2000</b><br>
+        <span class="k">default</span> <b>50</b><br>
+        <span class="k">group</span> <b>Jog limits</b>
+      </div>
+      <div class="arrow" aria-hidden="true">&rarr;</div>
+      <div class="ui" aria-label="The control an app draws from it">
+        <div class="grp">Jog limits</div>
+        <div class="lbl"><span>Speed ceiling for manual jogs</span><span>50 mm/s</span></div>
+        <div class="track"><i></i></div>
+        <div class="ends"><span>1</span><span>2000</span></div>
+      </div>
+      <figcaption>Left: one setting as Nucleus declares it. Right: one way an app can draw it. Another app could draw a knob or a number box from the same entry.</figcaption>
+    </figure>
     <p>So a setting added in the firmware shows up in every app the next time it connects, with its label, units and limits. Nobody ships an app update for it.</p>
   </section>
 
   <section aria-labelledby="s-safety">
     <h2 id="s-safety" data-n="03">Why safety lives in the machine</h2>
     <p>Your app is one client of many, and any client can be wrong: an old version, a buggy plugin, a script with a bad number in it. So the machine trusts none of them.</p>
-    <ul>
+    <ul class="tiles">
       <!-- SPEC §1.2 item 1: hub-authoritative, echoes report applied (post-clamp) values -->
-      <li>The machine holds the only real state. Apps send requests. The machine clamps each one to its limits and tells every app what it actually did.</li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><b>One source of truth</b><p>The machine holds the only real state. Apps send requests. The machine clamps each one to its limits and tells every app what it actually did.</p></li>
       <!-- SPEC §11.4: sole-caller rule; Nucleus .claude/rules/architecture.md: MotionArbiter is the only component that commands motion -->
-      <li>One component on the machine drives the motor. Every request goes through it. There is no side door.</li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#lock"/></svg><b>No side door</b><p>One component on the machine drives the motor. Every request goes through it.</p></li>
       <!-- SPEC §11.3 deadman default 600 ms; releases ownership -->
-      <li>If an app goes quiet, it loses control of motion. The default is 600 ms.</li>
+      <li><span class="big">600<small>ms</small></span><b>Go quiet, lose control</b><p>If an app goes quiet, it loses control of motion. 600 ms is the default.</p></li>
       <!-- SPEC §11.1, §11.2: pause and estop are role-exempt -->
-      <li>Anyone connected can stop the machine, even an app that is only watching. Starting it takes control access. The spec puts it this way: "you may always stop the machine; you may not always start it."</li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#stop"/></svg><b>Anyone can stop it</b><p>Even an app that is only watching. Starting it takes control access. The spec puts it this way: "you may always stop the machine; you may not always start it."</p></li>
       <!-- SPEC §11.2 honesty clause H1 -->
-      <li>A hardware e-stop is still the last word. The protocol's stop is a convenience, not a replacement for one.</li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#bolt"/></svg><b>Hardware e-stop wins</b><p>A hardware e-stop is still the last word. The protocol's stop is a convenience, not a replacement for one.</p></li>
     </ul>
   </section>
 
   <section aria-labelledby="s-tiers">
     <h2 id="s-tiers" data-n="04">Who can do what</h2>
     <!-- SPEC §12.2 (ratified): watch 0, control 1, configure 2; §12.3 pairing -->
-    <p>Every connection has an access tier. <strong>Watch</strong> sees everything and can stop the machine. <strong>Control</strong> can also move it. <strong>Configure</strong> can also change setup and decide who else gets in. Watching needs no pairing; the rest does. The <a href="/diagrams/#pairing">pairing diagram</a> shows how you get each one.</p>
+    <ul class="tiles">
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#eye"/></svg><b>Watch</b><p>Sees everything and can stop the machine. Needs no pairing.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#rail"/></svg><b>Control</b><p>Everything Watch can do, and it can move the machine. Needs pairing.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#palette"/></svg><b>Configure</b><p>Everything Control can do, plus setup and deciding who else gets in. Needs pairing.</p></li>
+    </ul>
+    <p>The <a href="/diagrams/#pairing">pairing diagram</a> shows how you get each one.</p>
   </section>
 
   <section aria-labelledby="s-repo">
     <h2 id="s-repo" data-n="05">What's in the repo</h2>
     <!-- Valence README.md, Layout table and License -->
-    <dl class="terms">
-      <div><dt>The spec</dt><dd>The protocol, in one document, plus the registry that assigns every wire number. <span class="nb">CC BY 4.0</span>.</dd></div>
-      <div><dt>The library</dt><dd>A C++20 reference implementation. Header-only, no hardware, no dependencies. <span class="nb">MIT</span>.</dd></div>
-      <div><dt>Clients</dt><dd>A JavaScript client and Valence Connect, a plugin for MultiFunPlayer.</dd></div>
-      <div><dt>Valence Bench</dt><dd>A reference hub that runs with no hardware, for testing a client.</dd></div>
-      <div><dt>Tools</dt><dd>A wire-level conformance probe, a tracer, a soak tester.</dd></div>
-    </dl>
+    <ul class="tiles">
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#doc"/></svg><b>The spec</b><p>The protocol, in one document, plus the registry that assigns every wire number. <span class="nb">CC BY 4.0</span>.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#code"/></svg><b>The library</b><p>A C++20 reference implementation. Header-only, no hardware, no dependencies. <span class="nb">MIT</span>.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#app"/></svg><b>Clients</b><p>A JavaScript client and Valence Connect, a plugin for MultiFunPlayer.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#sim"/></svg><b>Valence Bench</b><p>A reference hub that runs with no hardware, for testing a client.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#search"/></svg><b>Tools</b><p>A wire-level conformance probe, a tracer, a soak tester.</p></li>
+    </ul>
     <!-- SPEC header: v1.0-draft; README: name reserved for conformant implementations (NOTICE) -->
     <p>Status: pre-release. The spec is v1.0-draft and changes through RFCs. Wire numbers are not frozen yet. The name "Valence" is reserved for implementations that pass conformance.</p>
   </section>
 
   <section aria-labelledby="s-build">
     <h2 id="s-build" data-n="06">Build on it</h2>
-    <ul>
-      <li><a href="/Valence/latest/build/quickstart/">Quickstart</a>: talk to a hub in a few lines.</li>
-      <li><a href="/Valence/latest/build/hub/">Build a hub</a>: make your own machine speak Valence.</li>
-      <li><a href="/Valence/latest/build/plugins/">Plugins</a> and <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Phosphor's plugin contract</a>: draw your own controls.</li>
-      <li><a href="/Valence/latest/spec/">The spec</a>, rendered, and <a href="https://github.com/openvalence/Valence/blob/main/spec/SPEC.md">the source</a>.</li>
-      <li><a href="/Valence/latest/community/contributing/">Contributing</a> and <a href="/Valence/latest/community/rfc-process/">the RFC process</a>.</li>
+    <ul class="cards">
+      <li class="card"><div class="body"><h3><a href="/Valence/latest/build/quickstart/">Quickstart</a></h3><p>Talk to a hub in a few lines.</p></div></li>
+      <li class="card"><div class="body"><h3><a href="/Valence/latest/build/hub/">Build a hub</a></h3><p>Make your own machine work with Valence.</p></div></li>
+      <li class="card"><div class="body"><h3><a href="/Valence/latest/build/plugins/">Plugins</a></h3><p>Draw your own controls. Also see <a class="nb" href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">Phosphor's plugin contract</a>.</p></div></li>
+      <li class="card"><div class="body"><h3><a href="/Valence/latest/spec/">The spec</a></h3><p>Rendered, with <a href="https://github.com/openvalence/Valence/blob/main/spec/SPEC.md">the source</a> on GitHub.</p></div></li>
+      <li class="card"><div class="body"><h3><a href="/Valence/latest/community/contributing/">Contributing</a></h3><p>How changes land, and <a href="/Valence/latest/community/rfc-process/">the RFC process</a>.</p></div></li>
     </ul>
     <p class="links"><a href="https://github.com/openvalence/Valence">Repo</a> · <a href="/Valence/">Docs</a> · <a href="/diagrams/">Diagrams</a> · <a href="/components/">All components</a></p>
   </section>

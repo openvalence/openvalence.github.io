@@ -13,7 +13,8 @@
 <meta name="twitter:title" content="Demos: OpenValence">
 <meta name="twitter:description" content="Run the Kinetic motion planner in your browser, shape a funscript with Bézier handles, and watch Phosphor drive its built-in Virtual machine. No hardware needed.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B">
+<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -64,6 +65,7 @@
     <!-- Kinetic README.md "Determinism": bit-identical on every IEEE-754 target built with -ffp-contract=off -->
     <!-- Nucleus flagship_p4/src/CMakeLists.txt:59-62 builds with -ffp-contract=off, as does Kinetic/CMakeLists.txt:13 -->
     <p>Kinetic gives the same bits on every target, and the firmware and the WebAssembly build use the same compiler rule for it. Same knots, same settings: the curve in your browser is the curve the machine plans.</p>
+    <figure class="shot"><a href="/Kinetic/"><img src="/images/kinetic/playground.webp" width="1280" height="800" alt="The Kinetic² playground: four stacked plots of position, velocity, acceleration and jerk over two seconds, with the planner options as sliders on the right." loading="lazy" decoding="async"></a><figcaption>The playground, live at openvalence.org/Kinetic. Click to open it.</figcaption></figure>
     <p class="links"><a href="/Kinetic/">Open the playground</a> · <a href="/Kinetic/handles.html">Open the handles editor</a> · <a href="/kinetic/">About Kinetic</a></p>
     <!-- Kinetic playground/handles.html: open a .funscript or the built-in script; drag a knot's handles to set angle and length -->
     <p>The handles editor loads a funscript as a chain of Bézier curves. Drag a knot's handles to set how fast it passes through. Bring your own <code>.funscript</code> or use the built-in one.</p>

@@ -13,7 +13,8 @@
 <meta name="twitter:title" content="Isotope: OpenValence">
 <meta name="twitter:description" content="Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: a design home, nothing runs yet. No license chosen.">
 <!-- chrome:head -->
-<meta name="theme-color" content="#08090B">
+<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3F4F6" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -58,6 +59,24 @@
     <p>Isotope is the planned firmware for Valence accessories: small ESP32 boards, such as a peristaltic pump or a motorized stand, that join a hub over ESP-NOW and show up in its catalog as ordinary channels.</p>
   </section>
 
+  <!-- Isotope docs/DESIGN.md: hub and spoke, 1 s beacon, 5 s fail-safe, at most 19 accessories, 3 typical -->
+  <figure class="diagram spoke">
+    <svg viewBox="0 0 560 300" role="img" aria-labelledby="iso-t iso-d"><title id="iso-t">Hub and spoke</title><desc id="iso-d">A client such as Phosphor talks Valence to the hub. Three accessories, a pump, a motorized stand and any other accessory, each talk only to the hub over ESP-NOW. The hub sends a beacon once a second; an accessory that hears nothing for 5 seconds goes to its safe value.</desc>
+      <defs><marker id="iso-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L8 4L0 8z"/></marker><marker id="iso-i" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow-i" d="M0 0L8 4L0 8z"/></marker></defs>
+      <rect class="d-cli" x="190" y="8" width="180" height="44" rx="2"/><text class="d-t" x="280" y="28" text-anchor="middle">Phosphor, or any app</text><text class="d-s" x="280" y="43" text-anchor="middle">sees accessory channels as channels</text>
+      <path class="d-back" d="M280 56V104" marker-end="url(#iso-i)" marker-start="url(#iso-i)"/><text class="d-i" x="290" y="84">Valence</text>
+      <rect class="d-hub" x="190" y="108" width="180" height="56" rx="2"/><text class="d-t" x="280" y="130" text-anchor="middle">Hub · Nucleus</text><text class="d-s" x="280" y="145" text-anchor="middle">stores each accessory's channels,</text><text class="d-s" x="280" y="157" text-anchor="middle">runs the logic, beacons every 1 s</text>
+      <path class="d-flow" d="M220 168L96 226" marker-end="url(#iso-a)" marker-start="url(#iso-a)"/>
+      <path class="d-flow" d="M280 168V226" marker-end="url(#iso-a)" marker-start="url(#iso-a)"/>
+      <path class="d-flow" d="M340 168L464 226" marker-end="url(#iso-a)" marker-start="url(#iso-a)"/>
+      <text class="d-r" x="128" y="190">ESP-NOW</text>
+      <rect class="d-box" x="16" y="230" width="160" height="56" rx="2"/><text class="d-t" x="96" y="252" text-anchor="middle">Pump</text><text class="d-s" x="96" y="267" text-anchor="middle">declares its channels</text><text class="d-s" x="96" y="279" text-anchor="middle">and a safe value</text>
+      <rect class="d-box" x="200" y="230" width="160" height="56" rx="2"/><text class="d-t" x="280" y="252" text-anchor="middle">Motorized stand</text><text class="d-s" x="280" y="267" text-anchor="middle">no beacon for 5 s:</text><text class="d-s" x="280" y="279" text-anchor="middle">goes to its safe value</text>
+      <rect class="d-box" x="384" y="230" width="160" height="56" rx="2" stroke-dasharray="4 3"/><text class="d-t" x="464" y="252" text-anchor="middle">Your accessory</text><text class="d-s" x="464" y="267" text-anchor="middle">up to 19 per hub,</text><text class="d-s" x="464" y="279" text-anchor="middle">3 is typical</text>
+    </svg>
+    <figcaption>Accessories talk only to the hub, never to a client or to each other. Planned design; nothing here runs yet.</figcaption>
+  </figure>
+
   <section aria-labelledby="s-status">
     <h2 id="s-status" data-n="01">Status <span class="tag">WIP</span></h2>
     <!-- Isotope README.md banner "Nothing here runs yet"; "License: Not chosen" -->
@@ -68,30 +87,30 @@
 
   <section aria-labelledby="s-works">
     <h2 id="s-works" data-n="02">How it will work</h2>
-    <dl class="terms">
-      <div><dt>Hub and spoke</dt><dd>Accessories talk only to the hub. They never talk to a client or to each other. A client such as <a href="/phosphor/">Phosphor</a> sees accessory channels like any other channel in the hub's catalog. So no client needs accessory-specific code.</dd></div>
-      <div><dt>Join and declare</dt><dd>You open a pairing window on the hub. The accessory sends a join request, then declares its own channels. The hub stores them. So adding an accessory needs no change to the hub or the client.</dd></div>
-      <div><dt>The hub runs the logic</dt><dd>The relationships that drive an accessory live in the hub, not in the client. So an accessory behaves the same from any client.</dd></div>
-      <div><dt>Fails safe on its own</dt><dd>The hub sends a beacon once a second. With no beacon for 5 seconds, or on a goodbye or an e-stop, each actuator goes to the safe value it declared. So a lost hub leaves each actuator at a value you chose in advance.</dd></div>
-      <div><dt>Unencrypted</dt><dd>A deliberate choice, with obligations: the accessory clamps every actuating value, and the hub never treats accessory telemetry as safety-grade. So nothing safety-critical hangs on an accessory.</dd></div>
-      <div><dt>Small fleets</dt><dd>A hub addresses at most 19 accessories; 3 is typical. The limit comes from ESP-NOW's peer table.</dd></div>
-    </dl>
+    <ul class="tiles">
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#beacon"/></svg><b>Hub and spoke</b><p>Accessories talk only to the hub. They never talk to a client or to each other. A client such as <a href="/phosphor/">Phosphor</a> sees accessory channels like any other channel in the hub's catalog. So no client needs accessory-specific code.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#link"/></svg><b>Join and declare</b><p>You open a pairing window on the hub. The accessory sends a join request, then declares its own channels. The hub stores them. So adding an accessory needs no change to the hub or the client.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><b>The hub runs the logic</b><p>The relationships that drive an accessory live in the hub, not in the client. So an accessory behaves the same from any client.</p></li>
+      <li><span class="big">5<small>s</small></span><b>Fails safe on its own</b><p>The hub sends a beacon once a second. With no beacon for 5 seconds, or on a goodbye or an e-stop, each actuator goes to the safe value it declared. So a lost hub leaves each actuator at a value you chose in advance.</p></li>
+      <li><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#lock"/></svg><b>Unencrypted</b><p>A deliberate choice, with obligations: the accessory clamps every actuating value, and the hub never treats accessory telemetry as safety-grade. So nothing safety-critical hangs on an accessory.</p></li>
+      <li><span class="big">19</span><b>Small fleets</b><p>A hub addresses at most 19 accessories; 3 is typical. The limit comes from ESP-NOW's peer table.</p></li>
+    </ul>
   </section>
 
   <section aria-labelledby="s-order">
     <h2 id="s-order" data-n="03">Build order</h2>
     <!-- Isotope README.md "The order things get built" -->
-    <dl class="terms">
-      <div><dt>Config and generator</dt><dd>A declarative config, shaped like ESPHome's, is the one place an accessory is described. The generator turns it into an image.</dd></div>
-      <div><dt>Web flasher</dt><dd>A browser page takes a config, makes the image and flashes it over Web Serial.</dd></div>
-      <div><dt>Visual builder</dt><dd>A blueprint-style editor on top of the config. It writes the same config and never does anything the config cannot.</dd></div>
-    </dl>
+    <ol class="chain steps">
+      <li><div class="blk"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#doc"/></svg><strong>Config and generator</strong><p class="tip">A declarative config, shaped like ESPHome's, is the one place an accessory is described. The generator turns it into an image.</p></div></li>
+      <li><div class="blk"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg><strong>Web flasher</strong><p class="tip">A browser page takes a config, makes the image and flashes it over Web Serial.</p></div></li>
+      <li><div class="blk"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#nodes"/></svg><strong>Visual builder</strong><p class="tip">A blueprint-style editor on top of the config. It writes the same config and never does anything the config cannot.</p></div></li>
+    </ol>
   </section>
 
   <section aria-labelledby="s-fit">
     <h2 id="s-fit" data-n="04">How it fits</h2>
     <!-- Isotope README.md "Its relatives"; Hardware flagship/FEATURES.md "Accessories" -->
-    <p>Isotope uses <a href="/Valence/">Valence</a> and takes every wire number from the spec. Anything it needs that the spec lacks goes through an RFC first. The hub is <a href="/nucleus/">Nucleus</a>. A plain on/off or PWM load, like a pump, does not need Isotope: the <a href="/hardware/">Flagship board</a> has a pin for it. See the <a href="/diagrams/">diagrams</a> and <a href="/components/">Components</a> for the whole system.</p>
+    <p>Isotope uses <a href="/Valence/">Valence</a> and takes every wire number from the spec. Anything it needs that the spec lacks goes through an RFC first. The hub is <a href="/nucleus/">Nucleus</a>. A plain on/off or PWM load, like a pump, does not need Isotope: the <a href="/hardware/">Flagship PCB</a> has a pin for it. See the <a href="/diagrams/">diagrams</a> and <a href="/components/">Components</a> for the whole system.</p>
     <p class="links"><a href="https://github.com/openvalence/Isotope">Repo</a> · <a href="https://github.com/openvalence/Isotope/blob/main/docs/DESIGN.md">Design document</a> · <a href="/Valence/">Valence docs</a> · <a href="/components/">Components</a></p>
   </section>
 </main>
