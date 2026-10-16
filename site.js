@@ -2,6 +2,12 @@
 // Respects prefers-reduced-motion: nothing starts moving on its own when it is set.
 (() => {
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const net = navigator.connection;
+  const lean = net && (net.saveData || /2g|3g/.test(net.effectiveType || ''));
+  const afterLoad = (f) => {
+    const later = () => (window.requestIdleCallback ? requestIdleCallback(f, { timeout: 2000 }) : setTimeout(f, 300));
+    document.readyState === 'complete' ? later() : addEventListener('load', later, { once: true });
+  };
 
   // Narrow screens scroll the header links sideways: bring the current one into view.
   const nav = document.querySelector('.chips'), here = nav && nav.querySelector('[aria-current]');
@@ -21,13 +27,101 @@
   }
 
   // Looping clips: play only while on screen.
-  for (const v of document.querySelectorAll('video[data-auto]')) {
-    if (still) continue;
+  function clip(v) {
     v.removeAttribute('controls');
     const wanted = toggle(v.parentElement, () => v.play().catch(() => {}), () => v.pause());
     new IntersectionObserver(([e]) => {
       if (e.isIntersecting && wanted()) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
     }, { threshold: 0.25 }).observe(v);
+  }
+
+  // A figure with data-live (the scripts of a motion/ piece) runs the piece live where the
+  // device can carry it: sharp at any size, themed by the tokens. The video is the fallback:
+  // weak or unknown-lean devices get it from the start, and a live run whose first second
+  // drops frames hands over to it at the same loop position. Reduced motion keeps the poster.
+  // Constraints: one data-live figure per page (a piece's scripts share the page's globals).
+  const able = !still && !lean && (navigator.hardwareConcurrency || 0) >= 4 && (navigator.deviceMemory || 4) >= 4;
+  const liveFig = able && document.querySelector('figure[data-live]');
+  for (const v of document.querySelectorAll('video[data-auto]')) {
+    if (still) continue;
+    v.removeAttribute('controls');
+    if (!(liveFig && liveFig.contains(v))) clip(v);
+  }
+  if (liveFig) afterLoad(() => {
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      window.motionHost = (api) => live(liveFig, api);
+      for (const src of liveFig.dataset.live.split(' ')) {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = false;
+        s.onerror = () => fallback(liveFig);
+        document.head.appendChild(s);
+      }
+    }, { rootMargin: '400px' });
+    io.observe(liveFig);
+  });
+  function fallback(fig) {
+    if (fig.dataset.live === '') return;
+    fig.dataset.live = '';
+    for (const v of fig.querySelectorAll('video[data-auto]')) clip(v);
+  }
+  function live(fig, api) {
+    const shown = () => [...fig.querySelectorAll('video')].find((v) => v.offsetParent);
+    const scheme = matchMedia('(prefers-color-scheme: light)');
+    const box = document.createElement('div');
+    box.className = 'live';
+    box.innerHTML = '<svg id="scene" viewBox="0 0 1280 720" aria-hidden="true"></svg>';
+    const svg = box.firstChild;
+    let t = 0, last = 0, raf = 0, ready = false, seen = false, dt = [], video = null, at = -1, onSeeked = null;
+    const build = () => {
+      const v = shown();
+      if (!v) return Promise.resolve();
+      v.after(box);
+      svg.replaceChildren();
+      return api.start(scheme.matches ? 'light' : 'dark').then(() => api.draw(t));
+    };
+    const frame = (ms) => {
+      const d = last ? ms - last : 0;
+      last = ms;
+      if (d < 250) t = (t + d / 1000) % api.dur;   // longer: the tab was hidden; carry on, no jump
+      api.draw(t);
+      if (dt && d && d < 250 && dt.push(d) > 3 && dt.reduce((a, b) => a + b, 0) >= 1000) {
+        const p90 = dt.slice(3).sort((a, b) => a - b)[Math.floor((dt.length - 3) * 0.9)];
+        dt = null;
+        if (p90 > 20) handover();
+      }
+      // the video sits seeked at `at`, under the live picture: start it as the clock passes
+      if (at >= 0 && (t - at + api.dur) % api.dur < 0.25) {
+        video.removeEventListener('seeked', onSeeked);
+        video.play().catch(() => {});
+        stop();
+        box.remove();
+        scheme.removeEventListener('change', build);
+        fallback(fig);
+        return;
+      }
+      raf = requestAnimationFrame(frame);
+    };
+    const go = () => { if (ready && !raf) { last = 0; raf = requestAnimationFrame(frame); } };
+    const stop = () => { cancelAnimationFrame(raf); raf = 0; };
+    function handover() {
+      video = shown();
+      const seek = () => { at = -1; video.currentTime = (t + 0.5) % api.dur; };
+      onSeeked = () => {
+        if (((video.currentTime - t + api.dur) % api.dur) > 0.5) seek();   // the clock got there first
+        else at = video.currentTime;
+      };
+      video.addEventListener('seeked', onSeeked);
+      video.addEventListener('loadedmetadata', seek, { once: true });
+      video.preload = 'auto';
+      video.load();
+    }
+    const wanted = toggle(box, go, stop);
+    new IntersectionObserver(([e]) => { seen = e.isIntersecting; seen && wanted() ? go() : stop(); }, { threshold: 0.25 }).observe(box);
+    scheme.addEventListener('change', build);
+    build().then(() => { ready = true; if (seen && wanted()) go(); }, () => { box.remove(); fallback(fig); });
   }
 
   // Kinetic figure: knots, then the curve through them, then a playhead riding it.
@@ -105,8 +199,6 @@
   // with data-hi (on the <img>, or on the <source> that matches the color scheme) is
   // swapped for its 2x file once the page is idle and the image is near the screen.
   // Skipped on Save-Data and 2g/3g connections.
-  const net = navigator.connection;
-  const lean = net && (net.saveData || /2g|3g/.test(net.effectiveType || ''));
   function hiFor(img) {
     const pic = img.parentElement && img.parentElement.tagName === 'PICTURE' ? img.parentElement : null;
     if (pic) for (const s of pic.querySelectorAll('source')) {
@@ -149,8 +241,5 @@
       p.decode().then(() => { v.poster = p.src; }).catch(() => {});
     }
   }
-  if (!lean) {
-    const later = () => (window.requestIdleCallback ? requestIdleCallback(sharpen, { timeout: 2000 }) : setTimeout(sharpen, 300));
-    document.readyState === 'complete' ? later() : addEventListener('load', later, { once: true });
-  }
+  if (!lean) afterLoad(sharpen);
 })();

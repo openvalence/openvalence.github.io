@@ -85,7 +85,7 @@
       <li><b>Limits are ceilings</b><p>The planner stays under the velocity, acceleration and jerk limits and does not plan to reach them. Every trim, clamp and refusal is recorded as an anomaly you can read, so you can see where a pattern asked for too much.</p></li>
     </ul>
     <!-- motion/knots-to-curve.html; motion/handles-data.js, a trace of Kinetic 71a3c9b built by motion/bake-handles.mjs and checked bit for bit against openvalence.org/Kinetic/kinetic2.wasm -->
-    <figure class="motion">
+    <figure class="motion" data-live="/motion/handles-data.js /motion/common.js /motion/knots-to-curve.js">
       <div class="frame dark">
         <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/knots-to-curve-dark.webp" aria-label="Animation, no sound, in six steps: Kinetic² classes eleven timed knots, gives each an angle, sets two handles per piece and scales them under the speed, acceleration and jerk ceilings, checks each piece at sample points and turning points, trims one knot that is out of reach while keeping its time, then samples the finished curve every millisecond as a carriage rides it.">
           <source src="/images/motion/knots-to-curve-dark-640.webm" type="video/webm" media="(max-width: 700px)">

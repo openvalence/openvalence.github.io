@@ -15,6 +15,22 @@ Each renders twice, dark and light (the `theme` variable), into `../images/motio
 `<piece>-<theme>.webm` (VP9) and `.mp4` (H.264) at 1280 wide, the same at 640 wide with
 `-640`, and `<piece>-<theme>.webp`, the poster, which is frame 0. Every file is under 1.2 MB.
 
+## Live on the site
+
+Each piece's script is its own file (`<piece>.js`), so the site can run it in the page.
+The figure's `data-live` lists the scripts in load order; `site.js` decides per visitor:
+
+- Live: no reduced motion, no Save-Data or 2g/3g, `hardwareConcurrency` 4 or more,
+  `deviceMemory` 4 or more where the browser reports it. After the page has loaded and
+  the figure is near the screen, `site.js` sets `window.motionHost`, loads the scripts,
+  and `run()` in `common.js` hands it the piece. Colors come from `/style.css`'s tokens
+  and the scene is rebuilt when the color scheme changes. If the 90th-percentile frame
+  time over the first second is above 20 ms, the video takes over at the same loop
+  position.
+- Video: everyone else. The poster stays for reduced motion.
+
+The page loads one live piece at most: the scripts share the page's globals.
+
 ## Re-render
 
 Needs Node 22+ and FFmpeg on the PATH.

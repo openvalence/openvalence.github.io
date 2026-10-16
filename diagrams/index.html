@@ -29,7 +29,6 @@
 <meta property="og:image:alt" content="The OpenValence mark, a violet ring in three arcs around a blue core, beside the name OpenValence.">
 <meta name="twitter:card" content="summary_large_image">
 <!-- /chrome:head -->
-<script src="/site.js" defer></script>
 </head>
 <body>
 
@@ -87,7 +86,7 @@
          09: ValenceMotion.h react_us 4000; MotionArbiter.h kLeaseTicks 4
          return: Phosphor wishes.js TELEMETRY_HZ 50; ValenceCatalog.h plan-strip 0x1110 -->
     <!-- motion/screen-to-rail.html; facts as the Sources comment above; curve from motion/bake.mjs (Kinetic² WebAssembly build) -->
-    <figure class="motion">
+    <figure class="motion" data-live="/motion/kinetic-data.js /motion/common.js /motion/screen-to-rail.js">
       <div class="frame dark">
         <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/screen-to-rail-dark.webp" aria-label="Animation, no sound: a funscript action goes from the player over the wire to the hub, through the Kinetic² planner and the LP core as A/B quadrature, and moves the carriage on the rail. Motion state flows back to the app.">
           <source src="/images/motion/screen-to-rail-dark-640.webm" type="video/webm" media="(max-width: 700px)">
