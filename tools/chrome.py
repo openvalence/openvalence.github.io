@@ -1,7 +1,8 @@
 """Copies the shared head, header and footer blocks from tools/chrome.html into every page.
 
 Each page marks the blocks with <!-- chrome:NAME --> ... <!-- /chrome:NAME -->.
-The header's aria-current is set from the page's canonical link. Run from the repo root:
+The header's aria-current is set from the page's canonical link. The Kinetic repo's playground/
+(/Kinetic/) carries a copy of the header and its CSS: a header change updates it too. Run from the repo root:
     python tools/chrome.py
 """
 import pathlib, re
