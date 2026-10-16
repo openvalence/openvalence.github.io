@@ -15,6 +15,50 @@
 <!-- chrome:head -->
 <meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
+<script>
+// The theme before first paint; site.js follows "themechange". Constraints: stays inline and above
+// the stylesheet; the theme-color metas stay first, dark then light. localStorage.theme is kept only
+// while it differs from the default (the system, or Dark Reader's scheme once seen in this tab);
+// darkreader-lock stands Dark Reader's dynamic mode down.
+(() => {
+  const d = document.documentElement, sys = matchMedia('(prefers-color-scheme: light)');
+  const get = (s, k) => { try { return window[s].getItem(k); } catch (e) {} };
+  const put = (s, k, v) => { try { v ? window[s].setItem(k, v) : window[s].removeItem(k); } catch (e) {} };
+  let dr = get('sessionStorage', 'darkreader');
+  const auto = () => dr || (sys.matches ? 'light' : 'dark');
+  const lock = () => document.querySelector('meta[name=darkreader-lock]') || document.head.append(Object.assign(document.createElement('meta'), { name: 'darkreader-lock' }));
+  const label = () => {
+    const b = document.querySelector('.theme'), to = d.dataset.theme === 'light' ? 'dark' : 'light';
+    if (b) { b.title = `Switch to ${to} theme`; b.setAttribute('aria-label', b.title); }
+  };
+  const apply = () => {
+    const t = get('localStorage', 'theme') || auto(), [dk, lt] = document.querySelectorAll('meta[name=theme-color]');
+    d.dataset.theme = t;
+    dk.media = t === 'dark' ? 'all' : 'not all';
+    lt.media = t === 'light' ? 'all' : 'not all';
+    label();
+    dispatchEvent(new Event('themechange'));
+  };
+  addEventListener('click', (e) => {
+    if (!e.target.closest || !e.target.closest('.theme')) return;
+    const t = d.dataset.theme === 'light' ? 'dark' : 'light';
+    put('localStorage', 'theme', t === auto() ? '' : t);
+    apply();
+  });
+  new MutationObserver(() => {
+    if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;
+    dr = d.getAttribute('data-darkreader-scheme') === 'dimmed' ? 'light' : 'dark';
+    put('sessionStorage', 'darkreader', dr);
+    lock();
+    apply();
+  }).observe(d, { attributeFilter: ['data-darkreader-mode'] });
+  if (dr) lock();
+  sys.addEventListener('change', apply);
+  document.addEventListener('DOMContentLoaded', label);
+  d.classList.add('js');
+  apply();
+})();
+</script>
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -61,6 +105,7 @@
     <a class="chip" href="https://github.com/openvalence">GitHub</a>
   </nav>
   <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
+  <button class="theme" type="button" aria-label="Switch theme"><svg class="ico sun" aria-hidden="true"><use href="/icons/ui.svg#sun"/></svg><svg class="ico moon" aria-hidden="true"><use href="/icons/ui.svg#moon"/></svg></button>
 </header>
 <!-- /chrome:header -->
 

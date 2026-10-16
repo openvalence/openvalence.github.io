@@ -189,7 +189,6 @@
   }
   function live(fig, api) {
     const shown = () => [...fig.querySelectorAll('video')].find((v) => v.offsetParent);
-    const scheme = matchMedia('(prefers-color-scheme: light)');
     const box = document.createElement('div');
     box.className = 'live';
     box.innerHTML = '<svg id="scene" viewBox="0 0 1280 720" aria-hidden="true"></svg>';
@@ -200,7 +199,7 @@
       if (!v) return Promise.resolve();
       v.after(box);
       svg.replaceChildren();
-      return api.start(scheme.matches ? 'light' : 'dark').then(() => api.draw(t, held));
+      return api.start(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark').then(() => api.draw(t, held));
     };
     const frame = (ms) => {
       const d = last ? ms - last : 0;
@@ -220,7 +219,7 @@
         video.play().catch(() => {});
         stop();
         box.remove();
-        scheme.removeEventListener('change', build);
+        removeEventListener('themechange', build);
         fallback(fig);
         return;
       }
@@ -243,7 +242,7 @@
     const S = fig.stepper;
     const wanted = S ? S.use({ seek: (x, h) => { t = x; held = !!h; if (ready) api.draw(t, held); }, play: go, pause: stop, smooth: true }, api.steps) : toggle(box, go, stop);
     new IntersectionObserver(([e]) => { seen = e.isIntersecting; seen && wanted() ? go() : stop(); }, { threshold: 0.25 }).observe(box);
-    scheme.addEventListener('change', build);
+    addEventListener('themechange', build);
     build().then(() => { ready = true; if (seen && wanted()) go(); }, () => { box.remove(); fallback(fig); });
   }
 
@@ -318,6 +317,21 @@
     box.appendChild(b);
   }
 
+  // Light and dark pictures: a <source media="(prefers-color-scheme: light)"> follows the page's
+  // theme (the head script's data-theme), which the toggle can set against the system's.
+  const schemed = [...document.querySelectorAll('picture > source[media*="prefers-color-scheme"]')];
+  function pictures() {
+    const light = document.documentElement.dataset.theme === 'light';
+    for (const s of schemed) {
+      s.dataset.scheme = s.dataset.scheme || (s.media.includes('light') ? 'light' : 'dark');
+      s.media = (s.dataset.scheme === 'light') === light ? 'all' : 'not all';
+    }
+    if (io) for (const s of schemed) io.observe(s.parentElement.querySelector('img'));
+  }
+  let io = null;
+  pictures();
+  addEventListener('themechange', pictures);
+
   // Sharper images after the page has loaded. The light files paint first; an image
   // with data-hi (on the <img>, or on the <source> that matches the color scheme) is
   // swapped for its 2x file once the page is idle and the image is near the screen.
@@ -333,6 +347,7 @@
     const hit = hiFor(img);
     if (!hit) return;
     const [el, url] = hit;
+    if (el.getAttribute(el === img ? 'src' : 'srcset') === url) return;
     const pre = new Image();
     pre.src = url;
     pre.decode().then(() => {
@@ -354,7 +369,7 @@
     }).catch(() => {});
   }
   function sharpen() {
-    const io = new IntersectionObserver((es) => {
+    io = new IntersectionObserver((es) => {
       for (const e of es) if (e.isIntersecting) { io.unobserve(e.target); upgrade(e.target); }
     }, { rootMargin: '800px' });
     for (const img of document.querySelectorAll('img')) if (hiFor(img)) io.observe(img);
