@@ -7,7 +7,7 @@
 // renders/k2i (untracked), checks the build's 1 ms samples against the deployed
 // kinetic2.wasm bit for bit, and refuses to write on a mismatch.
 // Constraints: units here are the engine's (window 0..1); handles-data.js is mm on a
-// 100 mm window, with the Kinetic playground handles page's ceilings (handles-model.js DEF).
+// 100 mm window, with the Kinetic playground handles page's ceilings (Kinetic playground/handles.js).
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -16,7 +16,7 @@ const here = new URL('.', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$
 const kin = resolve(process.argv[2] || join(here, '../../Kinetic'));
 const build = join(here, 'renders/k2i');
 const MM = 100;                                     // the window, mm
-const LIM = [1000, 50000, 5e6];                     // mm/s, mm/s^2, mm/s^3 (handles-model.js DEF)
+const LIM = [1000, 50000, 5e6];                     // mm/s, mm/s^2, mm/s^3 (Kinetic playground/handles.js)
 // The script: p0, span, then t (s) and p (mm) per knot; the last at rest.
 const SCRIPT = [10, 3.4, [[0.45, 35], [0.8, 70], [1.15, 92], [1.5, 15], [1.62, 100], [2.0, 20], [2.08, 92], [2.6, 60], [2.9, 40], [3.3, 10]]];
 const WALK = 4, TRIM = 6, ANG = 1;                  // the pieces the video opens up (from knot i to i + 1), the knot whose angle it works
