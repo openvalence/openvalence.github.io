@@ -164,7 +164,7 @@
 
   <section aria-labelledby="s-outside">
     <h2 id="s-outside" data-n="06">What is outside my control</h2>
-    <p>Parties that may learn something about you while you use this software. I operate none of them and receive no data from them:</p>
+    <p>Parties that may learn something about you while you use this software. I run none of them and get no data from them:</p>
     <dl class="terms">
       <div><dt>Your operating system</dt><dd>Windows, macOS, Android and Linux distributions collect their own diagnostics about the applications you run, under their own settings and policies. On Windows the app renders through WebView2, which is Microsoft's component and follows Microsoft's telemetry settings for your account.</dd></div>
       <div><dt>Where you got the app</dt><dd>Flathub and GitHub each count installs and downloads and may show me aggregate numbers. They do not give me who you are.</dd></div>
@@ -177,15 +177,16 @@
     <h2 id="s-site" data-n="07">This website</h2>
     <p>openvalence.org is static files. It sets no cookies and has no ads or third-party trackers. Its fonts are served from its own folder, not a third party. The documentation at <a href="/Valence/">/Valence/</a> and the playground at <a href="/Kinetic/">/Kinetic/</a> are the same kind of static site.</p>
     <h3>Visitor statistics</h3>
-    <p>The site counts visits with <a href="https://umami.is/">Umami</a>, an open-source analytics tool. It runs on a server I own and operate myself, at home in the United States, reached at stats.openvalence.org; no analytics company is involved. It is there so I can see which pages people read and how they move between them. The data stays on that server: it is not sold, shared, or used for advertising.</p>
+    <p>Visits are counted with <a href="https://umami.is/">Umami</a>, open-source analytics I host myself, at home in the United States (stats.openvalence.org). No analytics company is involved. I use it to see which pages get read and in what order. The data stays on that server: not sold, not shared, not used for ads.</p>
     <ul>
-      <li><strong>What a page view records:</strong> the page address, the page you came from, your browser, operating system, device type, screen size and language, and your country and region.</li>
-      <li><strong>Your IP address</strong> is used only to look up that country and region and to tell one visitor from another. It is never written to the database. Visitors are told apart by a one-way hash of the IP address, browser and site with a secret that changes every month, so the identifier cannot follow you from one month to the next, across sites, or back to you.</li>
-      <li><strong>No browser storage is written:</strong> no cookies, no local storage entries, no fingerprinting beyond the fields listed above, and no session recordings or heatmaps. The script reads one opt-out key, if present (below).</li>
-      <li><strong>Opting out:</strong> if your browser sends Do Not Track, no records are created. A content blocker that blocks the script works too, as does setting <code>umami.disabled</code> to <code>1</code> in this site's local storage.</li>
+      <li><strong>Recorded per page view:</strong> page address, referring page, browser, operating system, device type, screen size, language, country and region.</li>
+      <li><strong>IP address:</strong> used to derive country and region, then discarded. Never written to the database.</li>
+      <li><strong>Visitor ID:</strong> a one-way hash of IP, browser and site, salted with a secret that rotates monthly. It can't link you across months, across sites, or back to you.</li>
+      <li><strong>Your browser:</strong> no cookies, no local storage writes, no session recordings, no heatmaps. The script reads one opt-out key.</li>
+      <li><strong>Opt out:</strong> send Do Not Track, block the script, or set <code>umami.disabled</code> to <code>1</code> in this site's local storage. No records are created.</li>
     </ul>
     <h3>EU visitors</h3>
-    <p>The statistics are built to meet the EU's GDPR and ePrivacy rules. They write no data to your device, so the ePrivacy consent requirement for cookies does not apply, and there is no consent banner. The brief use of your IP address to derive a country and region rests on legitimate interest (GDPR Article 6(1)(f)): knowing how the site is read, with the minimum data needed for that. The records contain no identifier that links back to you, so there is no per-person record to look up, export or delete. For anything else, write to the address below.</p>
+    <p>Built for the GDPR and ePrivacy rules. No data is written to your device, so there's no cookie banner. Deriving country and region from your IP rests on legitimate interest (GDPR Article 6(1)(f)), with the minimum data needed. Records hold no identifier that links back to you, so there's no per-person record to look up, export or delete. Anything else: write to the address below.</p>
     <h3>Who serves it</h3>
     <p>GitHub Pages hosts the files and Cloudflare runs the domain. Both may keep standard server logs (IP address, pages requested, browser) under their own policies: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a> and <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare's privacy policy</a>. I don't have access to those logs.</p>
     <h3>Google Search Console</h3>
