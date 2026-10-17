@@ -1,6 +1,9 @@
 // Progressive extras. Every page reads fine without this file.
 // Respects prefers-reduced-motion: nothing starts moving on its own when it is set.
 (() => {
+  // ov.me: the owner's browsers tag their visits as 'owner' in the statistics; set once per browser with
+  // localStorage.setItem('ov.me', 1). identify() must run before the tracker's first page view, which waits for load.
+  try { if (localStorage.getItem('ov.me')) addEventListener('DOMContentLoaded', () => window.umami?.identify('owner')); } catch {}
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const net = navigator.connection;
   const lean = net && (net.saveData || /2g|3g/.test(net.effectiveType || ''));
