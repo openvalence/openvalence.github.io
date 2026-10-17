@@ -41,6 +41,13 @@
     document.addEventListener('pointerdown', (e) => { if (!m.contains(e.target)) set(false); });
   }
 
+  // The header mark (tools/chrome.html): /mark-anim.js plays its intro on the home page's first load
+  // in a session (the head script sets html.intro) and turns it on hover. Loaded at load, so it never
+  // competes with the first paint; reduced motion: neither.
+  const mark = document.querySelector('.brand img');
+  const atLoad = (f) => (document.readyState === 'complete' ? f() : addEventListener('load', f, { once: true }));
+  if (mark && !still) atLoad(() => import('/mark-anim.js').then((m) => m.header(mark)).catch(() => document.documentElement.classList.remove('intro')));
+
   // A pause button for anything that moves on its own (WCAG 2.2.2).
   function toggle(host, onPlay, onPause) {
     const b = document.createElement('button');

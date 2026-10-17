@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"piece","type":"string","label":"Piece","default":"orbit"},{"id":"theme","type":"string","label":"Theme","default":"dark"}]'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, height=1080">
+<meta name="robots" content="noindex">
+<title>The mark</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+#root { position: relative; width: 1920px; height: 1080px; }
+#stage { position: absolute; left: 420px; top: 0; width: 1080px; height: 1080px; }
+#stage svg { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<!-- The OpenValence mark, animated by /mark-anim.js (render-mark.sh copies it into assets/).
+     piece "orbit": the site header's intro (seed 7: the same random starts every render), the hover
+     spin, then the intro backward to the bare core.
+     piece "phosphor": Phosphor's loop, one turn of the mark (it repeats every 3.2 s by symmetry).
+     theme dark or light: phosphor adds light on dark and tints on light. HyperFrames writes the
+     frames with a transparent background; render-mark.sh lays the page color under them.
+     Both pieces are 9.6 s and loop: the last frame runs into frame 0. render-mark.sh cuts the
+     1080 square from the middle of the 1920 frame. -->
+<div id="root" data-composition-id="main" data-start="0" data-duration="9.6" data-width="1920" data-height="1080" data-fps="60" data-no-timeline>
+  <div id="stage" class="clip" data-start="0" data-duration="9.6" data-track-index="0" data-no-timeline></div>
+</div>
+<script>
+(() => {
+  const D = 9.6, SPIN = 3.0, OUT = 7.0;
+  const BG = { dark: '#0B0B0C', light: '#F3F2EE' };
+  const v = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+  const q = new URLSearchParams(location.search);
+  const piece = v.piece || q.get('piece') || 'orbit', theme = v.theme || q.get('theme') || 'dark';
+  const stage = document.getElementById('stage');
+  if (BG[theme]) document.body.style.background = BG[theme];
+  stage.style.setProperty('--mark-bg', BG[theme] || BG.dark);
+  let draw = () => {};
+  const ready = import('./assets/mark-anim.js').then((m) => {
+    if (piece === 'phosphor') {
+      const p = m.phosphor(stage);
+      draw = (t) => p.draw(t);
+    } else {
+      stage.innerHTML = m.MARK_SVG.replace('viewBox="-351 -351 702 702"', 'viewBox="-550 -550 1100 1100"');
+      const o = m.orbit(stage.firstChild, { seed: 7 });
+      draw = (t) => {
+        if (t >= OUT) o.draw(Math.max(0, o.END - (t - OUT)));
+        else if (t >= SPIN && t < SPIN + 1.4) o.spin((t - SPIN) / 1.4);
+        else o.draw(Math.min(t, o.END));
+      };
+    }
+    draw(0);
+  });
+  if (window.__hyperframes && window.__hyperframes.registerFrameSource) {
+    window.__hyperframes.registerFrameSource({ element: stage, ready, render: (t) => draw(t) });
+  } else {
+    // a plain tab: loop on the page clock, for previewing only
+    ready.then(() => { const t0 = performance.now(); const f = (ms) => { draw(((ms - t0) / 1000) % D); requestAnimationFrame(f); }; requestAnimationFrame(f); });
+  }
+})();
+</script>
+</body>
+</html>

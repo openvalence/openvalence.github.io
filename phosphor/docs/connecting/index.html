@@ -56,6 +56,9 @@
   sys.addEventListener('change', apply);
   document.addEventListener('DOMContentLoaded', label);
   d.classList.add('js');
+  // The home page's first load in a session plays the header mark's intro (site.js); html.intro
+  // hides the mark until it starts, and style.css shows it anyway after 2.5 s.
+  if (location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches && !get('sessionStorage', 'intro')) d.classList.add('intro');
   apply();
 })();
 </script>
