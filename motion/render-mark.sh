@@ -45,13 +45,9 @@ for piece in ${PIECES[@]}; do
       -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf $vcrf -row-mt 1 -deadline good -cpu-used 1 -g 600 "$OUT/$piece-alpha-$cut.webm"
   done
   # Discord and READMEs: a whole loop on dark, 360 square at 25 fps, one palette, under 2 MB. The
-  # phosphor's glow changes every pixel every frame: its GIF is a one-turn loop (3.2 s), rendered apart.
+  # phosphor's picture repeats every 3.2 s (a third of a turn), so its GIF is that much.
   gframes="renders/mark-$piece-dark" gd=9.6
-  if [ $piece = phosphor ]; then
-    gframes=renders/mark-phosphor-gif gd=3.2
-    rm -rf "$gframes"
-    "${HF[@]}" render . --composition mark.html --variables '{"piece":"phosphor","theme":"dark","turns":1}' --format png-sequence --output "$gframes" --quiet
-  fi
+  [ $piece = phosphor ] && gd=3.2
   ffmpeg -y -v error -f lavfi -i "color=c=${BG[dark]}:s=1920x1080:r=60" -framerate 60 -i "$gframes/frame_%06d.png" \
     -filter_complex "[0][1]overlay=shortest=1,crop=1080:1080:420:0,trim=duration=$gd,fps=25,scale=360:360:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=full[p];[b][p]paletteuse=dither=sierra2_4a" -loop 0 "$OUT/$piece-dark.gif"
 done

@@ -72,21 +72,19 @@ loops on the browser clock.
 `mark.html` draws the animated OpenValence mark from `/mark-anim.js`, the one source for both
 animations (Phosphor's `src/ui/mark-anim.js` is a byte-identical copy; edit here first):
 
-- `orbit`: the electrons are captured one after another onto an outer level, circle it at constant
-  speed and drop into their gaps, each drop sending out a photon. On the site it is the header
-  mark's intro (`header()`; the home page's first load in a session); a hover excites the electrons
-  and they drop back. The clip: the intro, two excitations, the electrons knocked free.
-- `phosphor`: the ring spins past a pump point; each electron that passes it jumps out, stays an
-  exponentially distributed while, and drops back with a photon, and the light decays exponentially.
-  Phosphor's launch splash and its hub-connecting indicator.
-
-The motion borrows from the physics (instant jumps, exponential waits and decays, constant orbits);
-the header comment in `mark-anim.js` lists what it borrows.
+- `orbit`: the electrons come in from random places just outside the ring on an elastic ease and
+  settle into their gaps; then the arcs grow between them from their middles. On the site it is
+  the header mark's intro (`header()`; the home page's first load in a session, fresh random starts
+  each time) and one smooth spin on hover. The clip (seed 7): the intro, the spin, the intro
+  backward.
+- `phosphor`: the mark spins at constant speed; the electrons take turns jumping out and back on an
+  in-out elastic ease, each leaving a glow in its wake on the way down that fades exponentially.
+  Phosphor's launch splash and its hub-connecting indicator. The picture repeats every 3.2 s.
 
 Both clips are 9.6 s at 60 fps and loop. `bash render-mark.sh [piece ...]` renders them and writes
 into `renders/mark/` (or `$OUT`): `<piece>-<dark|light>-<1920x1080|1080x1080>.mp4` and `.webm`,
 `<piece>-alpha-<1920x1080|1080x1080>.webm` (VP9 with alpha, phosphor drawn for a dark page) and
-`<piece>-dark.gif` (360 square, 25 fps, under 2 MB; phosphor's is a one-turn loop, 3.2 s).
+`<piece>-dark.gif` (360 square, 25 fps, under 2 MB; phosphor's is its 3.2 s repeat).
 They are for posts and READMEs and are not committed.
 
 ## The Kinetic² data

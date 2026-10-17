@@ -133,7 +133,6 @@ main li { margin-bottom: 6px; }
 }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 900 1.15rem/1 var(--display); font-stretch: 115%; letter-spacing: -.01em; white-space: nowrap; }
 .brand img, .brand .ov-mark { display: block; width: 26px; height: 26px; flex: none; }
-.brand .ov-mark { overflow: visible; }
 .intro .brand img { opacity: 0; animation: mark-show 0s 2.5s forwards; }
 @keyframes mark-show { to { opacity: 1; } }
 .chips { display: flex; align-items: center; gap: 22px; margin-left: auto; }

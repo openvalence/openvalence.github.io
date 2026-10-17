@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-composition-variables='[{"id":"piece","type":"string","label":"Piece","default":"orbit"},{"id":"theme","type":"string","label":"Theme","default":"dark"},{"id":"turns","type":"number","label":"Phosphor turns per loop","default":3}]'>
+<html lang="en" data-composition-variables='[{"id":"piece","type":"string","label":"Piece","default":"orbit"},{"id":"theme","type":"string","label":"Theme","default":"dark"}]'>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1920, height=1080">
@@ -15,9 +15,9 @@ html, body { width: 1920px; height: 1080px; overflow: hidden; background: transp
 </head>
 <body>
 <!-- The OpenValence mark, animated by /mark-anim.js (render-mark.sh copies it into assets/).
-     piece "orbit": the site header's intro (the electrons captured), two hover excitations, then
-     the electrons knocked free; frame 0 is the nucleus and the ring.
-     piece "phosphor": Phosphor's splash loop, its full period (turns: 3, 9.6 s; 1 for the GIF).
+     piece "orbit": the site header's intro (seed 7: the same random starts every render), the hover
+     spin, then the intro backward to the bare core.
+     piece "phosphor": Phosphor's loop, one turn of the mark (it repeats every 3.2 s by symmetry).
      theme dark or light: phosphor adds light on dark and tints on light. HyperFrames writes the
      frames with a transparent background; render-mark.sh lays the page color under them.
      Both pieces are 9.6 s and loop: the last frame runs into frame 0. render-mark.sh cuts the
@@ -27,7 +27,7 @@ html, body { width: 1920px; height: 1080px; overflow: hidden; background: transp
 </div>
 <script>
 (() => {
-  const D = 9.6, X1 = 3.3, X2 = 5.7, OUT = 8.3;
+  const D = 9.6, SPIN = 3.0, OUT = 7.0;
   const BG = { dark: '#0B0B0C', light: '#F3F2EE' };
   const v = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
   const q = new URLSearchParams(location.search);
@@ -38,15 +38,14 @@ html, body { width: 1920px; height: 1080px; overflow: hidden; background: transp
   let draw = () => {};
   const ready = import('./assets/mark-anim.js').then((m) => {
     if (piece === 'phosphor') {
-      const p = m.phosphor(stage, { turns: +(v.turns || q.get('turns') || 3) });
+      const p = m.phosphor(stage);
       draw = (t) => p.draw(t);
     } else {
       stage.innerHTML = m.MARK_SVG.replace('viewBox="-351 -351 702 702"', 'viewBox="-550 -550 1100 1100"');
-      const o = m.orbit(stage.firstChild);
+      const o = m.orbit(stage.firstChild, { seed: 7 });
       draw = (t) => {
-        if (t >= OUT) o.ionize(t - OUT);
-        else if (t >= X2 && t < X2 + o.EXCITE(2)) o.excite(t - X2, 2);
-        else if (t >= X1 && t < X1 + o.EXCITE(1)) o.excite(t - X1, 1);
+        if (t >= OUT) o.draw(Math.max(0, o.END - (t - OUT)));
+        else if (t >= SPIN && t < SPIN + 1.4) o.spin((t - SPIN) / 1.4);
         else o.draw(Math.min(t, o.END));
       };
     }
