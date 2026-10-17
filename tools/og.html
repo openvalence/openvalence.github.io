@@ -2,21 +2,16 @@
 <!-- The 1200x630 link-preview card (images/og.png). Render: screenshot this page at 1200x630, DPR 1, after fonts load. -->
 <html lang="en"><head><meta charset="utf-8"><title>og</title>
 <style>
-@font-face { font-family: 'Archivo'; src: url('../fonts/Archivo.woff2') format('woff2'); font-weight: 100 900; }
-@font-face { font-family: 'Martian Mono'; src: url('../fonts/MartianMono.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; src: url('../fonts/Archivo.woff2') format('woff2'); font-weight: 700 900; font-stretch: 100% 125%; }
 html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #0B0B0C; }
-.card { box-sizing: border-box; width: 1200px; height: 630px; padding: 64px 72px 0; display: flex; flex-direction: column; position: relative; }
-.brand { display: flex; align-items: center; gap: 16px; font: 800 34px/1 'Archivo', 'Arial Black', sans-serif; color: #F3F3EF; letter-spacing: -.01em; }
-.brand img { width: 56px; height: 56px; }
-h1 { font: 800 84px/.95 'Archivo', 'Arial Black', sans-serif; color: #F3F3EF; letter-spacing: -.025em; margin: 64px 0 0; max-width: 1020px; }
-.foot { margin-top: auto; display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 40px;
-  font: 400 19px/1.3 'Martian Mono', ui-monospace, monospace; color: #92928C; }
-.foot b { font-weight: 400; color: #92A3FF; }
-.band { position: absolute; left: 0; right: 0; bottom: 0; height: 12px; background: #2E4BFF; }
+.card { box-sizing: border-box; width: 1200px; height: 630px; padding: 70px 72px 0; position: relative; overflow: hidden; }
+/* the homepage h1 */
+h1 { font: 900 88px/.93 'Archivo', 'Arial Black', sans-serif; font-stretch: 118%; letter-spacing: -.015em; color: #F3F3EF; margin: 0; max-width: 16ch; text-wrap: balance; }
+/* the footer wordmark: spans the content width (8.25 font sizes), the site's --bg-3 */
+.word { position: absolute; left: 72px; right: 72px; bottom: 34px; font: 900 128px/.8 'Archivo', 'Arial Black', sans-serif; font-size: calc(1056px / 8.25); font-stretch: 125%; letter-spacing: -.04em; color: #1F1F22; white-space: nowrap; }
 </style></head>
 <body><div class="card">
-  <div class="brand"><img src="../mark.svg" alt="">OpenValence</div>
   <h1>Open-source hardware and software for linear motion machines</h1>
-  <div class="foot"><span>Flagship PCB · Nucleus · Phosphor · Valence</span><b>openvalence.org</b></div>
-  <div class="band"></div>
-</div></body></html>
+  <div class="word">OpenValence</div>
+</div></body>
+</html>
