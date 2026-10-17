@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy policy: OpenValence</title>
-<meta name="description" content="What Phosphor, the Nucleus firmware and this website do with your data. Short version: nothing leaves your machine unless you point it somewhere.">
+<meta name="description" content="What Phosphor, the Nucleus firmware and this website do with your data. Short version: the software sends data only to endpoints you configure.">
 <link rel="canonical" href="https://openvalence.org/privacy.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/privacy.html">
 <meta property="og:title" content="Privacy policy: OpenValence">
-<meta property="og:description" content="What Phosphor, the Nucleus firmware and this website do with your data. Short version: nothing leaves your machine unless you point it somewhere.">
+<meta property="og:description" content="What Phosphor, the Nucleus firmware and this website do with your data. Short version: the software sends data only to endpoints you configure.">
 <meta name="twitter:title" content="Privacy policy: OpenValence">
-<meta name="twitter:description" content="What Phosphor, the Nucleus firmware and this website do with your data. Short version: nothing leaves your machine unless you point it somewhere.">
+<meta name="twitter:description" content="What Phosphor, the Nucleus firmware and this website do with your data. Short version: the software sends data only to endpoints you configure.">
 <!-- chrome:head -->
 <meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: light)">
@@ -146,7 +146,7 @@
       <div><dt>Stash</dt><dd>If you enter a Stash server in the funscript player, the app sends requests to that address with the API key you gave it, and streams video from it. That is your server, on whatever network you put it on; its own logs are its business.</dd></div>
       <div><dt>Plugins and the pages they load</dt><dd>The app allows plugins to fetch <code>http</code> and <code>https</code> URLs. The plugins that ship with the app only contact addresses you configured. A plugin you install from elsewhere can contact whatever its author wrote it to; read its manifest before enabling it.</dd></div>
       <div><dt>Other programs on your computer</dt><dd>Phosphor runs a Buttplug server so that other software can drive the machine and your toys through it. It listens on the loopback address only (<code>127.0.0.1</code>, port 12345 by default), so only programs on the same computer can reach it. It never listens on your network unless you change that setting.</dd></div>
-      <div><dt>Neutrino, the built-in machine</dt><dd>It runs inside the app, as WebAssembly. Nothing it does leaves the computer.</dd></div>
+      <div><dt>Neutrino, the built-in machine</dt><dd>It runs inside the app, as WebAssembly, and makes no network connections of its own.</dd></div>
     </dl>
     <p>The app does not check for updates by itself. Updates arrive through whatever installed it: Flathub, or a download from GitHub.</p>
   </section>
@@ -164,7 +164,7 @@
 
   <section aria-labelledby="s-outside">
     <h2 id="s-outside" data-n="06">What is outside my control</h2>
-    <p>Parties that may learn something about you while you use this software. I run none of them and receive nothing from them:</p>
+    <p>Parties that may learn something about you while you use this software. I operate none of them and receive no data from them:</p>
     <dl class="terms">
       <div><dt>Your operating system</dt><dd>Windows, macOS, Android and Linux distributions collect their own diagnostics about the applications you run, under their own settings and policies. On Windows the app renders through WebView2, which is Microsoft's component and follows Microsoft's telemetry settings for your account.</dd></div>
       <div><dt>Where you got the app</dt><dd>Flathub and GitHub each count installs and downloads and may show me aggregate numbers. They do not give me who you are.</dd></div>
@@ -177,19 +177,19 @@
     <h2 id="s-site" data-n="07">This website</h2>
     <p>openvalence.org is static files. It sets no cookies and has no ads or third-party trackers. Its fonts are served from its own folder, not a third party. The documentation at <a href="/Valence/">/Valence/</a> and the playground at <a href="/Kinetic/">/Kinetic/</a> are the same kind of static site.</p>
     <h3>Visitor statistics</h3>
-    <p>The site counts visits with <a href="https://umami.is/">Umami</a>, an open-source analytics tool. It runs on a server I own and operate myself, at home in the United States, reached at stats.openvalence.org; no analytics company is involved. It is there so I can see which pages people read and how they move between them. Nobody else gets the data: it is not sold, shared, or used for ads.</p>
+    <p>The site counts visits with <a href="https://umami.is/">Umami</a>, an open-source analytics tool. It runs on a server I own and operate myself, at home in the United States, reached at stats.openvalence.org; no analytics company is involved. It is there so I can see which pages people read and how they move between them. The data stays on that server: it is not sold, shared, or used for advertising.</p>
     <ul>
       <li><strong>What a page view records:</strong> the page address, the page you came from, your browser, operating system, device type, screen size and language, and your country and region.</li>
       <li><strong>Your IP address</strong> is used only to look up that country and region and to tell one visitor from another. It is never written to the database. Visitors are told apart by a one-way hash of the IP address, browser and site with a secret that changes every month, so the identifier cannot follow you from one month to the next, across sites, or back to you.</li>
-      <li><strong>Nothing is stored in your browser:</strong> no cookies, no local storage, no fingerprinting beyond what is listed above, and no session recordings or heatmaps. The script only reads one opt-out setting, if you have set it (below).</li>
-      <li><strong>Opting out:</strong> if your browser sends Do Not Track, nothing is recorded. A content blocker that blocks the script works too, as does setting <code>umami.disabled</code> to <code>1</code> in this site's local storage.</li>
+      <li><strong>No browser storage is written:</strong> no cookies, no local storage entries, no fingerprinting beyond the fields listed above, and no session recordings or heatmaps. The script reads one opt-out key, if present (below).</li>
+      <li><strong>Opting out:</strong> if your browser sends Do Not Track, no records are created. A content blocker that blocks the script works too, as does setting <code>umami.disabled</code> to <code>1</code> in this site's local storage.</li>
     </ul>
     <h3>EU visitors</h3>
-    <p>The statistics are built to meet the EU's GDPR and ePrivacy rules. Because they place nothing on your device, there is no cookie consent to ask for, and so no banner. The brief use of your IP address to derive a country and region rests on legitimate interest (GDPR Article 6(1)(f)): knowing how the site is read, with the minimum data needed for that. Since nothing recorded identifies you, there is no record about you in particular to look up, export or delete. For anything else, write to the address below.</p>
+    <p>The statistics are built to meet the EU's GDPR and ePrivacy rules. They write no data to your device, so the ePrivacy consent requirement for cookies does not apply, and there is no consent banner. The brief use of your IP address to derive a country and region rests on legitimate interest (GDPR Article 6(1)(f)): knowing how the site is read, with the minimum data needed for that. The records contain no identifier that links back to you, so there is no per-person record to look up, export or delete. For anything else, write to the address below.</p>
     <h3>Who serves it</h3>
     <p>GitHub Pages hosts the files and Cloudflare runs the domain. Both may keep standard server logs (IP address, pages requested, browser) under their own policies: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a> and <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare's privacy policy</a>. I don't have access to those logs.</p>
     <h3>Google Search Console</h3>
-    <p>I read Google Search Console for this site. That is Google's own data about how the site shows up in Google Search: which queries it appeared for, how often, how many clicks, which pages. Google collects and aggregates it from its search results; the site collects nothing for it. See <a href="https://policies.google.com/privacy">Google's privacy policy</a>.</p>
+    <p>I read Google Search Console for this site. That is Google's own data about how the site shows up in Google Search: which queries it appeared for, how often, how many clicks, which pages. Google collects and aggregates it from its search results; the site runs no Google code to produce it. See <a href="https://policies.google.com/privacy">Google's privacy policy</a>.</p>
   </section>
 
   <section aria-labelledby="s-changes">
