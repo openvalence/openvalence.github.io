@@ -115,9 +115,9 @@
 <main>
   <section class="opening">
     <h1>Neutrino</h1>
-    <!-- Nucleus sim/valencesim/README.md (parity table); wasm/CMakeLists.txt; src/SimCore.h:70 kHubName "Neutrino"; Phosphor docs/BUILD.md "The built-in machine" -->
+    <!-- Nucleus sim/neutrino/README.md (parity table); wasm/CMakeLists.txt; src/SimCore.h:83 kHubName "Neutrino"; Phosphor docs/BUILD.md "The built-in machine" -->
     <p class="lede">The Nucleus hub firmware compiled to WebAssembly and built into Phosphor. It acts like a real machine over Valence, with no PCB and no motor.</p>
-    <p class="fine">Lives in the <a href="https://github.com/openvalence/Nucleus/tree/main/sim/valencesim">Nucleus repo</a>. <span class="nb">Apache-2.0</span>.</p>
+    <p class="fine">Lives in the <a href="https://github.com/openvalence/Nucleus/tree/main/sim/neutrino">Nucleus repo</a>. <span class="nb">Apache-2.0</span>.</p>
   </section>
 
   <section class="aside" aria-labelledby="s-status">
@@ -131,14 +131,14 @@
     <ul class="facts three">
       <li><b>Try Phosphor</b><p>Build a Dash, run patterns and play funscripts before you own a machine.</p></li>
       <li><b>Build clients</b><p>Write a Valence app or plugin against a hub that answers like the real one.</p></li>
-      <!-- Phosphor package.json "check": test/integral-pin.mjs, test/valence-sim.mjs --integral; docs/BUILD.md:390-394 -->
+      <!-- Phosphor package.json "check": test/neutrino-pin.mjs, test/neutrino-twin.mjs --wasm; docs/BUILD.md:390-394 -->
       <li><b>Test every build</b><p>Phosphor's checks boot Neutrino and run the protocol suite against it before CI builds the app.</p></li>
     </ul>
   </section>
 
   <section aria-labelledby="s-same">
     <h2 class="xl" id="s-same">The same code as the PCB</h2>
-    <!-- Nucleus sim/valencesim/wasm/CMakeLists.txt:28-39 compiles flagship_p4/src motion/MotionArbiter.cpp, patterns/PatternEngine.cpp, patterns/advanced/AdvancedPattern.cpp, hub/ValenceDevice.cpp, hub/ValenceEstopDatagram.cpp verbatim; MotionArbiter.h:60-68 kinetic2::Engine; README.md "Parity is one-way" -->
+    <!-- Nucleus sim/neutrino/wasm/CMakeLists.txt:28-39 compiles flagship_p4/src motion/MotionArbiter.cpp, patterns/PatternEngine.cpp, patterns/advanced/AdvancedPattern.cpp, hub/ValenceDevice.cpp, hub/ValenceEstopDatagram.cpp verbatim; MotionArbiter.h:60-68 kinetic2::Engine; README.md "Parity is one-way" -->
     <p>Neutrino compiles the firmware's own source files: the Valence hub, the catalog, the motion arbiter with every safety gate, the pattern generators and the <a href="/kinetic/">Kinetic²</a> planner. Only the parts that touch hardware are swapped for stand-ins, and the firmware is never changed to suit Neutrino.</p>
     <div class="lanes" role="group" aria-label="Phosphor with the PCB and with Neutrino">
       <div class="lane">
@@ -169,9 +169,9 @@
         <tr><th scope="row">Hub, catalog, patterns, planner</th><td>Nucleus firmware</td><td>The same source files. The catalog has the same etag as the board's.</td></tr>
         <!-- README.md rows "Emitter and position truth"; src/IdealEmitter.h -->
         <tr><th scope="row">Motor output</th><td>The LP core sends quadrature to the servo drive</td><td>An ideal emitter that hits every step on time. Position is its step count.</td></tr>
-        <!-- Phosphor src/model/integral-bridge.js:11-13, 99-126; integral.cpp:7-8 -->
+        <!-- Phosphor src/model/neutrino-bridge.js:11-13, 99-126; neutrino.cpp:7-8 -->
         <tr><th scope="row">Link</th><td>WebSocket over Wi-Fi</td><td>Messages between Phosphor and a worker thread, one Valence frame each. No network socket.</td></tr>
-        <!-- Phosphor src/shell/virtual.svelte.js:32, 67-77; integral.cpp:46-94 -->
+        <!-- Phosphor src/shell/virtual.svelte.js:32, 67-77; neutrino.cpp:46-94 -->
         <tr><th scope="row">Settings and presets</th><td>Flash</td><td>Phosphor's app storage, kept between runs.</td></tr>
         <!-- README.md rows "Saved networks", "WiFi scan"; src/SimCore.h:141-149 -->
         <tr><th scope="row">Wi-Fi</th><td>The ESP32-C6 radio</td><td>One saved network and a made-up scan list. Joining does nothing.</td></tr>
@@ -181,7 +181,7 @@
 
   <section aria-labelledby="s-run">
     <h2 class="xl" id="s-run">How it runs in Phosphor</h2>
-    <!-- Phosphor src/shell/virtual.svelte.js:44-57, 96, 106; src/model/integral-bridge.js:29-30, 59; integral.worker.js; DESIGN.md "the built-in machine" -->
+    <!-- Phosphor src/shell/virtual.svelte.js:44-57, 96, 106; src/model/neutrino-bridge.js:29-30, 59; neutrino.worker.js; DESIGN.md "the built-in machine" -->
     <ol>
       <li>Phosphor carries the WebAssembly build inside the app, about 660 KB.</li>
       <li>When you press Connect, it starts Neutrino in a worker thread, homed and with its pairing window open, so Phosphor pairs with it the way it pairs with a real machine.</li>
@@ -212,17 +212,17 @@
 
   <section aria-labelledby="s-dev">
     <h2 class="xl" id="s-dev">For developers</h2>
-    <!-- Nucleus sim/valencesim/README.md "Build" (Linux and macOS form; Windows adds WinLibs MinGW and -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc); src/main.cpp:131-132, 233-246, 313-319 -->
+    <!-- Nucleus sim/neutrino/README.md "Build" (Linux and macOS form; Windows adds WinLibs MinGW and -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc); src/main.cpp:131-132, 233-246, 313-319 -->
     <p>A native build of the same code runs as a standalone hub on your desktop, for client tests and the bench. Check out Valence and Kinetic beside Nucleus, then from the Nucleus folder:</p>
-    <pre tabindex="0"><code>cmake -S sim/valencesim -B sim/valencesim/build -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build sim/valencesim/build
-sim/valencesim/build/valencesim --homed --pairing-window</code></pre>
-    <p>It listens for Valence sessions over WebSocket on port 82 and answers discovery on the LAN. <code>--pairing-window</code> lets the first client that connects pair with configure access, as a PAIR press does on the PCB. On Windows, build with WinLibs MinGW-w64 and add <code>-DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc</code>. The <a href="https://github.com/openvalence/Nucleus/tree/main/sim/valencesim">README</a> lists every flag.</p>
+    <pre tabindex="0"><code>cmake -S sim/neutrino -B sim/neutrino/build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build sim/neutrino/build
+sim/neutrino/build/neutrino-sim --homed --pairing-window</code></pre>
+    <p>It listens for Valence sessions over WebSocket on port 82 and answers discovery on the LAN. <code>--pairing-window</code> lets the first client that connects pair with configure access, as a PAIR press does on the PCB. On Windows, build with WinLibs MinGW-w64 and add <code>-DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc</code>. The <a href="https://github.com/openvalence/Nucleus/tree/main/sim/neutrino">README</a> lists every flag.</p>
     <!-- README.md "The wasm front" -->
     <p>The WebAssembly build uses Emscripten:</p>
-    <pre tabindex="0"><code>emcmake cmake -S sim/valencesim/wasm -B sim/valencesim/wasm/build -G Ninja
-cmake --build sim/valencesim/wasm/build
-node sim/valencesim/wasm/check.mjs</code></pre>
+    <pre tabindex="0"><code>emcmake cmake -S sim/neutrino/wasm -B sim/neutrino/wasm/build -G Ninja
+cmake --build sim/neutrino/wasm/build
+node sim/neutrino/wasm/check.mjs</code></pre>
     <!-- Phosphor README.md "Neutrino cluster" (about 1,500 real-time hubs on a 16-core, 32-thread PC); test/cluster/cluster.mjs -->
     <p>Phosphor's Neutrino cluster runs many Neutrino hubs at once on worker threads to soak-test the hub and the client, about 1,500 of them in real time on a 16-core PC.</p>
   </section>
@@ -245,7 +245,7 @@ node sim/valencesim/wasm/check.mjs</code></pre>
     <h2 id="s-fit">Related</h2>
     <div>
       <p>Neutrino is <a href="/nucleus/">Nucleus</a> without the PCB. It plans with <a href="/kinetic/">Kinetic</a>, talks to clients over <a href="/valence/">Valence</a> and ships inside <a href="/phosphor/">Phosphor</a>.</p>
-      <p class="links"><a href="https://github.com/openvalence/Nucleus/tree/main/sim/valencesim">Source</a> · <a href="/demos/">Demos</a> · <a href="/downloads/">Downloads</a> · <a href="/components/">Components</a></p>
+      <p class="links"><a href="https://github.com/openvalence/Nucleus/tree/main/sim/neutrino">Source</a> · <a href="/demos/">Demos</a> · <a href="/downloads/">Downloads</a> · <a href="/components/">Components</a></p>
     </div>
   </section>
 </main>
