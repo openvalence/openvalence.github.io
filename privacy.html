@@ -183,7 +183,7 @@
       <li><strong>IP address:</strong> used to derive country and region, then discarded. Never written to the database.</li>
       <li><strong>Visitor ID:</strong> a one-way hash of IP, browser and site, salted with a secret that rotates monthly. It can't link you across months, across sites, or back to you.</li>
       <li><strong>Your browser:</strong> no cookies, no local storage writes, no session recordings, no heatmaps. The script reads one opt-out key.</li>
-      <li><strong>Opt out:</strong> send Do Not Track, block the script, or set <code>umami.disabled</code> to <code>1</code> in this site's local storage. No records are created.</li>
+      <li><strong>Opt out:</strong> configure your browser to send Do Not Track, block the script with a content blocker, or set <code>umami.disabled</code> to <code>1</code> in this site's local storage. Any of the three stops records from being created.</li>
     </ul>
     <h3>EU visitors</h3>
     <p>Built for the GDPR and ePrivacy rules. No data is written to your device, so the ePrivacy consent requirement for cookies does not apply. Deriving country and region from your IP rests on legitimate interest (GDPR Article 6(1)(f)), with the minimum data needed. Records hold no identifier that links back to you, so there's no per-person record to look up, export or delete. Anything else: write to the address below.</p>
