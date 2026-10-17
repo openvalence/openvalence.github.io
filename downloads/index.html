@@ -131,7 +131,7 @@
 <main>
   <section class="opening">
     <h1>Downloads</h1>
-    <!-- Release v0.1.641 = CI run 38814948678 at main c23c98c, checked 2026-10-15; no Android APK is built -->
+    <!-- Release v0.1.641 = CI run 38814948678 at main c23c98c, checked 2026-10-15; it has no Android APK -->
     <p class="lede">Phosphor 0.1.641, a pre-release build straight from CI. Expect bugs.</p>
   </section>
 
@@ -182,8 +182,14 @@
         </details>
       </li>
       <li>
-        <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-phone"/></svg><div><h3>Android <span class="tag">WIP</span></h3><small>Not in this release</small></div></div>
-        <p>CI doesn't build it yet.</p>
+        <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-phone"/></svg><div><h3>Android</h3><small>Android 8 and later, arm64</small></div></div>
+        <!-- From the next release: <ul class="files"><li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/vX.Y.Z/Phosphor-X.Y.Z-android-arm64.apk"><b>APK, sideload<small>Phosphor-X.Y.Z-android-arm64.apk</small></b><small>38 MB</small></a></li></ul> -->
+        <p>A signed APK ships with the next release. Google Play is planned.</p>
+        <details class="more">
+          <summary>Installing the APK</summary>
+          <p>Allow "Install unknown apps" for your browser or file manager, then open the APK. Updates install over the previous version as long as they are signed with the same key.</p>
+          <p>Signing certificate SHA-256: <code>published with the first APK</code>. Check a download with <code>apksigner verify --print-certs</code>.</p>
+        </details>
       </li>
     </ul>
     <p class="links">Release notes and every file: <a href="https://github.com/openvalence/Phosphor/releases/tag/v0.1.641">Phosphor v0.1.641 on GitHub</a> · Checksums: <a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/SHA256SUMS.txt">SHA256SUMS.txt</a></p>
