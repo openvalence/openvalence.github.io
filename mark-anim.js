@@ -85,7 +85,7 @@ export const MARK_SVG = `<svg class="ov-mark" viewBox="-351 -351 702 702" aria-h
 // settled, the arcs form between them, growing from their middles to their round caps.
 // Options: seed, zeta and hz (the elastic), sweep (the most degrees an electron travels round).
 export function orbit(svg, o = {}) {
-  const P = { seed: 1, zeta: 0.45, hz: 1.15, sweep: 95, ...o };
+  const P = { seed: 1, zeta: 0.36, hz: 1.3, sweep: 95, ...o };
   const ring = svg.querySelector('.ov-ring'), core = svg.querySelector('.ov-core');
   const ps = [...svg.querySelectorAll('.ov-p')], arcs = ps.map((g) => g.firstChild), es = ps.map((g) => g.lastChild);
   const statics = es.map((e) => e.getAttribute('transform'));
