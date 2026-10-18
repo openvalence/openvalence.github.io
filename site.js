@@ -339,24 +339,16 @@
   }
 
   // The home hero: the Phosphor demo (data-app) in an iframe once the page has loaded, the visitor has done
-  // something (a pointer, key, wheel or scroll) or 4 s have passed, and the hero is on screen, at a desktop
-  // (1280 x 800) or phone (390 x 844) logical size scaled to the frame, so the app lays out as it does on a
-  // screen that size. It shows over the poster on its 'ready' message; 'failed' or 20 s of silence removes it
+  // something (a pointer, key, wheel or scroll) or 4 s have passed, and the hero is on screen, sized to the
+  // frame (no transform: a scaled iframe costs the compositor every frame). It shows over the poster on its 'ready' message; 'failed' or 20 s of silence removes it
   // and the clip plays as before. It is told 'pause' off screen and in a hidden tab, 'resume' back. It follows the theme toggle; reduced motion is the app's own (it starts
   // nothing). Constraints: the frame's size comes from style.css alone (no shift).
   function app(box) {
     const fallback = () => { f.remove(); if (!still) for (const v of box.querySelectorAll('video[data-auto]')) clip(v); };
-    const local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);   // the preview serves the demo on :8791
-    const url = new URL(local ? `http://${location.hostname}:8791/demo/` : box.dataset.app);
+    const local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);   // the preview serves the mini build on :8791
+    const url = new URL(local ? `http://${location.hostname}:8791/mini/` : box.dataset.app);
     const theme = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
-    const tall = matchMedia('(max-width: 640px)');
     const f = document.createElement('iframe');
-    const fit = () => {
-      const [w, h] = tall.matches ? [390, 844] : [1280, 800];
-      f.width = w;
-      f.height = h;
-      f.style.transform = `scale(${box.clientWidth / w})`;
-    };
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return;
       io.disconnect();
@@ -365,8 +357,6 @@
       f.src = url.href;
       f.title = box.dataset.title || '';
       f.allow = 'compute-pressure';   // the app's health readout
-      fit();
-      new ResizeObserver(fit).observe(box);
       box.appendChild(f);
       // off screen or in a hidden tab the app pauses: Neutrino's clock stops (sent again on ready, the first
       // message the app can hear)
@@ -376,7 +366,7 @@
       document.addEventListener('visibilitychange', tell);
       const late = setTimeout(fallback, 20000);
       addEventListener('message', (m) => {
-        if (m.source !== f.contentWindow || !m.data) return;
+        if (m.source !== f.contentWindow || m.origin !== url.origin || !m.data) return;
         clearTimeout(late);
         if (m.data.phosphor === 'failed') return fallback();
         if (m.data.phosphor !== 'ready') return;
