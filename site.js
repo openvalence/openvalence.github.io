@@ -54,8 +54,14 @@
   // Scroll-linked entrances (style.css .rv) for what starts below the first screen only: the page
   // paints whole, and nothing on the first screen waits for a scroll.
   if (!still && window.CSS && CSS.supports('animation-timeline: view()')) {
-    const fold = innerHeight, all = [...document.querySelectorAll('main h2, .numbers > div, .doors > li, .index > li, .facts > li, .platforms > li, .split figure, .gallery figure, .renders figure, .stage-pcb')];
-    for (const e of all.filter((e) => e.getBoundingClientRect().top > fold)) e.classList.add('rv');
+    // an observer's first report, not a measurement here: it comes after the browser's own layout
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) {
+        io.unobserve(e.target);
+        if (e.boundingClientRect.top > e.rootBounds.height) e.target.classList.add('rv');
+      }
+    });
+    for (const e of document.querySelectorAll('main h2, .numbers > div, .doors > li, .index > li, .facts > li, .platforms > li, .split figure, .gallery figure, .renders figure, .stage-pcb')) io.observe(e);
   }
 
   // A pause button for anything that moves on its own (WCAG 2.2.2).
@@ -239,7 +245,7 @@
         s.onerror = () => fallback(liveFig);
         document.head.appendChild(s);
       }
-    }, { rootMargin: '400px' });
+    }, { threshold: 0.01 });   // on screen, not near it: a piece the reader has not reached costs nothing
     io.observe(liveFig);
   });
   function fallback(fig) {
