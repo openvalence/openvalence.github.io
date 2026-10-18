@@ -1,6 +1,6 @@
 # Motion
 
-Sources for the three looping clips on the site, rendered with
+Sources for the looping clips on the site, rendered with
 [HyperFrames](https://github.com/heygen-com/hyperframes) (Apache-2.0): each piece is an
 HTML page whose picture is a pure function of time, captured frame by frame in headless
 Chrome and encoded with FFmpeg.
@@ -10,6 +10,8 @@ Chrome and encoded with FFmpeg.
 | Screen to rail | `screen-to-rail.html` | `/diagrams/#funscript` |
 | Knots to curve | `knots-to-curve.html` | `/kinetic/`, under "Time never gives" |
 | Any app, one machine | `any-app.html` | `/valence/`, under "You already know how this works" |
+| The stroke | `stroke.html` (1280 x 360) | `/`, under the hero clip |
+| One second to 125 ns | `timing.html` | `/nucleus/`, in "Motion timing" |
 
 Each renders twice, dark and light (the `theme` variable), into `../images/motion/`:
 `<piece>-<theme>.webm` (VP9) and `.mp4` (H.264) at 1280 wide, the same at 640 wide with
@@ -46,6 +48,28 @@ stop of each beat in `knots-to-curve.js`. Change them together.
 
 The page loads one live piece at most: the scripts share the page's globals.
 
+A piece that is not 1280 x 720 names its box on the figure (`data-vb`, the stroke's
+`0 0 1280 360`). The stroke draws 700 px past both sides of its box and its figure
+(`.ribbon`) lets that show, so on the page the trace runs on into the margins.
+
+## The stroke and One second to 125 ns
+
+Both draw the Screen to rail stroke (`kinetic-data.js`), scaled to 100 mm.
+
+- The stroke: 400 px per second, real time. A knot is known 900 ms before it is due; the
+  planner's curve grows to it over 0.32 s as it arrives, the script beyond the horizon stays
+  straight lines between actions (as the player holds it), and the trace behind the carriage
+  fades exponentially with its age (220 px per e-fold).
+- One second to 125 ns: five stops (`STOPS`), each a span of the view, held and joined by
+  zooms eased in ln(span), with a slow drift so the view never stands still. Time on screen
+  runs at `K * span`: the trace always drifts at the same speed, and the readout gives the
+  factor. `K` makes the 24 s loop a whole number of stroke periods. Between 1 ms samples the
+  position is linear (the steer holds one speed per tick); each step boundary crossed is an
+  ideal deadline and its edge lands on the next 125 ns poll (`edges()`). Where edges are too
+  dense to draw one by one, A and B are bands whose brightness follows the edge rate. The
+  deepest stop is set on an edge at 150 to 230 mm/s whose offset also puts the strip and tick
+  stops on a moving stretch of the stroke.
+
 ## Re-render
 
 Needs Node 22+ and FFmpeg on the PATH.
@@ -53,7 +77,7 @@ Needs Node 22+ and FFmpeg on the PATH.
 ```sh
 cd motion
 npx --yes hyperframes@0.8.163 browser ensure   # once: downloads Chrome Headless Shell
-bash render.sh                     # all three; or: bash render.sh knots-to-curve
+bash render.sh                     # all of them; or: bash render.sh knots-to-curve
 ```
 
 `render.sh` runs HyperFrames 0.8.163 through `npx`. To use an installed copy instead, set
