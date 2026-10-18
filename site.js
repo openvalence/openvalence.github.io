@@ -375,7 +375,7 @@
         for (const v of box.querySelectorAll('video')) { v.pause(); v.remove(); }
         const cap = box.parentElement.querySelector('figcaption[data-live-caption]');
         if (cap) {
-          const a = Object.assign(document.createElement('a'), { href: box.dataset.app, textContent: 'Full size' });
+          const a = Object.assign(document.createElement('a'), { href: new URL('/', box.dataset.app).href, textContent: 'Open the web app' });
           cap.replaceChildren(cap.dataset.liveCaption + ' ', a);
         }
       });
