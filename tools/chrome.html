@@ -32,7 +32,10 @@ The shared blocks every page carries. Edit here, then run: python tools/chrome.p
     if (!e.target.closest || !e.target.closest('.theme')) return;
     const t = d.dataset.theme === 'light' ? 'dark' : 'light';
     put('localStorage', 'theme', t === auto() ? '' : t);
-    apply();
+    // a crossfade where the browser has view transitions (style.css .vt-theme); reduced motion: instant
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return apply();
+    d.classList.add('vt-theme');
+    document.startViewTransition(apply).finished.finally(() => d.classList.remove('vt-theme'));
   });
   new MutationObserver(() => {
     if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;

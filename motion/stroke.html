@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"theme","type":"string","label":"Theme","default":"dark"}]'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, height=360">
+<meta name="robots" content="noindex">
+<title>The stroke</title>
+<link rel="stylesheet" href="common.css">
+<style>html, body, #root, svg { height: 360px; }</style>
+</head>
+<body>
+<!-- The stroke: knots arrive 900 ms ahead, the planner fills in the curve to each, the carriage
+     plays it. Facts and their sources: stroke.js's header. -->
+<div id="root" data-composition-id="main" data-start="0" data-duration="12" data-width="1280" data-height="360" data-fps="30" data-no-timeline>
+  <svg id="scene" class="clip" data-start="0" data-duration="12" data-track-index="0" data-no-timeline viewBox="0 0 1280 360"></svg>
+</div>
+<script src="kinetic-data.js"></script>
+<script src="common.js"></script>
+<script src="stroke.js"></script>
+</body>
+</html>

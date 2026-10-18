@@ -44,7 +44,10 @@
     if (!e.target.closest || !e.target.closest('.theme')) return;
     const t = d.dataset.theme === 'light' ? 'dark' : 'light';
     put('localStorage', 'theme', t === auto() ? '' : t);
-    apply();
+    // a crossfade where the browser has view transitions (style.css .vt-theme); reduced motion: instant
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return apply();
+    d.classList.add('vt-theme');
+    document.startViewTransition(apply).finished.finally(() => d.classList.remove('vt-theme'));
   });
   new MutationObserver(() => {
     if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;
@@ -162,11 +165,11 @@
     <figure class="morph mt">
       <div class="entry" aria-label="A catalog entry as the machine sends it">
         <span class="k">name</span> <b>jog_speed</b><br>
-        <span class="k">desc</span> <b>Speed ceiling for manual jogs</b><br>
-        <span class="k">unit</span> <b>mm/s</b><br>
-        <span class="k">range</span> <b>1 to 2000</b><br>
-        <span class="k">default</span> <b>50</b><br>
-        <span class="k">group</span> <b>Jog limits</b>
+        <span class="k">desc</span> <b data-to=".lbl span">Speed ceiling for manual jogs</b><br>
+        <span class="k">unit</span> <b data-to=".lbl span + span">mm/s</b><br>
+        <span class="k">range</span> <b data-to=".ends">1 to 2000</b><br>
+        <span class="k">default</span> <b data-to=".lbl span + span">50</b><br>
+        <span class="k">group</span> <b data-to=".grp">Jog limits</b>
       </div>
       <div class="arrow" aria-hidden="true">&rarr;</div>
       <div class="ui" aria-label="The control an app draws from it">

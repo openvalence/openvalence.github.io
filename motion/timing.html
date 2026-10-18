@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"theme","type":"string","label":"Theme","default":"dark"}]'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, height=720">
+<meta name="robots" content="noindex">
+<title>One second to 125 ns</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<!-- One second to 125 ns: the motion timing on /nucleus/ as one zoom, from the 900 ms Wi-Fi
+     buffer to the LP core's 125 ns poll grid. Facts and their sources: timing.js's header. -->
+<div id="root" data-composition-id="main" data-start="0" data-duration="24" data-width="1280" data-height="720" data-fps="30" data-no-timeline>
+  <svg id="scene" class="clip" data-start="0" data-duration="24" data-track-index="0" data-no-timeline viewBox="0 0 1280 720"></svg>
+</div>
+<script src="kinetic-data.js"></script>
+<script src="common.js"></script>
+<script src="timing.js"></script>
+</body>
+</html>

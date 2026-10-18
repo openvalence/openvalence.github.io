@@ -48,6 +48,44 @@
   const atLoad = (f) => (document.readyState === 'complete' ? f() : addEventListener('load', f, { once: true }));
   if (mark && !still) atLoad(() => import('/mark-anim.js').then((m) => m.header(mark)).catch(() => document.documentElement.classList.remove('intro')));
 
+  // Scroll-linked entrances (style.css .rv) for what starts below the first screen only: the page
+  // paints whole, and nothing on the first screen waits for a scroll.
+  if (!still && window.CSS && CSS.supports('animation-timeline: view()')) {
+    // an observer's first report, not a measurement here: it comes after the browser's own layout
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) {
+        io.unobserve(e.target);
+        if (e.boundingClientRect.top > e.rootBounds.height) {
+          e.target.classList.add('rv');
+          if (e.target.matches('.doors > li, .index > li, .facts > li, .platforms > li')) rules.push(e.target), draw();
+        }
+      }
+    });
+    // The rules over rows follow the scroll through a short exponential chase (28 ms), so a wheel notch eases
+    // in instead of jumping: target = how far the row has come in (0..48% of its pass), eased.
+    const rules = [];
+    let raf = 0, last = 0;
+    const ease = (x) => x * x * (3 - 2 * x);
+    const draw = () => { if (!raf) raf = requestAnimationFrame(step); };
+    function step(now) {
+      raf = 0;
+      const k = 1 - Math.exp(-(last ? Math.min(now - last, 50) : 16) / 28), vh = innerHeight;
+      last = now;
+      let moving = false;
+      for (const el of rules) {
+        const r = el.getBoundingClientRect();
+        const t = ease(Math.min(1, Math.max(0, (vh - r.top) / (0.48 * (vh + r.height)))));
+        const c = el._draw ?? 0, n = Math.abs(t - c) < 0.001 ? t : c + (t - c) * k;
+        if (n !== c) el.style.setProperty('--draw', (el._draw = n).toFixed(4));
+        if (n !== t) moving = true;
+      }
+      if (moving) draw(); else last = 0;
+    }
+    addEventListener('scroll', draw, { passive: true });
+    addEventListener('resize', draw, { passive: true });
+    for (const e of document.querySelectorAll('main h2, .numbers > div, .doors > li, .index > li, .facts > li, .platforms > li, .split figure, .gallery figure, .renders figure, .stage-pcb')) io.observe(e);
+  }
+
   // A pause button for anything that moves on its own (WCAG 2.2.2).
   function toggle(host, onPlay, onPause) {
     const b = document.createElement('button');
@@ -84,6 +122,22 @@
     const bar = fig.querySelector('.stepbar'), [prev, play, next, range] = bar.querySelectorAll('button, input');
     const tabs = [...fig.querySelectorAll('.steptabs button')], note = fig.querySelector('.stepnote'), say = bar.querySelector('[aria-live]');
     let stops = base, drive = null, playing = !still, touched = false, u = +range.value, cur = -1, anim = 0;
+    // the current step's bar (style.css .tab-bar): one element that glides between the tabs
+    const tabBar = document.createElement('i');
+    tabBar.className = 'tab-bar';
+    tabs[0].parentElement.appendChild(tabBar);
+    let placed = false;
+    const place = (jump) => {
+      const t = tabs[cur];
+      if (!t) return;
+      // the first placement and a resize jump; a step change glides
+      const snap = jump || !placed;
+      if (snap) tabBar.style.transition = 'none';
+      tabBar.style.transform = `translate(${t.offsetLeft}px, ${t.offsetTop}px) scaleX(${t.offsetWidth / 100})`;
+      if (snap) { void tabBar.offsetWidth; tabBar.style.transition = ''; }
+      placed = true;
+    };
+    new ResizeObserver(() => place(true)).observe(tabs[0].parentElement);
     const host = (x) => (x - off + dur) % dur;
     const beatOf = (x) => starts.reduce((b, s, i) => (x >= s ? i : b), 0);
     // keep: leave the note as it is (a step on its way)
@@ -97,7 +151,7 @@
       }
       if (!keep) note.textContent = (stop && stop.note) || '';
       range.setAttribute('aria-valuetext', `Step ${b + 1} of ${items.length}, ${x.toFixed(1)} s`);
-      cur = b;
+      if (b !== cur) { cur = b; place(); }
     }
     function setPlay(on) {
       cancelAnimationFrame(anim);
@@ -190,6 +244,8 @@
   // or, on a stepper figure, a still picture per step.
   // Constraints: one data-live figure per page (a piece's scripts share the page's globals).
   const able = !lean && (navigator.hardwareConcurrency || 0) >= 4 && (navigator.deviceMemory || 4) >= 4;
+  // The home hero's Phosphor (app() below) where the device can carry it; its clip stays the fallback.
+  const appBox = able ? document.querySelector('.frame[data-app]') : null;
   for (const ol of document.querySelectorAll('ol.beats[data-dur]')) { const f = ol.closest('figure'); f.stepper = stepper(f, ol); }
   const first = document.querySelector('figure[data-live]');
   const liveFig = able && first && (!still || first.stepper) && first;
@@ -198,8 +254,9 @@
     if (f && f.stepper) { v.removeAttribute('controls'); continue; }
     if (still) continue;
     v.removeAttribute('controls');
-    if (!(liveFig && liveFig.contains(v))) clip(v);
+    if (!(liveFig && liveFig.contains(v)) && !(appBox && appBox.contains(v))) clip(v);
   }
+  if (appBox) afterLoad(() => app(appBox));
   for (const f of document.querySelectorAll('figure')) if (f.stepper && f !== liveFig) videoDrive(f);
   if (liveFig) afterLoad(() => {
     const io = new IntersectionObserver(([e]) => {
@@ -213,7 +270,7 @@
         s.onerror = () => fallback(liveFig);
         document.head.appendChild(s);
       }
-    }, { rootMargin: '400px' });
+    }, { threshold: 0.01 });   // on screen, not near it: a piece the reader has not reached costs nothing
     io.observe(liveFig);
   });
   function fallback(fig) {
@@ -226,7 +283,7 @@
     const shown = () => [...fig.querySelectorAll('video')].find((v) => v.offsetParent);
     const box = document.createElement('div');
     box.className = 'live';
-    box.innerHTML = '<svg id="scene" viewBox="0 0 1280 720" aria-hidden="true"></svg>';
+    box.innerHTML = `<svg id="scene" viewBox="${fig.dataset.vb || '0 0 1280 720'}" aria-hidden="true"></svg>`;
     const svg = box.firstChild;
     let t = 0, last = 0, raf = 0, ready = false, seen = false, dt = [], video = null, at = -1, onSeeked = null, held = false;
     const build = () => {
@@ -281,6 +338,66 @@
     build().then(() => { ready = true; if (seen && wanted()) go(); }, () => { box.remove(); fallback(fig); });
   }
 
+  // The home hero: the Phosphor demo (data-app) in an iframe once the page has loaded, the visitor has done
+  // something (a pointer, key, wheel or scroll) or 4 s have passed, and the hero is on screen, at a desktop
+  // (1280 x 800) or phone (390 x 844) logical size scaled to the frame, so the app lays out as it does on a
+  // screen that size. It shows over the poster on its 'ready' message; 'failed' or 20 s of silence removes it
+  // and the clip plays as before. It is told 'pause' off screen and in a hidden tab, 'resume' back. It follows the theme toggle; reduced motion is the app's own (it starts
+  // nothing). Constraints: the frame's size comes from style.css alone (no shift).
+  function app(box) {
+    const fallback = () => { f.remove(); if (!still) for (const v of box.querySelectorAll('video[data-auto]')) clip(v); };
+    const local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);   // the preview serves the demo on :8791
+    const url = new URL(local ? `http://${location.hostname}:8791/demo/` : box.dataset.app);
+    const theme = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+    const tall = matchMedia('(max-width: 640px)');
+    const f = document.createElement('iframe');
+    const fit = () => {
+      const [w, h] = tall.matches ? [390, 844] : [1280, 800];
+      f.width = w;
+      f.height = h;
+      f.style.transform = `scale(${box.clientWidth / w})`;
+    };
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      url.searchParams.set('embed', '1');
+      url.searchParams.set('theme', theme());
+      f.src = url.href;
+      f.title = box.dataset.title || '';
+      f.allow = 'compute-pressure';   // the app's health readout
+      fit();
+      new ResizeObserver(fit).observe(box);
+      box.appendChild(f);
+      // off screen or in a hidden tab the app pauses: Neutrino's clock stops (sent again on ready, the first
+      // message the app can hear)
+      let seen = true;
+      const tell = () => f.contentWindow && f.contentWindow.postMessage({ phosphor: seen && !document.hidden ? 'resume' : 'pause' }, url.origin);
+      new IntersectionObserver(([e]) => { seen = e.isIntersecting; tell(); }).observe(box);
+      document.addEventListener('visibilitychange', tell);
+      const late = setTimeout(fallback, 20000);
+      addEventListener('message', (m) => {
+        if (m.source !== f.contentWindow || !m.data) return;
+        clearTimeout(late);
+        if (m.data.phosphor === 'failed') return fallback();
+        if (m.data.phosphor !== 'ready') return;
+        tell();
+        box.classList.add('on');
+        for (const v of box.querySelectorAll('video')) { v.pause(); v.remove(); }
+        const cap = box.parentElement.querySelector('figcaption[data-live-caption]');
+        if (cap) {
+          const a = Object.assign(document.createElement('a'), { href: box.dataset.app, textContent: 'Full size' });
+          cap.replaceChildren(cap.dataset.liveCaption + ' ', a);
+        }
+      });
+      addEventListener('themechange', () => f.contentWindow && f.contentWindow.postMessage({ theme: theme() }, url.origin));
+    }, { threshold: 0.01 });
+    // its first seconds are a heavy main thread: not while the page is still settling
+    const IN = ['pointerdown', 'pointermove', 'keydown', 'wheel', 'scroll', 'touchstart'];
+    const go = () => { clearTimeout(t); for (const n of IN) removeEventListener(n, go, true); io.observe(box); };
+    const t = setTimeout(go, 4000);
+    for (const n of IN) addEventListener(n, go, { capture: true, passive: true, once: true });
+  }
+
   // Kinetic figure: knots, then the curve through them, then a playhead riding it.
   for (const svg of document.querySelectorAll('svg[data-knots]')) {
     if (still) continue;
@@ -333,6 +450,34 @@
       return (2 * u3 - 3 * u2 + 1) * K[i][1] + (u3 - 2 * u2 + u) * h[i] * m[i]
         + (-2 * u3 + 3 * u2) * K[i + 1][1] + (u3 - u2) * h[i] * m[i + 1];
     };
+  }
+
+  // A catalog entry turning into a control (/valence/, figure.morph): the first time the figure is
+  // well on screen, each field ([data-to] in the entry) travels to the part of the control drawn
+  // from it, which comes up as it lands. The figure is whole before and after; reduced motion: none.
+  for (const fig of document.querySelectorAll('figure.morph')) {
+    if (still || !fig.animate) continue;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      const box = fig.getBoundingClientRect();
+      [...fig.querySelectorAll('[data-to]')].forEach((src, i) => {
+        const dst = fig.querySelector('.ui ' + src.dataset.to), a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+        const fly = document.createElement('span');
+        fly.className = 'fly';
+        fly.setAttribute('aria-hidden', 'true');
+        fly.textContent = src.textContent;
+        fly.style.left = a.left - box.left - 8 + 'px';
+        fly.style.top = a.top - box.top - 2 + 'px';
+        fig.appendChild(fly);
+        const at = 250 + i * 160, go = 720;
+        const dx = b.left - a.left, dy = b.top + b.height / 2 - (a.top + a.height / 2);
+        fly.animate([{ transform: 'none', opacity: 0 }, { transform: 'none', opacity: 1, offset: 0.12 }, { transform: `translate(${dx}px, ${dy}px)`, opacity: 1, offset: 0.85 }, { transform: `translate(${dx}px, ${dy}px)`, opacity: 0 }],
+          { delay: at, duration: go, easing: 'cubic-bezier(.45, 0, .2, 1)', fill: 'both' }).finished.then(() => fly.remove());
+        dst.animate([{ opacity: 0.15 }, { opacity: 1 }], { delay: at + go * 0.8, duration: 260, easing: 'ease-out', fill: 'backwards' });
+      });
+    }, { threshold: 0.6 });
+    io.observe(fig);
   }
 
   // Click-to-load embeds: nothing heavy loads until asked.
@@ -409,6 +554,7 @@
     }, { rootMargin: '800px' });
     for (const img of document.querySelectorAll('img')) if (hiFor(img)) io.observe(img);
     for (const v of document.querySelectorAll('video[data-hi-poster]')) {
+      if (!v.offsetParent) continue;   // not shown (the home hero's clip on a phone)
       const p = new Image();
       p.src = v.dataset.hiPoster;
       p.decode().then(() => { v.poster = p.src; }).catch(() => {});
