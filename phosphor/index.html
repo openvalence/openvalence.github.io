@@ -150,7 +150,7 @@
 
   <section class="aside" aria-labelledby="s-status">
     <h2 id="s-status">Status</h2>
-    <!-- Downloads: v0.1.641 pre-release CI build on GitHub releases (checked 2026-10-15); Phosphor/.github/workflows/build.yml -->
+    <!-- Downloads: v0.1.678 pre-release CI build on GitHub releases (checked 2026-10-18); Phosphor/.github/workflows/build.yml -->
     <p>Pre-release builds are on <a href="/downloads/">Downloads</a>. Features marked <span class="tag">WIP</span> are not finished.</p>
   </section>
 
@@ -288,11 +288,11 @@
     <h2 class="xl" id="s-platforms">Platforms</h2>
     <!-- docs/BUILD.md lines 379-388 (CI jobs), 228-229 (Intel Macs not built), 302-353 (Android); README.md line 160; docs/DESIGN.md §10.7 lines 1058-1063 -->
     <ul class="platforms">
-      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-win"/></svg><div><h3>Windows</h3><small>pre-release build</small></div></div><p>NSIS installer, x86_64. Not code-signed yet, so SmartScreen may warn on first run.</p></li>
+      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-win"/></svg><div><h3>Windows</h3><small>pre-release build</small></div></div><p>MSIX package, installer and portable zip, x86_64. Code-signed; SmartScreen may still warn while a new release builds download reputation.</p></li>
       <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-mac"/></svg><div><h3>macOS</h3><small>pre-release build</small></div></div><p>A .dmg for Apple silicon. Intel Macs are not built. CI builds are ad-hoc signed and not notarized.</p></li>
       <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-linux"/></svg><div><h3>Linux</h3><small>pre-release build</small></div></div><p>.deb and .AppImage, x86_64.</p></li>
       <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-pkg"/></svg><div><h3>Flatpak</h3><small>pre-release build</small></div></div><p>A bundle built by CI on the GNOME runtime. It is not on Flathub.</p></li>
-      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-phone"/></svg><div><h3>Android <span class="tag">WIP</span></h3><small>local builds only</small></div></div><p>A debug APK built from source, Android 8.0 or later. CI does not build it.</p></li>
+      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-phone"/></svg><div><h3>Android <span class="tag">WIP</span></h3><small>pre-release build</small></div></div><p>A signed APK for arm64, Android 8.0 or later. Sideload it.</p></li>
       <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-web"/></svg><div><h3>Browser</h3><small>backup surface</small></div></div><p>The page a hub serves from its own flash. No Bluetooth and no plugins.</p></li>
     </ul>
     <p class="mt">The browser page needs no install. Some features reach the app before they reach the browser page.</p>

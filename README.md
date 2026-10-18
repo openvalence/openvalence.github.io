@@ -13,7 +13,7 @@ Plain HTML, no build step:
   (`valence/`, `components/`, `nucleus/`, `phosphor/` with `phosphor/docs/`,
   `kinetic/`, `hardware/`, `isotope/`, `diagrams/`, `demos/`, `downloads/`)
 - `style.css` (dark and light: `prefers-color-scheme`, overridden by `data-theme` from the header toggle and the head script in `tools/chrome.html`, which also stands Dark Reader down), `mark.svg`, `favicon.ico`, `icons/` (`icons/ui.svg` is the line-icon sprite pages use with `<use href>`)
-- `site.js`: small progressive extras (looping clips that pause off screen, the Kinetic sketch, click-to-load embeds). Pages read fine without it, and it starts nothing moving under `prefers-reduced-motion`
+- `site.js`: small progressive extras (looping clips that pause off screen, the Kinetic sketch, click-to-load embeds, the downloads page's newest-release lookup from the GitHub API). Pages read fine without it, and it starts nothing moving under `prefers-reduced-motion`
 - `fonts/`: the self-hosted fonts (SIL OFL, notice in `fonts/LICENSE`)
 - `images/`: screenshots and clips (`images/phosphor/`, light and dark), PCB renders from the KiCad project (`images/hardware/`), the playground shot (`images/kinetic/`), the demo capture and the social card (`og.png`)
 - `sitemap.xml`, `robots.txt`

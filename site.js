@@ -418,4 +418,32 @@
     }
   }
   if (!lean) afterLoad(sharpen);
+
+  // Downloads: the newest published Phosphor release, pre-releases included (/releases/latest skips
+  // them; the API lists newest first and drafts only to the repo's own members). The static page is
+  // the fallback; values change only when the API names a newer version than data-release. A file
+  // missing from that release hides its button. Public names: Phosphor-<version>-<data-file>.
+  const rel = document.querySelector('[data-release]');
+  if (rel) fetch('https://api.github.com/repos/openvalence/Phosphor/releases?per_page=10')
+    .then((r) => (r.ok ? r.json() : []))
+    .then((list) => {
+      const r = list.find((x) => !x.draft);
+      if (!r) return;
+      const v = r.tag_name.replace(/^v/, ''), a = v.split('.').map(Number), b = rel.dataset.release.split('.').map(Number);
+      const i = a.findIndex((x, k) => x !== b[k]);
+      if (i < 0 || !(a[i] > (b[i] ?? -1))) return;
+      const file = (name) => r.assets.find((x) => x.name === name);
+      for (const el of document.querySelectorAll('[data-rel="v"]')) el.textContent = v;
+      for (const el of document.querySelectorAll('[data-rel="notes"]')) el.href = r.html_url;
+      for (const el of document.querySelectorAll('[data-rel="sums"]')) el.href = file('SHA256SUMS.txt')?.browser_download_url || r.html_url;
+      for (const el of rel.querySelectorAll('a[data-file]')) {
+        const f = file(`Phosphor-${v}-${el.dataset.file}`);
+        el.closest('li').hidden = !f;
+        if (!f) continue;
+        el.href = f.browser_download_url;
+        el.querySelector('b small').textContent = f.name;
+        el.querySelector('b + small').textContent = (f.size / 1048576).toFixed(1) + ' MB';
+      }
+    })
+    .catch(() => {});
 })();

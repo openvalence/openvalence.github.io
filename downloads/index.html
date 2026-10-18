@@ -84,9 +84,9 @@
   "name": "Phosphor",
   "description": "The reference Valence client: a UI builder for linear motion machines, with plugins, a funscript player and Neutrino, a built-in emulated machine.",
   "url": "https://openvalence.org/phosphor/",
-  "downloadUrl": "https://github.com/openvalence/Phosphor/releases/tag/v0.1.641",
+  "downloadUrl": "https://github.com/openvalence/Phosphor/releases",
   "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "Windows, macOS, Linux",
+  "operatingSystem": "Windows, macOS, Linux, Android",
   "license": "https://www.apache.org/licenses/LICENSE-2.0",
   "isAccessibleForFree": true,
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -131,29 +131,32 @@
 <main>
   <section class="opening">
     <h1>Downloads</h1>
-    <!-- Release v0.1.641 = CI run 38814948678 at main c23c98c, checked 2026-10-15; it has no Android APK -->
-    <p class="lede">Phosphor 0.1.641, a pre-release build straight from CI. Expect bugs.</p>
+    <!-- Static fallback: release v0.1.678 = CI run 39159641803 at main de7d388, checked 2026-10-18. site.js swaps in a newer published release from the GitHub API. -->
+    <p class="lede">Phosphor <span data-rel="v">0.1.678</span>, a pre-release build straight from CI. Expect bugs.</p>
   </section>
 
-  <section aria-labelledby="s-phosphor">
-    <h2 class="xl" id="s-phosphor">Phosphor 0.1.641 <span class="tag">pre-release</span></h2>
+  <section aria-labelledby="s-phosphor" data-release="0.1.678">
+    <h2 class="xl" id="s-phosphor">Phosphor <span data-rel="v">0.1.678</span> <span class="tag">pre-release</span></h2>
     <ul class="platforms">
       <li>
         <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-win"/></svg><div><h3>Windows</h3><small>Windows 10 and 11, 64-bit</small></div></div>
         <ul class="files">
-          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-windows-x64-setup.exe"><b>Installer<small>Phosphor-0.1.641-windows-x64-setup.exe</small></b><small>8.1 MB</small></a></li>
-          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-windows-x64-portable.exe"><b>Portable, no install<small>Phosphor-0.1.641-windows-x64-portable.exe</small></b><small>28.7 MB</small></a></li>
+          <li><a class="dlbtn" data-file="windows-x64.msix" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-windows-x64.msix"><b>MSIX package<small>Phosphor-0.1.678-windows-x64.msix</small></b><small>10.9 MB</small></a></li>
+          <li><a class="dlbtn" data-file="windows-x64-setup.exe" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-windows-x64-setup.exe"><b>Installer<small>Phosphor-0.1.678-windows-x64-setup.exe</small></b><small>8.1 MB</small></a></li>
+          <li><a class="dlbtn" data-file="windows-x64-portable.zip" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-windows-x64-portable.zip"><b>Portable zip, no install<small>Phosphor-0.1.678-windows-x64-portable.zip</small></b><small>10.4 MB</small></a></li>
         </ul>
-        <p class="fine">Windows builds are not signed yet; SmartScreen may warn.</p>
+        <p class="fine">Signed by Grayson Heath. SmartScreen may still warn while a new release builds download reputation.</p>
         <details class="more">
-          <summary>"Windows protected your PC"?</summary>
-          <p>Neither file is signed yet, so SmartScreen shows that warning: choose More info, then Run anyway. The portable exe needs the WebView2 runtime, which Windows 10 and 11 already include.</p>
+          <summary>Which one?</summary>
+          <p>The MSIX installs with a double-click through App Installer, which comes with Windows 10 and 11. The installer is the classic setup program.</p>
+          <p>The portable zip holds a Phosphor folder: extract it somewhere you can write to and run <code>phosphor.exe</code>. Its data stays in a <code>PhosphorData</code> folder beside the exe. Run from inside the zip, it asks you to extract first. Loose in Downloads, Desktop, Documents or a drive root, it asks before writing anything.</p>
+          <p>All three need the WebView2 runtime, which Windows 10 and 11 include.</p>
         </details>
       </li>
       <li>
         <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-mac"/></svg><div><h3>macOS</h3><small>Apple silicon. Intel Macs are not built.</small></div></div>
         <ul class="files">
-          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-macos-arm64.dmg"><b>Disk image<small>Phosphor-0.1.641-macos-arm64.dmg</small></b><small>11.4 MB</small></a></li>
+          <li><a class="dlbtn" data-file="macos-arm64.dmg" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-macos-arm64.dmg"><b>Disk image<small>Phosphor-0.1.678-macos-arm64.dmg</small></b><small>11.3 MB</small></a></li>
         </ul>
         <details class="more">
           <summary>macOS won't open it?</summary>
@@ -163,8 +166,8 @@
       <li>
         <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-linux"/></svg><div><h3>Linux</h3><small>x86_64</small></div></div>
         <ul class="files">
-          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-linux-x86_64.AppImage"><b>AppImage, runs anywhere<small>Phosphor-0.1.641-linux-x86_64.AppImage</small></b><small>86.3 MB</small></a></li>
-          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-linux-amd64.deb"><b>.deb, Debian and Ubuntu<small>Phosphor-0.1.641-linux-amd64.deb</small></b><small>12.6 MB</small></a></li>
+          <li><a class="dlbtn" data-file="linux-x86_64.AppImage" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-linux-x86_64.AppImage"><b>AppImage, runs anywhere<small>Phosphor-0.1.678-linux-x86_64.AppImage</small></b><small>86.2 MB</small></a></li>
+          <li><a class="dlbtn" data-file="linux-amd64.deb" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-linux-amd64.deb"><b>.deb, Debian and Ubuntu<small>Phosphor-0.1.678-linux-amd64.deb</small></b><small>12.5 MB</small></a></li>
         </ul>
         <details class="more">
           <summary>Running the AppImage</summary>
@@ -174,7 +177,7 @@
       <li>
         <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-pkg"/></svg><div><h3>Flatpak</h3><small>Linux, x86_64</small></div></div>
         <ul class="files">
-          <li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/Phosphor-0.1.641-linux-x86_64.flatpak"><b>Flatpak bundle<small>Phosphor-0.1.641-linux-x86_64.flatpak</small></b><small>8.2 MB</small></a></li>
+          <li><a class="dlbtn" data-file="linux-x86_64.flatpak" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-linux-x86_64.flatpak"><b>Flatpak bundle<small>Phosphor-0.1.678-linux-x86_64.flatpak</small></b><small>8.1 MB</small></a></li>
         </ul>
         <details class="more">
           <summary>Installing the bundle</summary>
@@ -183,8 +186,10 @@
       </li>
       <li>
         <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-phone"/></svg><div><h3>Android</h3><small>Android 8 and later, arm64</small></div></div>
-        <!-- From the next release: <ul class="files"><li><a class="dlbtn" href="https://github.com/openvalence/Phosphor/releases/download/vX.Y.Z/Phosphor-X.Y.Z-android-arm64.apk"><b>APK, sideload<small>Phosphor-X.Y.Z-android-arm64.apk</small></b><small>38 MB</small></a></li></ul> -->
-        <p>A signed APK ships with the next release. Google Play is planned.</p>
+        <ul class="files">
+          <li><a class="dlbtn" data-file="android-arm64.apk" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-android-arm64.apk"><b>APK, sideload<small>Phosphor-0.1.678-android-arm64.apk</small></b><small>36.4 MB</small></a></li>
+        </ul>
+        <p class="fine">Google Play is planned.</p>
         <details class="more">
           <summary>Installing the APK</summary>
           <p>Allow "Install unknown apps" for your browser or file manager, then open the APK. Updates install over the previous version as long as they are signed with the same key.</p>
@@ -192,7 +197,7 @@
         </details>
       </li>
     </ul>
-    <p class="links">Release notes and every file: <a href="https://github.com/openvalence/Phosphor/releases/tag/v0.1.641">Phosphor v0.1.641 on GitHub</a> · Checksums: <a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/SHA256SUMS.txt">SHA256SUMS.txt</a></p>
+    <p class="links">Release notes and every file: <a data-rel="notes" href="https://github.com/openvalence/Phosphor/releases/tag/v0.1.678">Phosphor v<span data-rel="v">0.1.678</span> on GitHub</a> · Checksums: <a data-rel="sums" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/SHA256SUMS.txt">SHA256SUMS.txt</a></p>
     <p>To build from source, follow the README in the <a href="https://github.com/openvalence/Phosphor">Phosphor repo</a>.</p>
   </section>
 
@@ -218,7 +223,7 @@
 
   <section class="aside" aria-labelledby="s-verify">
     <h2 id="s-verify">Verify your download</h2>
-    <p>Only download from <a href="https://github.com/openvalence">github.com/openvalence</a>. This site never hosts binaries. Compare your file against <a href="https://github.com/openvalence/Phosphor/releases/download/v0.1.641/SHA256SUMS.txt">SHA256SUMS.txt</a> with <code>sha256sum -c SHA256SUMS.txt</code> on Linux and macOS (<code>shasum -a 256</code>), or <code>Get-FileHash</code> in PowerShell.</p>
+    <p>Only download from <a href="https://github.com/openvalence">github.com/openvalence</a>. This site never hosts binaries. Compare your file against <a data-rel="sums" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/SHA256SUMS.txt">SHA256SUMS.txt</a> with <code>sha256sum -c SHA256SUMS.txt</code> on Linux and macOS (<code>shasum -a 256</code>), or <code>Get-FileHash</code> in PowerShell.</p>
   </section>
 </main>
 
