@@ -141,14 +141,15 @@
       <li>
         <div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-win"/></svg><div><h3>Windows</h3><small>Windows 10 and 11, 64-bit</small></div></div>
         <ul class="files">
-          <li><a class="dlbtn" data-file="windows-x64.msix" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-windows-x64.msix"><b>MSIX package<small>Phosphor-0.1.678-windows-x64.msix</small></b><small>10.9 MB</small></a></li>
+          <li><a class="dlbtn" data-file="windows-x64.msix" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-windows-x64.msix"><b>MSIX package <span class="tag">Recommended</span><small>Phosphor-0.1.678-windows-x64.msix</small></b><small>10.9 MB</small></a></li>
           <li><a class="dlbtn" data-file="windows-x64-setup.exe" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-windows-x64-setup.exe"><b>Installer<small>Phosphor-0.1.678-windows-x64-setup.exe</small></b><small>8.1 MB</small></a></li>
           <li><a class="dlbtn" data-file="windows-x64-portable.zip" href="https://github.com/openvalence/Phosphor/releases/download/v0.1.678/Phosphor-0.1.678-windows-x64-portable.zip"><b>Portable zip, no install<small>Phosphor-0.1.678-windows-x64-portable.zip</small></b><small>10.4 MB</small></a></li>
         </ul>
         <p class="fine">Code-signed. SmartScreen may still warn while a new release builds download reputation.</p>
         <details class="more">
           <summary>Which one?</summary>
-          <p>The MSIX installs with a double-click through App Installer, which comes with Windows 10 and 11. The installer is the classic setup program.</p>
+          <p>Pick the MSIX. It installs with a double-click through App Installer, which comes with Windows 10 and 11. Windows checks its signature before installing, keeps the installed files read-only, and uninstall removes everything, settings included. No setup wizard.</p>
+          <p>The installer is the classic setup program, for machines where App Installer is blocked or missing.</p>
           <p>The portable zip holds a Phosphor folder: extract it somewhere you can write to and run <code>phosphor.exe</code>. Its data stays in a <code>PhosphorData</code> folder beside the exe. Run from inside the zip, it asks you to extract first. Loose in Downloads, Desktop, Documents or a drive root, it asks before writing anything.</p>
           <p>All three need the WebView2 runtime, which Windows 10 and 11 include.</p>
         </details>
