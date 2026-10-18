@@ -240,6 +240,20 @@ section > h2:first-child { scroll-margin-top: 24px; }
 .frame { position: relative; margin: 0; border-radius: 12px; overflow: hidden; background: #000; box-shadow: var(--shadow); }
 .frame video, .frame img { display: block; width: 100%; height: auto; }
 .stage figcaption { margin-top: 16px; color: rgba(255,255,255,.9); font-size: .92rem; }
+.stage figcaption a { color: #fff; }
+/* The home hero's live Phosphor (site.js app()): the frame keeps the poster's size; the iframe renders at a
+   logical size and is scaled to it, shown on the app's 'ready'. Under 640 px the frame is a phone screen with
+   its own still (.tall), and the desktop clip is not shown. */
+.frame[data-app] { aspect-ratio: 1280 / 800; }
+.frame[data-app] iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; opacity: 0; pointer-events: none; transition: opacity .5s ease-out; }
+.frame[data-app].on iframe { opacity: 1; pointer-events: auto; }
+.frame[data-app] .tall { display: none; }
+@media (max-width: 640px) {
+  .frame[data-app] { aspect-ratio: 390 / 844; }
+  .frame[data-app] video { display: none; }
+  .frame[data-app] .tall { display: block; position: absolute; inset: 0; background: url(/images/phosphor/demo-phone-dark.webp) 0 0 / 100% auto no-repeat; }
+  [data-theme=light] .frame[data-app] .tall { background-image: url(/images/phosphor/demo-phone-light.webp); }
+}
 .vtoggle {
   position: absolute; right: 14px; bottom: 14px;
   padding: 8px 14px; border-radius: 999px;

@@ -247,6 +247,8 @@
   // or, on a stepper figure, a still picture per step.
   // Constraints: one data-live figure per page (a piece's scripts share the page's globals).
   const able = !lean && (navigator.hardwareConcurrency || 0) >= 4 && (navigator.deviceMemory || 4) >= 4;
+  // The home hero's Phosphor (app() below) where the device can carry it; its clip stays the fallback.
+  const appBox = able ? document.querySelector('.frame[data-app]') : null;
   for (const ol of document.querySelectorAll('ol.beats[data-dur]')) { const f = ol.closest('figure'); f.stepper = stepper(f, ol); }
   const first = document.querySelector('figure[data-live]');
   const liveFig = able && first && (!still || first.stepper) && first;
@@ -255,8 +257,9 @@
     if (f && f.stepper) { v.removeAttribute('controls'); continue; }
     if (still) continue;
     v.removeAttribute('controls');
-    if (!(liveFig && liveFig.contains(v))) clip(v);
+    if (!(liveFig && liveFig.contains(v)) && !(appBox && appBox.contains(v))) clip(v);
   }
+  if (appBox) afterLoad(() => app(appBox));
   for (const f of document.querySelectorAll('figure')) if (f.stepper && f !== liveFig) videoDrive(f);
   if (liveFig) afterLoad(() => {
     const io = new IntersectionObserver(([e]) => {
@@ -336,6 +339,59 @@
     new IntersectionObserver(([e]) => { seen = e.isIntersecting; seen && wanted() ? go() : stop(); }, { threshold: 0.25 }).observe(box);
     addEventListener('themechange', build);
     build().then(() => { ready = true; if (seen && wanted()) go(); }, () => { box.remove(); fallback(fig); });
+  }
+
+  // The home hero: the Phosphor demo (data-app) in an iframe once the page has loaded, the visitor has done
+  // something (a pointer, key, wheel or scroll) or 4 s have passed, and the hero is on screen, at a desktop
+  // (1280 x 800) or phone (390 x 844) logical size scaled to the frame, so the app lays out as it does on a
+  // screen that size. It shows over the poster on its 'ready' message; 'failed' or 20 s of silence removes it
+  // and the clip plays as before. It follows the theme toggle; reduced motion is the app's own (it starts
+  // nothing). Constraints: the frame's size comes from style.css alone (no shift).
+  function app(box) {
+    const fallback = () => { f.remove(); if (!still) for (const v of box.querySelectorAll('video[data-auto]')) clip(v); };
+    const local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);   // the preview serves the demo on :8791
+    const url = new URL(local ? `http://${location.hostname}:8791/demo/` : box.dataset.app);
+    const theme = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+    const tall = matchMedia('(max-width: 640px)');
+    const f = document.createElement('iframe');
+    const fit = () => {
+      const [w, h] = tall.matches ? [390, 844] : [1280, 800];
+      f.width = w;
+      f.height = h;
+      f.style.transform = `scale(${box.clientWidth / w})`;
+    };
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      url.searchParams.set('embed', '1');
+      url.searchParams.set('theme', theme());
+      f.src = url.href;
+      f.title = box.dataset.title || '';
+      f.allow = 'compute-pressure';   // the app's health readout
+      fit();
+      new ResizeObserver(fit).observe(box);
+      box.appendChild(f);
+      const late = setTimeout(fallback, 20000);
+      addEventListener('message', (m) => {
+        if (m.source !== f.contentWindow || !m.data) return;
+        clearTimeout(late);
+        if (m.data.phosphor === 'failed') return fallback();
+        if (m.data.phosphor !== 'ready') return;
+        box.classList.add('on');
+        for (const v of box.querySelectorAll('video')) { v.pause(); v.remove(); }
+        const cap = box.parentElement.querySelector('figcaption[data-live-caption]');
+        if (cap) {
+          const a = Object.assign(document.createElement('a'), { href: box.dataset.app, textContent: 'Full size' });
+          cap.replaceChildren(cap.dataset.liveCaption + ' ', a);
+        }
+      });
+      addEventListener('themechange', () => f.contentWindow && f.contentWindow.postMessage({ theme: theme() }, url.origin));
+    }, { threshold: 0.01 });
+    // its first seconds are a heavy main thread: not while the page is still settling
+    const IN = ['pointerdown', 'pointermove', 'keydown', 'wheel', 'scroll', 'touchstart'];
+    const go = () => { clearTimeout(t); for (const n of IN) removeEventListener(n, go, true); io.observe(box); };
+    const t = setTimeout(go, 4000);
+    for (const n of IN) addEventListener(n, go, { capture: true, passive: true, once: true });
   }
 
   // Kinetic figure: knots, then the curve through them, then a playhead riding it.
@@ -494,6 +550,7 @@
     }, { rootMargin: '800px' });
     for (const img of document.querySelectorAll('img')) if (hiFor(img)) io.observe(img);
     for (const v of document.querySelectorAll('video[data-hi-poster]')) {
+      if (!v.offsetParent) continue;   // not shown (the home hero's clip on a phone)
       const p = new Image();
       p.src = v.dataset.hiPoster;
       p.decode().then(() => { v.poster = p.src; }).catch(() => {});

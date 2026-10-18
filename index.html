@@ -12,6 +12,9 @@
 <meta property="og:description" content="Open Source OSSM Flagship PCB, Phosphor app with Buttplug.io support and built in funscript player, Nucleus firmware with Kinetic² Motion.">
 <meta name="twitter:title" content="Open-Source Software And Hardware For Linear Motion Machines">
 <meta name="twitter:description" content="Open Source OSSM Flagship PCB, Phosphor app with Buttplug.io support and built in funscript player, Nucleus firmware with Kinetic² Motion.">
+<!-- the hero's phone still (style.css .frame[data-app] .tall), early: it is the phone LCP -->
+<link rel="preload" as="image" href="/images/phosphor/demo-phone-dark.webp" media="(max-width: 640px) and (prefers-color-scheme: dark)" fetchpriority="high">
+<link rel="preload" as="image" href="/images/phosphor/demo-phone-light.webp" media="(max-width: 640px) and (prefers-color-scheme: light)" fetchpriority="high">
 <!-- chrome:head -->
 <meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: light)">
@@ -155,12 +158,14 @@
     </div>
     <div class="stage">
       <figure>
-        <div class="frame">
+        <!-- data-app: the Phosphor demo (Phosphor repo, npm run build:demo), live over the poster where site.js's gate allows -->
+        <div class="frame" data-app="https://phosphor.openvalence.org/demo/" data-title="Phosphor, live in your browser, driving Neutrino with the Advanced pattern">
+          <span class="tall" role="img" aria-label="Phosphor on a phone, connected to Neutrino: the position readout, the safety buttons and the Advanced pattern card with its speed and stroke shape."></span>
           <video data-auto muted loop playsinline controls preload="none" width="1280" height="800" poster="/images/phosphor/hero-poster.webp" data-hi-poster="/images/phosphor/hi/hero-poster.webp" aria-label="Phosphor playing a funscript against Neutrino, the built-in machine: the timeline scrolls and the position marker follows it along the rail.">
             <source src="/images/phosphor/hero.webm" type="video/webm">
           </video>
         </div>
-        <figcaption>Phosphor driving Neutrino, the machine's firmware running inside the app. Example script, no sound.</figcaption>
+        <figcaption data-live-caption="Phosphor, live in your browser, driving Neutrino, the machine's firmware, with the Advanced pattern.">Phosphor driving Neutrino, the machine's firmware running inside the app. Example script, no sound.</figcaption>
       </figure>
     </div>
     <!-- motion/stroke.html; 900 ms: Phosphor's send-ahead at the 1000 ms factory horizon; 128 ms: Nucleus MotionArbiter.h kStripLen; curve and knots from motion/bake.mjs (Kinetic² WebAssembly build) -->
