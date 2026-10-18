@@ -64,7 +64,7 @@
         }
       }
     });
-    // The rules over rows follow the scroll through an exponential chase, so a wheel notch eases
+    // The rules over rows follow the scroll through a short exponential chase (28 ms), so a wheel notch eases
     // in instead of jumping: target = how far the row has come in (0..48% of its pass), eased.
     const rules = [];
     let raf = 0, last = 0;
@@ -72,7 +72,7 @@
     const draw = () => { if (!raf) raf = requestAnimationFrame(step); };
     function step(now) {
       raf = 0;
-      const k = 1 - Math.exp(-(last ? Math.min(now - last, 50) : 16) / 110), vh = innerHeight;
+      const k = 1 - Math.exp(-(last ? Math.min(now - last, 50) : 16) / 28), vh = innerHeight;
       last = now;
       let moving = false;
       for (const el of rules) {
