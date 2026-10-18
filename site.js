@@ -58,9 +58,34 @@
     const io = new IntersectionObserver((es) => {
       for (const e of es) {
         io.unobserve(e.target);
-        if (e.boundingClientRect.top > e.rootBounds.height) e.target.classList.add('rv');
+        if (e.boundingClientRect.top > e.rootBounds.height) {
+          e.target.classList.add('rv');
+          if (e.target.matches('.doors > li, .index > li, .facts > li, .platforms > li')) rules.push(e.target), draw();
+        }
       }
     });
+    // The rules over rows follow the scroll through an exponential chase, so a wheel notch eases
+    // in instead of jumping: target = how far the row has come in (0..48% of its pass), eased.
+    const rules = [];
+    let raf = 0, last = 0;
+    const ease = (x) => x * x * (3 - 2 * x);
+    const draw = () => { if (!raf) raf = requestAnimationFrame(step); };
+    function step(now) {
+      raf = 0;
+      const k = 1 - Math.exp(-(last ? Math.min(now - last, 50) : 16) / 110), vh = innerHeight;
+      last = now;
+      let moving = false;
+      for (const el of rules) {
+        const r = el.getBoundingClientRect();
+        const t = ease(Math.min(1, Math.max(0, (vh - r.top) / (0.48 * (vh + r.height)))));
+        const c = el._draw ?? 0, n = Math.abs(t - c) < 0.001 ? t : c + (t - c) * k;
+        if (n !== c) el.style.setProperty('--draw', (el._draw = n).toFixed(4));
+        if (n !== t) moving = true;
+      }
+      if (moving) draw(); else last = 0;
+    }
+    addEventListener('scroll', draw, { passive: true });
+    addEventListener('resize', draw, { passive: true });
     for (const e of document.querySelectorAll('main h2, .numbers > div, .doors > li, .index > li, .facts > li, .platforms > li, .split figure, .gallery figure, .renders figure, .stage-pcb')) io.observe(e);
   }
 

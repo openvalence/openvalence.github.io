@@ -777,7 +777,7 @@ a { transition: color .16s ease-out, text-decoration-color .16s ease-out; }
   .doors > li.rv, .index > li.rv, .facts > li.rv, .platforms > li.rv { border-top-color: transparent; position: relative; }
   .doors > li.rv::before, .index > li.rv::before, .facts > li.rv::before, .platforms > li.rv::before {
     content: ''; position: absolute; left: 0; right: 0; top: -3px; height: 3px; background: var(--ink); transform-origin: 0 0;
-    animation: rv-draw both cubic-bezier(.4, .1, .2, 1); animation-timeline: view(); animation-range: entry 0% cover 48%;
+    transform: scaleX(var(--draw, 1));   /* site.js eases --draw toward the scroll position */
   }
   .band .facts > li.rv::before { background: #fff; }
   .split figure.rv img, .gallery figure.rv img, .renders figure.rv img, .stage-pcb.rv img { animation: rv-drift both linear; animation-timeline: view(); animation-range: cover; }
