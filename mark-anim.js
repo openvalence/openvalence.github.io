@@ -127,7 +127,7 @@ export function orbit(svg, o = {}) {
 
 // header(img): the site header's mark (openvalence.github.io, tools/chrome.html). Swaps the static
 // <img> for a MARK_SVG of the same size, plays the intro once when html.intro is set (the head script
-// sets it on the home page's first load in a session; style.css hides the img meanwhile), from fresh
+// sets it on the home page unless the visitor came from another page of the site; style.css hides the img meanwhile), from fresh
 // random places each time, then spins once per hover or keyboard focus. Site only.
 export function header(img) {
   const html = document.documentElement, brand = img.closest('a') || img.parentElement;
@@ -144,7 +144,6 @@ export function header(img) {
     requestAnimationFrame(tick);
   };
   if (html.classList.contains('intro')) {
-    try { sessionStorage.setItem('intro', '1'); } catch (e) {}
     if (performance.now() < 2300) { o.draw(0); go(o.END, o.draw); }   // later, style.css has shown the img: no intro
   }
   img.remove();

@@ -5,14 +5,15 @@ The shared blocks every page carries. Edit here, then run: python tools/chrome.p
 <meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: light)">
 <script>
 // The theme before first paint; site.js follows "themechange". Constraints: stays inline and above
-// the stylesheet; the theme-color metas stay first, dark then light. localStorage.theme is kept only
-// while it differs from the default (the system, or Dark Reader's scheme once seen in this tab);
-// darkreader-lock stands Dark Reader's dynamic mode down.
+// the stylesheet; the theme-color metas stay first, dark then light. localStorage.theme is the ONLY
+// storage the site touches, written only by the theme button and only while it differs from the
+// default (the system, or Dark Reader's scheme on this page); privacy.html promises that, so add no
+// other storage without a consent story. darkreader-lock stands Dark Reader's dynamic mode down.
 (() => {
   const d = document.documentElement, sys = matchMedia('(prefers-color-scheme: light)');
   const get = (s, k) => { try { return window[s].getItem(k); } catch (e) {} };
   const put = (s, k, v) => { try { v ? window[s].setItem(k, v) : window[s].removeItem(k); } catch (e) {} };
-  let dr = get('sessionStorage', 'darkreader');
+  let dr;
   const auto = () => dr || (sys.matches ? 'light' : 'dark');
   const lock = () => document.querySelector('meta[name=darkreader-lock]') || document.head.append(Object.assign(document.createElement('meta'), { name: 'darkreader-lock' }));
   const label = () => {
@@ -36,17 +37,16 @@ The shared blocks every page carries. Edit here, then run: python tools/chrome.p
   new MutationObserver(() => {
     if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;
     dr = d.getAttribute('data-darkreader-scheme') === 'dimmed' ? 'light' : 'dark';
-    put('sessionStorage', 'darkreader', dr);
     lock();
     apply();
   }).observe(d, { attributeFilter: ['data-darkreader-mode'] });
-  if (dr) lock();
   sys.addEventListener('change', apply);
   document.addEventListener('DOMContentLoaded', label);
   d.classList.add('js');
-  // The home page's first load in a session plays the header mark's intro (site.js); html.intro
-  // hides the mark until it starts, and style.css shows it anyway after 2.5 s.
-  if (location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches && !get('sessionStorage', 'intro')) d.classList.add('intro');
+  // The home page plays the header mark's intro unless the visitor came from another page of this
+  // site (site.js); html.intro hides the mark until it starts, and style.css shows it anyway after 2.5 s.
+  const inside = (() => { try { return new URL(document.referrer).origin === location.origin; } catch (e) { return false; } })();
+  if (location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches && !inside) d.classList.add('intro');
   apply();
 })();
 </script>
