@@ -345,7 +345,7 @@
   // something (a pointer, key, wheel or scroll) or 4 s have passed, and the hero is on screen, at a desktop
   // (1280 x 800) or phone (390 x 844) logical size scaled to the frame, so the app lays out as it does on a
   // screen that size. It shows over the poster on its 'ready' message; 'failed' or 20 s of silence removes it
-  // and the clip plays as before. It follows the theme toggle; reduced motion is the app's own (it starts
+  // and the clip plays as before. It is told 'pause' off screen and in a hidden tab, 'resume' back. It follows the theme toggle; reduced motion is the app's own (it starts
   // nothing). Constraints: the frame's size comes from style.css alone (no shift).
   function app(box) {
     const fallback = () => { f.remove(); if (!still) for (const v of box.querySelectorAll('video[data-auto]')) clip(v); };
@@ -371,12 +371,19 @@
       fit();
       new ResizeObserver(fit).observe(box);
       box.appendChild(f);
+      // off screen or in a hidden tab the app pauses: Neutrino's clock stops (sent again on ready, the first
+      // message the app can hear)
+      let seen = true;
+      const tell = () => f.contentWindow && f.contentWindow.postMessage({ phosphor: seen && !document.hidden ? 'resume' : 'pause' }, url.origin);
+      new IntersectionObserver(([e]) => { seen = e.isIntersecting; tell(); }).observe(box);
+      document.addEventListener('visibilitychange', tell);
       const late = setTimeout(fallback, 20000);
       addEventListener('message', (m) => {
         if (m.source !== f.contentWindow || !m.data) return;
         clearTimeout(late);
         if (m.data.phosphor === 'failed') return fallback();
         if (m.data.phosphor !== 'ready') return;
+        tell();
         box.classList.add('on');
         for (const v of box.querySelectorAll('video')) { v.pause(); v.remove(); }
         const cap = box.parentElement.querySelector('figcaption[data-live-caption]');
