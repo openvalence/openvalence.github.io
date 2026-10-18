@@ -227,7 +227,7 @@
     <p>CI builds are ad-hoc signed and not notarized. After you copy Phosphor out of the .dmg, either run <code>xattr -dr com.apple.quarantine /Applications/Phosphor.app</code> or use System Settings, Privacy &amp; Security, Open Anyway after the first refused launch. macOS then asks for two permissions, Local Network (to find machines) and Bluetooth (to set them up). Without Local Network, scans fail without an error, so allow both.</p>
     <h3>Windows</h3>
     <!-- docs/BUILD.md lines 145; src/shell/SettingsPane.svelte:100; docs/DESIGN.md lines 1151-1152 -->
-    <p>Phosphor needs Microsoft's WebView2, which comes with Windows 11 and current Windows 10. Windows asks about the firewall the first time you turn on Settings, Open to LAN. Phosphor never edits firewall rules.</p>
+    <p>Phosphor needs Microsoft's WebView2, which comes with Windows 11 and current Windows 10. Windows 10 LTSC and IoT lack it: the installer downloads it during setup, or install the <a href="https://developer.microsoft.com/microsoft-edge/webview2/">Evergreen Runtime</a>. Windows asks about the firewall the first time you turn on Settings, Open to LAN. Phosphor never edits firewall rules.</p>
     <h3>Open to LAN</h3>
     <!-- src/shell/lan.svelte.js:90, 92, 120; docs/DESIGN.md lines 1145-1148 -->
     <p><code>&lt;port&gt; unavailable</code> or <code>Not open: …</code> means the port could not be used. A port below 1024 needs privileges on Linux and macOS. Phosphor falls back to a port the system picks and advertises that one.</p>
