@@ -43,7 +43,10 @@
     if (!e.target.closest || !e.target.closest('.theme')) return;
     const t = d.dataset.theme === 'light' ? 'dark' : 'light';
     put('localStorage', 'theme', t === auto() ? '' : t);
-    apply();
+    // a crossfade where the browser has view transitions (style.css .vt-theme); reduced motion: instant
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return apply();
+    d.classList.add('vt-theme');
+    document.startViewTransition(apply).finished.finally(() => d.classList.remove('vt-theme'));
   });
   new MutationObserver(() => {
     if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;
@@ -135,6 +138,26 @@
       <li><span class="num">128<small>ns</small></span><b>Edge spread</b><p>Every quadrature edge lands on a 125 ns grid, so timing error stays inside one step and does not add up over a stroke.</p></li>
       <li><span class="num">900<small>ms</small></span><b>Wi-Fi buffer</b><p>The client sends motion up to the horizon minus 100 ms ahead, so a shorter Wi-Fi stall doesn't reach the motion.</p></li>
     </ul>
+    <!-- motion/timing.html; facts as the Sources comment above, plus MotionArbiter.h kStepsPerMm 208.608 and kLpClockHz 40 MHz; the stroke from motion/bake.mjs (Kinetic² WebAssembly build) -->
+    <figure class="motion" data-live="/motion/kinetic-data.js /motion/common.js /motion/timing.js">
+      <div class="frame dark">
+        <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/timing-dark.webp" aria-label="Animation, no sound: one stroke seen at five zoom levels, from a 2.4 second view where knots arrive 900 ms ahead, to the 128 ms plan strip, to 1 ms steer ticks that renew a 4 ms lease, to single quadrature steps of 4.79 micrometers, to the 125 ns poll grid where an edge lands on the first poll after its deadline.">
+          <source src="/images/motion/timing-dark-640.webm" type="video/webm" media="(max-width: 700px)">
+          <source src="/images/motion/timing-dark-640.mp4" type="video/mp4" media="(max-width: 700px)">
+          <source src="/images/motion/timing-dark.webm" type="video/webm">
+          <source src="/images/motion/timing-dark.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="frame light">
+        <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/timing-light.webp" aria-label="Animation, no sound: one stroke seen at five zoom levels, from a 2.4 second view where knots arrive 900 ms ahead, to the 128 ms plan strip, to 1 ms steer ticks that renew a 4 ms lease, to single quadrature steps of 4.79 micrometers, to the 125 ns poll grid where an edge lands on the first poll after its deadline.">
+          <source src="/images/motion/timing-light-640.webm" type="video/webm" media="(max-width: 700px)">
+          <source src="/images/motion/timing-light-640.mp4" type="video/mp4" media="(max-width: 700px)">
+          <source src="/images/motion/timing-light.webm" type="video/webm">
+          <source src="/images/motion/timing-light.mp4" type="video/mp4">
+        </video>
+      </div>
+      <figcaption>One stroke, from the Wi-Fi buffer down to a single edge. Time slows as the view narrows; the readout says by how much. Positions are Kinetic² output drawn as a 100 mm stroke, the steps are Nucleus's 208.608 per mm.</figcaption>
+    </figure>
     <details class="more">
       <summary>Details</summary>
       <p>The planner keeps a strip of the next 128 positions in mm, one per 1 ms tick. Past the end of the strip the steer holds the last position and counts a planner stall.</p>

@@ -136,8 +136,11 @@ main li { margin-bottom: 6px; }
 .intro .brand img { opacity: 0; animation: mark-show 0s 2.5s forwards; }
 @keyframes mark-show { to { opacity: 1; } }
 .chips { display: flex; align-items: center; gap: 22px; margin-left: auto; }
-.chip { color: var(--ink-2); text-decoration: none; white-space: nowrap; font: 800 .82rem/1.6 var(--display); font-stretch: 108%; text-transform: uppercase; letter-spacing: .04em; }
-.chip:hover, .chip[aria-current] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 6px; }
+.chip { position: relative; color: var(--ink-2); white-space: nowrap; font: 800 .82rem/1.6 var(--display); font-stretch: 108%; text-transform: uppercase; letter-spacing: .04em; text-decoration: underline 3px transparent; text-underline-offset: 11px; transition: color .18s ease-out, text-decoration-color .18s ease-out, text-underline-offset .3s var(--settle); }
+.chip:hover { color: var(--ink); text-decoration-color: var(--accent); text-underline-offset: 6px; }
+/* the current page's bar: one element across pages, so a page change slides it to the new link */
+.chip[aria-current] { color: var(--ink); text-decoration-color: transparent; }
+.chip[aria-current]::after { content: ''; position: absolute; left: 0; right: 0; top: calc(50% + .66em + 6px); height: 3px; background: var(--accent); view-transition-name: nav-current; }
 .chip.util { margin-left: 2px; padding-left: 24px; border-left: 1px solid var(--rule); }
 .get {
   display: inline-flex; align-items: center; gap: 8px; flex: none;
@@ -149,23 +152,26 @@ main li { margin-bottom: 6px; }
 /* the theme toggle: shows the theme it switches to; hidden without the head script */
 .theme { display: grid; place-items: center; flex: none; width: 38px; height: 38px; margin-left: -14px; padding: 0; border: 0; border-radius: 50%; color: var(--ink); background: none; cursor: pointer; }
 .theme:hover { color: var(--accent-ink); background: var(--bg-2); }
-.theme .ico { width: 21px; height: 21px; }
-html:not(.js) .theme, :root:not([data-theme=light]) .theme .moon, [data-theme=light] .theme .sun { display: none; }
+.theme .ico { grid-area: 1 / 1; width: 21px; height: 21px; transition: transform .7s var(--spring), opacity .2s ease-out; }
+html:not(.js) .theme { display: none; }
+/* both icons share the cell: the other theme's turns in, this one's turns out */
+:root:not([data-theme=light]) .theme .moon { opacity: 0; transform: rotate(-100deg) scale(.4); }
+[data-theme=light] .theme .sun { opacity: 0; transform: rotate(100deg) scale(.4); }
 /* the Components menu: site.js opens it on hover, tap and its arrow button, and adds .live; without
    it, hover and focus-within open it. Below 1100 px the panel hangs from the header, not from the
    scrolling link row, which would clip it. */
 .strip { position: relative; z-index: 10; }
 .menu { position: relative; display: flex; align-items: center; gap: 2px; }
 .menu-btn { display: grid; place-items: center; width: 24px; height: 28px; margin-right: -6px; padding: 0; border: 0; border-radius: 4px; color: var(--ink-2); background: none; cursor: pointer; }
-.menu-btn .ico { width: 15px; height: 15px; stroke-width: 2.5; transition: transform .15s; }
+.menu-btn .ico { width: 15px; height: 15px; stroke-width: 2.5; transition: transform .45s var(--spring); }
 .menu-btn:hover, .menu.open .menu-btn { color: var(--ink); }
 .menu.open .menu-btn .ico { transform: rotate(180deg); }
 html:not(.js) .menu-btn { display: none; }
 .menu-panel {
   position: absolute; top: 100%; left: -18px; width: 360px; padding-top: 12px;
-  visibility: hidden; opacity: 0; transition: opacity .12s, visibility 0s .12s;
+  visibility: hidden; opacity: 0; transform: translateY(-8px); transition: opacity .12s ease-in, transform .12s ease-in, visibility 0s .12s;
 }
-.menu.open .menu-panel, .menu:not(.live):hover .menu-panel, .menu:not(.live):focus-within .menu-panel { visibility: visible; opacity: 1; transition-delay: 0s; }
+.menu.open .menu-panel, .menu:not(.live):hover .menu-panel, .menu:not(.live):focus-within .menu-panel { visibility: visible; opacity: 1; transform: none; transition: opacity .16s ease-out, transform .42s var(--settle), visibility 0s; }
 .menu-panel ul { margin: 0; padding: 0; list-style: none; }
 .menu-panel ul, .menu-panel .all { background: var(--bg); }
 .menu-panel ul { border-top: 3px solid var(--ink); box-shadow: var(--shadow); }
@@ -693,14 +699,17 @@ html:not(.js) .stepbar, html:not(.js) .steptabs, html:not(.js) .stepnote { displ
 .stepbar button:hover { color: var(--bg); background: var(--ink); }
 .stepbar .go { min-width: 7.2em; color: #fff; background: var(--accent); border-color: var(--accent); }
 .stepbar input { flex: 1 1 180px; min-width: 0; margin: 0; accent-color: var(--accent); }
-.steptabs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px 16px; margin: 0 0 14px; }
+.steptabs { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px 16px; margin: 0 0 14px; }
+/* the current step's bar (site.js stepper()) glides between the tabs */
+.steptabs .tab-bar { position: absolute; left: 0; top: 0; width: 100px; height: 3px; background: var(--accent); transform-origin: 0 0; transition: transform .5s var(--settle); pointer-events: none; }
+.steptabs:has(.tab-bar) [aria-current] { border-top-color: var(--rule); }
 .steptabs button { padding: 9px 0 0; text-align: left; color: var(--ink-3); background: none; border: 0; border-top: 3px solid var(--rule); }
 .steptabs button span { margin-right: .3em; font-family: var(--mono); font-weight: 400; color: var(--accent-ink); }
 .steptabs button:hover, .steptabs [aria-current] { color: var(--ink); }
 .steptabs [aria-current] { border-top-color: var(--accent); }
 .js .motion .beats { display: grid; padding: 0; list-style: none; }
-.js .motion .beats > li { grid-area: 1 / 1; margin: 0; visibility: hidden; }
-.js .motion .beats > li.on { visibility: visible; }
+.js .motion .beats > li { grid-area: 1 / 1; margin: 0; visibility: hidden; opacity: 0; transition: opacity .12s ease-in, visibility 0s .12s; }
+.js .motion .beats > li.on { visibility: visible; opacity: 1; transition: opacity .28s ease-out .1s, visibility 0s .1s; }
 .stepnote { min-height: 3lh; margin: 8px 0 12px; font: 400 .76rem/1.6 var(--mono); color: var(--ink); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 640px) {
@@ -713,3 +722,84 @@ html:not(.js) .stepbar, html:not(.js) .steptabs, html:not(.js) .stepnote { displ
 .motion .live .disp { font-family: var(--display); font-weight: 900; font-stretch: 118%; letter-spacing: -0.015em; }
 .motion .live .kick { font-family: var(--display); font-weight: 800; font-stretch: 110%; letter-spacing: 0.06em; text-transform: uppercase; }
 .motion .live .mono { font-family: var(--mono); font-weight: 400; }
+
+/* ---- motion: page changes, scroll, feedback ----
+   Transforms and opacity only. Reduced motion turns all of it off: the rule above, and page
+   changes opt in only without it. Page changes use cross-document view transitions where the
+   browser has them, a plain load elsewhere.
+   --spring is a damped spring (zeta 0.6, 1.9 Hz, 9% over), --settle a stiffer one (zeta 0.82,
+   1% over), both sampled into linear(). */
+:root {
+  --spring: linear(0, 0.055, 0.189, 0.359, 0.536, 0.699, 0.836, 0.942, 1.017, 1.064, 1.088, 1.095, 1.089, 1.076, 1.06, 1.043, 1.028, 1.015, 1.005, 0.998, 0.994, 0.992, 0.991, 0.992, 0.993, 0.994, 0.996, 0.997, 0.999, 1, 1);
+  --settle: linear(0, 0.08, 0.249, 0.436, 0.605, 0.742, 0.843, 0.914, 0.96, 0.988, 1.002, 1.009, 1.011, 1.01, 1.009, 1.007, 1.005, 1.003, 1.002, 1.001, 1);
+  --out: cubic-bezier(.2, .8, .2, 1);
+}
+
+/* page changes: the header holds still, the mark turns a third (it looks the same every 120
+   degrees), the current-page bar slides to the new link, the page crossfades and the new one rises */
+@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }
+.strip { view-transition-name: strip; }
+.brand img, .brand .ov-mark { view-transition-name: mark; }
+main h1 { view-transition-name: title; }
+::view-transition-group(*) { animation-duration: .5s; animation-timing-function: var(--out); }
+::view-transition-old(root) { animation: vt-out .26s ease both; }
+::view-transition-new(root) { animation: vt-in .26s ease both, vt-rise .55s var(--out) both; }
+/* two headlines never stand on top of each other: the old one is gone before the new one shows */
+::view-transition-old(title) { animation: vt-out .14s ease-in both; }
+::view-transition-new(title) { animation: vt-in .3s ease-out .1s both, vt-rise .6s var(--out) .1s both; }
+::view-transition-old(title), ::view-transition-new(title) { height: 100%; object-fit: none; object-position: left top; }
+::view-transition-old(mark) { animation: none; opacity: 0; }
+::view-transition-new(mark) { animation: vt-turn .9s var(--spring) both; }
+::view-transition-group(nav-current) { animation-duration: .55s; animation-timing-function: var(--settle); }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; } }
+@keyframes vt-rise { from { transform: translateY(14px); } }
+@keyframes vt-turn { from { transform: rotate(-120deg); } }
+/* the theme toggle's crossfade: the head script (tools/chrome.html) sets .vt-theme for it */
+.vt-theme::view-transition-old(*) { animation: vt-out .32s ease both; }
+.vt-theme::view-transition-new(*) { animation: vt-in .32s ease both; }
+.vt-theme::view-transition-group(*) { animation: none; }
+
+/* feedback: hover eases, a press gives, the release springs back */
+a { transition: color .16s ease-out, text-decoration-color .16s ease-out; }
+.btn, .get, .dlbtn, .stepbar button, .vtoggle { transition: background-color .18s ease-out, color .18s ease-out, border-color .18s ease-out, transform .5s var(--spring); }
+.btn:active, .get:active, .dlbtn:active, .stepbar button:active, .vtoggle:active, .theme:active { transform: scale(.95); transition-duration: .18s, .18s, .18s, .09s; transition-timing-function: ease-out; }
+.embed .btn:active { transform: translate(-50%, -50%) scale(.95); }
+.theme { transition: color .18s ease-out, background-color .18s ease-out, transform .5s var(--spring); }
+.doors h3 a::after { content: '\2192'; display: inline-block; margin-left: .28em; transition: transform .5s var(--spring); }
+.doors h3 a:hover::after { transform: translateX(.2em); }
+.index > li h3 a, .menu-panel .item, .menu-panel .item b, .steptabs button, .chain .blk, .chain .blk .ico, .chain .blk strong, .chain .blk small, .spot { transition: color .16s ease-out, background-color .16s ease-out, border-color .16s ease-out; }
+
+/* scroll: site.js marks .rv on what starts below the first screen, so the page paints whole.
+   On the way in, headings rise, the rules over rows draw left to right, pictures drift a little. */
+@supports (animation-timeline: view()) {
+  h2.rv, .numbers > .rv { animation: rv-rise both var(--out); animation-timeline: view(); animation-range: entry 0% cover 32%; }
+  .doors > li.rv, .index > li.rv, .facts > li.rv, .platforms > li.rv { border-top-color: transparent; position: relative; }
+  .doors > li.rv::before, .index > li.rv::before, .facts > li.rv::before, .platforms > li.rv::before {
+    content: ''; position: absolute; left: 0; right: 0; top: -3px; height: 3px; background: var(--ink); transform-origin: 0 0;
+    animation: rv-draw both cubic-bezier(.3, .6, .2, 1); animation-timeline: view(); animation-range: entry 10% cover 34%;
+  }
+  .band .facts > li.rv::before { background: #fff; }
+  .split figure.rv img, .gallery figure.rv img, .renders figure.rv img, .stage-pcb.rv img { animation: rv-drift both linear; animation-timeline: view(); animation-range: cover; }
+}
+@keyframes rv-rise { from { transform: translateY(.45em); } }
+@keyframes rv-draw { from { transform: scaleX(0); } }
+@keyframes rv-drift { from { transform: translateY(22px); } to { transform: translateY(-22px); } }
+/* a live piece comes up over its poster */
+.motion .live { animation: vt-in .5s ease-out both; }
+.band .motion figcaption { color: rgba(255,255,255,.9); }
+/* a catalog field on its way into the control (site.js, figure.morph) */
+.morph { position: relative; }
+.morph .fly { position: absolute; z-index: 2; padding: 2px 8px; border-radius: 999px; font: 400 .78rem/1.6 var(--mono); color: #fff; background: var(--accent); border: 2px solid #fff; white-space: nowrap; pointer-events: none; box-shadow: 0 6px 18px -6px rgba(0,0,0,.5); }
+/* the home page's stroke: drawn on the page itself, and on into the margins (motion/stroke.js
+   draws past its box); narrow screens show it larger, cropped at the sides */
+.ribbon { margin: clamp(40px, 6vw, 84px) 0 0; }
+.ribbon .frame { overflow: visible; border-radius: 0; box-shadow: none; background: none; }
+.motion.ribbon .live svg { overflow: visible; }
+.motion.ribbon .vtoggle { top: 0; right: 0; padding: 6px 11px; font-size: .64rem; color: var(--ink-3); background: var(--bg); border: 1.5px solid var(--rule); }
+.motion.ribbon .vtoggle:hover { color: var(--ink); border-color: var(--ink-3); background: var(--bg); }
+@media (max-width: 640px) {
+  .ribbon { margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); overflow-x: clip; }
+  .ribbon .frame { width: 140%; margin-left: -27%; }
+  .motion.ribbon .vtoggle { right: calc(9.3% + 8px); }
+}

@@ -43,7 +43,10 @@
     if (!e.target.closest || !e.target.closest('.theme')) return;
     const t = d.dataset.theme === 'light' ? 'dark' : 'light';
     put('localStorage', 'theme', t === auto() ? '' : t);
-    apply();
+    // a crossfade where the browser has view transitions (style.css .vt-theme); reduced motion: instant
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return apply();
+    d.classList.add('vt-theme');
+    document.startViewTransition(apply).finished.finally(() => d.classList.remove('vt-theme'));
   });
   new MutationObserver(() => {
     if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;
@@ -160,6 +163,26 @@
         <figcaption>Phosphor driving Neutrino, the machine's firmware running inside the app. Example script, no sound.</figcaption>
       </figure>
     </div>
+    <!-- motion/stroke.html; 900 ms: Phosphor's send-ahead at the 1000 ms factory horizon; 128 ms: Nucleus MotionArbiter.h kStripLen; curve and knots from motion/bake.mjs (Kinetic² WebAssembly build) -->
+    <figure class="motion ribbon" data-live="/motion/kinetic-data.js /motion/common.js /motion/stroke.js" data-vb="0 0 1280 360">
+      <div class="frame dark">
+        <video data-auto muted loop playsinline controls preload="none" width="1280" height="360" poster="/images/motion/stroke-dark.webp" aria-label="Animation, no sound: a script's actions arrive 900 ms before they are due, the planner draws a smooth curve to each one, and a carriage on a rail follows the curve while its path fades behind it.">
+          <source src="/images/motion/stroke-dark-640.webm" type="video/webm" media="(max-width: 700px)">
+          <source src="/images/motion/stroke-dark-640.mp4" type="video/mp4" media="(max-width: 700px)">
+          <source src="/images/motion/stroke-dark.webm" type="video/webm">
+          <source src="/images/motion/stroke-dark.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="frame light">
+        <video data-auto muted loop playsinline controls preload="none" width="1280" height="360" poster="/images/motion/stroke-light.webp" aria-label="Animation, no sound: a script's actions arrive 900 ms before they are due, the planner draws a smooth curve to each one, and a carriage on a rail follows the curve while its path fades behind it.">
+          <source src="/images/motion/stroke-light-640.webm" type="video/webm" media="(max-width: 700px)">
+          <source src="/images/motion/stroke-light-640.mp4" type="video/mp4" media="(max-width: 700px)">
+          <source src="/images/motion/stroke-light.webm" type="video/webm">
+          <source src="/images/motion/stroke-light.mp4" type="video/mp4">
+        </video>
+      </div>
+      <figcaption>A script on its way to the rail. Each action is sent 900 ms early, Kinetic² draws the curve to it as it arrives, and the carriage follows the next 128 ms of the plan. The curve is real planner output.</figcaption>
+    </figure>
   </section>
 
   <section aria-labelledby="s-start">

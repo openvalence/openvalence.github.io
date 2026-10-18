@@ -51,6 +51,13 @@
   const atLoad = (f) => (document.readyState === 'complete' ? f() : addEventListener('load', f, { once: true }));
   if (mark && !still) atLoad(() => import('/mark-anim.js').then((m) => m.header(mark)).catch(() => document.documentElement.classList.remove('intro')));
 
+  // Scroll-linked entrances (style.css .rv) for what starts below the first screen only: the page
+  // paints whole, and nothing on the first screen waits for a scroll.
+  if (!still && window.CSS && CSS.supports('animation-timeline: view()')) {
+    const fold = innerHeight, all = [...document.querySelectorAll('main h2, .numbers > div, .doors > li, .index > li, .facts > li, .platforms > li, .split figure, .gallery figure, .renders figure, .stage-pcb')];
+    for (const e of all.filter((e) => e.getBoundingClientRect().top > fold)) e.classList.add('rv');
+  }
+
   // A pause button for anything that moves on its own (WCAG 2.2.2).
   function toggle(host, onPlay, onPause) {
     const b = document.createElement('button');
@@ -87,6 +94,22 @@
     const bar = fig.querySelector('.stepbar'), [prev, play, next, range] = bar.querySelectorAll('button, input');
     const tabs = [...fig.querySelectorAll('.steptabs button')], note = fig.querySelector('.stepnote'), say = bar.querySelector('[aria-live]');
     let stops = base, drive = null, playing = !still, touched = false, u = +range.value, cur = -1, anim = 0;
+    // the current step's bar (style.css .tab-bar): one element that glides between the tabs
+    const tabBar = document.createElement('i');
+    tabBar.className = 'tab-bar';
+    tabs[0].parentElement.appendChild(tabBar);
+    let placed = false;
+    const place = (jump) => {
+      const t = tabs[cur];
+      if (!t) return;
+      // the first placement and a resize jump; a step change glides
+      const snap = jump || !placed;
+      if (snap) tabBar.style.transition = 'none';
+      tabBar.style.transform = `translate(${t.offsetLeft}px, ${t.offsetTop}px) scaleX(${t.offsetWidth / 100})`;
+      if (snap) { void tabBar.offsetWidth; tabBar.style.transition = ''; }
+      placed = true;
+    };
+    new ResizeObserver(() => place(true)).observe(tabs[0].parentElement);
     const host = (x) => (x - off + dur) % dur;
     const beatOf = (x) => starts.reduce((b, s, i) => (x >= s ? i : b), 0);
     // keep: leave the note as it is (a step on its way)
@@ -100,7 +123,7 @@
       }
       if (!keep) note.textContent = (stop && stop.note) || '';
       range.setAttribute('aria-valuetext', `Step ${b + 1} of ${items.length}, ${x.toFixed(1)} s`);
-      cur = b;
+      if (b !== cur) { cur = b; place(); }
     }
     function setPlay(on) {
       cancelAnimationFrame(anim);
@@ -229,7 +252,7 @@
     const shown = () => [...fig.querySelectorAll('video')].find((v) => v.offsetParent);
     const box = document.createElement('div');
     box.className = 'live';
-    box.innerHTML = '<svg id="scene" viewBox="0 0 1280 720" aria-hidden="true"></svg>';
+    box.innerHTML = `<svg id="scene" viewBox="${fig.dataset.vb || '0 0 1280 720'}" aria-hidden="true"></svg>`;
     const svg = box.firstChild;
     let t = 0, last = 0, raf = 0, ready = false, seen = false, dt = [], video = null, at = -1, onSeeked = null, held = false;
     const build = () => {
@@ -336,6 +359,34 @@
       return (2 * u3 - 3 * u2 + 1) * K[i][1] + (u3 - 2 * u2 + u) * h[i] * m[i]
         + (-2 * u3 + 3 * u2) * K[i + 1][1] + (u3 - u2) * h[i] * m[i + 1];
     };
+  }
+
+  // A catalog entry turning into a control (/valence/, figure.morph): the first time the figure is
+  // well on screen, each field ([data-to] in the entry) travels to the part of the control drawn
+  // from it, which comes up as it lands. The figure is whole before and after; reduced motion: none.
+  for (const fig of document.querySelectorAll('figure.morph')) {
+    if (still || !fig.animate) continue;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      const box = fig.getBoundingClientRect();
+      [...fig.querySelectorAll('[data-to]')].forEach((src, i) => {
+        const dst = fig.querySelector('.ui ' + src.dataset.to), a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+        const fly = document.createElement('span');
+        fly.className = 'fly';
+        fly.setAttribute('aria-hidden', 'true');
+        fly.textContent = src.textContent;
+        fly.style.left = a.left - box.left - 8 + 'px';
+        fly.style.top = a.top - box.top - 2 + 'px';
+        fig.appendChild(fly);
+        const at = 250 + i * 160, go = 720;
+        const dx = b.left - a.left, dy = b.top + b.height / 2 - (a.top + a.height / 2);
+        fly.animate([{ transform: 'none', opacity: 0 }, { transform: 'none', opacity: 1, offset: 0.12 }, { transform: `translate(${dx}px, ${dy}px)`, opacity: 1, offset: 0.85 }, { transform: `translate(${dx}px, ${dy}px)`, opacity: 0 }],
+          { delay: at, duration: go, easing: 'cubic-bezier(.45, 0, .2, 1)', fill: 'both' }).finished.then(() => fly.remove());
+        dst.animate([{ opacity: 0.15 }, { opacity: 1 }], { delay: at + go * 0.8, duration: 260, easing: 'ease-out', fill: 'backwards' });
+      });
+    }, { threshold: 0.6 });
+    io.observe(fig);
   }
 
   // Click-to-load embeds: nothing heavy loads until asked.
