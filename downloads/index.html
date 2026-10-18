@@ -148,10 +148,10 @@
         <p class="fine">Code-signed. SmartScreen may still warn while a new release builds download reputation.</p>
         <details class="more">
           <summary>Which one?</summary>
-          <p>Pick the MSIX. It installs with a double-click through App Installer, which comes with Windows 10 and 11. Windows checks its signature before installing, keeps the installed files read-only, and uninstall removes everything, settings included. No setup wizard.</p>
-          <p>The installer is the classic setup program, for machines where App Installer is blocked or missing.</p>
-          <p>The portable zip holds a Phosphor folder: extract it somewhere you can write to and run <code>phosphor.exe</code>. Its data stays in a <code>PhosphorData</code> folder beside the exe. Run from inside the zip, it asks you to extract first. Loose in Downloads, Desktop, Documents or a drive root, it asks before writing anything.</p>
-          <p>All three need the WebView2 runtime, which Windows 10 and 11 include.</p>
+          <p><b>MSIX:</b> Windows verifies the signature and every file block before installing. Per-user, no admin, into the protected WindowsApps folder. Settings live in a per-app container that uninstall deletes.</p>
+          <p><b>Installer:</b> classic per-user setup, no admin. For machines where App Installer is removed or blocked by policy.</p>
+          <p><b>Portable:</b> extract the folder anywhere writable and run <code>phosphor.exe</code>. Data stays in <code>PhosphorData</code> beside it. Warns before writing from inside the zip, Downloads, Desktop, Documents or a drive root.</p>
+          <p>All three need WebView2, built into Windows 10 and 11.</p>
         </details>
       </li>
       <li>
