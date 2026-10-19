@@ -118,7 +118,7 @@
 <main>
   <section class="opening">
     <h1>Try it without a machine</h1>
-    <p>The planner runs in your browser. Phosphor includes Neutrino, an emulated machine that runs on your desktop. Neither needs a PCB.</p>
+    <p>The planner and Phosphor both run in your browser. Phosphor includes Neutrino, an emulated machine. Neither needs a PCB.</p>
   </section>
 
   <section aria-labelledby="s-playground">
@@ -144,8 +144,10 @@
     </figure>
     <!-- Phosphor README.md "Neutrino, the built-in machine (the hub firmware as wasm)"; src/model/neutrino/ -->
     <p>Neutrino is the machine's firmware compiled to WebAssembly, running inside Phosphor. It uses the same Valence protocol as a real machine, so the clip shows the real protocol, catalog and planner, without a motor.</p>
-    <p>It comes with Phosphor: connect to "Neutrino" in the machine list. Pre-release builds are on <a href="/downloads/">Downloads</a>, and <a href="/neutrino/">the Neutrino page</a> explains how it works.</p>
-    <p>A version that runs on this website is WIP.</p>
+    <p>It comes with Phosphor: connect to "Neutrino" in the machine list. <a href="/neutrino/">The Neutrino page</a> explains how it works.</p>
+    <!-- Phosphor .github/workflows/pages.yml: the web build at phosphor.openvalence.org/, the memory-only mini at /mini/ -->
+    <p>Phosphor also runs in your browser at phosphor.openvalence.org, with Neutrino as its only machine. Browsers can't reach a machine on your network; for a real machine, use the app from <a href="/downloads/">Downloads</a>.</p>
+    <p class="links"><a href="https://phosphor.openvalence.org/">Open the web app</a> · <a href="https://phosphor.openvalence.org/mini/">Open the mini demo</a> · <a href="/downloads/">Downloads</a></p>
   </section>
 </main>
 
