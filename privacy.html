@@ -119,7 +119,7 @@
   <section class="opening">
     <h1>Privacy</h1>
     <p class="fine">Effective October 18, 2026.</p>
-    <p>The plain version first. Phosphor has no telemetry, no crash reporting, no analytics, no accounts and no ads. I have not built any of that in, first party or third party, and there is no server of mine for the app to talk to. Everything it remembers lives in a folder on your computer. The only things it ever sends go to places you chose yourself: the machine on your network, a Stash server you entered the address of, a page a plugin loads, a Bluetooth device you connected. What those endpoints and your operating system do with traffic is outside my control, and this page says where that line is.</p>
+    <p>The plain version first. Phosphor has no telemetry, no crash reporting, no analytics, no accounts and no ads. I have not built any of that in, first party or third party, and there is no server of mine for the app to talk to. Everything it remembers lives in a folder on your computer. The only things it ever sends go to places you chose yourself: the machine on your network, a Stash server you entered the address of, a page a plugin loads, a Bluetooth device you connected. The one exception is the firmware flasher, which asks GitHub for our release checksums when you pick a firmware file. What those endpoints and your operating system do with traffic is outside my control, and this page says where that line is.</p>
     <p>The rest is the long version, written so that it is checkable. The source is public; every claim here can be read in the code.</p>
   </section>
 
@@ -143,12 +143,13 @@
 
   <section aria-labelledby="s-network">
     <h2 id="s-network" data-n="03">What the app sends, and to whom</h2>
-    <p>Every network connection Phosphor makes goes to an endpoint you chose. There is no endpoint of mine.</p>
+    <p>Every network connection Phosphor makes goes to an endpoint you chose, apart from the firmware checksum request below. There is no endpoint of mine.</p>
     <dl class="terms">
       <div><dt>Your machine</dt><dd>To find a hub, the app sends a short discovery broadcast on your local network and listens for replies; it only broadcasts when you ask it to scan, or when it reconnects to a hub you saved. Once connected, the app and the hub exchange machine state over a WebSocket on your network. An emergency stop is also sent as a broadcast so it reaches the hub even if the session has dropped.</dd></div>
       <div><dt>Stash</dt><dd>If you enter a Stash server in the funscript player, the app sends requests to that address with the API key you gave it, and streams video from it. That is your server, on whatever network you put it on; its own logs are its business.</dd></div>
       <div><dt>Plugins and the pages they load</dt><dd>The app allows plugins to fetch <code>http</code> and <code>https</code> URLs. The plugins that ship with the app only contact addresses you configured. A plugin you install from elsewhere can contact whatever its author wrote it to; read its manifest before enabling it.</dd></div>
       <div><dt>Other programs on your computer</dt><dd>Phosphor runs a Buttplug server so that other software can drive the machine and your toys through it. It listens on the loopback address only (<code>127.0.0.1</code>, port 12345 by default), so only programs on the same computer can reach it. It never listens on your network unless you change that setting.</dd></div>
+      <div><dt>Firmware updates</dt><dd>When you pick a firmware file, the app asks GitHub (api.github.com) for our release checksums to label it Official or Unrecognized. Nothing about the file or your machine is sent; the comparison runs on your computer. The file goes only to your machine.</dd></div>
       <div><dt>Neutrino, the built-in machine</dt><dd>It runs inside the app, as WebAssembly, and makes no network connections of its own.</dd></div>
     </dl>
     <p>The app does not check for updates by itself. Updates arrive through whatever installed it: Flathub, or a download from GitHub.</p>
