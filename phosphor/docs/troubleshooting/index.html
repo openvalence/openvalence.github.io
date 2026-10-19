@@ -129,6 +129,7 @@
       <li><code>No LAN reply on UDP 22096</code>: no machine answered the network probe, so Phosphor went on to Bluetooth. Check that the machine is powered and on your network, or type its address.</li>
       <li><code>LAN discovery failed: …</code>: the probe itself could not run. The reason follows the colon. Type the address instead.</li>
       <li><code>No hub on Bluetooth</code> and <code>Bluetooth scan failed: …</code>: Bluetooth found nothing, or could not scan. Check that Bluetooth is on and that you granted Phosphor permission.</li>
+      <li>On a VPN: some VPN apps block or reroute local network traffic. In NordVPN, turn on LAN discovery (Settings, Connection); other VPNs call it local network access or LAN traffic.</li>
       <li><code>Enter a hub address</code>: the address field was empty.</li>
       <li><code>Retrying &lt;address&gt; in N s</code>: the link dropped and Phosphor is redialing. Retry now skips the wait.</li>
       <li><code>Failed: …</code>: the reason follows. Retry now tries again.</li>
