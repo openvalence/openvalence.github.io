@@ -122,9 +122,9 @@
   </section>
 
   <section aria-labelledby="s-find">
-    <h2 id="s-find" data-n="01">Finding and joining a machine</h2>
+    <h2 id="s-find" data-n="01">Finding and joining a machine<a class="hl" href="#s-find" aria-label="Copy link to this section"></a></h2>
     <!-- src/shell/hubs.svelte.js:138 (No LAN reply on UDP 22096), 158, 162, 192, 243, 249, 187; src/shell/HubsPane.svelte:52-60, 84, 147; src/shell/SetupFlow.svelte:62; src/shell/ble-setup.js:131-140, 157, 244 -->
-    <h3>Scan and connect</h3>
+    <h3 id="scan-and-connect">Scan and connect<a class="hl" href="#scan-and-connect" aria-label="Copy link to this section"></a></h3>
     <ul>
       <li><code>No LAN reply on UDP 22096</code>: no machine answered the network probe, so Phosphor went on to Bluetooth. Check that the machine is powered and on your network, or type its address.</li>
       <li><code>LAN discovery failed: …</code>: the probe itself could not run. The reason follows the colon. Type the address instead.</li>
@@ -137,7 +137,7 @@
       <li><code>No WiFi endpoint known</code>: Upgrade to Wi-Fi is grayed because the machine has not told Phosphor a Wi-Fi address over Bluetooth.</li>
       <li><code>&lt;address&gt; unreachable, staying on Bluetooth</code> and <code>WiFi upgrade failed, back on Bluetooth</code>: the machine offered a Wi-Fi address, but Phosphor could not open a session on it. You stay at the watch tier until it connects.</li>
     </ul>
-    <h3>Set up and pairing</h3>
+    <h3 id="set-up-and-pairing">Set up and pairing<a class="hl" href="#set-up-and-pairing" aria-label="Copy link to this section"></a></h3>
     <ul>
       <li><code>Press Pair on the machine</code>: the ask is waiting for a button press.</li>
       <li><code>Another ask is pending: Pair is refused</code> and <code>Another configure ask is pending: double-press approves neither</code>: two clients asked for configure at once. One of them has to give up before either is approved.</li>
@@ -155,7 +155,7 @@
   </section>
 
   <section aria-labelledby="s-health">
-    <h2 id="s-health" data-n="02">Pauses, stutter and lag</h2>
+    <h2 id="s-health" data-n="02">Pauses, stutter and lag<a class="hl" href="#s-health" aria-label="Copy link to this section"></a></h2>
     <!-- src/model/health/core.js:39-201 (CONDITIONS: lines, actions, thresholds); docs/DESIGN.md §10.14 lines 1397-1459; src/ui/LogPane.svelte:52-57 -->
     <p>Open Log, then the Health tab. It has three cards, Link, This device and Machine, and a list of incidents kept on this device. The same line also appears in the top strip's status slot. Each line is a measurement, followed by the one thing to try.</p>
     <figure class="docshot"><picture><source srcset="../img/ts-health-light.webp" data-hi="../img/hi/ts-health-light.webp" media="(prefers-color-scheme: light)"><img src="../img/ts-health-dark.webp" data-hi="../img/hi/ts-health-dark.webp" width="1280" height="800" alt="The Health tab of the Log page showing the link readings, with the This device section below." decoding="async"></picture><figcaption>The Health tab of the Log page.</figcaption></figure>
@@ -167,7 +167,7 @@
       <li>Updates per second, from the machine and to it.</li>
       <li>This device starts below Link.</li>
     </ol>
-    <h3>Link</h3>
+    <h3 id="link">Link<a class="hl" href="#link" aria-label="Copy link to this section"></a></h3>
     <ul>
       <li><code>Motion paused N ms · this device fell behind</code>: this computer sent the next moves too late. Close other apps.</li>
       <li><code>Motion paused N ms · WiFi delay N ms (likely)</code>: the moves left on time and arrived late. Move closer to the router. "Likely" means Phosphor has no timestamp from the machine to prove it.</li>
@@ -180,7 +180,7 @@
       <li><code>Machine cut updates on N channels</code>: the machine sent fewer updates because the link was busy. Disconnect other devices that use the machine.</li>
       <li><code>Rail stalled on N% of frames</code>: updates arrive late or bunched, so the dot stands still and then jumps.</li>
     </ul>
-    <h3>This device</h3>
+    <h3 id="this-device">This device<a class="hl" href="#this-device" aria-label="Copy link to this section"></a></h3>
     <ul>
       <li><code>Responses delayed up to N ms</code>: raised over 25 ms for 2 min. Close other apps.</li>
       <li><code>Memory up N MB in N min</code>: memory keeps rising after cleanup, raised at +100 MB. Restart Phosphor.</li>
@@ -189,7 +189,7 @@
       <li><code>Video dropped N frames in N s</code>: a script's video skipped frames. Close other apps.</li>
       <li><code>Screen drawing N frames a second</code>, <code>Clock drift N ms</code>, <code>Processor load serious</code>: close other apps, and restart Phosphor if clock drift persists.</li>
     </ul>
-    <h3>Machine</h3>
+    <h3 id="machine">Machine<a class="hl" href="#machine" aria-label="Copy link to this section"></a></h3>
     <ul>
       <li><code>Machine fault: …</code>: open the machine's Hardware page.</li>
       <li><code>Machine free memory down N%</code>: restart the machine when it is idle.</li>
@@ -197,13 +197,13 @@
       <li><code>Machine restarted</code>: the machine rebooted since the last connection.</li>
     </ul>
     <p>Some Machine lines read "not reported by this machine". The machine has to declare those readings first <span class="tag">WIP</span>.</p>
-    <h3>Send a report</h3>
+    <h3 id="send-a-report">Send a report<a class="hl" href="#send-a-report" aria-label="Copy link to this section"></a></h3>
     <!-- docs/DESIGN.md lines 1461-1491 -->
     <p>On an incident, Send report opens a review of every field in the report. Hold the button for 1.5 s to send. That opens a prefilled GitHub issue under your own account; Phosphor sends nothing itself. Save report writes the same data to a file without an account. The report holds numbers and version strings, and no script name, machine name, address or log text.</p>
   </section>
 
   <section aria-labelledby="s-log">
-    <h2 id="s-log" data-n="03">The log</h2>
+    <h2 id="s-log" data-n="03">The log<a class="hl" href="#s-log" aria-label="Copy link to this section"></a></h2>
     <!-- privacy.html s-stored; src-tauri/src/lib.rs:122-130 (release builds log to file at Info level); docs/BUILD.md lines 273-276; src/ui/LogPane.svelte:52-57, 147-150, 469 -->
     <p>The Log page has tabs for Log, Anomalies, Safety, Session, Changes and Health. The Log tab filters by Errors, Warnings, Info and Debug, and by source, and it searches. Plugin errors appear there tagged <code>plugin:&lt;name&gt;</code>.</p>
     <figure class="docshot"><picture><source srcset="../img/ts-log-light.webp" data-hi="../img/hi/ts-log-light.webp" media="(prefers-color-scheme: light)"><img src="../img/ts-log-dark.webp" data-hi="../img/hi/ts-log-dark.webp" width="1280" height="800" alt="The Log tab with its search field, severity filters, source filter and the Pause, Clear and Copy buttons." loading="lazy" decoding="async"></picture><figcaption>The Log tab and its filters.</figcaption></figure>
@@ -219,26 +219,26 @@
   </section>
 
   <section aria-labelledby="s-platform">
-    <h2 id="s-platform" data-n="04">Platform notes</h2>
-    <h3>Linux with an NVIDIA driver</h3>
+    <h2 id="s-platform" data-n="04">Platform notes<a class="hl" href="#s-platform" aria-label="Copy link to this section"></a></h2>
+    <h3 id="linux-with-an-nvidia-driver">Linux with an NVIDIA driver<a class="hl" href="#linux-with-an-nvidia-driver" aria-label="Copy link to this section"></a></h3>
     <!-- src-tauri/src/lib.rs:36-46 -->
     <p>NVIDIA's proprietary driver cannot back WebKitGTK's DMABUF renderer. Without a workaround the window stays blank on X11, and the Wayland connection dies with protocol error 71. Phosphor sets <code>WEBKIT_DISABLE_DMABUF_RENDERER=1</code> by itself when <code>/proc/driver/nvidia</code> exists, and a value you set yourself wins. If the window is still blank, start Phosphor with that variable set.</p>
-    <h3>Linux Flatpak</h3>
+    <h3 id="linux-flatpak">Linux Flatpak<a class="hl" href="#linux-flatpak" aria-label="Copy link to this section"></a></h3>
     <!-- docs/BUILD.md lines 273-279 -->
     <p>The Flatpak keeps its data in <code>~/.var/app/org.openvalence.Phosphor/data/com.phosphor.app/</code>, and a <code>.deb</code> install's folder is not visible to it. If you forced <code>GDK_BACKEND=x11</code> on a Wayland session, GTK fails to start unless the run adds <code>--socket=x11</code>.</p>
-    <h3>macOS</h3>
+    <h3 id="macos">macOS<a class="hl" href="#macos" aria-label="Copy link to this section"></a></h3>
     <!-- docs/BUILD.md lines 200-218; src-tauri/Info.plist -->
     <p>CI builds are ad-hoc signed and not notarized. After you copy Phosphor out of the .dmg, either run <code>xattr -dr com.apple.quarantine /Applications/Phosphor.app</code> or use System Settings, Privacy &amp; Security, Open Anyway after the first refused launch. macOS then asks for two permissions, Local Network (to find machines) and Bluetooth (to set them up). Without Local Network, scans fail without an error, so allow both.</p>
-    <h3>Windows</h3>
+    <h3 id="windows">Windows<a class="hl" href="#windows" aria-label="Copy link to this section"></a></h3>
     <!-- docs/BUILD.md lines 145; src/shell/SettingsPane.svelte:100; docs/DESIGN.md lines 1151-1152 -->
     <p>Phosphor needs Microsoft's WebView2, which comes with Windows 11 and current Windows 10. Windows 10 LTSC and IoT lack it: the installer downloads it during setup, or install the <a href="https://go.microsoft.com/fwlink/?linkid=2124701">WebView2 Runtime (x64 offline installer)</a>. Windows asks about the firewall the first time you turn on Settings, Open to LAN. Phosphor never edits firewall rules.</p>
-    <h3>Open to LAN</h3>
+    <h3 id="open-to-lan">Open to LAN<a class="hl" href="#open-to-lan" aria-label="Copy link to this section"></a></h3>
     <!-- src/shell/lan.svelte.js:90, 92, 120; docs/DESIGN.md lines 1145-1148 -->
     <p><code>&lt;port&gt; unavailable</code> or <code>Not open: …</code> means the port could not be used. A port below 1024 needs privileges on Linux and macOS. Phosphor falls back to a port the system picks and advertises that one.</p>
-    <h3>Buttplug server</h3>
+    <h3 id="buttplug-server">Buttplug server<a class="hl" href="#buttplug-server" aria-label="Copy link to this section"></a></h3>
     <!-- docs/BUTTPLUG.md lines 32, 91-94; docs/BUTTPLUG.md Android section -->
     <p>If the server will not start, the Buttplug pane shows the latest error, for example that the port is taken. The default port is 12345. Change it in the pane's Settings tab. The port and the device types can only change while the server is stopped.</p>
-    <h3>Android</h3>
+    <h3 id="android">Android<a class="hl" href="#android" aria-label="Copy link to this section"></a></h3>
     <!-- privacy.html s-bluetooth -->
     <p>Android requires the location permission before any app can scan for Bluetooth devices. Phosphor asks for it for that reason only.</p>
     <p class="links"><a href="/phosphor/docs/connecting/">Connecting</a> · <a href="/phosphor/docs/">Docs</a> · <a href="https://github.com/openvalence/Phosphor/issues">Phosphor issues</a></p>

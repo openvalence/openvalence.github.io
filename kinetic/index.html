@@ -140,7 +140,7 @@
   </section>
 
   <section aria-labelledby="s-model">
-    <h2 class="xl" id="s-model">How it plans</h2>
+    <h2 class="xl" id="s-model">How it plans<a class="hl" href="#s-model" aria-label="Copy link to this section"></a></h2>
     <!-- Kinetic README.md:16-29 "The model" -->
     <ul class="facts">
       <li><b>Knots in, a sampled trajectory out</b><p>Every source becomes knots: the curve passes position <code>p</code> at time <code>t_us</code>, optionally with an end velocity. The planner never sees a wire format, so a script and a live stream feed it the same way.</p></li>
@@ -212,7 +212,7 @@
       </div>
     </div>
     <div>
-      <h2 id="s-playground">Playground</h2>
+      <h2 id="s-playground">Playground<a class="hl" href="#s-playground" aria-label="Copy link to this section"></a></h2>
       <!-- Kinetic playground/README.md -->
       <p>The planner, compiled to WebAssembly, in your browser. Place knots on the position trace, change the planner options, and read the result: the curve, velocity, acceleration and jerk against the limits, the solved knots and every anomaly.</p>
       <p class="links"><a href="https://openvalence.org/Kinetic/">Open it full screen</a> · <a href="/Kinetic/handles.html">The handles editor</a> · <a href="/demos/">Demos</a></p>
@@ -221,7 +221,7 @@
 
   <section class="aside" aria-labelledby="s-determinism">
     <div>
-      <h2 id="s-determinism">Determinism</h2>
+      <h2 id="s-determinism">Determinism<a class="hl" href="#s-determinism" aria-label="Copy link to this section"></a></h2>
       <p>The plan you preview in the browser is the plan the firmware runs, as long as both are built with the same compiler flag.</p>
     </div>
     <div>
@@ -237,7 +237,7 @@
   </section>
 
   <section class="aside" aria-labelledby="s-use">
-    <h2 id="s-use">Using the library</h2>
+    <h2 id="s-use">Using the library<a class="hl" href="#s-use" aria-label="Copy link to this section"></a></h2>
     <div>
       <!-- Kinetic README.md:31-72 "Example"; :88-97 "Units and frames"; :113-138 "Integration"; :152-170 "WebAssembly" -->
       <p>You call <code>submit()</code> with knots and <code>positionAt()</code> on your own clock. It needs C++20 and builds with CMake or PlatformIO. A WebAssembly build with a small C interface is in the repo.</p>

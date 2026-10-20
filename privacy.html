@@ -124,12 +124,12 @@
   </section>
 
   <section aria-labelledby="s-scope">
-    <h2 id="s-scope" data-n="01">What this covers</h2>
+    <h2 id="s-scope" data-n="01">What this covers<a class="hl" href="#s-scope" aria-label="Copy link to this section"></a></h2>
     <p>This policy covers the Phosphor application on Windows, macOS, Linux and Android, the Nucleus firmware that runs on the machine, and this website, openvalence.org. All of it is published by AtlanticTM under the OpenValence name. "I" below means the one person who maintains it.</p>
   </section>
 
   <section aria-labelledby="s-stored">
-    <h2 id="s-stored" data-n="02">What the app stores, and where</h2>
+    <h2 id="s-stored" data-n="02">What the app stores, and where<a class="hl" href="#s-stored" aria-label="Copy link to this section"></a></h2>
     <p>Phosphor keeps its state in the per-user application data folder your operating system gives it: <code>%APPDATA%</code> and <code>%LOCALAPPDATA%</code> under <code>com.phosphor.app</code> on Windows, <code>~/Library/Application Support/com.phosphor.app</code> on macOS, <code>~/.local/share/com.phosphor.app</code> on Linux (inside <code>~/.var/app/org.openvalence.Phosphor</code> for the Flatpak), and the app's private storage on Android. The MSIX and installer builds both use these per-user folders. The portable build keeps all its data, including the web view's storage and logs, in a <code>PhosphorData</code> folder beside <code>phosphor.exe</code>, and writes nothing to your user profile or the registry. In the data folder you will find:</p>
     <ul>
       <li>Saved hubs: the address, name and session details of machines you connected to, so the app can reconnect.</li>
@@ -142,7 +142,7 @@
   </section>
 
   <section aria-labelledby="s-network">
-    <h2 id="s-network" data-n="03">What the app sends, and to whom</h2>
+    <h2 id="s-network" data-n="03">What the app sends, and to whom<a class="hl" href="#s-network" aria-label="Copy link to this section"></a></h2>
     <p>Every network connection Phosphor makes goes to an endpoint you chose, apart from the firmware checksum request below. There is no endpoint of mine.</p>
     <dl class="terms">
       <div><dt>Your machine</dt><dd>To find a hub, the app sends a short discovery broadcast on your local network and listens for replies; it only broadcasts when you ask it to scan, or when it reconnects to a hub you saved. Once connected, the app and the hub exchange machine state over a WebSocket on your network. An emergency stop is also sent as a broadcast so it reaches the hub even if the session has dropped.</dd></div>
@@ -156,18 +156,18 @@
   </section>
 
   <section aria-labelledby="s-bluetooth">
-    <h2 id="s-bluetooth" data-n="04">Bluetooth</h2>
+    <h2 id="s-bluetooth" data-n="04">Bluetooth<a class="hl" href="#s-bluetooth" aria-label="Copy link to this section"></a></h2>
     <p>Phosphor uses Bluetooth Low Energy for two things: finding and talking to a hub when Wi-Fi is not available, and, through ButtplugIO, finding and controlling toys. A scan runs when you press Scan, and the app connects only to the device you pick. It reads the advertising data the devices around you broadcast during a scan, keeps it in memory for the list you see, and discards it when the scan ends; it does not keep a record of devices you did not connect to.</p>
     <p>On Android, the operating system requires the location permission before any app may scan for Bluetooth devices, because scan results can in principle be used to infer location. Phosphor asks for that permission for that reason only. It does not read your position and has no code that would.</p>
   </section>
 
   <section aria-labelledby="s-firmware">
-    <h2 id="s-firmware" data-n="05">The machine</h2>
+    <h2 id="s-firmware" data-n="05">The machine<a class="hl" href="#s-firmware" aria-label="Copy link to this section"></a></h2>
     <p>Nucleus, the firmware on the hub, stores the machine's configuration and the names of the clients that are allowed to control it, on the board itself. It has no internet connection of its own and no server it reports to. It answers discovery on your local network and serves the clients that connect to it. Resetting the board's configuration clears it.</p>
   </section>
 
   <section aria-labelledby="s-outside">
-    <h2 id="s-outside" data-n="06">What is outside my control</h2>
+    <h2 id="s-outside" data-n="06">What is outside my control<a class="hl" href="#s-outside" aria-label="Copy link to this section"></a></h2>
     <p>Parties that may learn something about you while you use this software. I run none of them and get no data from them:</p>
     <dl class="terms">
       <div><dt>Your operating system</dt><dd>Windows, macOS, Android and Linux distributions collect their own diagnostics about the applications you run, under their own settings and policies. On Windows the app renders through WebView2, which is Microsoft's component and follows Microsoft's telemetry settings for your account.</dd></div>
@@ -178,9 +178,9 @@
   </section>
 
   <section aria-labelledby="s-site">
-    <h2 id="s-site" data-n="07">This website</h2>
+    <h2 id="s-site" data-n="07">This website<a class="hl" href="#s-site" aria-label="Copy link to this section"></a></h2>
     <p>openvalence.org is static files. It sets no cookies and has no ads or third-party trackers. If you pick a theme with the sun/moon toggle, that choice is saved in your browser's local storage. Its fonts are served from its own folder, not a third party. The downloads page asks GitHub's API (api.github.com) for the newest Phosphor release each time it loads, so GitHub sees that request, as it sees the download itself. The documentation at <a href="/Valence/">/Valence/</a> and the playground at <a href="/Kinetic/">/Kinetic/</a> are the same kind of static site.</p>
-    <h3>Visitor statistics</h3>
+    <h3 id="visitor-statistics">Visitor statistics<a class="hl" href="#visitor-statistics" aria-label="Copy link to this section"></a></h3>
     <p>Visits are counted with <a href="https://umami.is/">Umami</a>, an open-source analytics tool I host myself, at home in the United States; its only public address is stats.openvalence.org. No analytics company is involved. I use it to see which pages get read and in what order. The data stays on that server: not sold, not shared, not used for ads.</p>
     <ul>
       <li><strong>Recorded per page view:</strong> page address, referring page, browser, operating system, device type, screen size, language, country and region.</li>
@@ -189,16 +189,16 @@
       <li><strong>Your browser:</strong> no cookies, no local storage writes, no session recordings, no heatmaps. The script reads one opt-out key.</li>
       <li><strong>Opt out:</strong> configure your browser to send Do Not Track, block the script with a content blocker, or set <code>umami.disabled</code> to <code>1</code> in this site's local storage. Any of the three stops records from being created.</li>
     </ul>
-    <h3>EU visitors</h3>
+    <h3 id="eu-visitors">EU visitors<a class="hl" href="#eu-visitors" aria-label="Copy link to this section"></a></h3>
     <p>Built for the GDPR and ePrivacy rules. The site writes one thing to your device: the theme you pick with the theme button, kept as <code>theme</code> (<code>light</code> or <code>dark</code>) in local storage. That is storage you asked for, which ePrivacy Article 5(3) exempts from consent. Nothing else is written, so there is no cookie banner. Deriving country and region from your IP rests on legitimate interest (GDPR Article 6(1)(f)), with the minimum data needed. Records hold no identifier that links back to you, so there's no per-person record to look up, export or delete. Anything else: write to <a href="mailto:privacy@openvalence.org">privacy@openvalence.org</a>.</p>
-    <h3>Who serves it</h3>
+    <h3 id="who-serves-it">Who serves it<a class="hl" href="#who-serves-it" aria-label="Copy link to this section"></a></h3>
     <p>GitHub Pages hosts the files and Cloudflare runs the domain. Both may keep standard server logs (IP address, pages requested, browser) under their own policies: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a> and <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare's privacy policy</a>. I don't have access to those logs.</p>
-    <h3>Google Search Console</h3>
+    <h3 id="google-search-console">Google Search Console<a class="hl" href="#google-search-console" aria-label="Copy link to this section"></a></h3>
     <p>I read Google Search Console for this site. That is Google's own data about how the site shows up in Google Search: which queries it appeared for, how often, how many clicks, which pages. Google collects and aggregates it from its search results; the site runs no Google code to produce it. See <a href="https://policies.google.com/privacy">Google's privacy policy</a>.</p>
   </section>
 
   <section aria-labelledby="s-changes">
-    <h2 id="s-changes" data-n="08">Changes and contact</h2>
+    <h2 id="s-changes" data-n="08">Changes and contact<a class="hl" href="#s-changes" aria-label="Copy link to this section"></a></h2>
     <p>If any of the above changes, this page changes with it and the date at the top moves. The page is a file in a public repository, so its history is the changelog: <a href="https://github.com/openvalence/openvalence.github.io/commits/main/privacy.html">every revision</a>.</p>
     <p>Questions, or something here that does not match what the code does: <a href="mailto:privacy@openvalence.org">privacy@openvalence.org</a>. If the code and this page disagree, the code is right and this page gets fixed.</p>
   </section>

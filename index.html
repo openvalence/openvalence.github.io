@@ -191,7 +191,7 @@
   </section>
 
   <section aria-labelledby="s-start">
-    <h2 class="xl" id="s-start">Where to start</h2>
+    <h2 class="xl" id="s-start">Where to start<a class="hl" href="#s-start" aria-label="Copy link to this section"></a></h2>
     <ul class="doors">
       <li>
         <div><h3><a href="/phosphor/">Use it</a></h3><p>Get the app and play your first script.</p></div>
@@ -227,7 +227,7 @@
   </section>
 
   <section class="band" aria-labelledby="s-fits">
-    <h2 class="xl" id="s-fits">System overview</h2>
+    <h2 class="xl" id="s-fits">System overview<a class="hl" href="#s-fits" aria-label="Copy link to this section"></a></h2>
     <p class="lede">The firmware runs a hub that holds the machine's state. The desktop app, browser tabs, scripts and plugins connect to the hub as clients and stay in sync with it.</p>
     <!-- Sources as on /diagrams/#system: SPEC §13.2, §13.4; Nucleus README "Chips", transport.md; MotionArbiter.h kStripLen 128, kLeaseTicks 4; motion-control.md (40 MHz XTAL, 128 ns spread); board-map.md -->
     <ol class="chain">
@@ -245,7 +245,7 @@
   </section>
 
   <section aria-labelledby="s-measured">
-    <h2 class="xl" id="s-measured">Measurements</h2>
+    <h2 class="xl" id="s-measured">Measurements<a class="hl" href="#s-measured" aria-label="Copy link to this section"></a></h2>
     <dl class="numbers">
       <!-- Nucleus .claude/rules/motion-control.md, "The LP-core emitter": Rigol DHO4204 single-shot captures at 8 ns per sample, 2026-09-20; the 5-cycle poll loop at 40 MHz is 125 ns, peak-to-peak spread 128 ns (16 samples); at a prime rate intervals take two values and the mean does not drift -->
       <div>
@@ -267,7 +267,7 @@
   </section>
 
   <section aria-labelledby="s-parts">
-    <h2 class="xl" id="s-parts">Repositories</h2>
+    <h2 class="xl" id="s-parts">Repositories<a class="hl" href="#s-parts" aria-label="Copy link to this section"></a></h2>
     <ul class="index">
       <li><h3><a href="/valence/">Valence</a></h3><p>The protocol: spec, registry, reference library, clients, tools, documentation.</p><span class="lic">MIT · spec text CC BY 4.0</span></li>
       <li><h3><a href="/nucleus/">Nucleus</a></h3><p>Firmware for the OSSM Flagship PCB: an ESP32-P4 with an ESP32-C6 for Wi-Fi, built on ESP-IDF. The P4's low-power (LP) core generates the quadrature output.</p><span class="lic">Apache-2.0</span></li>
@@ -282,7 +282,7 @@
   </section>
 
   <section class="aside" aria-labelledby="s-stand">
-    <h2 id="s-stand">Status</h2>
+    <h2 id="s-stand">Status<a class="hl" href="#s-stand" aria-label="Copy link to this section"></a></h2>
     <div>
       <ul class="facts three">
         <li><b>Firmware</b><p>Homes the rail, plays scripts, and connects to the client over Wi-Fi.</p></li>
@@ -294,7 +294,7 @@
   </section>
 
   <section class="aside" aria-labelledby="s-built">
-    <h2 id="s-built">How it's built</h2>
+    <h2 id="s-built">How it's built<a class="hl" href="#s-built" aria-label="Copy link to this section"></a></h2>
     <div>
       <p class="big-line">One person designs this and makes every decision; coding agents write most of the code under that direction.</p>
       <p>Each repo holds its rules: a written doctrine, a registry that assigns every wire number, lint that fails the build, tests on every change, and a bench gate that requires firmware to move a real motor before a change is closed.</p>

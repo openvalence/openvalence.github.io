@@ -152,18 +152,18 @@
   </div>
 
   <section class="aside" aria-labelledby="s-status">
-    <h2 id="s-status">Status</h2>
+    <h2 id="s-status">Status<a class="hl" href="#s-status" aria-label="Copy link to this section"></a></h2>
     <!-- Downloads: v0.1.678 pre-release CI build on GitHub releases (checked 2026-10-18); Phosphor/.github/workflows/build.yml -->
     <p>Pre-release builds are on <a href="/downloads/">Downloads</a>. Features marked <span class="tag">WIP</span> are not finished.</p>
   </section>
 
   <section aria-labelledby="s-features">
-    <h2 class="xl" id="s-features">Features</h2>
+    <h2 class="xl" id="s-features">Features<a class="hl" href="#s-features" aria-label="Copy link to this section"></a></h2>
 
     <div class="split">
       <figure><picture><source srcset="/images/phosphor/builder-light.webp" data-hi="/images/phosphor/hi/builder-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/builder-dark.webp" data-hi="/images/phosphor/hi/builder-dark.webp" width="1280" height="800" alt="The Phosphor Dash in edit mode, with the modules palette open on the right listing control categories and the edit footer offering Undo, New nest, Modules and Layout." loading="lazy" decoding="async"></picture></figure>
       <div>
-        <h3>Your Dash, your layout</h3>
+        <h3 id="your-dash-your-layout">Your Dash, your layout<a class="hl" href="#your-dash-your-layout" aria-label="Copy link to this section"></a></h3>
         <!-- docs/DESIGN.md §10.1 (lines 372-416), §10.2 (418-497), §10.6 (983-1054) -->
         <p>The Dash is a grid you arrange. In edit mode you place, move, resize and delete controls from a palette, and save the result as a named layout.</p>
         <p>A control can narrow the machine's range but never widen it, so a Dash cannot ask for more than the machine allows.</p>
@@ -178,7 +178,7 @@
     <div class="split flip">
       <figure><picture><source srcset="/images/phosphor/funscript-light.webp" data-hi="/images/phosphor/hi/funscript-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/funscript-dark.webp" data-hi="/images/phosphor/hi/funscript-dark.webp" width="1280" height="800" alt="The Phosphor Funscript page playing an abstract color video with transport controls, a scrolling script timeline and a settings pane, while the rail above follows the motion." loading="lazy" decoding="async"></picture></figure>
       <div>
-        <h3>Funscript player</h3>
+        <h3 id="funscript-player">Funscript player<a class="hl" href="#funscript-player" aria-label="Copy link to this section"></a></h3>
         <!-- docs/plugins/FUNSCRIPT.md lines 66-77 (lead cap = horizon less 100 ms; 1000 ms horizon), 93-94 (horizons 500, 1000) -->
         <p>Plays a video next to its funscript and drives the rail from it. Video comes from a file or from a Stash server you point it at.</p>
         <p>It sends the machine segments up to the granted horizon minus 100 ms ahead: 900 ms at a 1000 ms horizon, so a shorter Wi-Fi stall doesn't reach the stroke.</p>
@@ -189,7 +189,7 @@
     <div class="split">
       <figure><picture><source srcset="/images/phosphor/nodes-light.webp" data-hi="/images/phosphor/hi/nodes-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/nodes-dark.webp" data-hi="/images/phosphor/hi/nodes-dark.webp" width="1280" height="800" alt="The Phosphor node editor with a small graph: the planned position and the stroke window limits wired into a Map range node, which feeds a Low-pass node." loading="lazy" decoding="async"></picture></figure>
       <div>
-        <h3>Node editor</h3>
+        <h3 id="node-editor">Node editor<a class="hl" href="#node-editor" aria-label="Copy link to this section"></a></h3>
         <!-- docs/GRAPH.md lines 8-29 (where a chain runs; TICK_MS 50 ms, 20 Hz), 31-47 (socket types) -->
         <p>Wire catalog fields, math nodes and Buttplug outputs into chains with float, int and bool sockets.</p>
         <details class="more">
@@ -203,7 +203,7 @@
     <div class="split flip">
       <figure><picture><source srcset="/images/phosphor/plugins-light.webp" data-hi="/images/phosphor/hi/plugins-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/plugins-dark.webp" data-hi="/images/phosphor/hi/plugins-dark.webp" width="1280" height="800" alt="The Phosphor Plugins pane listing installed factory plugins with version, active status, enable switches, permissions and roles." loading="lazy" decoding="async"></picture></figure>
       <div>
-        <h3>Plugins</h3>
+        <h3 id="plugins">Plugins<a class="hl" href="#plugins" aria-label="Copy link to this section"></a></h3>
         <!-- docs/PLUGINS.md lines 10-18 (Prime Rule), 387 (freeze candidate), 678-701 (permissions), 703-711 (loading), 783 factory list -->
         <p>A plugin is one JavaScript module and a <code>manifest.json</code>. It reads the catalog and writes through the same path every built-in control uses, so a plugin write gets the same pending, echo and fault states.</p>
         <p>Phosphor ships five: the Advanced pattern card (a port of fray-d's OSSM-Lite), the funscript player, a quick-access tray, a Wi-Fi picker and a set of three small games.</p>
@@ -220,7 +220,7 @@
   </section>
 
   <section class="band" aria-labelledby="s-themes">
-    <h2 class="xl" id="s-themes">Themes</h2>
+    <h2 class="xl" id="s-themes">Themes<a class="hl" href="#s-themes" aria-label="Copy link to this section"></a></h2>
     <!-- src/themes/index.js lines 6-25 (20 themes); docs/THEMES.md line 19 (12 color presets), docs/DESIGN.md §10.16 lines 1559-1564 -->
     <p>There are 20 themes, from the default Phosphor theme to Luna, Mica, Liquid Glass, Material, Blueprint and P1 Terminal. The default theme has 12 color presets. A theme restyles chrome, controls, type and icons. The stop pair, the safety edge and the warning states look the same in every theme.</p>
     <ul class="swipe" tabindex="0" aria-label="Theme screenshots, scroll sideways">
@@ -235,7 +235,7 @@
   </section>
 
   <section aria-labelledby="s-more">
-    <h2 class="xl" id="s-more">More features</h2>
+    <h2 class="xl" id="s-more">More features<a class="hl" href="#s-more" aria-label="Copy link to this section"></a></h2>
     <ul class="gallery">
       <li><figure><picture><source srcset="/images/phosphor/wifi-light.webp" data-hi="/images/phosphor/hi/wifi-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/wifi-dark.webp" data-hi="/images/phosphor/hi/wifi-dark.webp" width="1280" height="800" alt="The Phosphor Wi-Fi picker listing nearby networks with signal bars and lock icons, the connected network checked, and Other network, Advanced and Scan buttons at the bottom." loading="lazy" decoding="async"></picture><figcaption><b>Wi-Fi picker</b>One of the five plugins that ship with Phosphor.</figcaption></figure></li>
       <li><figure><picture><source srcset="/phosphor/docs/img/ts-health-light.webp" data-hi="/phosphor/docs/img/hi/ts-health-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/ts-health-dark.webp" data-hi="/phosphor/docs/img/hi/ts-health-dark.webp" width="1280" height="800" alt="The Health tab of the Log page showing the link readings, with the This device section below." loading="lazy" decoding="async"></picture><figcaption><b>Health</b>Measured facts with the number behind them. <a href="/phosphor/docs/troubleshooting/">Troubleshooting</a></figcaption></figure></li>
@@ -288,27 +288,27 @@
   </section>
 
   <section aria-labelledby="s-platforms">
-    <h2 class="xl" id="s-platforms">Platforms</h2>
+    <h2 class="xl" id="s-platforms">Platforms<a class="hl" href="#s-platforms" aria-label="Copy link to this section"></a></h2>
     <!-- docs/BUILD.md lines 379-388 (CI jobs), 228-229 (Intel Macs not built), 302-353 (Android); README.md line 160; docs/DESIGN.md §10.7 lines 1058-1063 -->
     <ul class="platforms">
-      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-win"/></svg><div><h3>Windows</h3><small>pre-release build</small></div></div><p>MSIX package, installer and portable zip, x86_64. Code-signed; SmartScreen may still warn while a new release builds download reputation.</p></li>
-      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-mac"/></svg><div><h3>macOS</h3><small>pre-release build</small></div></div><p>A .dmg for Apple silicon. Intel Macs are not built. CI builds are ad-hoc signed and not notarized.</p></li>
-      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-linux"/></svg><div><h3>Linux</h3><small>pre-release build</small></div></div><p>.deb and .AppImage, x86_64.</p></li>
-      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-pkg"/></svg><div><h3>Flatpak</h3><small>pre-release build</small></div></div><p>A bundle built by CI on the GNOME runtime. It is not on Flathub.</p></li>
-      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-phone"/></svg><div><h3>Android <span class="tag">WIP</span></h3><small>pre-release build</small></div></div><p>A signed APK for arm64, Android 8.0 or later. Sideload it.</p></li>
-      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-web"/></svg><div><h3>Browser</h3><small>backup surface</small></div></div><p>The page a hub serves from its own flash. No Bluetooth and no plugins.</p></li>
+      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-win"/></svg><div><h3 id="windows">Windows<a class="hl" href="#windows" aria-label="Copy link to this section"></a></h3><small>pre-release build</small></div></div><p>MSIX package, installer and portable zip, x86_64. Code-signed; SmartScreen may still warn while a new release builds download reputation.</p></li>
+      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-mac"/></svg><div><h3 id="macos">macOS<a class="hl" href="#macos" aria-label="Copy link to this section"></a></h3><small>pre-release build</small></div></div><p>A .dmg for Apple silicon. Intel Macs are not built. CI builds are ad-hoc signed and not notarized.</p></li>
+      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-linux"/></svg><div><h3 id="linux">Linux<a class="hl" href="#linux" aria-label="Copy link to this section"></a></h3><small>pre-release build</small></div></div><p>.deb and .AppImage, x86_64.</p></li>
+      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-pkg"/></svg><div><h3 id="flatpak">Flatpak<a class="hl" href="#flatpak" aria-label="Copy link to this section"></a></h3><small>pre-release build</small></div></div><p>A bundle built by CI on the GNOME runtime. It is not on Flathub.</p></li>
+      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-phone"/></svg><div><h3 id="android">Android <span class="tag">WIP</span><a class="hl" href="#android" aria-label="Copy link to this section"></a></h3><small>pre-release build</small></div></div><p>A signed APK for arm64, Android 8.0 or later. Sideload it.</p></li>
+      <li><div class="os"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#os-web"/></svg><div><h3 id="browser">Browser<a class="hl" href="#browser" aria-label="Copy link to this section"></a></h3><small>backup surface</small></div></div><p>The page a hub serves from its own flash. No Bluetooth and no plugins.</p></li>
     </ul>
     <p class="mt">The browser page needs no install. Some features reach the app before they reach the browser page.</p>
   </section>
 
   <section class="aside" aria-labelledby="s-fit">
-    <h2 id="s-fit">Phosphor and Valence</h2>
+    <h2 id="s-fit">Phosphor and Valence<a class="hl" href="#s-fit" aria-label="Copy link to this section"></a></h2>
     <!-- Phosphor README.md lines 164-172; docs/BUILD.md lines 19-24 -->
     <p>Phosphor is a Valence client. The hub holds the machine's state, Phosphor sends intents, and the hub clamps them and echoes what it applied. See <a href="/diagrams/">the diagrams</a> for the whole picture and <a href="/valence/">the Valence docs</a> for the protocol.</p>
   </section>
 
   <section aria-labelledby="s-docs">
-    <h2 class="xl" id="s-docs">Documentation</h2>
+    <h2 class="xl" id="s-docs">Documentation<a class="hl" href="#s-docs" aria-label="Copy link to this section"></a></h2>
     <ul class="index">
       <li><h3><a href="/phosphor/docs/getting-started/">Getting started</a></h3><p>Install, first launch, Neutrino.</p><span class="lic">guide</span></li>
       <li><h3><a href="/phosphor/docs/connecting/">Connecting</a></h3><p>Discovery, Bluetooth setup, access tiers, pairing, E-Stop.</p><span class="lic">guide</span></li>

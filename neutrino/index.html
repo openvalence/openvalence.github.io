@@ -124,13 +124,13 @@
   </section>
 
   <section class="aside" aria-labelledby="s-status">
-    <h2 id="s-status">Status</h2>
+    <h2 id="s-status">Status<a class="hl" href="#s-status" aria-label="Copy link to this section"></a></h2>
     <!-- Phosphor docs/BUILD.md:21-23, src/main.js:95-106 (shell only); bead ph-5u0g.1 (Android, in progress) -->
     <p class="big-line">In every Phosphor pre-release build for Windows, macOS and Linux. Android is WIP.</p>
   </section>
 
   <section aria-labelledby="s-why">
-    <h2 class="xl" id="s-why">What it's for</h2>
+    <h2 class="xl" id="s-why">What it's for<a class="hl" href="#s-why" aria-label="Copy link to this section"></a></h2>
     <ul class="facts three">
       <li><b>Try Phosphor</b><p>Build a Dash, run patterns and play funscripts before you own a machine.</p></li>
       <li><b>Build clients</b><p>Write a Valence app or plugin against a hub that answers like the real one.</p></li>
@@ -140,7 +140,7 @@
   </section>
 
   <section aria-labelledby="s-same">
-    <h2 class="xl" id="s-same">The same code as the PCB</h2>
+    <h2 class="xl" id="s-same">The same code as the PCB<a class="hl" href="#s-same" aria-label="Copy link to this section"></a></h2>
     <!-- Nucleus sim/neutrino/wasm/CMakeLists.txt:28-39 compiles flagship_p4/src motion/MotionArbiter.cpp, patterns/PatternEngine.cpp, patterns/advanced/AdvancedPattern.cpp, hub/ValenceDevice.cpp, hub/ValenceEstopDatagram.cpp verbatim; MotionArbiter.h:60-68 kinetic2::Engine; README.md "Parity is one-way" -->
     <p>Neutrino compiles the firmware's own source files: the Valence hub, the catalog, the motion arbiter with every safety gate, the pattern generators and the <a href="/kinetic/">Kinetic²</a> planner. Only the parts that touch hardware are swapped for stand-ins, and the firmware is never changed to suit Neutrino.</p>
     <div class="lanes" role="group" aria-label="Phosphor with the PCB and with Neutrino">
@@ -183,7 +183,7 @@
   </section>
 
   <section aria-labelledby="s-run">
-    <h2 class="xl" id="s-run">How it runs in Phosphor</h2>
+    <h2 class="xl" id="s-run">How it runs in Phosphor<a class="hl" href="#s-run" aria-label="Copy link to this section"></a></h2>
     <!-- Phosphor src/shell/virtual.svelte.js:44-57, 96, 106; src/model/neutrino-bridge.js:29-30, 59; neutrino.worker.js; DESIGN.md "the built-in machine" -->
     <ol>
       <li>Phosphor carries the WebAssembly build inside the app, about 660 KB.</li>
@@ -201,7 +201,7 @@
   </section>
 
   <section aria-labelledby="s-use">
-    <h2 class="xl" id="s-use">Try it</h2>
+    <h2 class="xl" id="s-use">Try it<a class="hl" href="#s-use" aria-label="Copy link to this section"></a></h2>
     <!-- Phosphor src/model/builtin.js:8-10; src/shell/HubsPane.svelte:116-129; settings-pane.js:33 -->
     <ol>
       <li>Install Phosphor from <a href="/downloads/">Downloads</a> and open the Hubs page.</li>
@@ -214,7 +214,7 @@
   </section>
 
   <section aria-labelledby="s-dev">
-    <h2 class="xl" id="s-dev">For developers</h2>
+    <h2 class="xl" id="s-dev">For developers<a class="hl" href="#s-dev" aria-label="Copy link to this section"></a></h2>
     <!-- Nucleus sim/neutrino/README.md "Build" (Linux and macOS form; Windows adds WinLibs MinGW and -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc); src/main.cpp:131-132, 233-246, 313-319 -->
     <p>A native build of the same code runs as a standalone hub on your desktop, for client tests and the bench. Check out Valence and Kinetic beside Nucleus, then from the Nucleus folder:</p>
     <pre tabindex="0"><code>cmake -S sim/neutrino -B sim/neutrino/build -G Ninja -DCMAKE_BUILD_TYPE=Release
@@ -231,7 +231,7 @@ node sim/neutrino/wasm/check.mjs</code></pre>
   </section>
 
   <section class="aside" aria-labelledby="s-limits">
-    <h2 id="s-limits">Limits</h2>
+    <h2 id="s-limits">Limits<a class="hl" href="#s-limits" aria-label="Copy link to this section"></a></h2>
     <!-- README.md parity table: emitter, Drive link and DRV_ALM, push-to-pair, heap and tcp figures, mDNS; src/SimCore.cpp:23-42 -->
     <div>
     <ul>
@@ -245,7 +245,7 @@ node sim/neutrino/wasm/check.mjs</code></pre>
   </section>
 
   <section class="aside" aria-labelledby="s-fit">
-    <h2 id="s-fit">Related</h2>
+    <h2 id="s-fit">Related<a class="hl" href="#s-fit" aria-label="Copy link to this section"></a></h2>
     <div>
       <p>Neutrino is <a href="/nucleus/">Nucleus</a> without the PCB. It plans with <a href="/kinetic/">Kinetic</a>, talks to clients over <a href="/valence/">Valence</a> and ships inside <a href="/phosphor/">Phosphor</a>.</p>
       <p class="links"><a href="https://github.com/openvalence/Nucleus/tree/main/sim/neutrino">Source</a> · <a href="/demos/">Demos</a> · <a href="/downloads/">Downloads</a> · <a href="/components/">Components</a></p>

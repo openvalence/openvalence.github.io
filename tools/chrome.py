@@ -1,11 +1,54 @@
-"""Copies the shared head, header and footer blocks from tools/chrome.html into every page.
+"""Copies the shared head, header and footer blocks from tools/chrome.html into every page, then gives
+every h2 and h3 in <main> an id and a section link mark (style.css .hl; site.js copies the link).
 
 Each page marks the blocks with <!-- chrome:NAME --> ... <!-- /chrome:NAME -->.
 The header's aria-current is set from the page's canonical link. The Kinetic repo's playground/
 (/Kinetic/) carries a copy of the header and its CSS: a header change updates it too. Run from the repo root:
     python tools/chrome.py
+Constraints: never change an id once published; Phosphor and shared links point at them. A heading
+that is itself a link (a card title) gets neither id nor mark.
 """
-import pathlib, re
+import html, pathlib, re
+
+MARK = '<a class="hl" href="#{}" aria-label="Copy link to this section"></a>'
+
+
+def slug(inner, taken):
+    text = re.sub(r'<span class="tag">.*?</span>', "", inner, flags=re.S)
+    text = html.unescape(re.sub(r"<[^>]+>", "", text)).lower().replace("'", "").replace("’", "")
+    s = ""
+    for w in re.findall(r"[a-z0-9]+", text):
+        if s and len(s) + len(w) >= 32:
+            break
+        s = f"{s}-{w}" if s else w
+    base, n = s or "section", 2
+    s = base
+    while s in taken:
+        s, n = f"{base}-{n}", n + 1
+    taken.add(s)
+    return s
+
+
+def anchor(page):
+    taken = set(re.findall(r'\sid="([^"]+)"', page))
+
+    def one(m):
+        tag, attrs, inner = m.groups()
+        if re.search(r'<a\b(?![^>]*class="hl")', inner):
+            return m.group(0)
+        hid = re.search(r'\sid="([^"]+)"', attrs)
+        if hid:
+            hid = hid.group(1)
+        else:
+            hid = slug(inner, taken)
+            attrs += f' id="{hid}"'
+        if 'class="hl"' not in inner:
+            inner = inner.rstrip() + MARK.format(hid)
+        return f"<{tag}{attrs}>{inner}</{tag}>"
+
+    heads = lambda mm: re.sub(r"<(h[23])\b([^>]*)>(.*?)</\1>", one, mm.group(0), flags=re.S)
+    return re.sub(r"<main\b.*?</main>", heads, page, flags=re.S)
+
 
 # pages without a header link of their own, and the link that stands for them
 SECTION = {f"/{c}/": "/components/" for c in ("nucleus", "neutrino", "kinetic", "hardware", "isotope")}
@@ -31,7 +74,7 @@ for page in sorted(root.rglob("*.html")):
             # the page's own entry in the Components menu
             body = body.replace(f'class="item" href="{here}"', f'class="item" href="{here}" aria-current="page"', 1)
         return f"<!-- chrome:{m.group(1)} -->\n{body}<!-- /chrome:{m.group(1)} -->"
-    new = re.sub(r"<!-- chrome:(\w+) -->\n.*?<!-- /chrome:\1 -->", fill, text, flags=re.S)
+    new = anchor(re.sub(r"<!-- chrome:(\w+) -->\n.*?<!-- /chrome:\1 -->", fill, text, flags=re.S))
     if new != text:
         page.write_text(new, encoding="utf-8", newline="\n")
         changed += 1

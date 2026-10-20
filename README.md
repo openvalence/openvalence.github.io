@@ -20,8 +20,10 @@ Plain HTML, no build step:
 
 The site has its own look, separate from Phosphor's: Archivo (wide, heavy) for display type, the system face for text, Martian Mono for numbers, and one accent, ultramarine `#2E4BFF`, used as solid bands. The tokens sit at the top of `style.css`. Every page carries the same head, header and footer
 between `<!-- chrome:* -->` markers. Edit them in `tools/chrome.html`, then run
-`python tools/chrome.py` to copy them into every page. Add a new page's URL to
-`sitemap.xml`.
+`python tools/chrome.py` to copy them into every page. The same run gives every
+`h2` and `h3` in `<main>` that lacks one an id from its text, plus a `#` mark
+that copies the section's link (`site.js`); run it after adding a heading, and
+never rename an id once published. Add a new page's URL to `sitemap.xml`.
 
 1. Edit the files.
 2. Preview with `python -m http.server` from the repo root (pages use

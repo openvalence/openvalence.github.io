@@ -122,7 +122,7 @@
   </section>
 
   <section aria-labelledby="s-can">
-    <h2 id="s-can" data-n="01">What a plugin can do</h2>
+    <h2 id="s-can" data-n="01">What a plugin can do<a class="hl" href="#s-can" aria-label="Copy link to this section"></a></h2>
     <!-- docs/PLUGINS.md Prime Rule, Module shape, The API (v1) table -->
     <dl class="terms">
       <div><dt>Cards</dt><dd>A card you can place on the Dash.</dd></div>
@@ -137,7 +137,7 @@
   </section>
 
   <section aria-labelledby="s-ship">
-    <h2 id="s-ship" data-n="02">Plugins that ship with Phosphor</h2>
+    <h2 id="s-ship" data-n="02">Plugins that ship with Phosphor<a class="hl" href="#s-ship" aria-label="Copy link to this section"></a></h2>
     <!-- Phosphor src/plugins/factory.js; plugins/factory/*/manifest.json; PLUGINS.md Factory plugins; src/plugins/graph.js:35 manifest -->
     <p>Factory plugins are bundled in the app and enabled by default. They use the same rules as any plugin you install.</p>
     <table class="parts">
@@ -177,7 +177,7 @@
   </section>
 
   <section aria-labelledby="s-manage">
-    <h2 id="s-manage" data-n="03">Enable, disable, reload</h2>
+    <h2 id="s-manage" data-n="03">Enable, disable, reload<a class="hl" href="#s-manage" aria-label="Copy link to this section"></a></h2>
     <!-- PluginsPane.svelte (enabled switch, Show tab, Reload, error slot, folder path); PLUGINS.md Loading, Module shape (error boundary) -->
     <p>The Plugins pane is in the sidebar's Phosphor section. It appears once Phosphor has a hub's catalog. Each plugin has a row with:</p>
     <ul>
@@ -199,7 +199,7 @@
   </section>
 
   <section aria-labelledby="s-perm">
-    <h2 id="s-perm" data-n="04">Permissions</h2>
+    <h2 id="s-perm" data-n="04">Permissions<a class="hl" href="#s-perm" aria-label="Copy link to this section"></a></h2>
     <!-- PLUGINS.md Permissions, The API (One producer); src/plugins/host.js:28 MOTION_HOLD_MS 500, :360 menu, :408 net.fetch -->
     <p>Reading needs no permission. A plugin declares everything else in its manifest, the Plugins pane shows the list, and the app refuses a gated call that the manifest did not declare.</p>
     <table class="parts">
@@ -214,13 +214,13 @@
         <tr><th scope="row"><code>net.listen:&lt;port&gt;</code></th><td>A TCP listener on 127.0.0.1 only, never the LAN</td></tr>
       </tbody>
     </table>
-    <h3>The motion lock</h3>
+    <h3 id="the-motion-lock">The motion lock<a class="hl" href="#the-motion-lock" aria-label="Copy link to this section"></a></h3>
     <p>Only one plugin may send motion at a time. When one sends scheduled motion, it holds the motion input until its last segment ends plus 500 ms. Any other plugin's motion is refused meanwhile, with <code>motion input in use by &lt;plugin&gt;</code>, and the funscript player grays Play with the same words. A running pattern gives <code>stop the pattern first</code>.</p>
     <p>The hub applies its own check on top. If another source holds the rail, the refusal reads <code>refused: rail owned by &lt;source&gt;</code>. The e-stop and pause in the top strip are Phosphor's, not a plugin's, and always work.</p>
   </section>
 
   <section aria-labelledby="s-install">
-    <h2 id="s-install" data-n="05">Installing a plugin</h2>
+    <h2 id="s-install" data-n="05">Installing a plugin<a class="hl" href="#s-install" aria-label="Copy link to this section"></a></h2>
     <!-- PLUGINS.md Loading ("plugins are enabled by default once installed"; "Restart the app"), Permissions ("does not contain hostile code"); PluginsPane.svelte "Drop a plugin folder here and restart"; privacy.html; src-tauri/src/plugins.rs:32-33 -->
     <p>A plugin is a folder with a <code>manifest.json</code> and one module file. Put the folder in the plugins folder and restart Phosphor. The Plugins pane prints the folder's real path on your system. A plugin with the same name as a factory plugin replaces it.</p>
     <p><strong>A plugin you install is enabled right away, and a plugin runs with the full authority of the app page.</strong> The permission list is a record of what the plugin says it will do. It is not a sandbox: a hostile module could open its own network connection. Install a plugin only from a source you would trust with a program, and read its manifest first. The <a href="/privacy.html">privacy page</a> says the same: the plugins that ship with the app contact only addresses you configured, and a plugin from elsewhere can contact whatever its author wrote.</p>
@@ -228,7 +228,7 @@
   </section>
 
   <section aria-labelledby="s-dev">
-    <h2 id="s-dev" data-n="06">For developers</h2>
+    <h2 id="s-dev" data-n="06">For developers<a class="hl" href="#s-dev" aria-label="Copy link to this section"></a></h2>
     <!-- PLUGINS.md Module shape, Manifest, The API (v1), Freeze; examples dir -->
     <p>The full contract is in <a href="https://github.com/openvalence/Phosphor/blob/main/docs/PLUGINS.md">docs/PLUGINS.md</a>. The short version:</p>
     <dl class="terms">

@@ -124,13 +124,13 @@
   </section>
 
   <section class="aside" aria-labelledby="s-status">
-    <h2 id="s-status">Status</h2>
+    <h2 id="s-status">Status<a class="hl" href="#s-status" aria-label="Copy link to this section"></a></h2>
     <!-- Nucleus README.md "Build and flash"; docs/board-map.md "The bench profile"; gh release list is empty -->
     <p class="big-line">Runs on an ESP32-P4 dev board and bench rigs. The Flagship PCB is still in design (see <a href="/hardware/">Hardware</a>). No release yet; when there is one, it will be on <a href="/downloads/">Downloads</a>.</p>
   </section>
 
   <section class="band" aria-labelledby="s-motion">
-    <h2 class="xl" id="s-motion">Motion timing</h2>
+    <h2 class="xl" id="s-motion">Motion timing<a class="hl" href="#s-motion" aria-label="Copy link to this section"></a></h2>
     <!-- Nucleus MotionArbiter.h:120-128 kStripLen=128; ValenceMotion.h:289 kMotionTickUs=1000; MotionArbiter.h:111-119 kLeaseTicks = 4; motion-control.md:252-254 (125 ns poll loop at 40 MHz, 128 ns spread); Phosphor src/model/motion.js:80-85 LEAD_MARGIN_MS=100; Nucleus StoredState.h:77-81 factory horizon 1000 ms -->
     <ul class="facts">
       <li><span class="num">128<small>ms</small></span><b>Plan strip</b><p>The planner, <a href="/kinetic/">Kinetic²</a>, keeps the next 128 positions in mm, one per 1 ms tick, so a planner solve of up to 128 ms never leaves the output without a plan.</p></li>
@@ -173,7 +173,7 @@
   </section>
 
   <section aria-labelledby="s-chips">
-    <h2 class="xl" id="s-chips">Chips</h2>
+    <h2 class="xl" id="s-chips">Chips<a class="hl" href="#s-chips" aria-label="Copy link to this section"></a></h2>
     <!-- Nucleus README.md:15-22 "Chips"; .claude/rules/transport.md:83-84; README.md:20-22; docs/supervisor.md:232-244 -->
     <ul class="facts three">
       <li><b>ESP32-P4</b><p>Runs everything we wrote: the Valence hub, the WebSocket server, policy and motion.</p></li>
@@ -183,7 +183,7 @@
   </section>
 
   <section class="aside" aria-labelledby="s-safety">
-    <h2 id="s-safety">Safety</h2>
+    <h2 id="s-safety">Safety<a class="hl" href="#s-safety" aria-label="Copy link to this section"></a></h2>
     <ul class="facts">
       <!-- architecture.md:69-77 MotionArbiter sole-caller rule -->
       <li><b>The MotionArbiter</b><p>The only code allowed to command motion. Manual input, scripts, patterns and network sessions submit intents to it, so every safety check lives in one place: homed, commissioned, pause, e-stop, and a clamp to the rail window.</p></li>
@@ -193,7 +193,7 @@
   </section>
 
   <section aria-labelledby="s-pairing">
-    <h2 class="xl" id="s-pairing">Pairing button <span class="tag">WIP</span></h2>
+    <h2 class="xl" id="s-pairing">Pairing button <span class="tag">WIP</span><a class="hl" href="#s-pairing" aria-label="Copy link to this section"></a></h2>
     <!-- Nucleus flagship_p4/src/system/ButtonGesture.h:38-42 (kDoublePressMs 600, kDemoteHoldMs 5000; RFC-114 and RFC-117 are drafts); Valence SPEC §12.3; §13.4.1 -->
     <ul class="facts">
       <li><b>Press PAIR</b><p>Opens a 120 s pairing window.</p></li>
@@ -205,13 +205,13 @@
   </section>
 
   <section class="aside" aria-labelledby="s-updates">
-    <h2 id="s-updates">Firmware updates and rollback</h2>
+    <h2 id="s-updates">Firmware updates and rollback<a class="hl" href="#s-updates" aria-label="Copy link to this section"></a></h2>
     <!-- Nucleus build-test-deploy.md:102-118 -->
     <p>An HTTP POST to <code>/ota</code> on port 80, with a token, writes the new image to the idle slot and reboots. The new image is on trial: if its hub task hangs before it proves itself, the watchdog resets the PCB and the bootloader brings back the previous image.</p>
   </section>
 
   <section class="aside" aria-labelledby="s-fit">
-    <h2 id="s-fit">Related</h2>
+    <h2 id="s-fit">Related<a class="hl" href="#s-fit" aria-label="Copy link to this section"></a></h2>
     <div>
       <!-- Valence SPEC §1.2; Phosphor README.md (Neutrino) -->
       <p>Nucleus is the hub in <a href="/Valence/">Valence</a>: it holds the machine's state, and clients such as <a href="/phosphor/">Phosphor</a> send intents that it clamps and echoes. It plans motion with <a href="/kinetic/">Kinetic</a> and runs on the <a href="/hardware/">Flagship PCB</a>. The same hub code compiles to WebAssembly and runs inside Phosphor as <a href="/neutrino/">Neutrino</a>, so you can try it without a PCB; see <a href="/demos/">Demos</a>. The <a href="/diagrams/">diagrams</a> show the whole system, and <a href="/components/">Components</a> lists every part.</p>

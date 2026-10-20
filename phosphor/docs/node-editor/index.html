@@ -122,13 +122,13 @@
   </section>
 
   <section aria-labelledby="s-status">
-    <h2 id="s-status" data-n="01">Status <span class="tag">WIP</span></h2>
+    <h2 id="s-status" data-n="01">Status <span class="tag">WIP</span><a class="hl" href="#s-status" aria-label="Copy link to this section"></a></h2>
     <!-- docs/GRAPH.md; Phosphor board ph-e82.13 (open), ph-e82.13.8 (open: reachable from a category page) -->
     <p>The node editor is in the app and still changing. You reach it as a module on the Dash. See the <a href="https://github.com/openvalence/Phosphor/blob/main/docs/GRAPH.md">graph notes</a> for the current node list.</p>
   </section>
 
   <section aria-labelledby="s-open">
-    <h2 id="s-open" data-n="02">Open it</h2>
+    <h2 id="s-open" data-n="02">Open it<a class="hl" href="#s-open" aria-label="Copy link to this section"></a></h2>
     <!-- src/plugins/graph.js:46 HERO title 'Node graph'; DESIGN.md 10.6 (edit mode, module palette, engage, Open); GRAPH.md "The add menu" (Send to node editor) -->
     <p>The editor is a built-in plugin whose module is called <strong>Node graph</strong>. To use it, put it on a Dash layout:</p>
     <ol>
@@ -150,14 +150,14 @@
   </section>
 
   <section aria-labelledby="s-nodes">
-    <h2 id="s-nodes" data-n="03">Nodes and wires</h2>
+    <h2 id="s-nodes" data-n="03">Nodes and wires<a class="hl" href="#s-nodes" aria-label="Copy link to this section"></a></h2>
     <!-- GRAPH.md Socket types, Nodes, Evaluation; src/model/graph.js:491-510 OPS; graph.js:554 'refused: would loop' -->
     <p>A node is a block with input sockets on its left and one output socket on its right. Drag from one socket to another to wire them. Drag a wire off a socket and release it over empty canvas to search for a node that fits.</p>
-    <h3>Source and target nodes</h3>
+    <h3 id="source-and-target-nodes">Source and target nodes<a class="hl" href="#source-and-target-nodes" aria-label="Copy link to this section"></a></h3>
     <p>A <strong>field node</strong> is a setting from the connected hub, shown with its card name, description, range, unit and live value. Used as a source it reads. Used as a target it writes, through the same path as a normal control, so a refusal appears the same way. A <strong>toy node</strong> is a control of a device connected to Phosphor's built-in buttplug server. Each field or toy appears once.</p>
-    <h3>Value types</h3>
+    <h3 id="value-types">Value types<a class="hl" href="#value-types" aria-label="Copy link to this section"></a></h3>
     <p>Sockets carry <code>float</code>, <code>int</code> or <code>bool</code>. There are no arrays. Types convert the way Blender's do: int to float is exact, float to int rounds, a bool is 0 or 1, and any nonzero number reads as true. A small ring at a wire's midpoint means the two ends differ in type and a conversion happens there.</p>
-    <h3>Operation nodes</h3>
+    <h3 id="operation-nodes">Operation nodes<a class="hl" href="#operation-nodes" aria-label="Copy link to this section"></a></h3>
     <p>One node per family, with the operation in a dropdown:</p>
     <table class="parts">
       <thead>
@@ -175,7 +175,7 @@
   </section>
 
   <section aria-labelledby="s-run">
-    <h2 id="s-run" data-n="04">Where a chain runs</h2>
+    <h2 id="s-run" data-n="04">Where a chain runs<a class="hl" href="#s-run" aria-label="Copy link to this section"></a></h2>
     <!-- GRAPH.md "Where a chain runs"; src/model/graph.js:31 TICK_MS 50; DESIGN.md 10.8; Valence SPEC 8.11, 11.6 -->
     <p>A node target shows a badge, <code>hub</code> or <code>client</code>, saying where its chain runs.</p>
     <dl class="terms">
@@ -186,7 +186,7 @@
   </section>
 
   <section aria-labelledby="s-build">
-    <h2 id="s-build" data-n="05">What you can build</h2>
+    <h2 id="s-build" data-n="05">What you can build<a class="hl" href="#s-build" aria-label="Copy link to this section"></a></h2>
     <!-- GRAPH.md "Position with duration", Starting graphs; src/model/graph-presets.js:19, :41 -->
     <p>The <strong>More</strong> menu has a <strong>Starting graph</strong> list. A starting graph is placed below what is already there as one undoable step, and you edit it like any other nodes. Two are included:</p>
     <dl class="terms">
@@ -198,7 +198,7 @@
   </section>
 
   <section aria-labelledby="s-keys">
-    <h2 id="s-keys" data-n="06">Keys</h2>
+    <h2 id="s-keys" data-n="06">Keys<a class="hl" href="#s-keys" aria-label="Copy link to this section"></a></h2>
     <!-- src/model/keys.js:100-109; GraphEditor.svelte:529, :538 -->
     <table class="parts">
       <thead>
@@ -219,7 +219,7 @@
   </section>
 
   <section aria-labelledby="s-save">
-    <h2 id="s-save" data-n="07">Saving</h2>
+    <h2 id="s-save" data-n="07">Saving<a class="hl" href="#s-save" aria-label="Copy link to this section"></a></h2>
     <!-- src/model/graph.js:689 STORAGE_KEY 'phosphor.graph', saveLocal :696; src/plugins/graph.js persist() after connect, edits, undo/redo -->
     <p>There is no Save button. Phosphor stores the graph on your computer after each edit: nodes, wires, operations and the view. A hub edge is also written to the hub, which keeps it. Client chains come back when you reopen Phosphor and run only while it is open and linked. The graph is not synced to other computers.</p>
     <p class="links"><a href="/phosphor/docs/">Phosphor docs</a> · <a href="/phosphor/docs/plugins/">Plugins</a> · <a href="https://github.com/openvalence/Phosphor/blob/main/docs/GRAPH.md">Graph notes</a></p>

@@ -122,7 +122,7 @@
   </section>
 
   <section aria-labelledby="s-install">
-    <h2 id="s-install" data-n="01">Install</h2>
+    <h2 id="s-install" data-n="01">Install<a class="hl" href="#s-install" aria-label="Copy link to this section"></a></h2>
     <!-- gh release list is empty for every repo (site brief); Phosphor docs/BUILD.md lines 56-63 (Windows: Rust MSVC, Node 22), 9-17 (layout) -->
     <p>Pre-release builds for Windows, macOS and Linux are on <a href="/downloads/">Downloads</a>.</p>
     <p>To build from source instead: the Phosphor repo expects its siblings beside it in one folder: <code>Valence</code>, <code>Nucleus</code>, <code>Kinetic</code> and <code>ButtplugIO</code> on its <code>valence</code> branch. On Windows you need Rust (MSVC) and Node 22. Then, in the Phosphor folder:</p>
@@ -132,14 +132,14 @@ npm run build:app -- --bundles nsis</code></pre>
   </section>
 
   <section aria-labelledby="s-launch">
-    <h2 id="s-launch" data-n="02">First launch</h2>
+    <h2 id="s-launch" data-n="02">First launch<a class="hl" href="#s-launch" aria-label="Copy link to this section"></a></h2>
     <!-- src/App.svelte:160 (first run opens Hubs), 152-157 (sections); src/model/prefs.js:32 (reconnect default true); docs/DESIGN.md §10.11 lines 1183-1187 -->
     <p>With no saved hub, Phosphor opens on the Hubs page. That page lists saved hubs, finds new ones and holds Neutrino, the built-in machine. From the second launch on, Phosphor redials the last hub by default. The setting is Settings, Connection, "Reconnect to the last hub on launch", and it is on until you turn it off.</p>
     <p>The sidebar has three sections. Machine and Valence fill in once a hub's catalog has loaded. Phosphor, the third, is always there.</p>
   </section>
 
   <section aria-labelledby="s-virtual">
-    <h2 id="s-virtual" data-n="03">Try Neutrino</h2>
+    <h2 id="s-virtual" data-n="03">Try Neutrino<a class="hl" href="#s-virtual" aria-label="Copy link to this section"></a></h2>
     <!-- docs/DESIGN.md §10.10 lines 1113-1131, 1153-1160; src/shell/HubsPane.svelte:116-129; src/ui/TopStrip.svelte:252; src/shell/HubsPane.svelte:58 -->
     <p>Neutrino is the Nucleus hub firmware compiled to WebAssembly and run inside Phosphor. It has patterns, planning and telemetry like a real hub, and no motor, so it is a safe place to learn the app.</p>
     <ol>
@@ -162,7 +162,7 @@ npm run build:app -- --bundles nsis</code></pre>
   </section>
 
   <section aria-labelledby="s-find">
-    <h2 id="s-find" data-n="04">Find a real machine</h2>
+    <h2 id="s-find" data-n="04">Find a real machine<a class="hl" href="#s-find" aria-label="Copy link to this section"></a></h2>
     <!-- src/shell/hubs.svelte.js:107 (LAN_SCAN_MS 1500), 109 and src-tauri/src/discovery.rs:22 (port 22096), 120-139 (scan order); src/model/machine.svelte.js:952, 956-960 (host:port, default 82); src/shell/HubsPane.svelte:136-143, 155 -->
     <p>On the Hubs page, under Find a hub, press Scan. Scan sends a discovery probe on your local network (UDP port 22096) and waits 1.5 s. If any machine answers, you get a list. If none does, Scan falls back to a Bluetooth scan.</p>
     <p>Each row shows the machine's name, its address, firmware version and when it was last seen. A row can carry marks: <code>LAN</code> or <code>BLE</code> for how it was found, <code>needs setup</code> for a machine with no Wi-Fi, and <code>pairing open</code>. Press Connect on the row.</p>
@@ -171,7 +171,7 @@ npm run build:app -- --bundles nsis</code></pre>
   </section>
 
   <section aria-labelledby="s-screens">
-    <h2 id="s-screens" data-n="05">The main screens</h2>
+    <h2 id="s-screens" data-n="05">The main screens<a class="hl" href="#s-screens" aria-label="Copy link to this section"></a></h2>
     <!-- docs/DESIGN.md §10.11 lines 1183-1187, 1218-1220; src/App.svelte:128-149; src/shell/settings-pane.js:48-52; src/ui/TopStrip.svelte:242-244 -->
     <figure class="docshot"><picture><source srcset="../img/gs-dash-light.webp" data-hi="../img/hi/gs-dash-light.webp" media="(prefers-color-scheme: light)"><img src="../img/gs-dash-dark.webp" data-hi="../img/hi/gs-dash-dark.webp" width="1280" height="800" alt="The Dash connected to Neutrino with a pattern running, showing the top strip with the position readout, the sidebar and the Telemetry and Pattern cards." loading="lazy" decoding="async"></picture><figcaption>The Dash connected to Neutrino, with a pattern running.</figcaption></figure>
     <ol class="legend">
@@ -181,13 +181,13 @@ npm run build:app -- --bundles nsis</code></pre>
       <li>Halt stops the machine.</li>
       <li>Dash, the first page in the Machine section.</li>
     </ol>
-    <h3>Machine</h3>
+    <h3 id="machine">Machine<a class="hl" href="#machine" aria-label="Copy link to this section"></a></h3>
     <p>Dash is the home page you arrange. Below it are the pages the machine's catalog defines. The names come from the registry and typically include Generator, Motion, Limits, Hardware, System, Other and Setup. A page appears only if the machine offers settings in that category.</p>
-    <h3>Valence</h3>
+    <h3 id="valence">Valence<a class="hl" href="#valence" aria-label="Copy link to this section"></a></h3>
     <p>Pairing, Link and Log. Pairing handles access. Link shows the protocol view: traffic, channels and refusals. Log has tabs for the log, anomalies, safety events, the session, changes and Health.</p>
-    <h3>Phosphor</h3>
+    <h3 id="phosphor">Phosphor<a class="hl" href="#phosphor" aria-label="Copy link to this section"></a></h3>
     <p>Display (themes), Plugins, Hubs, Buttplug, Settings, Merge and About. Display folds into Settings in the app and is its own page on the hub-served page.</p>
-    <h3>The top strip</h3>
+    <h3 id="the-top-strip">The top strip<a class="hl" href="#the-top-strip" aria-label="Copy link to this section"></a></h3>
     <p>The strip carries Home, Flip, Override, Pause and E-Stop, with the rail and the position numerals beside them. Override lets you jog across the full travel. Pause and E-Stop are always there, and E-Stop latches until you hold it for 3 s.</p>
     <p class="links"><a href="/phosphor/docs/">Docs</a> · <a href="/phosphor/">Phosphor</a> · <a href="https://github.com/openvalence/Phosphor">Repo</a></p>
   </section>

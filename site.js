@@ -41,6 +41,29 @@
     document.addEventListener('pointerdown', (e) => { if (!m.contains(e.target)) set(false); });
   }
 
+  // Section links (style.css .hl, marks from tools/chrome.py): a click copies the page URL with the
+  // section's id and puts the hash in the address bar without scrolling. Stores nothing.
+  let said;
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a.hl');
+    if (!a || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    history.replaceState(history.state, '', a.hash);
+    const tip = (t) => {
+      a.dataset.tip = t;
+      clearTimeout(a._tip);
+      a._tip = setTimeout(() => delete a.dataset.tip, 1500);
+      if (!said) {
+        said = document.body.appendChild(document.createElement('span'));
+        said.className = 'vh';
+        said.setAttribute('role', 'status');
+      }
+      said.textContent = '';
+      setTimeout(() => { said.textContent = t; }, 50);
+    };
+    (navigator.clipboard ? navigator.clipboard.writeText(location.href) : Promise.reject()).then(() => tip('Link copied'), () => tip('Link in the address bar'));
+  });
+
   // The header mark (tools/chrome.html): /mark-anim.js plays its intro on the home page unless the
   // visitor came from another page of the site (the head script sets html.intro) and turns it on hover. Loaded at load, so it never
   // competes with the first paint; reduced motion: neither.

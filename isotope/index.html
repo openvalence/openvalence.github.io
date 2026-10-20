@@ -123,7 +123,7 @@
   </section>
 
   <section class="band" aria-labelledby="s-spoke">
-    <h2 class="xl" id="s-spoke">Accessory network</h2>
+    <h2 class="xl" id="s-spoke">Accessory network<a class="hl" href="#s-spoke" aria-label="Copy link to this section"></a></h2>
     <!-- Isotope docs/DESIGN.md: hub and spoke, 1 s beacon, 5 s fail-safe, at most 19 accessories, 3 typical -->
     <figure class="diagram spoke on-band">
       <svg viewBox="0 0 560 300" role="img" aria-labelledby="iso-t iso-d"><title id="iso-t">Hub and spoke</title><desc id="iso-d">A client such as Phosphor talks Valence to the hub. Three accessories, a pump, a motorized stand and any other accessory, each talk only to the hub over ESP-NOW. The hub sends a beacon once a second; an accessory that hears nothing for 5 seconds goes to its safe value.</desc>
@@ -144,7 +144,7 @@
   </section>
 
   <section class="aside" aria-labelledby="s-status">
-    <h2 id="s-status">Status</h2>
+    <h2 id="s-status">Status<a class="hl" href="#s-status" aria-label="Copy link to this section"></a></h2>
     <div>
       <!-- Isotope README.md banner "Nothing here runs yet"; "License: Not chosen" -->
       <p>The repo holds the design document and validation plans. There is no firmware yet; building starts once the radio numbers it depends on are measured on dev boards. No license is chosen yet, so nothing in the repo is licensed for reuse.</p>
@@ -154,7 +154,7 @@
   </section>
 
   <section aria-labelledby="s-works">
-    <h2 class="xl" id="s-works">Design</h2>
+    <h2 class="xl" id="s-works">Design<a class="hl" href="#s-works" aria-label="Copy link to this section"></a></h2>
     <ul class="facts three">
       <li><b>Hub and spoke</b><p>Accessories talk only to the hub. A client such as <a href="/phosphor/">Phosphor</a> sees accessory channels like any other channel in the hub's catalog, so it needs no accessory-specific code.</p></li>
       <li><b>Join and declare</b><p>You open a pairing window on the hub. The accessory sends a join request, then declares its own channels, and the hub stores them. Adding an accessory needs no change to the hub or the client.</p></li>
@@ -166,7 +166,7 @@
   </section>
 
   <section aria-labelledby="s-order">
-    <h2 class="xl" id="s-order">Build order</h2>
+    <h2 class="xl" id="s-order">Build order<a class="hl" href="#s-order" aria-label="Copy link to this section"></a></h2>
     <!-- Isotope README.md "The order things get built" -->
     <ol class="chain steps">
       <li><div class="blk"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#doc"/></svg><span><strong>Config and generator</strong></span><p class="tip">A declarative config, shaped like ESPHome's, is the one place an accessory is described. The generator turns it into an image.</p></div></li>
@@ -176,7 +176,7 @@
   </section>
 
   <section class="aside" aria-labelledby="s-fit">
-    <h2 id="s-fit">Related</h2>
+    <h2 id="s-fit">Related<a class="hl" href="#s-fit" aria-label="Copy link to this section"></a></h2>
     <div>
       <!-- Isotope README.md "Its relatives"; Hardware flagship/FEATURES.md "Accessories" -->
       <p>Isotope uses <a href="/Valence/">Valence</a> and takes every wire number from the spec. Anything it needs that the spec lacks goes through an RFC first. The hub is <a href="/nucleus/">Nucleus</a>. A plain on/off or PWM load, like a pump, does not need Isotope: the <a href="/hardware/">Flagship PCB</a> has a pin for it. See the <a href="/diagrams/">diagrams</a> and <a href="/components/">Components</a> for the whole system.</p>
