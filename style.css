@@ -554,6 +554,23 @@ h1 .tag, h2 .tag { font-size: .7rem; vertical-align: .6em; }
 .d-arrow { fill: var(--accent-ink); }
 .d-arrow-i { fill: var(--info); }
 .d-arrow-g { fill: var(--line-3); }
+/* component drawings (the guides): pads, a part on the far side, wires and their gaps at crossings.
+   One set of wire colors reads on both themes (3:1 or better on --bg and --bg-2); ground is the ink. */
+:root { --w-5v: #E5383B; --w-tx: #A47C00; --w-rx: #1A9145; --w-trip: #D4600C; --w-a: #3D7BF0; --w-b: #9B5DE5; }
+.d-m    { fill: var(--ink-3); font: 400 9.5px var(--mono); opacity: .75; }
+.d-pad  { fill: var(--line-3); }
+.d-th   { fill: var(--bg); stroke: var(--ink-2); stroke-width: 1.6; }
+.d-dash { fill: none; stroke: var(--ink-3); stroke-width: 1.2; stroke-dasharray: 4 3; }
+.d-wire { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.d-halo { fill: none; stroke: var(--bg); stroke-width: 8; stroke-linejoin: round; }
+.diagram.wide { max-width: 760px; }
+/* a drawing wider than a phone scrolls inside its figure; the page never scrolls sideways */
+.diagram .scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+.wires { display: flex; flex-wrap: wrap; gap: 4px 18px; max-width: var(--measure); margin: 12px 0 0; padding: 0; list-style: none; font: 400 .8rem/1.5 var(--mono); color: var(--ink-3); }
+.wires li { margin: 0; }
+.sw { display: inline-block; width: 18px; height: 4px; margin-right: 7px; vertical-align: .25em; border-radius: 1px; background: var(--c); }
+.warn { max-width: var(--measure); margin: 0 0 16px; padding: 2px 0 2px 16px; border-left: 3px solid var(--bad); }
+.tag:first-child { margin-left: 0; }
 
 /* ---- shots and captures used by docs and demos ---- */
 .shot { margin: 0 0 24px; }
@@ -677,6 +694,7 @@ main pre code { overflow-wrap: normal; }
   .parts tbody th, .parts td { padding: 0; border: 0; }
   .parts.vs td::before { content: 'On the PCB: '; color: var(--ink-3); }
   .parts.vs td:last-child::before { content: 'In Neutrino: '; }
+  .parts td[data-k]::before { content: attr(data-k) ': '; color: var(--ink-3); }
 }
 /* the wordmark, Download and the theme toggle share the top row down to 360 px */
 @media (max-width: 400px) {

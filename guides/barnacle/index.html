@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barnacle mod build guide: OpenValence</title>
+<meta name="description" content="Wire an M5Stack Stamp-P4 onto the OSSM R+D board rev 2.3: one 7-pin header, two looms, A/B quadrature to the servo drive. Parts, steps, pinouts, power budget.">
+<link rel="canonical" href="https://openvalence.org/guides/barnacle/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://openvalence.org/guides/barnacle/">
+<meta property="og:title" content="Barnacle mod build guide: OpenValence">
+<meta property="og:description" content="Wire an M5Stack Stamp-P4 onto the OSSM R+D board rev 2.3: one 7-pin header, two looms, A/B quadrature to the servo drive. Parts, steps, pinouts, power budget.">
+<meta name="twitter:title" content="Barnacle mod build guide: OpenValence">
+<meta name="twitter:description" content="Wire an M5Stack Stamp-P4 onto the OSSM R+D board rev 2.3: one 7-pin header, two looms, A/B quadrature to the servo drive. Parts, steps, pinouts, power budget.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: light)">
+<script>
+// The theme before first paint; site.js follows "themechange". Constraints: stays inline and above
+// the stylesheet; the theme-color metas stay first, dark then light. localStorage.theme is the ONLY
+// storage the site touches, written only by the theme button and only while it differs from the
+// default (the system, or Dark Reader's scheme on this page); privacy.html promises that, so add no
+// other storage without a consent story. darkreader-lock stands Dark Reader's dynamic mode down.
+(() => {
+  const d = document.documentElement, sys = matchMedia('(prefers-color-scheme: light)');
+  const get = (s, k) => { try { return window[s].getItem(k); } catch (e) {} };
+  const put = (s, k, v) => { try { v ? window[s].setItem(k, v) : window[s].removeItem(k); } catch (e) {} };
+  let dr;
+  const auto = () => dr || (sys.matches ? 'light' : 'dark');
+  const lock = () => document.querySelector('meta[name=darkreader-lock]') || document.head.append(Object.assign(document.createElement('meta'), { name: 'darkreader-lock' }));
+  const label = () => {
+    const b = document.querySelector('.theme'), to = d.dataset.theme === 'light' ? 'dark' : 'light';
+    if (b) { b.title = `Switch to ${to} theme`; b.setAttribute('aria-label', b.title); }
+  };
+  const apply = () => {
+    const t = get('localStorage', 'theme') || auto(), [dk, lt] = document.querySelectorAll('meta[name=theme-color]');
+    d.dataset.theme = t;
+    dk.media = t === 'dark' ? 'all' : 'not all';
+    lt.media = t === 'light' ? 'all' : 'not all';
+    label();
+    dispatchEvent(new Event('themechange'));
+  };
+  addEventListener('click', (e) => {
+    if (!e.target.closest || !e.target.closest('.theme')) return;
+    const t = d.dataset.theme === 'light' ? 'dark' : 'light';
+    put('localStorage', 'theme', t === auto() ? '' : t);
+    // a crossfade where the browser has view transitions (style.css .vt-theme); reduced motion: instant
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return apply();
+    d.classList.add('vt-theme');
+    document.startViewTransition(apply).finished.finally(() => d.classList.remove('vt-theme'));
+  });
+  new MutationObserver(() => {
+    if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;
+    dr = d.getAttribute('data-darkreader-scheme') === 'dimmed' ? 'light' : 'dark';
+    lock();
+    apply();
+  }).observe(d, { attributeFilter: ['data-darkreader-mode'] });
+  sys.addEventListener('change', apply);
+  document.addEventListener('DOMContentLoaded', label);
+  d.classList.add('js');
+  // The home page plays the header mark's intro unless the visitor came from another page of this
+  // site (site.js); html.intro hides the mark until it starts, and style.css shows it anyway after 2.5 s.
+  const inside = (() => { try { return new URL(document.referrer).origin === location.origin; } catch (e) { return false; } })();
+  if (location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches && !inside) d.classList.add('intro');
+  apply();
+})();
+</script>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<script src="/site.js" defer></script>
+<script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Open-source hardware and software for linear motion machines, with the OpenValence mark and a large OpenValence wordmark.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <div class="menu">
+      <a class="chip" href="/components/">Components</a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-parts" aria-label="Components menu"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chev"/></svg></button>
+      <div class="menu-panel" id="menu-parts">
+        <ul>
+          <li><a class="item" href="/nucleus/"><b>Nucleus</b><span>Firmware for the OSSM Flagship PCB</span></a></li>
+          <li><a class="item" href="/neutrino/"><b>Neutrino</b><span>The hub firmware, emulated inside Phosphor</span></a></li>
+          <li><a class="item" href="/kinetic/"><b>Kinetic</b><span>The motion planner: knots in, smooth motion out</span></a></li>
+          <li><a class="item" href="/isotope/"><b>Isotope <i>WIP</i></b><span>Accessory firmware that joins over <span class="nb">ESP-NOW</span></span></a></li>
+          <li><a class="item" href="/hardware/"><b>OSSM Flagship PCB <i>WIP</i></b><span>The controller board, in KiCad</span></a></li>
+        </ul>
+        <a class="item all" href="/components/">All components</a>
+      </div>
+    </div>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip util" href="/Valence/">Docs</a>
+    <a class="chip" href="/guides/" aria-current="page">Guides</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
+  <button class="theme" type="button" aria-label="Switch theme"><svg class="ico sun" aria-hidden="true"><use href="/icons/ui.svg#sun"/></svg><svg class="ico moon" aria-hidden="true"><use href="/icons/ui.svg#moon"/></svg></button>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <h1>Barnacle mod</h1>
+    <p class="lede">An M5Stack Stamp-P4 wired onto the OSSM R+D reference board, rev 2.3. The P4 runs Nucleus and sends A/B quadrature straight to the servo drive. The board's ESP32-WROOM-32D stays on as an I/O helper.</p>
+    <p>One 7-pin header on the Stamp and eight wires. The R+D board gets no new parts.</p>
+    <p><span class="tag">WIP</span> Firmware. nucleus-p4b, the Nucleus build for the barnacle, and the WROOM shim firmware are not released yet. <a href="#status">Status</a></p>
+  </section>
+
+  <section aria-labelledby="what">
+    <h2 id="what">What it is<a class="hl" href="#what" aria-label="Copy link to this section"></a></h2>
+    <!-- operator's draft barnacle-wiring.html (2026-10-23) and R+D rev 2.3 netlist; M5Stack Stamp-P4 schematic; operator rulings 2026-10-23: drive setup over RS485 first, no software power cut -->
+    <p>The Stamp-P4 takes over motion. Three wires (A, B, GND) carry A/B quadrature from the P4's LP core to the servo drive's pulse and direction inputs. The servo's 10-pin signal cable no longer plugs into the R+D board.</p>
+    <p>Five more wires go to J8 on the R+D board, the 10-pin header the servo cable used: 5 V, GND, a serial link each way, and TRIP. The WROOM runs the shim firmware. It reads motor current, motor voltage and the button, drives the RGB LED, and reports to the P4 at 115200 baud.</p>
+    <p>Motor power stays on J2 SERVO POWER. The current sensor sits in that path, so the helper sees motor current only while the servo draws from J2.</p>
+    <figure class="diagram wide">
+      <div class="scroll"><svg viewBox="0 0 600 326" role="img" aria-labelledby="harness-t harness-d" style="min-width:560px"><title id="harness-t">The barnacle harness</title><desc id="harness-d">Two looms meet at the 7-pin header on the Stamp-P4. The R+D loom has five wires from J8: pin 1 GND to pad 13, pin 2 to pad 17 TX, pin 7 to pad 7 TRIP, pin 9 to pad 19 RX, and pin 10 5V to pad 15. The servo loom has three wires: pad 9 A to PUL+, pad 11 B to DIR+, and pad 13 GND to PUL− and DIR−, jumpered at the drive. Pad 13 carries both ground wires. J8 pins 3 to 6 and 8 stay unused. Motor power stays on J2.</desc><text class="d-k" x="14.0" y="22.0">R+D board · J8</text><rect class="d-box" x="14" y="32" width="180" height="266" rx="2"/><rect class="d-th" x="180" y="43" width="10" height="10" style="stroke:var(--ink);stroke-width:2.4"/><text class="d-s" x="24.0" y="51.5"> 1 GND · ALM−</text><circle class="d-th" cx="185" cy="74" r="5" style="stroke:var(--w-tx);stroke-width:2.4"/><text class="d-s" x="24.0" y="77.5"> 2 TX in · ALM+</text><circle class="d-th" cx="185" cy="100" r="5"/><text class="d-m" x="24.0" y="103.5"> 3 GND · PED−</text><circle class="d-th" cx="185" cy="126" r="5"/><text class="d-m" x="24.0" y="129.5"> 4 spare in · PED+</text><circle class="d-th" cx="185" cy="152" r="5"/><text class="d-m" x="24.0" y="155.5"> 5 spare out · ENA−</text><circle class="d-th" cx="185" cy="178" r="5"/><text class="d-m" x="24.0" y="181.5"> 6 5V · ENA+</text><circle class="d-th" cx="185" cy="204" r="5" style="stroke:var(--w-trip);stroke-width:2.4"/><text class="d-s" x="24.0" y="207.5"> 7 TRIP · DIR−</text><circle class="d-th" cx="185" cy="230" r="5"/><text class="d-m" x="24.0" y="233.5"> 8 5V · DIR+</text><circle class="d-th" cx="185" cy="256" r="5" style="stroke:var(--w-rx);stroke-width:2.4"/><text class="d-s" x="24.0" y="259.5"> 9 RX out · PUL−</text><circle class="d-th" cx="185" cy="282" r="5" style="stroke:var(--w-5v);stroke-width:2.4"/><text class="d-s" x="24.0" y="285.5">10 5V · PUL+</text><text class="d-m" x="14.0" y="316.0">motor power stays on J2</text><text class="d-k" x="354.0" y="22.0" text-anchor="middle">Stamp-P4 · XH</text><rect class="d-hub" x="318" y="52" width="72" height="224" rx="2"/><circle class="d-th" cx="324" cy="74" r="4.5"/><circle class="d-th" cx="384" cy="74" r="4.5"/><text class="d-s" x="354.0" y="77.5" text-anchor="middle">7 TRIP</text><circle class="d-th" cx="324" cy="104" r="4.5"/><circle class="d-th" cx="384" cy="104" r="4.5"/><text class="d-s" x="354.0" y="107.5" text-anchor="middle">9 A</text><circle class="d-th" cx="324" cy="134" r="4.5"/><circle class="d-th" cx="384" cy="134" r="4.5"/><text class="d-s" x="354.0" y="137.5" text-anchor="middle">11 B</text><circle class="d-th" cx="324" cy="164" r="4.5"/><circle class="d-th" cx="384" cy="164" r="4.5"/><text class="d-s" x="354.0" y="167.5" text-anchor="middle">13 GND</text><circle class="d-th" cx="324" cy="194" r="4.5"/><circle class="d-th" cx="384" cy="194" r="4.5"/><text class="d-s" x="354.0" y="197.5" text-anchor="middle">15 5V</text><circle class="d-th" cx="324" cy="224" r="4.5"/><circle class="d-th" cx="384" cy="224" r="4.5"/><text class="d-s" x="354.0" y="227.5" text-anchor="middle">17 TX</text><circle class="d-th" cx="324" cy="254" r="4.5"/><circle class="d-th" cx="384" cy="254" r="4.5"/><text class="d-s" x="354.0" y="257.5" text-anchor="middle">19 RX</text><path class="d-halo" d="M191 204H212V74H319"/><path class="d-wire" style="stroke:var(--w-trip)" d="M191 204H212V74H319"/><path class="d-halo" d="M191 48H232V164H319"/><path class="d-wire" style="stroke:var(--ink)" d="M191 48H232V164H319"/><path class="d-halo" d="M191 74H252V224H319"/><path class="d-wire" style="stroke:var(--w-tx)" d="M191 74H252V224H319"/><path class="d-halo" d="M191 282H272V194H319"/><path class="d-wire" style="stroke:var(--w-5v)" d="M191 282H272V194H319"/><path class="d-halo" d="M191 256H292V254H319"/><path class="d-wire" style="stroke:var(--w-rx)" d="M191 256H292V254H319"/><text class="d-k" x="586.0" y="22.0" text-anchor="end">Servo drive · signal in</text><rect class="d-box" x="470" y="80" width="116" height="152" rx="2"/><circle class="d-th" cx="476" cy="104" r="4.5"/><text class="d-s" x="488.0" y="107.5">PUL+</text><circle class="d-th" cx="476" cy="134" r="4.5"/><text class="d-s" x="488.0" y="137.5">DIR+</text><circle class="d-th" cx="476" cy="164" r="4.5"/><text class="d-s" x="488.0" y="167.5">PUL−</text><circle class="d-th" cx="476" cy="190" r="4.5"/><text class="d-s" x="488.0" y="193.5">DIR−</text><text class="d-m" x="480.0" y="210.0">ENA ALM PED</text><text class="d-m" x="480.0" y="223.0">not connected</text><path class="d-halo" d="M389 104H472"/><path class="d-wire" style="stroke:var(--w-a)" d="M389 104H472"/><path class="d-halo" d="M389 134H472"/><path class="d-wire" style="stroke:var(--w-b)" d="M389 134H472"/><path class="d-halo" d="M389 164H472M440 164V190H472"/><path class="d-wire" style="stroke:var(--ink)" d="M389 164H472M440 164V190H472"/><circle cx="440" cy="164" r="3.5" style="fill:var(--ink)"/><text class="d-r" x="470.0" y="250.0">A/B pulse input</text><text class="d-r" x="354.0" y="296.0" text-anchor="middle">pad 13: two GND wires</text><text class="d-r" x="354.0" y="309.0" text-anchor="middle">on one contact</text></svg></div>
+      <ul class="wires">
+        <li><span class="sw" style="--c:var(--w-5v)"></span>5V, red</li>
+        <li><span class="sw" style="--c:var(--ink)"></span>GND, black</li>
+        <li><span class="sw" style="--c:var(--w-tx)"></span>TX, yellow: P4 to WROOM</li>
+        <li><span class="sw" style="--c:var(--w-rx)"></span>RX, green: WROOM to P4</li>
+        <li><span class="sw" style="--c:var(--w-trip)"></span>TRIP, orange: active low</li>
+        <li><span class="sw" style="--c:var(--w-a)"></span>A, blue</li>
+        <li><span class="sw" style="--c:var(--w-b)"></span>B, violet</li>
+      </ul>
+      <figcaption>The two looms meet at the Stamp's header. Both grounds land on pad 13. Wire colors are a suggestion.</figcaption>
+    </figure>
+
+    <h3 id="stopping">Stopping the machine<a class="hl" href="#stopping" aria-label="Copy link to this section"></a></h3>
+    <p>The R+D board has no motor power switch and no Modbus link to the drive, and in this build the drive's enable line, ENA, is unconnected. Software cannot cut motor power.</p>
+    <p>Two things stop the motor: the P4 stops its A/B output, or the E-stop cuts the servo's supply. Wire a latching E-stop that breaks the servo's DC supply (<a href="#estop">step 5</a>).</p>
+    <p>Overcurrent protection stays with the servo drive. The current and voltage the helper reports are for monitoring and homing.</p>
+  </section>
+
+  <section aria-labelledby="parts">
+    <h2 id="parts">Parts<a class="hl" href="#parts" aria-label="Copy link to this section"></a></h2>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Part</th><th scope="col">Qty</th><th scope="col">Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">M5Stack Stamp-P4</th><td data-k="Qty">1</td><td>The ESP32-P4 module. It has no radio of its own.</td></tr>
+        <tr><th scope="row">M5Stack Stamp-AddOn C6</th><td data-k="Qty">1</td><td>Wi-Fi and BLE. Plugs into the Stamp's SDIO connector.</td></tr>
+        <tr><th scope="row">OSSM R+D board, rev 2.3</th><td data-k="Qty">1</td><td>With its ESP32-WROOM-32D.</td></tr>
+        <tr><th scope="row">JST XH header, 7-pin, top entry</th><td data-k="Qty">1</td><td>B7B-XH-A. Goes on Stamp pads 7 to 19.</td></tr>
+        <tr><th scope="row">JST XH housing, 7-pin</th><td data-k="Qty">1</td><td>XHP-7.</td></tr>
+        <tr><th scope="row">JST XH crimps</th><td data-k="Qty">7, plus spares</td><td>SXH-001T-P0.6, for 28 to 22 AWG.</td></tr>
+        <tr><th scope="row">Plug for J8</th><td data-k="Qty">1</td><td>A 10-pin plug that mates with J8, the same type as the servo cable's, and 5 crimps.</td></tr>
+        <tr><th scope="row">Hookup wire</th><td data-k="Qty">8 lengths</td><td>Stranded. 5 for the R+D loom, 3 for the servo loom.</td></tr>
+        <tr><th scope="row">Electrolytic capacitor</th><td data-k="Qty">1</td><td>220 to 470 µF, 6.3 V or more, for the Stamp's 5 V.</td></tr>
+        <tr><th scope="row">USB to RS485 adapter</th><td data-k="Qty">1</td><td>For the drive setup in step 0.</td></tr>
+        <tr><th scope="row">Latching E-stop</th><td data-k="Qty">1</td><td>Rated for your servo supply's DC voltage and current.</td></tr>
+        <tr><th scope="row">Heat shrink</th><td data-k="Qty">some</td><td>For the ground splice and the capacitor leads.</td></tr>
+      </tbody>
+    </table>
+    <h3 id="tools">Tools<a class="hl" href="#tools" aria-label="Copy link to this section"></a></h3>
+    <ul>
+      <li>Soldering iron and solder.</li>
+      <li>A crimp tool for JST XH, and one for the J8 plug's crimps.</li>
+      <li>Wire strippers.</li>
+      <li>A multimeter with a DC milliamp range.</li>
+      <li>A computer, a USB-C cable and the USB to RS485 adapter.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="build">
+    <h2 id="build">Build<a class="hl" href="#build" aria-label="Copy link to this section"></a></h2>
+
+    <h3 id="drive-setup">0. Set up the servo drive<a class="hl" href="#drive-setup" aria-label="Copy link to this section"></a></h3>
+    <p>The R+D board has no Modbus link to the drive, so set the drive up first, over its own RS485 port (Modbus RTU), with the USB to RS485 adapter. Set the command input to A/B pulse input. In pulse and direction mode the drive misreads quadrature.</p>
+    <p>The <a href="/guides/servo-setup/">servo setup</a> tool finds the drive at any baud rate and applies the barnacle's settings. It runs in Chrome or Edge on a desktop, and it is WIP. Unplug the adapter when you are done: the barnacle does not use RS485.</p>
+
+    <h3 id="prep-stamp">1. Prep the Stamp<a class="hl" href="#prep-stamp" aria-label="Copy link to this section"></a></h3>
+    <p>Plug the Stamp-AddOn C6 into the SDIO connector, at the lower left of the Stamp's top side, beside the USB-C.</p>
+    <p>Find pad 1: top left, at the camera connector end. The left column runs 1 to 19, top to bottom. On that column the odd pads are through-hole and the even pads are castellated only. The header uses the through-hole pads, so it solders like any pin header.</p>
+    <figure class="diagram wide">
+      <div class="scroll"><svg viewBox="0 0 500 475" role="img" aria-labelledby="stamp-t stamp-d" style="min-width:480px"><title id="stamp-t">Stamp-P4, top view, with the 7-pin header</title><desc id="stamp-d">The M5Stack Stamp-P4 seen from the top, 22 by 28 mm, drawn to scale from M5Stack&#x27;s footprint. Pads 1 to 19 run down the left edge and 20 to 38 down the right edge at 1.27 mm pitch. The odd pads on the left and the even pads on the right are through-hole. Pads 46 to 65 run along the top edge (RMII, then MIPI DSI) and 39 to 45 along the bottom, with pad 42 a wide ground pad under the USB-C connector, which overhangs the bottom edge. The ESP32-P4 sits in the upper middle with the camera connector above it and the flash to its right. The SDIO connector, where the Stamp-AddOn C6 plugs in, sits at the lower left beside the USB-C. A 7-pin JST XH header, on the back, covers pads 7 to 19: 7 LPG8 TRIP, 9 LPG1 A, 11 LPG0 B, 13 GND, 15 VBUS 5V, 17 G27 TX, 19 G26 RX.</desc><path class="d-box" d="M162.0 80.0 L382.0 80.0 L393.0 91.0 L393.0 377.0 L382.0 388.0 L162.0 388.0 L151.0 377.0 L151.0 91.0Z"/><rect class="d-sunk" x="174.1" y="92.1" width="66.0" height="31.9" rx="2"/><text class="d-s" x="207.1" y="112.4" text-anchor="middle">camera</text><rect class="d-sunk" x="190.6" y="135.0" width="110.0" height="110.0" rx="2"/><text class="d-t" x="245.6" y="187.8" text-anchor="middle">ESP32-P4</text><text class="d-s" x="245.6" y="202.1" text-anchor="middle">10 x 10 mm</text><rect class="d-sunk" x="317.1" y="100.9" width="56.1" height="66.0" rx="2"/><text class="d-s" x="345.1" y="136.7" text-anchor="middle">flash</text><rect class="d-hub" x="170.8" y="308.8" width="44.0" height="71.5" rx="2"/><text class="d-r" transform="translate(195.8 344.6) rotate(-90)" text-anchor="middle">SDIO · C6</text><rect class="d-box" x="223.1" y="319.8" width="97.9" height="93.5" rx="2"/><text class="d-t" x="272.0" y="359.4" text-anchor="middle">USB-C</text><rect class="d-pad" x="164.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(170.8 70.5) rotate(-90)">46 G32</text><rect class="d-pad" x="175.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(181.8 70.5) rotate(-90)">47 G36</text><rect class="d-pad" x="186.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(192.8 70.5) rotate(-90)">48 G35</text><rect class="d-pad" x="197.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(203.8 70.5) rotate(-90)">49 G41</text><rect class="d-pad" x="208.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(214.8 70.5) rotate(-90)">50 G33</text><rect class="d-pad" x="219.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(225.8 70.5) rotate(-90)">51 G31</text><rect class="d-pad" x="230.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(236.8 70.5) rotate(-90)">52 G28</text><rect class="d-pad" x="241.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(247.8 70.5) rotate(-90)">53 G30</text><rect class="d-pad" x="252.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(258.8 70.5) rotate(-90)">54 G29</text><rect class="d-pad" x="263.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(269.8 70.5) rotate(-90)">55 G52</text><rect class="d-pad" x="274.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(280.8 70.5) rotate(-90)">56 GND</text><rect class="d-pad" x="285.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(291.8 70.5) rotate(-90)">57 D0_N</text><rect class="d-pad" x="296.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(302.8 70.5) rotate(-90)">58 D0_P</text><rect class="d-pad" x="307.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(313.8 70.5) rotate(-90)">59 GND</text><rect class="d-pad" x="318.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(324.8 70.5) rotate(-90)">60 CK_P</text><rect class="d-pad" x="329.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(335.8 70.5) rotate(-90)">61 CK_N</text><rect class="d-pad" x="340.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(346.8 70.5) rotate(-90)">62 GND</text><rect class="d-pad" x="351.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(357.8 70.5) rotate(-90)">63 D1_N</text><rect class="d-pad" x="362.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(368.8 70.5) rotate(-90)">64 D1_P</text><rect class="d-pad" x="373.8" y="74.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(379.8 70.5) rotate(-90)">65 GND</text><text class="d-k" x="164.5" y="18.0">RMII</text><text class="d-k" x="274.5" y="18.0">MIPI DSI</text><path class="d-line" d="M164.5 24H269.5M274.5 24H379.5"/><rect class="d-pad" x="164.2" y="382.5" width="6.6" height="11.0"/><text class="d-s" transform="translate(170.8 398.5) rotate(-90)" text-anchor="end">39 SYS_5V</text><rect class="d-pad" x="186.8" y="382.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(192.8 398.5) rotate(-90)" text-anchor="end">40 USB2 DP</text><rect class="d-pad" x="208.8" y="382.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(214.8 398.5) rotate(-90)" text-anchor="end">41 USB2 DM</text><rect class="d-pad" x="329.8" y="382.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(335.8 398.5) rotate(-90)" text-anchor="end">43 G24</text><rect class="d-pad" x="351.8" y="382.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(357.8 398.5) rotate(-90)" text-anchor="end">44 G25</text><rect class="d-pad" x="373.8" y="382.5" width="5.5" height="11.0"/><text class="d-s" transform="translate(379.8 398.5) rotate(-90)" text-anchor="end">45 LPG3</text><rect class="d-pad" x="250.0" y="382.5" width="44.0" height="5.5" opacity=".9"/><text class="d-s" x="272.0" y="427.3" text-anchor="middle">42 GND</text><rect class="d-dash" x="126.0" y="165.1" width="63.2" height="221.5" rx="2"/><text class="d-k" transform="translate(139.2 275.9) rotate(-90)" text-anchor="middle">XH header, on the back</text><rect class="d-pad" x="145.1" y="103.9" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="108.3" r="8.2"/><text class="d-s" x="119.7" y="111.6" text-anchor="end">1 LPG15</text><rect class="d-pad" x="145.1" y="119.5" width="11.0" height="5.5"/><text class="d-m" x="119.7" y="125.5" text-anchor="end">2 LPG14</text><rect class="d-pad" x="145.1" y="131.8" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="136.2" r="8.2"/><text class="d-s" x="119.7" y="139.5" text-anchor="end">3 LPG12</text><rect class="d-pad" x="145.1" y="147.4" width="11.0" height="5.5"/><text class="d-m" x="119.7" y="153.5" text-anchor="end">4 LPG11</text><rect class="d-pad" x="145.1" y="159.8" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="164.2" r="8.2"/><text class="d-s" x="119.7" y="167.5" text-anchor="end">5 LPG10</text><rect class="d-pad" x="145.1" y="175.4" width="11.0" height="5.5"/><text class="d-m" x="119.7" y="181.4" text-anchor="end">6 LPG9</text><rect class="d-pad" x="145.1" y="187.7" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="192.1" r="8.2" style="stroke:var(--w-trip);stroke-width:2.4"/><text class="d-s" x="119.7" y="195.4" text-anchor="end">7 LPG8</text><rect x="8.0" y="190.1" width="14" height="4" rx="1" style="fill:var(--w-trip)"/><text class="d-t" x="27.0" y="196.6">TRIP</text><rect class="d-pad" x="145.1" y="203.3" width="11.0" height="5.5"/><text class="d-m" x="119.7" y="209.4" text-anchor="end">8 LPG7</text><rect class="d-pad" x="145.1" y="215.6" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="220.0" r="8.2" style="stroke:var(--w-a);stroke-width:2.4"/><text class="d-s" x="119.7" y="223.3" text-anchor="end">9 LPG1</text><rect x="8.0" y="218.0" width="14" height="4" rx="1" style="fill:var(--w-a)"/><text class="d-t" x="27.0" y="224.5">A</text><rect class="d-pad" x="145.1" y="231.2" width="11.0" height="5.5"/><text class="d-m" x="119.7" y="237.3" text-anchor="end">10 G50</text><rect class="d-pad" x="145.1" y="243.6" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="248.0" r="8.2" style="stroke:var(--w-b);stroke-width:2.4"/><text class="d-s" x="119.7" y="251.3" text-anchor="end">11 LPG0</text><rect x="8.0" y="246.0" width="14" height="4" rx="1" style="fill:var(--w-b)"/><text class="d-t" x="27.0" y="252.5">B</text><rect class="d-pad" x="145.1" y="259.2" width="11.0" height="5.5"/><text class="d-m" x="119.7" y="265.2" text-anchor="end">12 G49</text><rect class="d-pad" x="145.1" y="271.5" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="275.9" r="8.2" style="stroke:var(--ink);stroke-width:2.4"/><text class="d-s" x="119.7" y="279.2" text-anchor="end">13 GND</text><rect x="8.0" y="273.9" width="14" height="4" rx="1" style="fill:var(--ink)"/><text class="d-t" x="27.0" y="280.4">GND</text><rect class="d-pad" x="145.1" y="287.1" width="11.0" height="5.5"/><text class="d-m" x="119.7" y="293.2" text-anchor="end">14 5VIN</text><rect class="d-pad" x="145.1" y="299.5" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="303.9" r="8.2" style="stroke:var(--w-5v);stroke-width:2.4"/><text class="d-s" x="119.7" y="307.2" text-anchor="end">15 VBUS</text><rect x="8.0" y="301.9" width="14" height="4" rx="1" style="fill:var(--w-5v)"/><text class="d-t" x="27.0" y="308.4">5V</text><rect class="d-pad" x="145.1" y="315.1" width="11.0" height="5.5"/><text class="d-m" x="119.7" y="321.1" text-anchor="end">16 LPG4</text><rect class="d-pad" x="145.1" y="327.4" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="331.8" r="8.2" style="stroke:var(--w-tx);stroke-width:2.4"/><text class="d-s" x="119.7" y="335.1" text-anchor="end">17 G27</text><rect x="8.0" y="329.8" width="14" height="4" rx="1" style="fill:var(--w-tx)"/><text class="d-t" x="27.0" y="336.3">TX</text><rect class="d-pad" x="145.1" y="343.0" width="11.0" height="5.5"/><text class="d-m" x="119.7" y="349.1" text-anchor="end">18 LPG6</text><rect class="d-pad" x="145.1" y="355.3" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="359.7" r="8.2" style="stroke:var(--w-rx);stroke-width:2.4"/><text class="d-s" x="119.7" y="363.0" text-anchor="end">19 G26</text><rect x="8.0" y="357.7" width="14" height="4" rx="1" style="fill:var(--w-rx)"/><text class="d-t" x="27.0" y="364.2">RX</text><rect class="d-pad" x="387.9" y="103.9" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="108.3" r="8.2"/><text class="d-s" x="404.9" y="111.6">20 G23</text><rect class="d-pad" x="387.9" y="119.5" width="11.0" height="5.5"/><text class="d-m" x="404.9" y="125.5">21 G22</text><rect class="d-pad" x="387.9" y="131.8" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="136.2" r="8.2"/><text class="d-s" x="404.9" y="139.5">22 G21</text><rect class="d-pad" x="387.9" y="147.4" width="11.0" height="5.5"/><text class="d-m" x="404.9" y="153.5">23 G20</text><rect class="d-pad" x="387.9" y="159.8" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="164.2" r="8.2"/><text class="d-s" x="404.9" y="167.5">24 G19</text><rect class="d-pad" x="387.9" y="175.4" width="11.0" height="5.5"/><text class="d-m" x="404.9" y="181.4">25 G18</text><rect class="d-pad" x="387.9" y="187.7" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="192.1" r="8.2"/><text class="d-s" x="404.9" y="195.4">26 G17</text><rect class="d-pad" x="387.9" y="203.3" width="11.0" height="5.5"/><text class="d-m" x="404.9" y="209.4">27 G16</text><rect class="d-pad" x="387.9" y="215.6" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="220.0" r="8.2"/><text class="d-s" x="404.9" y="223.3">28 3V3</text><rect class="d-pad" x="387.9" y="231.2" width="11.0" height="5.5"/><text class="d-m" x="404.9" y="237.3">29 LPG13</text><rect class="d-pad" x="387.9" y="243.6" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="248.0" r="8.2"/><text class="d-s" x="404.9" y="251.3">30 G37 U0TXD</text><rect class="d-pad" x="387.9" y="259.2" width="11.0" height="5.5"/><text class="d-m" x="404.9" y="265.2">31 G39</text><rect class="d-pad" x="387.9" y="271.5" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="275.9" r="8.2"/><text class="d-s" x="404.9" y="279.2">32 G38 U0RXD</text><rect class="d-pad" x="387.9" y="287.1" width="11.0" height="5.5"/><text class="d-m" x="404.9" y="293.2">33 G34</text><rect class="d-pad" x="387.9" y="299.5" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="303.9" r="8.2"/><text class="d-s" x="404.9" y="307.2">34 EN</text><rect class="d-pad" x="387.9" y="315.1" width="11.0" height="5.5"/><text class="d-m" x="404.9" y="321.1">35 LPG5</text><rect class="d-pad" x="387.9" y="327.4" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="331.8" r="8.2"/><text class="d-s" x="404.9" y="335.1">36 G35 BOOT</text><rect class="d-pad" x="387.9" y="343.0" width="11.0" height="5.5"/><text class="d-m" x="404.9" y="349.1">37 LPG2</text><rect class="d-pad" x="387.9" y="355.3" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="359.7" r="8.2"/><text class="d-s" x="404.9" y="363.0">38 GND</text></svg></div>
+      <figcaption>Top view, to scale from M5Stack's footprint. Rings are through-hole pads, per M5Stack's pinmap; plain pads are castellated only. Pads 1 to 19 and 20 to 38 sit at 1.27 mm pitch. Part positions on the module are approximate; the USB-C overhangs the bottom edge by about 2.3 mm.</figcaption>
+    </figure>
+    <p>Pad 15 is the Stamp's USB-C VBUS. From there 5 V passes an overvoltage switch (AW32901) and a CH213K ideal diode to the module's 5 V rail, and an SY8089 buck, rated 600 mA, makes 3.3 V. So 5 V can come in on pad 15.</p>
+
+    <h3 id="header">2. Solder the header<a class="hl" href="#header" aria-label="Copy link to this section"></a></h3>
+    <ol>
+      <li>Fit the 7-pin XH header from the back of the Stamp, into pads 7, 9, 11, 13, 15, 17 and 19. On the top side its body would sit on the SDIO connector.</li>
+      <li>Solder the pins from the top.</li>
+      <li>Check for bridges to the castellated pads between the pins: 8, 10, 12, 14, 16 and 18.</li>
+    </ol>
+    <p>The through-hole pads sit 2.54 mm apart and JST XH pitch is 2.50 mm. Over 7 pins that leaves each end pin 0.12 mm off its pad's center, and the header goes in.</p>
+
+    <h3 id="servo-loom">3. Build the servo loom<a class="hl" href="#servo-loom" aria-label="Copy link to this section"></a></h3>
+    <p>Three wires, under 15 cm, from the XH housing to the drive's signal input.</p>
+    <ul>
+      <li>Pad 9, A, to PUL+.</li>
+      <li>Pad 11, B, to DIR+.</li>
+      <li>Pad 13, GND, to PUL− and DIR−, jumpered together at the drive.</li>
+      <li>ENA, ALM and PED stay unconnected.</li>
+    </ul>
+    <figure class="diagram">
+      <svg viewBox="0 0 320 290" role="img" aria-labelledby="servo-t servo-d"><title id="servo-t">The servo loom</title><desc id="servo-d">Three wires under 15 cm long run from the Stamp-P4 header to the servo drive&#x27;s signal input. Pad 9, A, goes to PUL+. Pad 11, B, goes to DIR+. Pad 13, GND, goes to PUL− and DIR−, jumpered together at the drive. ENA, ALM and PED stay open. The drive is set to A/B pulse input. Header pads 7, 15, 17 and 19 belong to the R+D loom.</desc><text class="d-k" x="14.0" y="22.0">Stamp-P4 header</text><rect class="d-box" x="14" y="34" width="82" height="190" rx="2"/><circle class="d-th" cx="88" cy="52" r="5"/><text class="d-m" x="24.0" y="55.5">7 TRIP</text><circle class="d-th" cx="88" cy="76" r="5"/><text class="d-s" x="24.0" y="79.5">9 A</text><circle class="d-th" cx="88" cy="100" r="5"/><text class="d-s" x="24.0" y="103.5">11 B</text><circle class="d-th" cx="88" cy="124" r="5"/><text class="d-s" x="24.0" y="127.5">13 GND</text><circle class="d-th" cx="88" cy="148" r="5"/><text class="d-m" x="24.0" y="151.5">15 5V</text><circle class="d-th" cx="88" cy="172" r="5"/><text class="d-m" x="24.0" y="175.5">17 TX</text><circle class="d-th" cx="88" cy="196" r="5"/><text class="d-m" x="24.0" y="199.5">19 RX</text><text class="d-m" x="14.0" y="242.0">7, 15, 17, 19: R+D loom</text><text class="d-k" x="304.0" y="22.0" text-anchor="end">Servo drive, signal in</text><rect class="d-box" x="222" y="34" width="82" height="190" rx="2"/><circle class="d-th" cx="230" cy="76" r="5"/><text class="d-s" x="242.0" y="79.5">PUL+</text><circle class="d-th" cx="230" cy="100" r="5"/><text class="d-s" x="242.0" y="103.5">DIR+</text><circle class="d-th" cx="230" cy="136" r="5"/><text class="d-s" x="242.0" y="139.5">PUL−</text><circle class="d-th" cx="230" cy="160" r="5"/><text class="d-s" x="242.0" y="163.5">DIR−</text><text class="d-m" x="232.0" y="185.5">ENA: open</text><text class="d-m" x="232.0" y="200.5">ALM: open</text><text class="d-m" x="232.0" y="215.5">PED: open</text><path class="d-halo" d="M93 76H225"/><path class="d-wire" style="stroke:var(--w-a)" d="M93 76H225"/><path class="d-halo" d="M93 100H225"/><path class="d-wire" style="stroke:var(--w-b)" d="M93 100H225"/><path class="d-halo" d="M93 124H150V148H200M200 136V160M200 136H225M200 160H225"/><path class="d-wire" style="stroke:var(--ink)" d="M93 124H150V148H200M200 136V160M200 136H225M200 160H225"/><circle cx="200" cy="148" r="3.5" style="fill:var(--ink)"/><text class="d-t" x="124.0" y="70.0" text-anchor="middle">A</text><text class="d-t" x="124.0" y="94.0" text-anchor="middle">B</text><text class="d-t" x="124.0" y="142.0" text-anchor="middle">GND</text><text class="d-s" x="196.0" y="178.0" text-anchor="end">jumper at</text><text class="d-s" x="196.0" y="190.0" text-anchor="end">the drive</text><path class="d-line" d="M100 262H218M100 257V267M218 257V267"/><text class="d-r" x="159.0" y="280.0" text-anchor="middle">under 15 cm</text><text class="d-r" x="304.0" y="242.0" text-anchor="end">A/B pulse input</text></svg>
+      <figcaption>A and B swapped only reverses direction. The ground jumper sits at the drive end.</figcaption>
+    </figure>
+    <p>The drive's opto inputs take 3.3 V straight from the P4, with no level shifter. That works on the bench and over 3 m of shielded Cat5 from an ESP32-S3. The P4's pins drive the same as the S3's: 20 mA by default, 40 mA source and 28 mA sink at drive strength 3.</p>
+    <p>Pad 13 takes two ground wires, this one and J8 pin 1 from the R+D loom. Crimp both into one contact if they fit, or crimp one wire and splice the other onto it close to the housing.</p>
+
+    <h3 id="rd-loom">4. Build the R+D loom<a class="hl" href="#rd-loom" aria-label="Copy link to this section"></a></h3>
+    <p>Five wires from the same XH housing to the J8 plug.</p>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Signal</th><th scope="col">Stamp pad</th><th scope="col">J8 pin</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row"><span class="sw" style="--c:var(--w-trip)"></span>TRIP</th><td data-k="Stamp pad">7</td><td data-k="J8 pin">7</td></tr>
+        <tr><th scope="row"><span class="sw" style="--c:var(--ink)"></span>GND</th><td data-k="Stamp pad">13</td><td data-k="J8 pin">1</td></tr>
+        <tr><th scope="row"><span class="sw" style="--c:var(--w-5v)"></span>5V</th><td data-k="Stamp pad">15</td><td data-k="J8 pin">10</td></tr>
+        <tr><th scope="row"><span class="sw" style="--c:var(--w-tx)"></span>TX</th><td data-k="Stamp pad">17</td><td data-k="J8 pin">2</td></tr>
+        <tr><th scope="row"><span class="sw" style="--c:var(--w-rx)"></span>RX</th><td data-k="Stamp pad">19</td><td data-k="J8 pin">9</td></tr>
+      </tbody>
+    </table>
+    <figure class="diagram wide">
+      <div class="scroll"><svg viewBox="0 0 560 432" role="img" aria-labelledby="rnd-t rnd-d" style="min-width:520px"><title id="rnd-t">OSSM R+D board rev 2.3, top view, not to scale</title><desc id="rnd-d">The R+D reference board seen from the top, not to scale, parts in their true relative places. J10 PWR IN at the top left, then S1 RESET, the ESP32-WROOM-32D module at the top center with its antenna at the edge, and the RJ45 remote port at the top right. The USB-C connector J3 is on the right edge. On the left edge, the U6 current sensor (IO36) sits above J2 SERVO POWER. Along the bottom edge runs J8, the 10-pin servo header, pin 1 square at the left next to button S2; its connector is on the back. Transistors Q3, Q4 and Q5 sit below pins 5, 7 and 9. The barnacle uses J8 pins 1 GND, 2 TX in, 7 TRIP, 9 RX out and 10 5V. J12, a 4-pin header, sits center bottom, and the expansion headers J6, J9, J7 and J4 sit bottom right.</desc><rect class="d-box" x="10" y="10" width="540" height="412" rx="8"/><text class="d-k" x="540.0" y="28.0" text-anchor="end">not to scale</text><rect class="d-sunk" x="26" y="40" width="58" height="30" rx="2"/><rect class="d-pad" x="33" y="48" width="14" height="14"/><circle class="d-pad" cx="70" cy="55" r="7"/><text class="d-m" x="40.0" y="58.5" text-anchor="middle">+</text><text class="d-t" x="26.0" y="86.0">J10 PWR IN</text><text class="d-s" x="26.0" y="99.0">supply in</text><rect class="d-sunk" x="148" y="40" width="22" height="22" rx="2"/><circle class="d-line" cx="159" cy="51" r="6"/><text class="d-t" x="159.0" y="78.0" text-anchor="middle">S1</text><text class="d-s" x="159.0" y="91.0" text-anchor="middle">RESET</text><rect class="d-hub" x="196" y="10" width="168" height="132" rx="2"/><path class="d-line" d="M196 46H364" stroke-dasharray="3 3"/><text class="d-s" x="280.0" y="32.0" text-anchor="middle">antenna</text><text class="d-t" x="280.0" y="80.0" text-anchor="middle">ESP32-WROOM-32D</text><text class="d-r" x="280.0" y="96.0" text-anchor="middle">the I/O helper</text><text class="d-s" x="280.0" y="110.0" text-anchor="middle">runs the shim firmware</text><rect class="d-sunk" x="430" y="40" width="96" height="70" rx="2"/><text class="d-t" x="478.0" y="72.0" text-anchor="middle">RJ45</text><text class="d-s" x="478.0" y="87.0" text-anchor="middle">remote port</text><text class="d-s" x="478.0" y="100.0" text-anchor="middle">ANA1, ANA2</text><rect class="d-sunk" x="518" y="150" width="32" height="58" rx="2"/><text class="d-t" x="510.0" y="168.0" text-anchor="end">J3 USB-C</text><text class="d-s" x="510.0" y="182.0" text-anchor="end">CP2102, UART0</text><text class="d-s" x="510.0" y="195.0" text-anchor="end">flashes the WROOM</text><rect class="d-sunk" x="14" y="196" width="40" height="30" rx="2"/><text class="d-t" x="34.0" y="215.0" text-anchor="middle">U6</text><text class="d-s" x="62.0" y="207.0">CH701 hall sensor</text><text class="d-r" x="62.0" y="221.0">IO36: CURRENT</text><rect class="d-sunk" x="14" y="246" width="40" height="70" rx="2"/><circle class="d-th" cx="34" cy="264" r="9"/><circle class="d-th" cx="34" cy="298" r="9"/><text class="d-t" x="62.0" y="268.0">J2 SERVO POWER</text><text class="d-s" x="62.0" y="282.0">motor power out</text><path class="d-line" d="M34 226V246"/><rect class="d-dash" x="146" y="364" width="262" height="28" rx="2"/><rect class="d-th" x="153" y="371" width="14" height="14" style="stroke:var(--ink);stroke-width:3"/><text class="d-s" x="160.0" y="358.0" text-anchor="middle">1</text><text class="d-s" transform="translate(163.3 344.0) rotate(-90)">GND</text><circle class="d-th" cx="186" cy="378" r="7" style="stroke:var(--w-tx);stroke-width:3"/><text class="d-s" x="186.0" y="358.0" text-anchor="middle">2</text><text class="d-s" transform="translate(189.3 344.0) rotate(-90)">TX in</text><circle class="d-th" cx="212" cy="378" r="7"/><text class="d-m" x="212.0" y="358.0" text-anchor="middle">3</text><circle class="d-th" cx="238" cy="378" r="7"/><text class="d-m" x="238.0" y="358.0" text-anchor="middle">4</text><circle class="d-th" cx="264" cy="378" r="7"/><text class="d-m" x="264.0" y="358.0" text-anchor="middle">5</text><circle class="d-th" cx="290" cy="378" r="7"/><text class="d-m" x="290.0" y="358.0" text-anchor="middle">6</text><circle class="d-th" cx="316" cy="378" r="7" style="stroke:var(--w-trip);stroke-width:3"/><text class="d-s" x="316.0" y="358.0" text-anchor="middle">7</text><text class="d-s" transform="translate(319.3 344.0) rotate(-90)">TRIP</text><circle class="d-th" cx="342" cy="378" r="7"/><text class="d-m" x="342.0" y="358.0" text-anchor="middle">8</text><circle class="d-th" cx="368" cy="378" r="7" style="stroke:var(--w-rx);stroke-width:3"/><text class="d-s" x="368.0" y="358.0" text-anchor="middle">9</text><text class="d-s" transform="translate(371.3 344.0) rotate(-90)">RX out</text><circle class="d-th" cx="394" cy="378" r="7" style="stroke:var(--w-5v);stroke-width:3"/><text class="d-s" x="394.0" y="358.0" text-anchor="middle">10</text><text class="d-s" transform="translate(397.3 344.0) rotate(-90)">5V</text><text class="d-t" x="14.0" y="344.0">J8 SERVO</text><text class="d-s" x="14.0" y="357.0">connector on the back</text><rect class="d-sunk" x="102" y="367" width="22" height="22" rx="2"/><circle class="d-line" cx="113" cy="378" r="6"/><text class="d-s" x="113.0" y="406.0" text-anchor="middle">S2 BTN</text><rect class="d-sunk" x="256" y="395" width="16" height="12" rx="1"/><text class="d-k" x="264.0" y="418.0" text-anchor="middle">Q3</text><rect class="d-sunk" x="308" y="395" width="16" height="12" rx="1"/><text class="d-k" x="316.0" y="418.0" text-anchor="middle">Q4</text><rect class="d-sunk" x="360" y="395" width="16" height="12" rx="1"/><text class="d-k" x="368.0" y="418.0" text-anchor="middle">Q5</text><rect class="d-sunk" x="242" y="236" width="136" height="28" rx="2"/><circle class="d-pad" cx="256" cy="250" r="6"/><text class="d-s" x="256.0" y="228.0" text-anchor="middle">DIR−</text><circle class="d-pad" cx="292" cy="250" r="6"/><text class="d-s" x="292.0" y="228.0" text-anchor="middle">DIR+</text><circle class="d-pad" cx="328" cy="250" r="6"/><text class="d-s" x="328.0" y="228.0" text-anchor="middle">PU−</text><rect class="d-pad" x="358" y="244" width="12" height="12"/><text class="d-s" x="364.0" y="228.0" text-anchor="middle">PU+</text><text class="d-m" x="242.0" y="282.0">J12, not used</text><rect class="d-sunk" x="432" y="221" width="104" height="18" rx="2"/><circle class="d-pad" cx="444" cy="230" r="4.5"/><circle class="d-pad" cx="462" cy="230" r="4.5"/><circle class="d-pad" cx="480" cy="230" r="4.5"/><circle class="d-pad" cx="498" cy="230" r="4.5"/><text class="d-t" x="424.0" y="233.5" text-anchor="end">J6</text><text class="d-s" x="432.0" y="251.0">3V3</text><rect class="d-sunk" x="432" y="253" width="104" height="18" rx="2"/><circle class="d-pad" cx="444" cy="262" r="4.5"/><circle class="d-pad" cx="462" cy="262" r="4.5"/><circle class="d-pad" cx="480" cy="262" r="4.5"/><circle class="d-pad" cx="498" cy="262" r="4.5"/><text class="d-t" x="424.0" y="265.5" text-anchor="end">J9</text><text class="d-s" x="432.0" y="283.0">IO2 IO15</text><text class="d-s" x="432.0" y="295.0">IO33 IO22</text><rect class="d-sunk" x="432" y="307" width="104" height="18" rx="2"/><circle class="d-pad" cx="444" cy="316" r="4.5"/><circle class="d-pad" cx="462" cy="316" r="4.5"/><circle class="d-pad" cx="480" cy="316" r="4.5"/><circle class="d-pad" cx="498" cy="316" r="4.5"/><text class="d-t" x="424.0" y="319.5" text-anchor="end">J7</text><text class="d-s" x="432.0" y="337.0">GND</text><rect class="d-sunk" x="432" y="339" width="104" height="18" rx="2"/><circle class="d-pad" cx="444" cy="348" r="4.5"/><circle class="d-pad" cx="462" cy="348" r="4.5"/><circle class="d-pad" cx="480" cy="348" r="4.5"/><circle class="d-pad" cx="498" cy="348" r="4.5"/><text class="d-t" x="424.0" y="351.5" text-anchor="end">J4</text><text class="d-s" x="432.0" y="369.0">RS232</text></svg></div>
+      <figcaption>Not to scale; parts in their true relative places. J8's connector body is on the back of the board, the only connector there, so its pins are drawn from the top. The five used pins are in their wire colors.</figcaption>
+    </figure>
+    <p class="warn">J8 pins 7 and 9 sit between 5 V pins (6, 8 and 10). A crimp one position off puts 5 V on a P4 pin, and the P4 does not survive it. Measure before the Stamp is plugged in (<a href="#checks">step 6</a>).</p>
+    <p>Fit the capacitor at the Stamp end, across 5V and GND, within a few centimeters of the housing, minus lead to GND. It carries the Wi-Fi transmit bursts.</p>
+
+    <h3 id="estop">5. Wire the E-stop<a class="hl" href="#estop" aria-label="Copy link to this section"></a></h3>
+    <p>Put the latching E-stop in the servo's DC supply, between J2 SERVO POWER and the drive, so pressing it breaks the supply to the drive. Keep the motor supply on J2: the current sensor sees only what flows through it.</p>
+
+    <h3 id="checks">6. Pre-power checks<a class="hl" href="#checks" aria-label="Copy link to this section"></a></h3>
+    <ol>
+      <li>With nothing powered, check continuity on every wire, end to end, against the <a href="#point-to-point">point-to-point table</a>.</li>
+      <li>Check for shorts between neighboring header pins, most of all 15 (5V) and its neighbors 13 (GND) and 17 (TX).</li>
+      <li>Leave the loom off the Stamp and power the R+D board. At the XH housing, measure to GND: the 5V contact reads about 4.5 V. TX, RX and TRIP read 3.3 V or less. Anything near 5 V on a signal means a crimp sits on the wrong J8 pin.</li>
+      <li>Confirm the drive is in A/B pulse input mode (step 0) with ENA, ALM and PED unconnected.</li>
+    </ol>
+
+    <h3 id="power-on">7. First power-on and current check<a class="hl" href="#power-on" aria-label="Copy link to this section"></a></h3>
+    <ol>
+      <li>Unplug USB-C from the Stamp.</li>
+      <li>Put the meter's milliamp range in series with the 5V wire and plug the loom into the Stamp.</li>
+      <li>Power the R+D board and read the Stamp's draw with Wi-Fi active. About 350 mA average is expected, with bursts near 600 mA. Well above that, the R+D 5 V rail has no room left: stop and find out why.</li>
+      <li>Take the meter out, reconnect the 5V wire, then power the servo.</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="reference">
+    <h2 id="reference">Reference<a class="hl" href="#reference" aria-label="Copy link to this section"></a></h2>
+
+    <h3 id="point-to-point">Point to point<a class="hl" href="#point-to-point" aria-label="Copy link to this section"></a></h3>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Signal</th><th scope="col">Stamp-P4 pad</th><th scope="col">Other end</th><th scope="col">Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row"><span class="sw" style="--c:var(--w-trip)"></span>TRIP</th><td data-k="Pad">7 · LPG8</td><td data-k="To">R+D J8 pin 7 (DIR−)</td><td>Open collector from Q4 (WROOM IO27). Low means tripped. P4 internal pull-up on.</td></tr>
+        <tr><th scope="row"><span class="sw" style="--c:var(--w-a)"></span>A</th><td data-k="Pad">9 · LPG1</td><td data-k="To">Servo PUL+</td><td>3.3 V quadrature from the P4's LP core.</td></tr>
+        <tr><th scope="row"><span class="sw" style="--c:var(--w-b)"></span>B</th><td data-k="Pad">11 · LPG0</td><td data-k="To">Servo DIR+</td><td>3.3 V quadrature. LPG0 and LPG1 double as 32 kHz crystal pins; no 32 kHz crystal is fitted, so both are free.</td></tr>
+        <tr><th scope="row"><span class="sw" style="--c:var(--ink)"></span>GND</th><td data-k="Pad">13 · GND</td><td data-k="To">Servo PUL− and DIR− (jumpered), and R+D J8 pin 1</td><td>Two wires on one contact, or a short splice.</td></tr>
+        <tr><th scope="row"><span class="sw" style="--c:var(--w-5v)"></span>5V</th><td data-k="Pad">15 · VBUS</td><td data-k="To">R+D J8 pin 10 (PUL+)</td><td>About 4.5 V: the R+D 5 V rail sits after a Schottky diode. Pins 6 and 8 are the same rail.</td></tr>
+        <tr><th scope="row"><span class="sw" style="--c:var(--w-tx)"></span>TX</th><td data-k="Pad">17 · G27</td><td data-k="To">R+D J8 pin 2 (ALM+)</td><td>P4 to WROOM. Lands on WROOM IO13, which has a 10 kΩ pull-up to 3.3 V on the board.</td></tr>
+        <tr><th scope="row"><span class="sw" style="--c:var(--w-rx)"></span>RX</th><td data-k="Pad">19 · G26</td><td data-k="To">R+D J8 pin 9 (PUL−)</td><td>WROOM to P4. Open collector from Q5 (WROOM IO14). P4 internal pull-up on.</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="j8-pinout">R+D J8 pinout<a class="hl" href="#j8-pinout" aria-label="Copy link to this section"></a></h3>
+    <p>J8 is the 10-pin servo header; pin 1 is the square pad. In and out are from the WROOM's side. Q3 to Q5 are BC817 transistors with 220 Ω base resistors. They only sink, and their collectors are the minus pins.</p>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Pin</th><th scope="col">Servo name</th><th scope="col">On the R+D board</th><th scope="col">Barnacle use</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">1</th><td data-k="Servo name">ALM−</td><td data-k="Board">GND</td><td>GND</td></tr>
+        <tr><th scope="row">2</th><td data-k="Servo name">ALM+</td><td data-k="Board">WROOM IO13, 10 kΩ pull-up to 3.3 V</td><td>TX in, from the P4</td></tr>
+        <tr><th scope="row">3</th><td data-k="Servo name">PED−</td><td data-k="Board">GND</td><td>unused</td></tr>
+        <tr><th scope="row">4</th><td data-k="Servo name">PED+</td><td data-k="Board">WROOM IO4</td><td>spare in</td></tr>
+        <tr><th scope="row">5</th><td data-k="Servo name">ENA−</td><td data-k="Board">Q3 collector, from IO26</td><td>spare out</td></tr>
+        <tr><th scope="row">6</th><td data-k="Servo name">ENA+</td><td data-k="Board">5 V</td><td>unused</td></tr>
+        <tr><th scope="row">7</th><td data-k="Servo name">DIR−</td><td data-k="Board">Q4 collector, from IO27</td><td>TRIP, active low</td></tr>
+        <tr><th scope="row">8</th><td data-k="Servo name">DIR+</td><td data-k="Board">5 V</td><td>unused</td></tr>
+        <tr><th scope="row">9</th><td data-k="Servo name">PUL−</td><td data-k="Board">Q5 collector, from IO14</td><td>RX out, to the P4</td></tr>
+        <tr><th scope="row">10</th><td data-k="Servo name">PUL+</td><td data-k="Board">5 V</td><td>5V to the Stamp</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="helper-pin-map">WROOM helper pin map<a class="hl" href="#helper-pin-map" aria-label="Copy link to this section"></a></h3>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Function</th><th scope="col">WROOM GPIO</th><th scope="col">Where</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Link RX, from the P4</th><td data-k="GPIO">IO13</td><td>J8 pin 2</td></tr>
+        <tr><th scope="row">Link TX, to the P4</th><td data-k="GPIO">IO14</td><td>Q5 to J8 pin 9, TX inverted in the shim</td></tr>
+        <tr><th scope="row">TRIP</th><td data-k="GPIO">IO27</td><td>Q4 to J8 pin 7, active low on the wire</td></tr>
+        <tr><th scope="row">Motor current</th><td data-k="GPIO">IO36, ADC</td><td>CH701 hall sensor in series with J2, 10k/20k divider</td></tr>
+        <tr><th scope="row">Motor voltage</th><td data-k="GPIO">IO39, ADC</td><td>1:40 divider</td></tr>
+        <tr><th scope="row">Button</th><td data-k="GPIO">IO23</td><td>S2</td></tr>
+        <tr><th scope="row">RGB LED</th><td data-k="GPIO">IO25</td><td>WS2813</td></tr>
+        <tr><th scope="row">ANA1, ANA2</th><td data-k="GPIO">IO35, IO34</td><td>RJ45 remote port</td></tr>
+        <tr><th scope="row">Spare in, spare out</th><td data-k="GPIO">IO4, IO26</td><td>J8 pins 4 and 5</td></tr>
+      </tbody>
+    </table>
+    <p>The shim leaves UART0 (IO1, IO3) alone. The CP2102 owns it, so the WROOM still flashes over the R+D board's own USB-C.</p>
+
+    <h3 id="power-budget">Power budget<a class="hl" href="#power-budget" aria-label="Copy link to this section"></a></h3>
+    <p>The Stamp takes 5 V from the R+D board's 5 V rail: an LMR14006 buck rated 0.6 A, after a B1100 Schottky diode, so about 4.5 V at J8. The board's own loads share it. These numbers are estimates; step 7 measures the largest.</p>
+    <table class="parts">
+      <thead>
+        <tr><th scope="col">Load on the R+D 5 V rail</th><th scope="col">Average</th><th scope="col">Peak</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Stamp-P4 and C6, Wi-Fi on</th><td data-k="Average">about 350 mA</td><td data-k="Peak">about 600 mA, transmit bursts</td></tr>
+        <tr><th scope="row">R+D 3.3 V loads: WROOM with its radio off, RGB LED</th><td data-k="Average">40 to 100 mA</td><td></td></tr>
+        <tr><th scope="row">Current sensor</th><td data-k="Average">about 10 mA</td><td></td></tr>
+        <tr><th scope="row">Total, against 600 mA</th><td data-k="Average">400 to 450 mA</td><td data-k="Peak">about 700 mA, brief</td></tr>
+      </tbody>
+    </table>
+    <p>The average fits. The 220 to 470 µF capacitor at the Stamp carries the short peaks.</p>
+    <p>Do not power the Stamp from the R+D board's 3.3 V. That rail comes from an ME6211C33 regulator in SOT-23-5, which would dissipate about 0.4 W at the Stamp's load, more than that package can shed.</p>
+    <p class="warn">Pad 15 is the same net as the Stamp's USB-C VBUS. With the J8 loom connected, a computer on the Stamp's USB-C also powers the R+D board's 5 V loads. Unplug the loom before you flash over USB, or flash over Wi-Fi.</p>
+
+    <h3 id="link">How the link works<a class="hl" href="#link" aria-label="Copy link to this section"></a></h3>
+    <p>The link uses only parts already on the R+D board.</p>
+    <figure class="diagram">
+      <svg viewBox="0 0 320 338" role="img" aria-labelledby="link-t link-d"><title id="link-t">How RX, TRIP and TX cross the R+D board</title><desc id="link-d">Three signal paths. RX: the WROOM&#x27;s inverted UART TX on IO14 drives transistor Q5 through 220 ohms; Q5&#x27;s collector is J8 pin 9, which runs to the P4&#x27;s G26, held at 3.3 V by the P4&#x27;s 45 kilohm internal pull-up. Q5 can only pull the line low. TRIP: IO27 drives Q4 the same way; its collector, J8 pin 7, runs to the P4&#x27;s LPG8 with the same internal pull-up, so the line idles high and a trip pulls it low. TX: the P4&#x27;s G27 drives J8 pin 2 directly into the WROOM&#x27;s IO13, which has a 10 kilohm pull-up to 3.3 V on the R+D board.</desc><text class="d-k" x="8.0" y="16.0">RX · WROOM to P4</text><rect class="d-box" x="8" y="48" width="70" height="28" rx="2"/><text class="d-s" x="43.0" y="65.5" text-anchor="middle">IO14 TX</text><path class="d-line" d="M78 62H92M116 62H120"/><rect class="d-box" x="92" y="58" width="24" height="8" rx="1"/><text class="d-s" x="104.0" y="80.0" text-anchor="middle">220 Ω</text><circle class="d-line" cx="132" cy="62" r="15"/><path class="d-line" d="M126 53V71M126 58L139 50V36M126 66L139 74V88"/><path class="d-arrow-g" d="M139 74l-7 -1.5 3.5 -4.5z"/><path class="d-line" d="M131 88H147M134 92H144M137 96H141"/><text class="d-k" x="152.0" y="66.0">Q5</text><path class="d-wire" style="stroke:var(--w-rx)" d="M139 36H236"/><circle class="d-th" cx="168" cy="36" r="4"/><text class="d-s" x="168.0" y="27.0" text-anchor="middle">J8 9</text><rect class="d-hub" x="236" y="6" width="76" height="60" rx="2"/><path class="d-line" d="M244 14H260M252 14V18M252 40V36H236"/><rect class="d-box" x="248" y="18" width="8" height="22" rx="1"/><text class="d-s" x="264.0" y="17.0">3.3 V</text><text class="d-s" x="262.0" y="33.0">45 kΩ</text><text class="d-s" x="274.0" y="56.0" text-anchor="middle">G26 RX</text><text class="d-k" x="8.0" y="128.0">TRIP · active low</text><rect class="d-box" x="8" y="160" width="70" height="28" rx="2"/><text class="d-s" x="43.0" y="177.5" text-anchor="middle">IO27</text><path class="d-line" d="M78 174H92M116 174H120"/><rect class="d-box" x="92" y="170" width="24" height="8" rx="1"/><text class="d-s" x="104.0" y="192.0" text-anchor="middle">220 Ω</text><circle class="d-line" cx="132" cy="174" r="15"/><path class="d-line" d="M126 165V183M126 170L139 162V148M126 178L139 186V200"/><path class="d-arrow-g" d="M139 186l-7 -1.5 3.5 -4.5z"/><path class="d-line" d="M131 200H147M134 204H144M137 208H141"/><text class="d-k" x="152.0" y="178.0">Q4</text><path class="d-wire" style="stroke:var(--w-trip)" d="M139 148H236"/><circle class="d-th" cx="168" cy="148" r="4"/><text class="d-s" x="168.0" y="139.0" text-anchor="middle">J8 7</text><rect class="d-hub" x="236" y="118" width="76" height="60" rx="2"/><path class="d-line" d="M244 126H260M252 126V130M252 152V148H236"/><rect class="d-box" x="248" y="130" width="8" height="22" rx="1"/><text class="d-s" x="264.0" y="129.0">3.3 V</text><text class="d-s" x="262.0" y="145.0">45 kΩ</text><text class="d-s" x="274.0" y="168.0" text-anchor="middle">LPG8 TRIP</text><text class="d-k" x="8.0" y="240.0">TX · P4 to WROOM</text><rect class="d-box" x="8" y="272" width="70" height="28" rx="2"/><text class="d-s" x="43.0" y="289.5" text-anchor="middle">IO13 RX</text><path class="d-line" d="M78 286H104M104 286V280M93 252H115M104 252V256"/><rect class="d-box" x="100" y="256" width="8" height="22" rx="1"/><text class="d-s" x="120.0" y="255.0">3.3 V</text><text class="d-s" x="112.0" y="272.0">10 kΩ</text><path class="d-wire" style="stroke:var(--w-tx)" d="M104 286H236"/><path class="d-arrow" d="M86 286l8 -4v8z" style="fill:var(--w-tx)"/><circle class="d-th" cx="168" cy="286" r="4"/><text class="d-s" x="168.0" y="277.0" text-anchor="middle">J8 2</text><rect class="d-hub" x="236" y="272" width="76" height="28" rx="2"/><text class="d-s" x="274.0" y="289.5" text-anchor="middle">G27 TX</text><text class="d-m" x="8.0" y="330.0">Blue boxes: inside the Stamp-P4.</text></svg>
+      <figcaption>Q4 and Q5 only sink. The P4's 45 kΩ internal pull-up sets the high level at 3.3 V.</figcaption>
+    </figure>
+    <ul>
+      <li>TX, P4 to WROOM: the P4 drives J8 pin 2 directly. On the board that is the old ALM input, a 10 kΩ pull-up to 3.3 V into WROOM IO13. Plain 3.3 V UART.</li>
+      <li>RX, WROOM to P4: the WROOM's UART TX on IO14 drives Q5, whose collector is J8 pin 9. The transistor inverts, so the shim inverts its TX and the wire carries normal UART. The link runs at 115200 baud: the internal pull-up is weak, and that rate leaves wide margin on the rising edges while still carrying current and button data at 500 Hz.</li>
+      <li>TRIP: the WROOM drives Q4 from IO27, whose collector is J8 pin 7. On a current spike, the end stop during homing or a jam, the WROOM pulls TRIP low and the P4 stops on its next tick without waiting for the serial link.</li>
+      <li>While the WROOM resets or boots, IO27 floats, Q4 stays off and TRIP reads high: not tripped. A helper that hangs with IO27 high holds TRIP low, and the machine stops.</li>
+      <li>J8 pin 4 (WROOM IO4, input) and pin 5 (Q3, from IO26) are spare.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="troubleshooting">
+    <h2 id="troubleshooting">Troubleshooting<a class="hl" href="#troubleshooting" aria-label="Copy link to this section"></a></h2>
+    <dl class="terms">
+      <div><dt>The Stamp does not power up</dt><dd>Measure pad 15 to pad 13: about 4.5 V. No voltage: check the J8 pin 10 crimp and the GND wire to J8 pin 1.</dd></div>
+      <div><dt>A signal contact reads near 5 V</dt><dd>A crimp sits one position off on J8, onto pin 6, 8 or 10. Fix it before the Stamp goes on.</dd></div>
+      <div><dt>The motor does not move</dt><dd>Check the drive is in A/B pulse input mode (step 0) and that PUL− and DIR− are jumpered to GND at the drive.</dd></div>
+      <div><dt>The motor runs the wrong way</dt><dd>A and B are swapped. Swap the two wires at the drive.</dd></div>
+      <div><dt>TRIP reads tripped all the time</dt><dd>With the helper running, J8 pin 7 idles at 3.3 V. Low: the shim holds IO27 high or has hung, or the pin 7 crimp is wrong.</dd></div>
+      <div><dt>No data over the link</dt><dd>Check TX on pad 17 goes to J8 pin 2 and RX on pad 19 to J8 pin 9. Both ends run 115200 baud, and the shim inverts its TX.</dd></div>
+      <div><dt>Motor current reads zero</dt><dd>The servo draws its power from somewhere other than J2. Move it to J2 SERVO POWER.</dd></div>
+      <div><dt>The Stamp resets when Wi-Fi transmits</dt><dd>The 5 V sags on transmit bursts. Check the bulk capacitor is fitted at the Stamp end and its polarity is right.</dd></div>
+      <div><dt>The R+D board lights up while you flash the Stamp</dt><dd>USB-C on the Stamp feeds the R+D 5 V rail through the loom. Unplug the loom, or flash over Wi-Fi.</dd></div>
+      <div><dt>The WROOM will not flash</dt><dd>Flash it over the R+D board's USB-C. The CP2102 there owns UART0.</dd></div>
+    </dl>
+  </section>
+
+  <section class="aside" aria-labelledby="status">
+    <h2 id="status">Status <span class="tag">WIP</span><a class="hl" href="#status" aria-label="Copy link to this section"></a></h2>
+    <div>
+      <p class="big-line">The firmware is WIP. Neither piece is released yet.</p>
+      <ul>
+        <li>nucleus-p4b, the Nucleus build for the barnacle: A on LPG1, B on LPG0, TRIP on LPG8 (active low), the link on G27 (TX) and G26 (RX) at 115200 baud, internal pull-ups on RX and TRIP.</li>
+        <li>The WROOM shim firmware: streams button, current and voltage to the P4, drives the RGB LED on request, and pulls TRIP on a current spike, with thresholds the P4 sets for homing and for running.</li>
+        <li>The <a href="/guides/servo-setup/">servo setup</a> tool for step 0.</li>
+      </ul>
+      <p class="links"><a href="/guides/">Guides</a> · <a href="/nucleus/">Nucleus</a> · <a href="https://github.com/openvalence/Nucleus">Nucleus repo</a></p>
+    </div>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+  <a href="/guides/">Guides</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>
