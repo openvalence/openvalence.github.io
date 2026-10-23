@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Servo drive setup: OpenValence</title>
+<meta name="description" content="Find an AIM-series integrated servo at any baud rate over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
+<link rel="canonical" href="https://openvalence.org/guides/servo-setup/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/guides/servo-setup/">
+<meta property="og:title" content="Servo drive setup: OpenValence">
+<meta property="og:description" content="Find an AIM-series integrated servo at any baud rate over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
+<meta name="twitter:title" content="Servo drive setup: OpenValence">
+<meta name="twitter:description" content="Find an AIM-series integrated servo at any baud rate over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: light)">
+<script>
+// The theme before first paint; site.js follows "themechange". Constraints: stays inline and above
+// the stylesheet; the theme-color metas stay first, dark then light. localStorage.theme is the ONLY
+// storage the site touches, written only by the theme button and only while it differs from the
+// default (the system, or Dark Reader's scheme on this page); privacy.html promises that, so add no
+// other storage without a consent story. darkreader-lock stands Dark Reader's dynamic mode down.
+(() => {
+  const d = document.documentElement, sys = matchMedia('(prefers-color-scheme: light)');
+  const get = (s, k) => { try { return window[s].getItem(k); } catch (e) {} };
+  const put = (s, k, v) => { try { v ? window[s].setItem(k, v) : window[s].removeItem(k); } catch (e) {} };
+  let dr;
+  const auto = () => dr || (sys.matches ? 'light' : 'dark');
+  const lock = () => document.querySelector('meta[name=darkreader-lock]') || document.head.append(Object.assign(document.createElement('meta'), { name: 'darkreader-lock' }));
+  const label = () => {
+    const b = document.querySelector('.theme'), to = d.dataset.theme === 'light' ? 'dark' : 'light';
+    if (b) { b.title = `Switch to ${to} theme`; b.setAttribute('aria-label', b.title); }
+  };
+  const apply = () => {
+    const t = get('localStorage', 'theme') || auto(), [dk, lt] = document.querySelectorAll('meta[name=theme-color]');
+    d.dataset.theme = t;
+    dk.media = t === 'dark' ? 'all' : 'not all';
+    lt.media = t === 'light' ? 'all' : 'not all';
+    label();
+    dispatchEvent(new Event('themechange'));
+  };
+  addEventListener('click', (e) => {
+    if (!e.target.closest || !e.target.closest('.theme')) return;
+    const t = d.dataset.theme === 'light' ? 'dark' : 'light';
+    put('localStorage', 'theme', t === auto() ? '' : t);
+    // a crossfade where the browser has view transitions (style.css .vt-theme); reduced motion: instant
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return apply();
+    d.classList.add('vt-theme');
+    document.startViewTransition(apply).finished.finally(() => d.classList.remove('vt-theme'));
+  });
+  new MutationObserver(() => {
+    if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;
+    dr = d.getAttribute('data-darkreader-scheme') === 'dimmed' ? 'light' : 'dark';
+    lock();
+    apply();
+  }).observe(d, { attributeFilter: ['data-darkreader-mode'] });
+  sys.addEventListener('change', apply);
+  document.addEventListener('DOMContentLoaded', label);
+  d.classList.add('js');
+  // The home page plays the header mark's intro unless the visitor came from another page of this
+  // site (site.js); html.intro hides the mark until it starts, and style.css shows it anyway after 2.5 s.
+  const inside = (() => { try { return new URL(document.referrer).origin === location.origin; } catch (e) { return false; } })();
+  if (location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches && !inside) d.classList.add('intro');
+  apply();
+})();
+</script>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<script src="/site.js" defer></script>
+<script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Open-source hardware and software for linear motion machines, with the OpenValence mark and a large OpenValence wordmark.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+<style>
+/* this page only: the setup tool (servo.js) */
+.tool [hidden] { display: none; }
+.tool .btns { margin: 18px 0; }
+.tool .btn:disabled { opacity: .4; cursor: not-allowed; background: transparent; color: var(--ink); border-color: var(--ink); }
+.tool .btn.go:disabled { background: var(--accent); border-color: var(--accent); color: #fff; }
+.state { max-width: var(--measure); font-weight: 600; color: var(--ink); min-height: 1.5em; }
+.state.good { color: var(--accent-ink); }
+.state.bad { color: var(--bad); }
+.ack { display: flex; gap: 12px; align-items: flex-start; max-width: var(--measure); margin: 0 0 12px; cursor: pointer; }
+.ack input { flex: none; width: 20px; height: 20px; margin: .2em 0 0; accent-color: var(--accent); }
+.wrap { overflow-x: auto; margin: 18px 0; }
+.regs { width: 100%; max-width: 960px; border-collapse: collapse; font-size: .92rem; }
+.regs th, .regs td { padding: 8px 14px 8px 0; text-align: left; vertical-align: baseline; border-top: 1px solid var(--rule); }
+.regs thead th { border-top: 0; font: 900 .7rem/1.2 var(--display); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
+.regs .n { font: 400 .8rem var(--mono); white-space: nowrap; color: var(--ink); }
+.regs .new { color: var(--accent-ink); font-weight: 700; }
+ol.run, ul.run { list-style: none; padding-left: 0; font: 400 .82rem/1.5 var(--mono); }
+ol.run li, ul.run li { margin: 0; }
+.run li.bad { color: var(--bad); }
+pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .72rem/1.55 var(--mono); white-space: pre; color: var(--ink-2); }
+</style>
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <div class="menu">
+      <a class="chip" href="/components/">Components</a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-parts" aria-label="Components menu"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chev"/></svg></button>
+      <div class="menu-panel" id="menu-parts">
+        <ul>
+          <li><a class="item" href="/nucleus/"><b>Nucleus</b><span>Firmware for the OSSM Flagship PCB</span></a></li>
+          <li><a class="item" href="/neutrino/"><b>Neutrino</b><span>The hub firmware, emulated inside Phosphor</span></a></li>
+          <li><a class="item" href="/kinetic/"><b>Kinetic</b><span>The motion planner: knots in, smooth motion out</span></a></li>
+          <li><a class="item" href="/isotope/"><b>Isotope <i>WIP</i></b><span>Accessory firmware that joins over <span class="nb">ESP-NOW</span></span></a></li>
+          <li><a class="item" href="/hardware/"><b>OSSM Flagship PCB <i>WIP</i></b><span>The controller board, in KiCad</span></a></li>
+        </ul>
+        <a class="item all" href="/components/">All components</a>
+      </div>
+    </div>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip util" href="/Valence/">Docs</a>
+    <a class="chip" href="/guides/" aria-current="page">Guides</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
+  <button class="theme" type="button" aria-label="Switch theme"><svg class="ico sun" aria-hidden="true"><use href="/icons/ui.svg#sun"/></svg><svg class="ico moon" aria-hidden="true"><use href="/icons/ui.svg#moon"/></svg></button>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <h1>Servo drive setup <span class="tag">WIP</span></h1>
+    <p class="lede">Set up an AIM-series integrated servo (57AIM, 60AIM) for an OpenValence build from your browser. The page finds the drive at whatever baud rate and address it is set to, reads its registers, and writes the preset.</p>
+    <p>On a barnacle build (a P4 Stamp on the OSSM R+D board) the firmware has no RS485 link to the drive, so set the drive up here before you build. The main job is the input mode: the firmware sends A/B quadrature, and a drive left on another mode will not follow it.</p>
+    <p class="fine">Work in progress. Every write here follows a sequence proven on the bench from the command line; this page has not yet been tested against a drive.</p>
+  </section>
+
+  <section class="tool" aria-labelledby="s-need">
+    <h2 id="s-need">What you need<a class="hl" href="#s-need" aria-label="Copy link to this section"></a></h2>
+    <ul>
+      <li>Chrome or Edge on a desktop computer. The page uses Web Serial; Firefox, Safari and phones have none.</li>
+      <li>A USB to RS485 adapter with A, B and GND terminals.</li>
+      <li>The drive on its motor supply. Its logic runs from the motor bus: nothing answers until it has had power for about a second.</li>
+      <li>The motor free to move: belt off, or the carriage clear of both ends. A change of input mode or gains can move it.</li>
+    </ul>
+    <p id="support" class="state"></p>
+    <noscript><p class="state bad">This tool needs JavaScript.</p></noscript>
+    <h3 id="wiring">Wiring<a class="hl" href="#wiring" aria-label="Copy link to this section"></a></h3>
+    <p>The drive's RS485 side is opto-isolated and takes its own 5 V from the comms connector. Four wires from the drive's comms connector:</p>
+    <ul>
+      <li><b>485A</b> to the adapter's A (sometimes D+).</li>
+      <li><b>485B</b> to the adapter's B (sometimes D-).</li>
+      <li><b>COM</b> to the adapter's GND.</li>
+      <li><b>485_5V</b> to 5 V: the adapter's 5 V terminal if it has one, or any 5 V supply sharing that GND.</li>
+    </ul>
+    <p>The drive's manual has the pin numbers. Adapters label A and B both ways: if nothing answers at any rate, swap them.</p>
+  </section>
+
+  <section class="tool" aria-labelledby="s-find">
+    <h2 id="s-find">Find the drive<a class="hl" href="#s-find" aria-label="Copy link to this section"></a></h2>
+    <p>Pick the adapter's port. The page tries address 1 at 19200 (the factory rate), 115200, 38400 and 9600 baud, 8 data bits, no parity, 1 stop bit. If nothing answers, it tries addresses 2 to 247 at each rate, which takes about a minute. A reply with a valid CRC to a read of register 0x15, the drive's own address, identifies it.</p>
+    <div class="btns"><button class="btn go" id="find" type="button">Choose port and find</button><button class="btn" id="stop" type="button" hidden>Stop</button></div>
+    <p id="find-state" class="state" role="status"></p>
+  </section>
+
+  <section class="tool" aria-labelledby="s-settings">
+    <h2 id="s-settings">Settings<a class="hl" href="#s-settings" aria-label="Copy link to this section"></a></h2>
+    <p>Every register in the drive's map, read one at a time. Pairs are 32-bit, low word first. The map has no model or firmware register.</p>
+    <div class="btns"><button class="btn" id="reread" type="button">Read again</button><button class="btn" id="release" type="button" hidden>Release Modbus control</button></div>
+    <p id="drive-notes" class="state"></p>
+    <div class="wrap">
+      <table class="regs" id="regs" hidden>
+        <thead><tr><th>Reg</th><th>Name</th><th>Raw</th><th>Meaning</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="fine">Release Modbus control writes 0x00 = 506, then 0x00 = 0: the only way out once 0x00 is on.</p>
+  </section>
+
+  <section class="tool" aria-labelledby="s-baud">
+    <h2 id="s-baud">Baud rate<a class="hl" href="#s-baud" aria-label="Copy link to this section"></a></h2>
+    <p>Optional, and before the preset if you do it. The barnacle build never talks to the drive over RS485. Nucleus on the Flagship finds the drive at any of the four rates; 115200 gives the fastest reads.</p>
+    <p>The change is a four-write sequence the drive stores and switches to at its next power cycle: 0x00 = 1, 0x03 = 803, 0x04 = 129, 0x00 = 506. The page then has nothing to check until you power-cycle the drive.</p>
+    <p id="baud-now"></p>
+    <label class="ack"><input type="checkbox" id="ack-baud"><span>I will power-cycle the drive right after this, before it runs.</span></label>
+    <div class="btns"><button class="btn" id="baud" type="button">Change to 115200</button></div>
+    <p id="baud-state" class="state" role="status"></p>
+    <ol class="run" id="baud-run"></ol>
+  </section>
+
+  <section class="tool" aria-labelledby="s-preset">
+    <h2 id="s-preset">OpenValence preset<a class="hl" href="#s-preset" aria-label="Copy link to this section"></a></h2>
+    <p>What the firmware's A/B output needs: input mode 0x19 = 2 (A/B quadrature), position loop gain 0x07 even (alarm output normally open; your gain is kept, an odd ones digit becomes 0), output on (0x01 = 1) and Modbus control off (0x00 = 0). Only registers that differ are written.</p>
+    <label class="ack"><input type="checkbox" id="tuning"><span>Also write the machine's drive settings: gear 4/1 (8192 counts per motor turn, the scale the firmware sends), speed limit 2000 rpm and the gains from the bench ladder on a loaded 60AIM40F at 36 V.</span></label>
+    <div class="wrap">
+      <table class="regs" id="diff" hidden>
+        <thead><tr><th>Reg</th><th>Name</th><th>Now</th><th>New</th><th>Why</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p id="apply-state" class="state" role="status">Find the drive first.</p>
+    <p>The write order: Modbus control on (0x00 = 1), output off (0x01 = 0; the drive refuses writes with its output live), each register with a read-back check, the save command (0x14 = 1, three times), output on (0x01 = 1), and Modbus control released (0x00 = 506, then 0). If any read-back fails, nothing is saved and the output goes back to what it read. The page refuses to start while the motor turns.</p>
+    <label class="ack"><input type="checkbox" id="ack-apply"><span>The motor is free to move and nothing else is driving it. I will power-cycle the drive after the write.</span></label>
+    <div class="btns"><button class="btn go" id="apply" type="button">Write and save</button></div>
+    <ol class="run" id="apply-run"></ol>
+  </section>
+
+  <section class="tool" aria-labelledby="s-check">
+    <h2 id="s-check">Power cycle and check<a class="hl" href="#s-check" aria-label="Copy link to this section"></a></h2>
+    <p>The drive reads its input mode only at power-on, and a save is proven only by a power cycle. Switch the motor supply off, wait five seconds, switch it on, wait two seconds, then check. Leave the adapter plugged in.</p>
+    <p>The check finds the drive again (the last rate first), reads every register and runs the Flagship firmware's own drive check. Ready means every line passes and the preset held through the power cycle.</p>
+    <div class="btns"><button class="btn go" id="check" type="button">Check</button></div>
+    <p id="check-state" class="state" role="status"></p>
+    <ul class="run" id="ready"></ul>
+  </section>
+
+  <section class="tool" aria-labelledby="s-log">
+    <h2 id="s-log">Log<a class="hl" href="#s-log" aria-label="Copy link to this section"></a></h2>
+    <p>Every frame sent and received, in hex, with the time since the page loaded. During the address scan only replies are kept. Paste it into a support request.</p>
+    <div class="btns"><button class="btn" id="copy" type="button">Copy log</button><button class="btn" id="clear" type="button">Clear</button></div>
+    <pre class="log" id="log" tabindex="0" aria-label="Frame log"></pre>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+  <a href="/guides/">Guides</a>
+</footer>
+<!-- /chrome:footer -->
+
+<script type="module" src="/guides/servo-setup/servo.js"></script>
+</body>
+</html>
