@@ -146,7 +146,7 @@
 
     <h3 id="stopping">Stopping the machine<a class="hl" href="#stopping" aria-label="Copy link to this section"></a></h3>
     <p>The R+D board has no motor power switch and no Modbus link to the drive, and in this build the drive's enable line, ENA, is unconnected. Software cannot cut motor power.</p>
-    <p>Two things stop the motor: the P4 stops its A/B output, or the E-stop cuts the servo's supply. Wire a latching E-stop that breaks the servo's DC supply (<a href="#estop">step 5</a>).</p>
+    <p>Two things stop the motor: the P4 stops its A/B output, or the E-stop cuts power. Wire the E-stop the way the reference build does: a latching switch that breaks the AC mains to the power supply (<a href="#estop">step 5</a>).</p>
     <p>Overcurrent protection stays with the servo drive. The current and voltage the helper reports are for monitoring and homing.</p>
   </section>
 
@@ -167,7 +167,7 @@
         <tr><th scope="row">Hookup wire</th><td data-k="Qty">8 lengths</td><td>Stranded. 5 for the R+D loom, 3 for the servo loom.</td></tr>
         <tr><th scope="row">Electrolytic capacitor</th><td data-k="Qty">1</td><td>220 to 470 µF, 6.3 V or more, for the Stamp's 5 V.</td></tr>
         <tr><th scope="row">USB to RS485 adapter</th><td data-k="Qty">1</td><td>For the drive setup in step 0.</td></tr>
-        <tr><th scope="row">Latching E-stop</th><td data-k="Qty">1</td><td>Rated for your servo supply's DC voltage and current.</td></tr>
+        <tr><th scope="row">Latching E-stop</th><td data-k="Qty">1</td><td>Rated for your mains voltage and the supply's input current.</td></tr>
         <tr><th scope="row">Heat shrink</th><td data-k="Qty">some</td><td>For the ground splice and the capacitor leads.</td></tr>
       </tbody>
     </table>
@@ -242,7 +242,7 @@
     <p>Fit the capacitor at the Stamp end, across 5V and GND, within a few centimeters of the housing, minus lead to GND. It carries the Wi-Fi transmit bursts.</p>
 
     <h3 id="estop">5. Wire the E-stop<a class="hl" href="#estop" aria-label="Copy link to this section"></a></h3>
-    <p>Put the latching E-stop in the servo's DC supply, between J2 SERVO POWER and the drive, so pressing it breaks the supply to the drive. Keep the motor supply on J2: the current sensor sees only what flows through it.</p>
+    <p>Put the latching E-stop in the AC mains feed to the power supply, as on the reference build. Pressing it powers down everything: the servo, the R+D board and the Stamp. The P4 boots unhomed when power returns, so you home again before the next run. Keep the servo's DC supply on J2 SERVO POWER: the current sensor sees only what flows through it.</p>
 
     <h3 id="checks">6. Pre-power checks<a class="hl" href="#checks" aria-label="Copy link to this section"></a></h3>
     <ol>
