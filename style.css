@@ -208,6 +208,23 @@ main { max-width: calc(var(--wide) + 2 * var(--gutter)); margin-inline: auto; pa
 section { margin-bottom: clamp(80px, 11vw, 150px); }
 section > h2:first-child { scroll-margin-top: 24px; }
 
+/* "On this page" (tools/chrome.py nav.toc, site.js marks the current entry): from 1400 px main gives up
+   its right 13rem + 40px to the list, so drawings and prose end before it and nothing overlaps; below that it is hidden. */
+.toc { display: none; }
+@media (min-width: 1400px) {
+  main:has(> .toc) { position: relative; padding-right: calc(var(--gutter) + 13rem + 40px); }
+  .toc { display: block; position: absolute; top: clamp(32px, 6vw, 72px); bottom: 40px; right: var(--gutter); width: 13rem; }
+  .toc-in { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; border-left: 1px solid var(--rule); padding: 2px 0 2px 16px; }
+  .toc-h { margin: 0 0 10px; font: 800 .72rem/1 var(--display); font-stretch: 108%; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); }
+  .toc ul { list-style: none; margin: 0; padding: 0; max-width: none; }
+  .toc li { margin: 0; }
+  .toc a { position: relative; display: block; padding: 4px 0; font-size: .86rem; line-height: 1.35; color: var(--ink-3); text-decoration: none; transition: color .16s ease-out; }
+  .toc .h3 a { padding-left: 14px; font-size: .82rem; }
+  .toc a:hover { color: var(--ink); }
+  .toc a[aria-current] { color: var(--accent-ink); }
+  .toc a[aria-current]::before { content: ''; position: absolute; left: -17px; top: 3px; bottom: 3px; width: 3px; background: var(--accent); }
+}
+
 /* full-bleed: the band runs edge to edge, its content stays on the grid */
 .band {
   margin-inline: calc(50% - 50vw);

@@ -64,6 +64,34 @@
     (navigator.clipboard ? navigator.clipboard.writeText(location.href) : Promise.reject()).then(() => tip('Link copied'), () => tip('Link in the address bar'));
   });
 
+  // "On this page" (nav.toc, tools/chrome.py): the entry of the last heading above a line 64 px under
+  // the top of the screen gets aria-current (a heading reached by a link rests 32 px down, so it counts; at the page end the last one counts).
+  // An observer on the strip above that line is the trigger; the rects are read in its callback, after
+  // layout. Stores nothing; the list scrolls itself, never the page.
+  const toc = document.querySelector('.toc');
+  if (toc) {
+    const LINE = 64, links = [...toc.querySelectorAll('a')], heads = links.map((a) => document.getElementById(a.hash.slice(1)));
+    let cur = -1, io;
+    const mark = () => {
+      let n = -1;
+      heads.forEach((h, i) => { if (h && h.getBoundingClientRect().top <= LINE) n = i; });
+      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2 && heads[heads.length - 1].getBoundingClientRect().top < innerHeight) n = heads.length - 1;
+      if (n === cur) return;
+      if (cur >= 0) links[cur].removeAttribute('aria-current');
+      if ((cur = n) < 0) return;
+      const a = links[n], box = a.closest('.toc-in');
+      a.setAttribute('aria-current', 'location');
+      if (a.offsetTop < box.scrollTop || a.offsetTop + a.offsetHeight > box.scrollTop + box.clientHeight) box.scrollTop = a.offsetTop - box.clientHeight / 2;
+    };
+    const watch = () => {
+      if (io) io.disconnect();
+      io = new IntersectionObserver(mark, { rootMargin: `0px 0px -${Math.max(0, innerHeight - LINE)}px 0px` });
+      for (const h of heads) if (h) io.observe(h);
+    };
+    watch();
+    addEventListener('resize', watch);
+  }
+
   // The header mark (tools/chrome.html): /mark-anim.js plays its intro on the home page unless the
   // visitor came from another page of the site (the head script sets html.intro) and turns it on hover. Loaded at load, so it never
   // competes with the first paint; reduced motion: neither.

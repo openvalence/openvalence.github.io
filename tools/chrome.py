@@ -9,6 +9,8 @@ The header's aria-current is set from the page's canonical link. The Kinetic rep
     python tools/chrome.py
 Constraints: never change an id once published; Phosphor and shared links point at them. A heading
 that is itself a link (a card title) gets neither id nor mark.
+Guide and docs pages (/guides/, /phosphor/docs/) with three or more headings also get an "On this page"
+list (nav.toc, last in <main>): style.css shows it from 1400 px, site.js marks the current section.
 """
 import hashlib, html, pathlib, re
 
@@ -52,6 +54,24 @@ def anchor(page):
     return re.sub(r"<main\b.*?</main>", heads, page, flags=re.S)
 
 
+def toc(page, path):
+    """The nav.toc for a guide or docs page: every h2 and h3 of <main> that has an id, in order."""
+    page = re.sub(r'\n?[ \t]*<nav class="toc".*?</nav>', "", page, flags=re.S)
+    if path.parts[0] != "guides" and path.parts[:2] != ("phosphor", "docs"):
+        return page
+    main = re.search(r"<main\b.*?</main>", page, flags=re.S)
+    heads = re.findall(r'<(h[23])\b[^>]*\sid="([^"]+)"[^>]*>(.*?)</\1>', main.group(0) if main else "", flags=re.S)
+    if len(heads) < 3:
+        return page
+    items = ""
+    for tag, hid, inner in heads:
+        inner = re.sub(r'<span class="tag">.*?</span>|<a class="hl".*?</a>|<[^>]+>', "", inner, flags=re.S)
+        cls = ' class="h3"' if tag == "h3" else ""
+        items += f'<li{cls}><a href="#{hid}">{" ".join(inner.split())}</a></li>\n'
+    nav = f'  <nav class="toc" aria-label="On this page"><div class="toc-in"><p class="toc-h">On this page</p><ul>\n{items}</ul></div></nav>\n'
+    return page.replace("</main>", nav + "</main>", 1)
+
+
 # pages without a header link of their own, and the link that stands for them
 SECTION = {f"/{c}/": "/components/" for c in ("nucleus", "neutrino", "kinetic", "hardware", "isotope")}
 root = pathlib.Path(__file__).resolve().parent.parent
@@ -89,7 +109,7 @@ for page in sorted(root.rglob("*.html")):
             # the page's own entry in the Components menu
             body = body.replace(f'class="item" href="{here}"', f'class="item" href="{here}" aria-current="page"', 1)
         return f"<!-- chrome:{m.group(1)} -->\n{body}<!-- /chrome:{m.group(1)} -->"
-    new = anchor(re.sub(r"<!-- chrome:(\w+) -->\n.*?<!-- /chrome:\1 -->", fill, text, flags=re.S))
+    new = toc(anchor(re.sub(r"<!-- chrome:(\w+) -->\n.*?<!-- /chrome:\1 -->", fill, text, flags=re.S)), page.relative_to(root))
     if new != text:
         page.write_text(new, encoding="utf-8", newline="\n")
         changed += 1
