@@ -32,11 +32,12 @@
   --text: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --mono: 'Martian Mono', ui-monospace, Consolas, monospace;
   /* the width system: --wide holds the header, main, bands and footer; --measure is the
-     reading width for prose, captions, code, tables and diagrams. A figure takes one of the
-     two, never a width in between: clips and screenshots span the content width. */
+     reading width for prose and captions; --break is how far drawings, tables and code stand out
+     past the prose. Clips and screenshots span the content width. */
   --gutter: clamp(16px, 5vw, 64px);
-  --wide: 1440px;
-  --measure: 62ch;
+  --wide: 1600px;
+  --measure: 76ch;
+  --break: 1100px;
 
   /* names the diagrams and docs pages already use */
   --bg-card: var(--bg-2);
@@ -139,7 +140,7 @@ figcaption { max-width: var(--measure); }
 main ul, main ol { max-width: var(--measure); padding-left: 1.2em; }
 main li { margin-bottom: 6px; }
 .nb { white-space: nowrap; }
-.lede { font-size: clamp(1.1rem, 1.6vw, 1.35rem); line-height: 1.45; color: var(--ink-2); max-width: 40ch; }
+.lede { font-size: clamp(1.1rem, 1.6vw, 1.35rem); line-height: 1.45; color: var(--ink-2); max-width: 56ch; }
 .big-line { font: 800 clamp(1.4rem, 2.6vw, 2.1rem)/1.15 var(--display); font-stretch: 108%; color: var(--ink); max-width: 26ch; letter-spacing: -.01em; }
 .fine { font-size: .9rem; color: var(--ink-3); }
 
@@ -536,7 +537,7 @@ h1 .tag, h2 .tag { font-size: .7rem; vertical-align: .6em; }
 
 /* ---- diagrams: drawn from the tokens ---- */
 .diagram { margin: 0 0 24px; }
-.diagram { max-width: var(--measure); }
+.diagram { max-width: min(100%, 720px); }
 .diagram svg { display: block; width: 100%; height: auto; }
 .diagram figcaption { margin-top: 12px; font-size: .92rem; color: var(--ink-3); max-width: var(--measure); }
 .d-box  { fill: var(--bg-2); stroke: var(--line-3); stroke-width: 1.2; }
@@ -563,7 +564,8 @@ h1 .tag, h2 .tag { font-size: .7rem; vertical-align: .6em; }
 .d-dash { fill: none; stroke: var(--ink-3); stroke-width: 1.2; stroke-dasharray: 4 3; }
 .d-wire { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .d-halo { fill: none; stroke: var(--bg); stroke-width: 8; stroke-linejoin: round; }
-.diagram.wide { max-width: 760px; }
+.diagram.wide { max-width: min(100%, var(--break)); }
+.diagram.wide svg { max-height: 90vh; }
 /* a drawing wider than a phone scrolls inside its figure; the page never scrolls sideways */
 .diagram .scroll { overflow-x: auto; overscroll-behavior-x: contain; }
 .wires { display: flex; flex-wrap: wrap; gap: 4px 18px; max-width: var(--measure); margin: 12px 0 0; padding: 0; list-style: none; font: 400 .8rem/1.5 var(--mono); color: var(--ink-3); }
@@ -586,7 +588,6 @@ h1 .tag, h2 .tag { font-size: .7rem; vertical-align: .6em; }
 .legend li::marker { font: 900 .8rem var(--display); color: var(--accent-ink); }
 
 /* ---- tables and term lists (docs, diagrams) ---- */
-/* tables of terms read at the prose measure: 62ch of the 18 px body face, not of the table's 16 px */
 /* ---- lanes: two signal paths side by side, the shared middle in the accent (the Neutrino page) ---- */
 .lanes { display: grid; gap: 22px; margin: 30px 0 0; }
 .lane-h { margin: 0 0 8px; font: 800 .74rem/1.3 var(--display); font-stretch: 110%; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
@@ -597,7 +598,7 @@ h1 .tag, h2 .tag { font-size: .7rem; vertical-align: .6em; }
 .lane li.hub b { color: #fff; }
 .lane li.link { display: flex; align-items: center; justify-content: center; padding: 0 6px; border: 0; background: linear-gradient(var(--ink-3), var(--ink-3)) center / 100% 2px no-repeat; font: 400 .7rem/1.2 var(--mono); color: var(--ink-3); text-align: center; }
 .lane li.link span { padding: 3px 5px; background: var(--bg); }
-.parts { width: 100%; max-width: calc(var(--measure) * 18 / 16); border-collapse: collapse; font-size: 1rem; }
+.parts { width: 100%; max-width: min(100%, var(--break)); border-collapse: collapse; font-size: 1rem; }
 .parts thead th { padding: 0 16px 10px 0; text-align: left; font: 900 .74rem var(--display); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
 .parts tbody th, .parts td { padding: 14px 16px 14px 0; text-align: left; vertical-align: baseline; border-top: 2px solid var(--rule); }
 .parts tbody th { width: 11rem; font: 900 1rem var(--display); color: var(--ink); }
@@ -607,7 +608,7 @@ h1 .tag, h2 .tag { font-size: .7rem; vertical-align: .6em; }
 .terms > div { padding: 12px 0; border-top: 2px solid var(--rule); }
 .terms dt { font: 900 1.02rem/1.3 var(--display); color: var(--ink); }
 .terms dd { margin: 3px 0 0; }
-main pre { max-width: var(--measure); font: inherit; overflow-x: auto; padding: 14px 16px; background: var(--bg-2); border-radius: 8px; }
+main pre { max-width: min(100%, var(--break)); font: inherit; overflow-x: auto; padding: 14px 16px; background: var(--bg-2); border-radius: 8px; }
 main pre code { overflow-wrap: normal; }
 
 /* ---- footer: the name, big ---- */

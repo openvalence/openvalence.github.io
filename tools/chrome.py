@@ -2,13 +2,15 @@
 every h2 and h3 in <main> an id and a section link mark (style.css .hl; site.js copies the link).
 
 Each page marks the blocks with <!-- chrome:NAME --> ... <!-- /chrome:NAME -->.
+Every site-root .css/.js the blocks reference gets ?v=<first 10 hex of the file's sha256>, so a deploy
+that changes the file changes the URL and no cache serves the old one against new HTML.
 The header's aria-current is set from the page's canonical link. The Kinetic repo's playground/
 (/Kinetic/) carries a copy of the header and its CSS: a header change updates it too. Run from the repo root:
     python tools/chrome.py
 Constraints: never change an id once published; Phosphor and shared links point at them. A heading
 that is itself a link (a card title) gets neither id nor mark.
 """
-import html, pathlib, re
+import hashlib, html, pathlib, re
 
 MARK = '<a class="hl" href="#{}" aria-label="Copy link to this section"></a>'
 
@@ -54,6 +56,19 @@ def anchor(page):
 SECTION = {f"/{c}/": "/components/" for c in ("nucleus", "neutrino", "kinetic", "hardware", "isotope")}
 root = pathlib.Path(__file__).resolve().parent.parent
 blocks = dict(re.findall(r"<!-- chrome:(\w+) -->\n(.*?)<!-- /chrome:\1 -->", (root / "tools/chrome.html").read_text(encoding="utf-8"), re.S))
+
+
+def stamp(body):
+    def one(m):
+        f = root / m.group(2).lstrip("/")
+        if not f.is_file():
+            return m.group(0)
+        h = hashlib.sha256(f.read_bytes().replace(b"\r\n", b"\n")).hexdigest()[:10]
+        return f'{m.group(1)}"{m.group(2)}?v={h}"'
+    return re.sub(r'((?:href|src)=)"(/[^"?]+\.(?:css|js))"', one, body)
+
+
+blocks = {k: stamp(v) for k, v in blocks.items()}
 changed = 0
 for page in sorted(root.rglob("*.html")):
     if page.parts[len(root.parts)] in ("tools", ".git"):
