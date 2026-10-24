@@ -24,12 +24,13 @@ const TARGET_BAUD = 115200, BAUD_CODE = 803;
 // aim_program.py TARGET: the machine's drive settings, written only when the visitor ticks them.
 const TUNING = { 0x02: 2000, 0x03: 60000, 0x04: 495, 0x05: 3000, 0x06: 10, 0x07: 3000, 0x08: 3900, 0x09: 1, 0x0A: 4, 0x0B: 1, 0x18: 600, 0x19: 2 };
 const WRITABLE = new Set([0x00, 0x01, 0x14, ...Object.keys(TUNING).map(Number)]);
-// The input set: A/B quadrature, and 0x07's ones digit even (alarm output normally open), the
-// visitor's gain kept. With 0x00 = 0 and 0x01 = 1 it is what the Flagship firmware's drive-link
-// probe passes (Nucleus AimDrive.h judgeMap, docs/board-map.md drive link).
+// The preset: A/B quadrature, gear 4/1 (the scale the firmware's 208.6 steps/mm assumes), and 0x07's
+// ones digit even (alarm output normally open), the visitor's gain kept. With 0x00 = 0 and 0x01
+// nonzero it is what the Flagship firmware's drive-link probe passes (Nucleus AimDrive.h judgeMap,
+// docs/board-map.md drive link).
 const evenKp = (v) => (v % 2 ? v - (v % 10) : v);
 function targets() {
-  const t = { 0x19: 2 };
+  const t = { 0x19: 2, 0x0A: TUNING[0x0A], 0x0B: TUNING[0x0B] };
   if (raw[0x07] !== undefined) t[0x07] = evenKp(raw[0x07]);
   return $('tuning').checked ? { ...t, ...TUNING } : t;
 }
@@ -38,7 +39,7 @@ const ALARMS = { 0: 'none', 0x10: 'battery (the motor keeps running)', 0x12: 'ov
 // [address, name, meaning(raw value, all raw values), registers read together]
 const REGS = [
   [0x00, 'Modbus control', (v) => (v === 0 ? 'off: the pulse input is live' : 'on: the drive ignores its pulse input')],
-  [0x01, 'Output enable', (v) => (v === 0 ? 'off' : 'on')],
+  [0x01, 'Output enable', (v) => (v === 0 ? 'off' : v === 1 ? 'on' : `on: the manual lists 0 and 1; a 60AIM40F reads ${v} with Modbus control off`)],
   [0x02, 'Speed limit', (v) => `${v} rpm`],
   [0x03, 'Acceleration', (v) => (v <= 60000 ? `${v} rpm/s` : `full ramp plus ${v - 60000} % feed-forward`)],
   [0x04, 'Field weakening', () => 'drive internal'],
@@ -305,7 +306,7 @@ function ready() {
   const rows = [
     [r[0x15] === 1, `0x15 address reads ${r[0x15] ?? 'nothing'}; the firmware talks to address 1`],
     [r[0x00] === 0, `0x00 Modbus control ${r[0x00] ?? '?'}: must be 0, or the drive ignores the pulse input`],
-    [r[0x01] === 1, `0x01 output enable ${r[0x01] ?? '?'}: must be 1`],
+    [r[0x01] !== undefined && r[0x01] !== 0, `0x01 output enable ${r[0x01] ?? '?'}: must not be 0`],
     [r[0x19] === 2, `0x19 input mode ${r[0x19] ?? '?'}: must be 2, A/B quadrature`],
     [r[0x07] !== undefined && r[0x07] % 2 === 0, `0x07 position loop gain ${r[0x07] ?? '?'}: must be even, alarm output normally open`],
     [r[0x12] !== undefined && r[0x12] <= 100, `0x12 temperature ${r[0x12] ?? '?'}: 100 or less, else this is not the AIM map`],
@@ -320,7 +321,7 @@ function ready() {
   }
   if (r[0x0A] !== undefined && (r[0x0A] !== 4 || r[0x0B] !== 1)) {
     const li = document.createElement('li');
-    li.textContent = `note  0x0A/0x0B gear ${r[0x0A]}/${r[0x0B]}: the firmware's scale assumes 4/1, 8192 counts per turn (the machine settings write it)`;
+    li.textContent = `note  0x0A/0x0B gear ${r[0x0A]}/${r[0x0B]}: the firmware's scale assumes 4/1, 8192 counts per turn (the preset writes it)`;
     ul.append(li);
   }
   return rows.every(([ok]) => ok);
@@ -436,7 +437,7 @@ async function apply() {
   await w(0x01, 1, false);
   await release();
   await readAll();
-  step(`After release: 0x00 reads ${raw[0x00]}, 0x01 reads ${raw[0x01]}, 0x19 reads ${raw[0x19]}`, raw[0x00] !== 0 || raw[0x01] !== 1);
+  step(`After release: 0x00 reads ${raw[0x00]}, 0x01 reads ${raw[0x01]}, 0x19 reads ${raw[0x19]}`, raw[0x00] !== 0 || raw[0x01] === 0);
   if (saved) say('apply-state', 'Saved: the drive reported the save done. Power-cycle it now, then check.', 'good');
   else say('apply-state', 'Written, but the drive did not report the save done (some drives never do). Power-cycle it now, then check: that decides.', '');
 }

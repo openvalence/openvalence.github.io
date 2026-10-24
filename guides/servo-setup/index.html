@@ -201,8 +201,8 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
 
   <section class="tool" aria-labelledby="s-preset">
     <h2 id="s-preset">OpenValence preset<a class="hl" href="#s-preset" aria-label="Copy link to this section"></a></h2>
-    <p>What the firmware's A/B output needs: input mode 0x19 = 2 (A/B quadrature), position loop gain 0x07 even (alarm output normally open; your gain is kept, an odd ones digit becomes 0), output on (0x01 = 1) and Modbus control off (0x00 = 0). Only registers that differ are written.</p>
-    <label class="ack"><input type="checkbox" id="tuning"><span>Also write the machine's drive settings: gear 4/1 (8192 counts per motor turn, the scale the firmware sends), speed limit 2000 rpm and the gains from the bench ladder on a loaded 60AIM40F at 36 V.</span></label>
+    <p>What the firmware's A/B output needs: input mode 0x19 = 2 (A/B quadrature), position loop gain 0x07 even (alarm output normally open; your gain is kept, an odd ones digit becomes 0), output on (0x01 not 0) and Modbus control off (0x00 = 0). It also writes gear 4/1 (0x0A, 0x0B): 8192 counts per motor turn, the scale the firmware's 208.6 steps per millimeter assumes, so any other ratio moves the carriage the wrong distance. Only registers that differ are written.</p>
+    <label class="ack"><input type="checkbox" id="tuning"><span>Also write the machine's drive settings: speed limit 2000 rpm and the gains from the bench ladder on a loaded 60AIM40F at 36 V.</span></label>
     <div class="wrap">
       <table class="regs" id="diff" hidden>
         <thead><tr><th>Reg</th><th>Name</th><th>Now</th><th>New</th><th>Why</th></tr></thead>
