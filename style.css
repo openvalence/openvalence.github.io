@@ -176,7 +176,7 @@ html:not(.js) .theme { display: none; }
 :root:not([data-theme=light]) .theme .moon { opacity: 0; transform: rotate(-100deg) scale(.4); }
 [data-theme=light] .theme .sun { opacity: 0; transform: rotate(100deg) scale(.4); }
 /* the Components menu: site.js opens it on hover, tap and its arrow button, and adds .live; without
-   it, hover and focus-within open it. Below 1100 px the panel hangs from the header, not from the
+   it, hover and focus-within open it. Below 1360 px the panel hangs from the header, not from the
    scrolling link row, which would clip it. */
 .strip { position: relative; z-index: 10; }
 .menu { position: relative; display: flex; align-items: center; gap: 2px; }
@@ -624,8 +624,8 @@ main pre code { overflow-wrap: normal; }
   color: var(--bg-3); white-space: nowrap; overflow: hidden;
 }
 
-/* ---- narrower ---- */
-@media (max-width: 1100px) {
+/* ---- header, narrower: the full row needs about 1355 px, so below 1360 the links scroll on a row of their own ---- */
+@media (max-width: 1360px) {
   .strip { flex-wrap: wrap; justify-content: space-between; padding-bottom: 0; }
   .get { margin-left: auto; }
   .chips {
@@ -640,6 +640,9 @@ main pre code { overflow-wrap: normal; }
   .menu-panel { left: 0; right: 0; width: auto; padding: 0; }
   .menu-panel ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); column-gap: 0; padding-inline: max(0px, calc(var(--gutter) - 18px)); border-top-width: 1px; border-top-color: var(--rule); box-shadow: none; }
   .menu-panel .all { padding-inline: var(--gutter); border-bottom: 3px solid var(--ink); box-shadow: 0 24px 40px -24px rgba(0,0,0,.6); }
+}
+/* ---- narrower ---- */
+@media (max-width: 1100px) {
   .chain { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
