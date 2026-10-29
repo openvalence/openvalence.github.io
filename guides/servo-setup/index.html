@@ -210,7 +210,7 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
       </table>
     </div>
     <p id="apply-state" class="state" role="status">Find the drive first.</p>
-    <p>The write order: Modbus control on (0x00 = 1), output off (0x01 = 0; the drive refuses writes with its output live), each register with a read-back check, the save command (0x14 = 1, three times), output on (0x01 = 1), and Modbus control released (0x00 = 506, then 0). If any read-back fails, nothing is saved and the output goes back to what it read. The page refuses to start while the motor turns.</p>
+    <p>The write order: Modbus control on (0x00 = 1), output off (0x01 = 0; the drive refuses writes with its output live), then three passes of each register and the save command (0x14 = 1), the first pass with a read-back check, then output on (0x01 = 1). Modbus control stays on until you power-cycle the drive; the power cycle turns it off. If any read-back fails, the page stops, puts the output back and releases Modbus control. The page refuses to start while the motor turns.</p>
     <label class="ack"><input type="checkbox" id="ack-apply"><span>The motor is free to move and nothing else is driving it. I will power-cycle the drive after the write.</span></label>
     <div class="btns"><button class="btn go" id="apply" type="button">Write and save</button></div>
     <ol class="run" id="apply-run"></ol>
@@ -254,6 +254,6 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
 </footer>
 <!-- /chrome:footer -->
 
-<script type="module" src="/guides/servo-setup/servo.js"></script>
+<script type="module" src="/guides/servo-setup/servo.js?v=5ba0df24db"></script>
 </body>
 </html>

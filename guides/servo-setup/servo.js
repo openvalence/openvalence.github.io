@@ -410,36 +410,31 @@ async function apply() {
   }
   if (!(await stillCheck())) return;
   const outEn = raw[0x01];
-  step(`Output enable reads ${outEn}; it is written 1 last, before Modbus control is released.`);
+  step(`Output enable reads ${outEn}; it is written 1 last.`);
+  // The save that persists (0x19 included): 0x00 = 1, 0x01 = 0, then [values, 0x14 = 1] three
+  // times with no bus traffic in the 200 ms after each save, then 0x01 = 1, and NO release: the
+  // power cycle clears 0x00. Do not poll 0x14 through the save, save with the output live, or
+  // release with 506 before the power cycle; those runs read back fine and revert at power-on.
   let ok = (await w(0x00, 1)) && (await w(0x01, 0));
-  if (ok) for (const [a, v] of d) ok = (await w(a, v)) && ok;
+  for (let pass = 1; ok && pass <= 3; pass++) {
+    for (const [a, v] of d) ok = (await w(a, v, pass === 1)) && ok;
+    if (!ok) break;
+    await w(0x14, 1, false);
+    await sleep(200);
+    step(`Save pass ${pass} sent.`);
+  }
   if (!ok) {
-    step('A write failed: nothing saved. Restoring output enable and releasing Modbus control.', true);
+    step('A write failed. Restoring output enable and releasing Modbus control.', true);
     await w(0x01, outEn, false);
     await release();
     await readAll();
     say('apply-state', 'Not saved: a write failed. Copy the log below for support.', 'bad');
     return;
   }
-  let saved = false, flags = [];
-  for (let attempt = 1; attempt <= 3 && !saved; attempt++) {
-    await w(0x14, 1, false);
-    for (let i = 0; i < 30; i++) {
-      await sleep(100);
-      const f = await readRegs(0x14);
-      if (f) flags.push(f[0]);
-      if (f && f[0] === 2) { saved = true; break; }
-    }
-    step(`Save attempt ${attempt}: flag read ${[...new Set(flags)].join(', ') || 'nothing'}`);
-    flags = [];
-  }
-  // 0x01 reads back other than written while Modbus control is on; the read after release judges it.
   await w(0x01, 1, false);
-  await release();
   await readAll();
-  step(`After release: 0x00 reads ${raw[0x00]}, 0x01 reads ${raw[0x01]}, 0x19 reads ${raw[0x19]}`, raw[0x00] !== 0 || raw[0x01] === 0);
-  if (saved) say('apply-state', 'Saved: the drive reported the save done. Power-cycle it now, then check.', 'good');
-  else say('apply-state', 'Written, but the drive did not report the save done (some drives never do). Power-cycle it now, then check: that decides.', '');
+  step(`After the save: 0x19 reads ${raw[0x19]}, 0x00 reads ${raw[0x00]} (Modbus control stays on until the power cycle).`);
+  say('apply-state', 'Saved. Power-cycle the drive now: it ignores its pulse input until then. Then check.', 'good');
 }
 
 async function changeBaud() {
