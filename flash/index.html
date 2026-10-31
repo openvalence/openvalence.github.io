@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web flasher: OpenValence</title>
+<meta name="description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. WIP.">
+<link rel="canonical" href="https://openvalence.org/flash/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/flash/">
+<meta property="og:title" content="Web flasher: OpenValence">
+<meta property="og:description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. WIP.">
+<meta name="twitter:title" content="Web flasher: OpenValence">
+<meta name="twitter:description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. WIP.">
+<!-- chrome:head -->
+<meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: light)">
+<script>
+// The theme before first paint; site.js follows "themechange". Constraints: stays inline and above
+// the stylesheet; the theme-color metas stay first, dark then light. localStorage.theme is the ONLY
+// storage the site touches, written only by the theme button and only while it differs from the
+// default (the system, or Dark Reader's scheme on this page); privacy.html promises that, so add no
+// other storage without a consent story. darkreader-lock stands Dark Reader's dynamic mode down.
+(() => {
+  const d = document.documentElement, sys = matchMedia('(prefers-color-scheme: light)');
+  const get = (s, k) => { try { return window[s].getItem(k); } catch (e) {} };
+  const put = (s, k, v) => { try { v ? window[s].setItem(k, v) : window[s].removeItem(k); } catch (e) {} };
+  let dr;
+  const auto = () => dr || (sys.matches ? 'light' : 'dark');
+  const lock = () => document.querySelector('meta[name=darkreader-lock]') || document.head.append(Object.assign(document.createElement('meta'), { name: 'darkreader-lock' }));
+  const label = () => {
+    const b = document.querySelector('.theme'), to = d.dataset.theme === 'light' ? 'dark' : 'light';
+    if (b) { b.title = `Switch to ${to} theme`; b.setAttribute('aria-label', b.title); }
+  };
+  const apply = () => {
+    const t = get('localStorage', 'theme') || auto(), [dk, lt] = document.querySelectorAll('meta[name=theme-color]');
+    d.dataset.theme = t;
+    dk.media = t === 'dark' ? 'all' : 'not all';
+    lt.media = t === 'light' ? 'all' : 'not all';
+    label();
+    dispatchEvent(new Event('themechange'));
+  };
+  addEventListener('click', (e) => {
+    if (!e.target.closest || !e.target.closest('.theme')) return;
+    const t = d.dataset.theme === 'light' ? 'dark' : 'light';
+    put('localStorage', 'theme', t === auto() ? '' : t);
+    // a crossfade where the browser has view transitions (style.css .vt-theme); reduced motion: instant
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return apply();
+    d.classList.add('vt-theme');
+    document.startViewTransition(apply).finished.finally(() => d.classList.remove('vt-theme'));
+  });
+  new MutationObserver(() => {
+    if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;
+    dr = d.getAttribute('data-darkreader-scheme') === 'dimmed' ? 'light' : 'dark';
+    lock();
+    apply();
+  }).observe(d, { attributeFilter: ['data-darkreader-mode'] });
+  sys.addEventListener('change', apply);
+  document.addEventListener('DOMContentLoaded', label);
+  d.classList.add('js');
+  // The home page plays the header mark's intro unless the visitor came from another page of this
+  // site (site.js); html.intro hides the mark until it starts, and style.css shows it anyway after 2.5 s.
+  const inside = (() => { try { return new URL(document.referrer).origin === location.origin; } catch (e) { return false; } })();
+  if (location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches && !inside) d.classList.add('intro');
+  apply();
+})();
+</script>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css?v=d6154b93a9">
+<script src="/site.js?v=f9696283bd" defer></script>
+<script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:image" content="https://openvalence.org/images/og.png?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Open-source hardware and software for linear motion machines, with the OpenValence mark and a large OpenValence wordmark.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /chrome:head -->
+<style>
+/* this page only: the flasher (flash.js) */
+.tool [hidden] { display: none; }
+.tool .btns { margin: 18px 0; }
+.tool .btn:disabled { opacity: .4; cursor: not-allowed; background: transparent; color: var(--ink); border-color: var(--ink); }
+.tool .btn.go:disabled { background: var(--accent); border-color: var(--accent); color: #fff; }
+.state { max-width: var(--measure); font-weight: 600; color: var(--ink); min-height: 1.5em; }
+.state.good, .chk.good { color: var(--accent-ink); }
+.state.bad, .chk.bad { color: var(--bad); }
+.ack { display: flex; gap: 12px; align-items: flex-start; max-width: var(--measure); margin: 0 0 12px; cursor: pointer; }
+.ack input { flex: none; width: 20px; height: 20px; margin: .2em 0 0; accent-color: var(--accent); }
+.field { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 0 0 16px; }
+.field label { font: 900 .7rem/1.2 var(--display); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
+.tool select, .tool input[type=text] { font: 400 .9rem var(--text); color: var(--ink); background: var(--bg-2); border: 2px solid var(--rule); border-radius: 0; padding: 8px 10px; }
+.tool select:focus-visible, .tool input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.tool input.off { width: 9.5em; font: 400 .8rem var(--mono); }
+.tool input[type=file] { max-width: 100%; font: 400 .85rem var(--text); color: var(--ink-2); }
+.tool input[type=file]::file-selector-button { font: 700 .8rem var(--text); color: var(--ink); background: transparent; border: 2px solid var(--ink); padding: 6px 10px; margin-right: 10px; cursor: pointer; }
+.wrap { overflow-x: auto; margin: 18px 0; }
+.regs { width: 100%; max-width: var(--break); border-collapse: collapse; font-size: .92rem; }
+.regs th, .regs td { padding: 8px 14px 8px 0; text-align: left; vertical-align: baseline; border-top: 1px solid var(--rule); }
+.regs thead th { border-top: 0; font: 900 .7rem/1.2 var(--display); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
+.regs tbody th { font-weight: 600; color: var(--ink-3); white-space: nowrap; }
+.regs .n { font: 400 .8rem var(--mono); white-space: nowrap; color: var(--ink); }
+.regs .chk { font-size: .85rem; }
+.regs .x { font: 700 .8rem var(--text); color: var(--ink-2); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
+ol.run { list-style: none; padding-left: 0; font: 400 .82rem/1.5 var(--mono); white-space: pre-wrap; }
+ol.run li { margin: 0; }
+.run li.bad { color: var(--bad); }
+progress { display: block; width: 100%; max-width: var(--measure); height: 8px; margin: 0 0 12px; accent-color: var(--accent); }
+pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .72rem/1.55 var(--mono); white-space: pre; color: var(--ink-2); }
+@media (max-width: 640px) {
+  #files thead { display: none; }
+  #files tr { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; padding: 10px 0; border-top: 1px solid var(--rule); }
+  #files td { border: 0; padding: 0; }
+  #files td:nth-child(3), #files td:nth-child(4) { grid-column: 1 / -1; }
+}
+</style>
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <div class="menu">
+      <a class="chip" href="/components/">Components</a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-parts" aria-label="Components menu"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chev"/></svg></button>
+      <div class="menu-panel" id="menu-parts">
+        <ul>
+          <li><a class="item" href="/nucleus/"><b>Nucleus</b><span>Firmware for the OSSM Flagship PCB</span></a></li>
+          <li><a class="item" href="/neutrino/"><b>Neutrino</b><span>The hub firmware, emulated inside Phosphor</span></a></li>
+          <li><a class="item" href="/kinetic/"><b>Kinetic</b><span>The motion planner: knots in, smooth motion out</span></a></li>
+          <li><a class="item" href="/isotope/"><b>Isotope <i>WIP</i></b><span>Accessory firmware that joins over <span class="nb">ESP-NOW</span></span></a></li>
+          <li><a class="item" href="/hardware/"><b>OSSM Flagship PCB <i>WIP</i></b><span>The controller board, in KiCad</span></a></li>
+        </ul>
+        <a class="item all" href="/components/">All components</a>
+      </div>
+    </div>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip util" href="/Valence/">Docs</a>
+    <a class="chip" href="/guides/">Guides</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
+  <button class="theme" type="button" aria-label="Switch theme"><svg class="ico sun" aria-hidden="true"><use href="/icons/ui.svg#sun"/></svg><svg class="ico moon" aria-hidden="true"><use href="/icons/ui.svg#moon"/></svg></button>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <h1>Web flasher <span class="tag">WIP</span></h1>
+    <p class="lede">Write firmware to an OpenValence board over USB from Chrome or Edge. The page reads your .bin files in the browser and sends them only to the board.</p>
+    <p class="fine">Work in progress. The offsets and image checks are tested against release images; the write itself has not yet run against a board from this page.</p>
+  </section>
+
+  <section class="tool" aria-labelledby="s-need">
+    <h2 id="s-need">What you need<a class="hl" href="#s-need" aria-label="Copy link to this section"></a></h2>
+    <ul>
+      <li>Chrome or Edge on a desktop computer. The page uses Web Serial; Firefox, Safari and phones have none.</li>
+      <li>A USB data cable to the board.</li>
+      <li>The image files, from a release zip or your own build. This site hosts no images.</li>
+    </ul>
+    <p id="support" class="state"></p>
+    <noscript><p class="state bad">This tool needs JavaScript.</p></noscript>
+  </section>
+
+  <section class="tool" aria-labelledby="s-device">
+    <h2 id="s-device">Device<a class="hl" href="#s-device" aria-label="Copy link to this section"></a></h2>
+    <div class="field">
+      <label for="preset">Device</label>
+      <select id="preset">
+        <option value="garnet">Garnet remote: OSSM M5 Remote, ESP32-S3</option>
+        <option value="p4">Nucleus recovery: Flagship or barnacle, ESP32-P4</option>
+        <option value="shim">Barnacle helper shim: R+D board, ESP32</option>
+        <option value="custom">Custom: any ESP32, your offsets</option>
+      </select>
+      <label for="baud">Baud</label>
+      <select id="baud">
+        <option>115200</option>
+        <option>230400</option>
+        <option>460800</option>
+        <option>921600</option>
+      </select>
+    </div>
+    <div data-preset="garnet">
+      <p>The OSSM M5 Remote on a CoreS3 or CoreS3 SE. One full image at 0x0: bootloader, partition table and app. The image blanks NVS (0x9000 to 0xF000), so the saved Wi-Fi and key map go with it.</p>
+    </div>
+    <div data-preset="p4" hidden>
+      <p>Nucleus on the OSSM Flagship, or nucleus-p4b on a barnacle's Stamp-P4. Bootloader at 0x2000, partition table at 0x8000, otadata at 0xF000, app at 0x20000 (slot ota_0). Each file is optional. The chip is never erased: NVS holds the hub identity, the trust ledger and pairing.</p>
+      <p class="warn">Flash with the motor powered down. On a barnacle, unplug the J8 loom first: the Stamp's USB-C feeds the R+D board's 5 V through it.</p>
+    </div>
+    <div data-preset="shim" hidden>
+      <p>The barnacle's ESP32-WROOM-32D, through the R+D board's own USB-C (the CP2102 on UART0). One full image at 0x0. Erase is on, as in the release notes. Power off and the J8 loom unplugged.</p>
+    </div>
+    <div data-preset="custom" hidden>
+      <p>Any ESP32 chip. Set an offset for each file. Once connected, the offset list holds the chip's bootloader offset and the board's partitions, and files named like bootloader.bin, partitions.bin, ota_data_initial.bin or firmware.bin get their offset filled in. Erase of the whole chip is never offered on an ESP32-P4.</p>
+    </div>
+  </section>
+
+  <section class="tool" aria-labelledby="s-connect">
+    <h2 id="s-connect">Connect<a class="hl" href="#s-connect" aria-label="Copy link to this section"></a></h2>
+    <p>Pick the board's port. The page resets the board into download mode, reads the chip, its MAC address and flash size, and the partition table at 0x8000.</p>
+    <div class="btns"><button class="btn go" id="connect" type="button">Choose port and connect</button><button class="btn" id="disconnect" type="button" hidden>Disconnect</button></div>
+    <p id="conn-state" class="state" role="status"></p>
+    <div id="boot-help" hidden>
+      <h3 id="download-mode">Download mode by hand<a class="hl" href="#download-mode" aria-label="Copy link to this section"></a></h3>
+      <p data-preset="garnet">Hold the CoreS3's reset button for about 3 s, until the small green LED lights. The screen stays dark. Then connect.</p>
+      <p data-preset="p4" hidden>Hold the BOOT pad to GND while you plug in USB: TP903 on the Flagship, pad 36 (G35) on a bare Stamp-P4. Then connect.</p>
+      <p data-preset="shim" hidden>No port listed: install the Silicon Labs CP210x driver. Port listed but no answer: set the baud to 115200 and connect again.</p>
+      <p data-preset="custom" hidden>On most boards: hold BOOT (GPIO0), tap RESET, release BOOT, then connect.</p>
+    </div>
+    <div class="wrap" id="info" hidden>
+      <table class="regs">
+        <tbody>
+          <tr><th scope="row">Chip</th><td id="i-chip"></td></tr>
+          <tr><th scope="row">MAC</th><td class="n" id="i-mac"></td></tr>
+          <tr><th scope="row">Flash</th><td id="i-flash"></td></tr>
+          <tr><th scope="row">Partitions</th><td id="i-pt"></td></tr>
+          <tr><th scope="row">Boots</th><td id="i-boot"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="tool" aria-labelledby="s-files">
+    <h2 id="s-files">Files<a class="hl" href="#s-files" aria-label="Copy link to this section"></a></h2>
+    <p>Each file is checked before the write: an image header (0xE9) where the bootloader or app starts, the chip the image was built for, an app where an app goes, the slot size and the flash size.</p>
+    <div class="wrap">
+      <table class="regs" id="files">
+        <thead><tr><th>Offset</th><th>Slot</th><th>File</th><th>Check</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <datalist id="offsets"></datalist>
+    <div class="btns"><button class="btn" id="add" type="button" hidden>Add file</button></div>
+    <label class="ack" id="erase-row"><input type="checkbox" id="erase"><span>Erase the whole flash first. Clears everything the images do not cover.</span></label>
+    <label class="ack" data-preset="p4" hidden><input type="checkbox" id="blank-ota"><span>No otadata file: write a blank one, so the board boots ota_0.</span></label>
+  </section>
+
+  <section class="tool" aria-labelledby="s-write">
+    <h2 id="s-write">Write<a class="hl" href="#s-write" aria-label="Copy link to this section"></a></h2>
+    <p>The plan, in order:</p>
+    <ol class="run" id="plan"></ol>
+    <label class="ack"><input type="checkbox" id="ack"><span>The device and the files are right. The board stays plugged in until the reset.</span></label>
+    <div class="btns"><button class="btn go" id="write" type="button" disabled>Write</button><button class="btn" id="cancel" type="button" hidden>Cancel</button></div>
+    <progress id="bar" max="1" value="0" hidden></progress>
+    <p id="write-state" class="state" role="status"></p>
+    <p class="fine">Cancel stops after the current block. The region being written then holds a partial image.</p>
+  </section>
+
+  <section class="tool" aria-labelledby="s-log">
+    <h2 id="s-log">Log<a class="hl" href="#s-log" aria-label="Copy link to this section"></a></h2>
+    <p>Every step of the session, with the time since the page loaded. Paste it into a support request.</p>
+    <div class="btns"><button class="btn" id="copy" type="button">Copy log</button><button class="btn" id="clear" type="button">Clear</button></div>
+    <pre class="log" id="log" tabindex="0" aria-label="Session log"></pre>
+    <p class="fine">Writes through <a href="https://github.com/espressif/esptool-js">esptool-js</a> by Espressif (Apache-2.0). The flow follows <a href="https://github.com/thelastoutpostworkshop/ESPConnect">ESPConnect</a> by The Last Outpost Workshop (MIT). <a href="/flash/NOTICE.txt">Notices</a>.</p>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+  <a href="/guides/">Guides</a>
+</footer>
+<!-- /chrome:footer -->
+
+<script type="module" src="/flash/flash.js?v=99592d57d6"></script>
+</body>
+</html>
