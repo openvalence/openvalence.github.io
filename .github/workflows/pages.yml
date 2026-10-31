@@ -4,6 +4,8 @@
 #   <product>-<version> and carries SHA256SUMS.txt; README.md has the release recipe.
 # - A file missing from SHA256SUMS.txt, or one whose hash differs, fails the deploy: the flasher
 #   trusts flash/fw/index.json.
+# - A release event runs on the tag's ref, which the github-pages environment refuses (main only),
+#   so it only re-dispatches this workflow on main; every deploy runs from main.
 # - Pinned to the major versions of GitHub's static Pages starter workflow.
 name: Pages
 
@@ -14,17 +16,28 @@ on:
     types: [published, edited, deleted]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+permissions: {}
 
 jobs:
+  redispatch:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main -R "$GITHUB_REPOSITORY"
+
   deploy:
+    if: github.event_name != 'release'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
