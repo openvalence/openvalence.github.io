@@ -373,7 +373,7 @@
       <p class="big-line">The firmware is WIP. Neither piece is released yet.</p>
       <ul>
         <li>nucleus-p4b, the Nucleus build for the barnacle: A on LPG1, B on LPG0, TRIP on LPG8 (active low), the link on G27 (TX) and G26 (RX) at 115200 baud, internal pull-ups on RX and TRIP.</li>
-        <li>The WROOM shim firmware: streams button, current and voltage to the P4, drives the RGB LED on request, and pulls TRIP on a current spike, with thresholds the P4 sets for homing and for running.</li>
+        <li>The WROOM shim firmware: streams button, current and voltage to the P4, drives the RGB LED on request, and pulls TRIP on a current spike during homing, at the threshold the P4 sets for each home. Outside homing the current sensor only reports.</li>
         <li>The <a href="/guides/servo-setup/">servo setup</a> tool for step 0.</li>
         <li>The <a href="/flash/">web flasher</a> for the Stamp-P4 and WROOM images, from Chrome or Edge.</li>
       </ul>
