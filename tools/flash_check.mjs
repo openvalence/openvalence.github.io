@@ -1,11 +1,12 @@
 // Checks flash/image.js: synthetic cases always, real images when given. Run from the repo root:
-//   node tools/flash_check.mjs [garnet=FILE] [shim=FILE] [p4app=FILE] [p4build=DIR]
+//   node tools/flash_check.mjs [garnet=FILE] [shim=FILE] [p4app=FILE] [p4build=DIR] [index=FILE]
 // garnet: a Garnet *.factory.bin; shim: a barnacle-shim-*.bin; p4app: a nucleus-*-app.bin;
-// p4build: a flagship_p4 .pio/build/<env> folder (bootloader.bin, partitions.bin, ota_data_initial.bin).
+// p4build: a flagship_p4 .pio/build/<env> folder (bootloader.bin, partitions.bin, ota_data_initial.bin);
+// index: a flash/fw/index.json from tools/fw_index.py.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { PRESETS, checkFile, customKind, parsePartitions, otaCrc, bootSlot, guessOffset, checkPlan, md5 } from '../flash/image.js';
+import { PRESETS, releasesFor, checkFile, customKind, parsePartitions, otaCrc, bootSlot, guessOffset, checkPlan, md5 } from '../flash/image.js';
 
 const arg = Object.fromEntries(process.argv.slice(2).map((a) => a.split(/=(.*)/s).slice(0, 2)));
 const S3 = { name: 'ESP32-S3', imageChipId: 9, bootOffset: 0 };
@@ -104,6 +105,17 @@ assert.match(checkPlan([{ addr: 0x2000, data: new Uint8Array(0x7000), name: 'a' 
 assert.deepEqual(checkPlan([{ addr: 0x0, data: new Uint8Array(0x20000), name: 'm' }], parts).notes, ['m overwrites nvs at 0x9000: stored settings are lost']);
 assert.deepEqual(checkPlan(PRESETS.p4.slots.map((s) => ({ addr: s.addr, data: new Uint8Array(s.max), name: s.id })), parts), { notes: [] }); n += 5;   // full P4 slots stay clear of NVS
 
+// hosted releases: the preset's products only, newest version first (0.1.10 above 0.1.9), files
+// without a slot in the preset dropped, releases left with none dropped
+const rel = (product, version, ...roles) => ({ product, version, tag: `${product}-${version}`, prerelease: true, files: roles.map((r) => ({ name: `${r}.bin`, role: r, size: 1, sha256: '0'.repeat(64) })) });
+const INDEX = { releases: [rel('nucleus-p4b', '0.1.9', 'app'), rel('barnacle-shim', '0.1.78', 'image'), rel('nucleus-p4b', '0.1.10', 'boot', 'pt', 'ota', 'app', 'image'), rel('nucleus-p4', '0.2.0', 'app'), rel('garnet', '0.1.1', 'boot')] };
+assert.deepEqual(releasesFor(INDEX, 'p4').map((r) => r.tag), ['nucleus-p4-0.2.0', 'nucleus-p4b-0.1.10', 'nucleus-p4b-0.1.9']);
+assert.deepEqual(releasesFor(INDEX, 'p4')[1].files.map((f) => f.role), ['boot', 'pt', 'ota', 'app']);
+assert.deepEqual(releasesFor(INDEX, 'shim').map((r) => r.tag), ['barnacle-shim-0.1.78']);
+assert.deepEqual(releasesFor(INDEX, 'garnet'), []);   // no 'boot' slot on the Garnet preset
+assert.deepEqual(releasesFor(INDEX, 'custom'), []);
+assert.deepEqual(releasesFor(null, 'p4'), []); n += 6;
+
 // real images
 const read = (f) => new Uint8Array(readFileSync(f));
 if (arg.garnet) { ok(check(read(arg.garnet), 'garnet', 'image', S3), 'Garnet factory image'); no(check(read(arg.garnet), 'garnet', 'image', P4), /no image header/); no(check(read(arg.garnet), 'garnet', 'image', { ...S3, imageChipId: 13, name: 'ESP32-C6' }), /built for ESP32-S3; the board is ESP32-C6/); }
@@ -120,5 +132,16 @@ if (arg.p4build) {
   assert.deepEqual([at('nvs'), at('otadata'), at('ota_0'), at('ota_1')], [0x9000, 0xf000, 0x20000, 0x420000], 'the P4 preset matches the built table'); n++;
   for (const s of PRESETS.p4.slots.filter((s) => s.kind === 'app' || s.kind === 'otadata')) assert.equal(s.addr, s.kind === 'app' ? at('ota_0') : at('otadata')), n++;
   assert.equal(bootSlot(b('ota_data_initial.bin'), t).slot, 'ota_0'); n++;
+}
+if (arg.index) {
+  // every hosted release lands on a preset, every file on a slot of it
+  const idx = JSON.parse(readFileSync(arg.index, 'utf8'));
+  for (const r of idx.releases) {
+    const id = Object.keys(PRESETS).find((k) => PRESETS[k].products.includes(r.product));
+    assert.ok(id, `${r.tag}: no preset lists ${r.product}`);
+    assert.equal(releasesFor(idx, id).find((x) => x.tag === r.tag)?.files.length, r.files.length, `${r.tag}: a file has no slot`);
+    for (const f of r.files) assert.match(f.sha256, /^[0-9a-f]{64}$/);
+    n++;
+  }
 }
 console.log(`flash_check: ${n} checks passed${Object.keys(arg).length ? ' (real: ' + Object.keys(arg).join(', ') + ')' : ''}`);

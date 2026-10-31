@@ -23,13 +23,13 @@ const MB = 1048576;
 export const PRESETS = {
   garnet: {
     // Garnet/platformio.ini env m5_remote (16 MB, partitions.csv); FLASHING.txt: one image at 0x0
-    name: 'Garnet remote', chip: 'ESP32-S3', baud: 921600, erase: false,
+    name: 'Garnet remote', chip: 'ESP32-S3', baud: 921600, erase: false, products: ['garnet'],
     slots: [{ id: 'image', label: 'Factory image', hint: 'garnet-*.factory.bin', addr: 0x0, kind: 'merged', max: 16 * MB, ptAt: 0x8000 }],
   },
   p4: {
     // Nucleus flagship_p4/partitions.csv and sdkconfig (BOOTLOADER_OFFSET 0x2000, PARTITION_TABLE_OFFSET
     // 0x8000); the slot limits are the gaps to the next region
-    name: 'Nucleus P4 recovery', chip: 'ESP32-P4', baud: 921600, erase: null, blankOta: true,
+    name: 'Nucleus P4 recovery', chip: 'ESP32-P4', baud: 921600, erase: null, blankOta: true, products: ['nucleus-p4b', 'nucleus-p4'],
     slots: [
       { id: 'boot', label: 'Bootloader', hint: 'bootloader.bin', addr: 0x2000, kind: 'boot', max: 0x6000 },
       { id: 'pt', label: 'Partition table', hint: 'partitions.bin', addr: 0x8000, kind: 'pt', max: 0x1000 },
@@ -40,11 +40,23 @@ export const PRESETS = {
   shim: {
     // Nucleus barnacle_shim/platformio.ini (esp32dev, 4 MB); the barnacle-shim release README: erase,
     // then one image at 0x0 at 460800 baud
-    name: 'Barnacle helper shim', chip: 'ESP32', baud: 460800, erase: true,
+    name: 'Barnacle helper shim', chip: 'ESP32', baud: 460800, erase: true, products: ['barnacle-shim'],
     slots: [{ id: 'image', label: 'Shim image', hint: 'barnacle-shim-*.bin', addr: 0x0, kind: 'merged', max: 4 * MB, ptAt: 0x8000 }],
   },
-  custom: { name: 'Custom', chip: null, baud: 460800, erase: false, slots: [] },
+  custom: { name: 'Custom', chip: null, baud: 460800, erase: false, products: [], slots: [] },
 };
+
+// Hosted releases from /flash/fw/index.json (tools/fw_index.py writes it at deploy): the preset's
+// releases, newest version first, each keeping only the files with a slot in this preset.
+export function releasesFor(index, presetId) {
+  const p = PRESETS[presetId], ids = new Set(p.slots.map((s) => s.id));
+  const v = (r) => r.version.split('.').map(Number);
+  return (index?.releases || [])
+    .filter((r) => p.products.includes(r.product))
+    .map((r) => ({ ...r, files: r.files.filter((f) => ids.has(f.role)) }))
+    .filter((r) => r.files.length)
+    .sort((a, b) => { const x = v(a), y = v(b); return y[0] - x[0] || y[1] - x[1] || y[2] - x[2]; });
+}
 
 // chip: { name, imageChipId, bootOffset } from the connected loader. Returns a refusal or null.
 export function checkFile(d, addr, kind, chip, flashBytes, max, ptAt) {

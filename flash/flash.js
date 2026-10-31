@@ -1,14 +1,15 @@
 // The web flasher: esptool-js over Web Serial, the device presets and their file slots, the
 // write plan, and the session log.
 // Constraints:
-// - Files are read in the browser and go only to the serial port; the page stores nothing and
-//   sends nothing off the computer (privacy.html says so).
+// - Release images come from this site only (/flash/fw/, same origin, index.json written at
+//   deploy by tools/fw_index.py); local files are read in the browser. Both go only to the serial
+//   port; the page stores nothing and sends nothing off the computer (privacy.html says so).
 // - Erase of the whole chip is never offered on an ESP32-P4, whatever the preset: its NVS holds
 //   the hub identity, the trust ledger and pairing.
 // - Flash mode, frequency and size stay "keep": the images carry their build's settings, and a
 //   changed header would no longer match the image's appended SHA-256.
 import { ESPLoader, Transport } from './vendor/esptool-js/bundle.js';
-import { PRESETS, checkFile, customKind, parsePartitions, bootSlot, guessOffset, checkPlan, md5, hex, kb } from './image.js';
+import { PRESETS, releasesFor, checkFile, customKind, parsePartitions, bootSlot, guessOffset, checkPlan, md5, hex, kb } from './image.js?v=79e9906cf2';
 
 const $ = (id) => document.getElementById(id);
 
@@ -95,7 +96,49 @@ async function connect() {
 }
 
 // ---- the preset, its slots and the files ----
-let preset = PRESETS.garnet, rows = [];
+let preset = PRESETS.garnet, rows = [], fwIndex = null, srcTicket = 0;
+const freshRows = () => {
+  const r = preset.slots.map((s) => ({ slot: s, addr: s.addr, data: null, name: '' }));
+  return r.length ? r : [{ slot: null, addr: null, data: null, name: '' }];
+};
+
+// The release list for this preset; hidden with no index.json (a local preview) or no releases.
+function drawReleases() {
+  const rels = releasesFor(fwIndex, $('preset').value), sel = $('src');
+  sel.replaceChildren(new Option('Local files', ''), ...rels.map((r) => new Option(`${r.product} ${r.version}${r.prerelease ? ', prerelease' : ''}`, r.tag)));
+  $('src-row').hidden = !rels.length;
+  say('src-state', '');
+}
+
+// A release's files into the preset's slots, each checked against its SHA-256 in index.json.
+async function pickRelease() {
+  const tag = $('src').value, ticket = ++srcTicket;
+  rows = freshRows();
+  drawRows();
+  if (!tag) return say('src-state', '');
+  const rel = releasesFor(fwIndex, $('preset').value).find((r) => r.tag === tag);
+  say('src-state', `Fetching ${rel.tag}.`);
+  const got = freshRows();
+  try {
+    for (const f of rel.files) {
+      const res = await fetch(`/flash/fw/${rel.tag}/${f.name}`);
+      if (!res.ok) throw new Error(`${f.name}: HTTP ${res.status}`);
+      const data = new Uint8Array(await res.arrayBuffer());
+      const sha = [...new Uint8Array(await crypto.subtle.digest('SHA-256', data))].map((b) => b.toString(16).padStart(2, '0')).join('');
+      if (sha !== f.sha256) throw new Error(`${f.name}: SHA-256 does not match the release`);
+      Object.assign(got.find((r) => r.slot.id === f.role), { data, name: f.name, sha });
+      log(`release ${rel.tag}: ${f.name}, ${data.length} bytes, sha256 ${sha}`);
+    }
+  } catch (e) {
+    if (ticket !== srcTicket) return;
+    log(`release ${rel.tag}: ${e.message}`);
+    return say('src-state', `Fetch failed: ${e.message}.`, 'bad');
+  }
+  if (ticket !== srcTicket) return;
+  rows = got;
+  say('src-state', `${rel.product} ${rel.version}${rel.prerelease ? ', prerelease' : ''}: ${rel.files.length} file${rel.files.length === 1 ? '' : 's'}, SHA-256 matched.`, 'good');
+  drawRows();
+}
 
 function pickPreset() {
   preset = PRESETS[$('preset').value];
@@ -103,8 +146,9 @@ function pickPreset() {
   $('erase').checked = !!preset.erase;
   $('blank-ota').checked = !!preset.blankOta;
   for (const n of document.querySelectorAll('[data-preset]')) n.hidden = n.dataset.preset !== $('preset').value;
-  rows = preset.slots.map((s) => ({ slot: s, addr: s.addr, data: null, name: '' }));
-  if (!rows.length) rows.push({ slot: null, addr: null, data: null, name: '' });
+  srcTicket++;
+  rows = freshRows();
+  drawReleases();
   drawRows();
 }
 
@@ -135,6 +179,10 @@ function drawRows() {
       }
       refresh();
     });
+    let file = td(f);
+    if (r.sha) {
+      file = td(Object.assign(document.createElement('span'), { textContent: r.name }), document.createElement('br'), Object.assign(document.createElement('span'), { className: 'fine sha', textContent: `SHA-256 ${r.sha}` }));
+    }
     const st = td();
     st.className = 'chk';
     st.id = `chk-${i}`;
@@ -143,7 +191,7 @@ function drawRows() {
     const at = r.slot ? td(hex(r.addr)) : td(off);
     at.className = 'n';
     const tr = document.createElement('tr');
-    tr.append(at, what, td(f), st, td(rm));
+    tr.append(at, what, file, st, td(rm));
     body.append(tr);
   });
   refresh();
@@ -171,6 +219,7 @@ function refresh() {
   $('disconnect').disabled = busy;
   $('baud').disabled = busy || connected;
   $('preset').disabled = busy;
+  $('src').disabled = busy;
   const p4 = chip?.name === 'ESP32-P4';
   $('erase-row').hidden = preset.erase === null || p4;
   if ($('erase-row').hidden) $('erase').checked = false;
@@ -274,6 +323,7 @@ if (!('serial' in navigator)) {
 $('connect').addEventListener('click', connect);
 $('disconnect').addEventListener('click', () => { log('disconnected'); drop(); say('conn-state', 'Port closed.'); });
 $('preset').addEventListener('change', pickPreset);
+$('src').addEventListener('change', pickRelease);
 $('add').addEventListener('click', () => { rows.push({ slot: null, addr: null, data: null, name: '' }); drawRows(); });
 for (const id of ['erase', 'blank-ota', 'ack']) $(id).addEventListener('change', refresh);
 $('write').addEventListener('click', write);
@@ -287,3 +337,4 @@ $('copy').addEventListener('click', async () => {
 });
 $('clear').addEventListener('click', () => { lines.length = 0; $('log').textContent = ''; });
 pickPreset();
+fetch('/flash/fw/index.json').then((r) => (r.ok ? r.json() : null)).then((j) => { fwIndex = j; drawReleases(); }).catch(() => {});

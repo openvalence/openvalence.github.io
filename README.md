@@ -30,10 +30,41 @@ never rename an id once published. Add a new page's URL to `sitemap.xml`.
    root-relative links, so opening a file directly won't style it).
 3. Push to `main`.
 
-GitHub Pages serves the branch root within a minute. The lowercase page
+Every push to `main` runs `.github/workflows/pages.yml`, which deploys the
+repo (minus `tools/` and `.github/`) to GitHub Pages with every firmware
+release's files under `/flash/fw/`; the site updates a minute or two later.
+A published, edited or deleted release runs it too, and so does Run workflow
+on the Actions tab. Pages > Source is "GitHub Actions". The lowercase page
 folders sit beside the docs at `/Valence/` and the Kinetic playground at
 `/Kinetic/`, which are separate Pages sites; GitHub's paths are
 case-sensitive.
+
+## Firmware releases
+
+The web flasher at `/flash/` offers the files of every release on this repo.
+The binaries live only as release assets, never in git. Each build is one
+release:
+
+- Tag `<product>-<version>`: `nucleus-p4b-0.1.79`, `nucleus-p4-0.1.80`,
+  `barnacle-shim-0.1.78`, `garnet-0.1.1`. The product picks the flasher preset
+  (`products` in `flash/image.js`).
+- Assets: exactly the files the flasher writes, plus `SHA256SUMS.txt`. A file's
+  name picks its slot (`tools/fw_index.py`): `bootloader*.bin` 0x2000,
+  `partition*.bin` 0x8000, `ota_data*.bin` 0xF000, `*-app.bin` or
+  `firmware.bin` the app at 0x20000, any other `.bin` a full image at 0x0.
+- Prerelease while the flasher is WIP.
+- No image built with Wi-Fi credentials or a bench OTA key in `secrets.h`.
+
+```
+cd <folder holding only the release files>
+sha256sum *.bin > SHA256SUMS.txt
+gh release create nucleus-p4b-0.1.79 *.bin SHA256SUMS.txt -R openvalence/openvalence.github.io   --target main --prerelease --title "nucleus-p4b 0.1.79" --notes-file NOTES.md
+```
+
+The deploy downloads every release, refuses one whose files do not match its
+`SHA256SUMS.txt`, and writes `/flash/fw/index.json`. Check an index locally
+with `node tools/flash_check.mjs index=<path>`. Deleting a release removes it
+from the site at the next deploy.
 
 ## Custom domain
 

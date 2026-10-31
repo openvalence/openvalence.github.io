@@ -1,0 +1,59 @@
+# Deploys the site to GitHub Pages with every firmware release's files under /flash/fw/.
+# Constraints:
+# - Binaries live only as release assets on this repo, never in git. A release is tagged
+#   <product>-<version> and carries SHA256SUMS.txt; README.md has the release recipe.
+# - A file missing from SHA256SUMS.txt, or one whose hash differs, fails the deploy: the flasher
+#   trusts flash/fw/index.json.
+# - Pinned to the major versions of GitHub's static Pages starter workflow.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published, edited, deleted]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stage the site
+        run: |
+          mkdir _site
+          tar --exclude=./.git --exclude=./.github --exclude=./tools --exclude=./_site -cf - . | tar -xf - -C _site
+
+      - name: Fetch release files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release list --limit 200 --exclude-drafts --json tagName,isPrerelease,publishedAt > releases.json
+          for tag in $(jq -r '.[].tagName' releases.json); do
+            gh release download "$tag" --dir "_site/flash/fw/$tag"
+          done
+
+      - name: Verify and index
+        run: python3 tools/fw_index.py releases.json _site/flash/fw
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v5
