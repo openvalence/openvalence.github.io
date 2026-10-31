@@ -33,8 +33,10 @@ never rename an id once published. Add a new page's URL to `sitemap.xml`.
 Every push to `main` runs `.github/workflows/pages.yml`, which deploys the
 repo (minus `tools/` and `.github/`) to GitHub Pages with every firmware
 release's files under `/flash/fw/`; the site updates a minute or two later.
-A published, edited or deleted release runs it too, and so does Run workflow
-on the Actions tab. Pages > Source is "GitHub Actions". The lowercase page
+A published, edited or deleted release runs it too, once the release's tag
+points at a commit that has the workflow (GitHub reads it from the tag); for
+the releases tagged before it, `nucleus-p4b-0.1.79` and `barnacle-shim-0.1.78`,
+use Run workflow on the Actions tab or `gh workflow run pages.yml`. Pages > Source is "GitHub Actions". The lowercase page
 folders sit beside the docs at `/Valence/` and the Kinetic playground at
 `/Kinetic/`, which are separate Pages sites; GitHub's paths are
 case-sensitive.
