@@ -51,6 +51,12 @@ folders sit beside the docs at `/Valence/` and the Kinetic playground at
 `/Kinetic/`, which are separate Pages sites; GitHub's paths are
 case-sensitive.
 
+## Copy
+
+Page text follows the OpenValence string standard, whose one home is the
+rules file `.claude/rules/strings.md` in the Nucleus repo; changed copy
+runs its string pass before it is pushed.
+
 ## Firmware releases
 
 The web flasher at `/flash/` offers the files of every release on this repo.
