@@ -15,7 +15,7 @@ Plain HTML, no build step:
 - `style.css` (dark and light: `prefers-color-scheme`, overridden by `data-theme` from the header toggle and the head script in `tools/chrome.html`, which also stands Dark Reader down), `mark.svg`, `favicon.ico`, `icons/` (`icons/ui.svg` is the line-icon sprite pages use with `<use href>`)
 - `site.js`: small progressive extras (looping clips that pause off screen, the Kinetic sketch, click-to-load embeds, the downloads page's newest-release lookup from the GitHub API). Pages read fine without it, and it starts nothing moving under `prefers-reduced-motion`
 - `fonts/`: the self-hosted fonts (SIL OFL, notice in `fonts/LICENSE`)
-- `images/`: screenshots and clips (`images/phosphor/`, light and dark), PCB renders from the KiCad project (`images/hardware/`), the playground shot (`images/kinetic/`), the demo capture and the social card (`og.png`)
+- `images/`: screenshots and clips (`images/phosphor/`, light and dark), PCB renders from the KiCad project (`images/hardware/`), the playground shot (`images/kinetic/`), the demo capture, and each page's link-preview card (`images/og/<page>.png`)
 - `sitemap.xml`, `robots.txt`
 
 The site has its own look, separate from Phosphor's: Archivo (wide, heavy) for display type, the system face for text, Martian Mono for numbers, and one accent, ultramarine `#2E4BFF`, used as solid bands. The tokens sit at the top of `style.css`. Every page carries the same head, header and footer
@@ -24,6 +24,16 @@ between `<!-- chrome:* -->` markers. Edit them in `tools/chrome.html`, then run
 `h2` and `h3` in `<main>` that lacks one an id from its text, plus a `#` mark
 that copies the section's link (`site.js`); run it after adding a heading, and
 never rename an id once published. Add a new page's URL to `sitemap.xml`.
+
+Each page's head also gets its own social card: `og:title`, `og:description`,
+`og:image` and `twitter:image` come from the page's `<title>`, meta description
+and `images/og/<page>.png` (the canonical path's segments joined by `-`, `home`
+for `/`). `node tools/og.mjs` renders every card from `tools/og.html` with
+Playwright (an installed `playwright` package, or the sibling Phosphor
+checkout's); run it after adding a page or changing a title, a description or a
+figure a card borrows, then run `chrome.py`. Per-page title, subject and picture
+overrides are the `CARDS` table in `tools/og.mjs`; a page without an entry gets
+its h1, its description's first sentence and its first figure or image.
 
 1. Edit the files.
 2. Preview with `python -m http.server` from the repo root (pages use

@@ -1,19 +1,76 @@
 <!doctype html>
-<!-- The 1200x630 link-preview card (images/og.png). Render: screenshot this page at 1200x630, DPR 1, after fonts load. -->
-<html lang="en"><head><meta charset="utf-8"><title>og</title>
+<!-- The 1200x630 link-preview card template. tools/og.mjs fills it once per page (render()) and screenshots it
+     to images/og/<page>.png at DPR 1. Constraints: the card is dark whatever the visitor's theme; the page
+     figures it borrows use style.css's diagram classes, so style.css loads here and the og- classes below
+     must not collide with it. -->
+<html lang="en" data-theme="dark"><head><meta charset="utf-8"><title>og</title>
+<link rel="stylesheet" href="../style.css">
 <style>
-@font-face { font-family: 'Archivo'; src: url('../fonts/Archivo.woff2') format('woff2'); font-weight: 700 900; font-stretch: 100% 125%; }
-html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #0B0B0C; }
-.card { box-sizing: border-box; width: 1200px; height: 630px; padding: 70px 72px 0; position: relative; overflow: hidden; }
-/* the homepage h1 */
-h1 { font: 900 88px/.93 'Archivo', 'Arial Black', sans-serif; font-stretch: 118%; letter-spacing: -.015em; color: #F3F3EF; margin: 0; max-width: 16ch; text-wrap: balance; }
-/* the footer wordmark: spans the content width (8.25 font sizes), the site's --rule, a shade above the footer so the name reads in a thumbnail */
-.word { position: absolute; left: 72px; right: 72px; bottom: 34px; font: 900 128px/.8 'Archivo', 'Arial Black', sans-serif; font-size: calc(1056px / 8.25); font-stretch: 125%; letter-spacing: -.04em; color: #2C2C30; white-space: nowrap; }
-.mark { position: absolute; top: 74px; right: 72px; width: 128px; height: 128px; }
+html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: var(--bg); }
+.og { box-sizing: border-box; position: relative; width: 1200px; height: 630px; overflow: hidden; color: var(--ink); font-family: var(--text); }
+.og-top { position: absolute; left: 64px; top: 48px; display: flex; align-items: center; gap: 14px; font: 900 28px/1 var(--display); font-stretch: 112%; letter-spacing: -.01em; }
+.og-top img { width: 40px; height: 40px; }
+.og-text { position: absolute; left: 64px; top: 128px; width: 500px; height: 380px; display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+.og-title { font: 900 80px/.95 var(--display); font-stretch: 112%; letter-spacing: -.015em; text-wrap: balance; }
+.og-sub { font: 400 27px/1.32 var(--text); color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.og-vis { position: absolute; left: 604px; top: 128px; width: 532px; height: 380px; display: flex; align-items: center; justify-content: center; }
+.og-vis.frame { background: var(--bg-2); border: 1px solid var(--rule); box-sizing: border-box; }
+.og-vis > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.og-vis > img.contain { object-fit: contain; }
+.og-vis > svg { width: 100%; height: 100%; padding: 14px; box-sizing: border-box; }
+.og-rows { width: 100%; padding: 26px 30px; box-sizing: border-box; display: grid; grid-template-columns: max-content 1fr; gap: 16px 26px; align-items: baseline; }
+.og-rows .k { font: 500 25px/1.15 var(--mono); color: var(--accent-ink); white-space: nowrap; }
+.og-rows .v { font: 400 23px/1.25 var(--text); color: var(--ink); }
+.og-list { width: 100%; padding: 22px 30px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; }
+.og-list div { display: flex; gap: 20px; align-items: baseline; }
+.og-list .n { font: 500 18px/1 var(--mono); color: var(--ink-3); width: 30px; flex: none; }
+.og-list b { font: 900 25px/1.1 var(--display); font-stretch: 108%; }
+.og-list span { font: 400 20px/1.25 var(--text); color: var(--ink-2); }
+.og-list .item { display: block; }
+.og-list .item span { display: block; margin-top: 3px; }
+.og-mark { width: 240px; height: 240px; }
+.og-band { position: absolute; left: 0; right: 0; bottom: 0; height: 86px; background: var(--accent); color: var(--on-accent); display: flex; align-items: center; justify-content: space-between; padding: 0 64px; box-sizing: border-box; }
+.og-band .sec { font: 900 26px/1 var(--display); font-stretch: 118%; text-transform: uppercase; letter-spacing: .04em; }
+.og-band .url { font: 500 22px/1 var(--mono); }
 </style></head>
-<body><div class="card">
-  <h1>Open-source hardware and software for linear motion machines</h1>
-  <div class="word">OpenValence</div>
-  <img class="mark" src="../mark.svg" alt="">
-</div></body>
+<body><div class="og" id="og">
+  <div class="og-top"><img src="../mark.svg" alt="">OpenValence</div>
+  <div class="og-text"><div class="og-title" id="title"></div><div class="og-sub" id="sub"></div></div>
+  <div class="og-vis" id="vis"></div>
+  <div class="og-band"><span class="sec" id="sec"></span><span class="url" id="url"></span></div>
+</div>
+<script>
+// card: { title, subject, section, url, visual }, visual one of
+//   { img, fit, pos }  { svg, cls, crop }  { rows: [[key, text]] }  { list: [[name, text]] }  { mark: true }
+const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+async function render(card) {
+  const $ = (id) => document.getElementById(id);
+  $('title').textContent = card.title;
+  $('sub').textContent = card.subject;
+  $('sec').textContent = card.section;
+  $('url').textContent = card.url;
+  const v = card.visual, vis = $('vis');
+  vis.className = 'og-vis';
+  if (v.img) vis.innerHTML = `<img src="${v.img}" class="${v.fit === 'contain' ? 'contain' : ''}" style="object-position:${v.pos || 'center'}" alt="">`;
+  else if (v.svg) {
+    vis.classList.add('frame');
+    vis.innerHTML = `<div class="${v.cls}" style="margin:0;width:100%;height:100%;max-width:none">${v.svg}</div>`;
+    const s = vis.querySelector('svg');
+    s.removeAttribute('style');
+    if (v.crop) s.setAttribute('preserveAspectRatio', 'xMidYMin slice');
+  }
+  else if (v.rows) { vis.classList.add('frame'); vis.innerHTML = `<div class="og-rows">${v.rows.map(([k, t]) => `<span class="k">${esc(k)}</span><span class="v">${esc(t)}</span>`).join('')}</div>`; }
+  else if (v.list) { vis.classList.add('frame'); vis.innerHTML = `<div class="og-list">${v.list.slice(0, 7).map(([b, t], i) => `<div><span class="n">${String(i + 1).padStart(2, '0')}</span><span class="item"><b>${esc(b)}</b>${t ? `<span>${esc(t)}</span>` : ''}</span></div>`).join('')}</div>`; }
+  else vis.innerHTML = '<img class="og-mark" src="../mark.svg" alt="">';
+  await Promise.all([document.fonts.load('900 80px Archivo'), document.fonts.load("500 22px 'Martian Mono'")]);
+  // the title shrinks until title and subject fit their column
+  const t = $('title'), box = document.querySelector('.og-text');
+  for (let px = 80; px >= 44; px -= 4) {
+    t.style.fontSize = px + 'px';
+    if (box.scrollHeight <= box.clientHeight && t.scrollWidth <= t.clientWidth) break;
+  }
+  await Promise.all([...document.images].map((i) => i.decode().catch(() => {})));
+}
+</script>
+</body>
 </html>

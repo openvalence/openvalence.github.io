@@ -88,16 +88,42 @@ def stamp(body):
     return re.sub(r'((?:href|src)=)"(/[^"?]+\.(?:css|js))"', one, body)
 
 
+def social(text, here, page):
+    """The head block's per-page values: title, description, alt and the card's URL (tools/og.mjs's name rule:
+    the canonical path's segments joined by "-", "home" for /, else the file name; ".html" dropped)."""
+    title = html.unescape(re.search(r"<title>(.*?)</title>", text, re.S).group(1)).strip()
+    desc = re.search(r'<meta name="description" content="([^"]*)"', text)
+    desc = html.unescape(desc.group(1)) if desc else ""
+    name = re.sub(r"\.html$", "", ("-".join(p for p in here.split("/") if p) or "home") if here else page.name)
+    card = root / "images/og" / f"{name}.png"
+    if not card.is_file():
+        print(f"no card for {page.relative_to(root)}: run node tools/og.mjs; using the home card")
+        card = root / "images/og/home.png"
+    h = hashlib.sha256(card.read_bytes()).hexdigest()[:10]
+    esc = lambda s: html.escape(s, quote=True)
+    return {"{title}": esc(title), "{description}": esc(desc), "{alt}": esc(f"{title}. {desc}" if desc else title),
+            "{card}": f"https://openvalence.org/{card.relative_to(root).as_posix()}?v={h}"}
+
+
+# page-level copies of what the head block now carries; removed so each has one home
+LOCAL_SOCIAL = re.compile(r'\n<meta (?:property="og:(?:title|description)"|name="twitter:(?:title|description)") content="[^"]*">(?=\n)')
+
 blocks = {k: stamp(v) for k, v in blocks.items()}
 changed = 0
 for page in sorted(root.rglob("*.html")):
     if page.parts[len(root.parts)] in ("tools", ".git"):
         continue
-    text = page.read_text(encoding="utf-8")
+    orig = text = page.read_text(encoding="utf-8")
     canon = re.search(r'<link rel="canonical" href="https://openvalence\.org(/[^"]*)">', text)
     here = canon.group(1) if canon else None
+    if "<!-- chrome:head -->" in text:
+        text = LOCAL_SOCIAL.sub("", text)
+        values = social(text, here, page)
     def fill(m):
         body = blocks[m.group(1)]
+        if m.group(1) == "head":
+            for k, v in values.items():
+                body = body.replace(k, v)
         if here and here != "/":
             # the header link for this page or its section (/phosphor/docs/... marks Phosphor,
             # the component pages mark Components)
@@ -110,7 +136,7 @@ for page in sorted(root.rglob("*.html")):
             body = body.replace(f'class="item" href="{here}"', f'class="item" href="{here}" aria-current="page"', 1)
         return f"<!-- chrome:{m.group(1)} -->\n{body}<!-- /chrome:{m.group(1)} -->"
     new = toc(anchor(re.sub(r"<!-- chrome:(\w+) -->\n.*?<!-- /chrome:\1 -->", fill, text, flags=re.S)), page.relative_to(root))
-    if new != text:
+    if new != orig:
         page.write_text(new, encoding="utf-8", newline="\n")
         changed += 1
 print(f"{changed} page(s) updated")
