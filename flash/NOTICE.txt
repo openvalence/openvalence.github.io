@@ -16,6 +16,16 @@ pako 2.1.0
 atob-lite 2.0.0
   MIT License. Source: https://github.com/hughsk/atob-lite
 
+ESP-IDF nvs_flash and esp-idf-nvs-partition-gen
+  Copyright (c) 2015-2025 (nvs_flash), 2018-2023 (the generator)
+  Espressif Systems (Shanghai) Co. Ltd.
+  Apache License 2.0 (text in vendor/esptool-js/LICENSE).
+  Sources: https://github.com/espressif/esp-idf (components/nvs_flash),
+  https://github.com/espressif/esp-idf-nvs-partition-gen
+  nvs.js reads the NVS page format as nvs_flash defines it and places
+  entries as nvs_partition_gen.py does; the entry placement is ported from
+  that tool's Page.write_varlen_data and write_varlen_binary_data.
+
 ESPConnect
   The flasher's flow (confirm, write with progress and cancel, session log), its
   manual download-mode help, offsets read from the board's partition table and

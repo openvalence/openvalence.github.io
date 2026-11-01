@@ -8,8 +8,12 @@
 //   the hub identity, the trust ledger and pairing.
 // - Flash mode, frequency and size stay "keep": the images carry their build's settings, and a
 //   changed header would no longer match the image's appended SHA-256.
+// - Pre-program Wi-Fi: the SSID, password and hub address stay in the page and go only into the
+//   NVS row; no log line or message carries them (the log gets the NVS size and SSID length). The
+//   NVS row is written last, after every image, and only from an NVS that nvs.js parsed whole.
 import { ESPLoader, Transport } from './vendor/esptool-js/bundle.js';
-import { PRESETS, releasesFor, checkFile, customKind, parsePartitions, bootSlot, guessOffset, checkPlan, md5, hex, kb } from './image.js?v=79e9906cf2';
+import { PRESETS, releasesFor, checkFile, customKind, parsePartitions, bootSlot, guessOffset, checkPlan, md5, hex, kb } from './image.js?v=bd65b734d4';
+import { baseFor, withWifi, checkNet, blank } from './nvs.js?v=edb7ff98ca';
 
 const $ = (id) => document.getElementById(id);
 
@@ -39,6 +43,7 @@ function say(id, text, tone) {
 
 // ---- the board ----
 let transport = null, loader = null, chip = null, flashBytes = 0, parts = [], boot = null, busy = false, cancel = false;
+let nvs = null, nvsErr = null, mac = '';   // nvs: the board's NVS partition as read, { addr, data, url }
 const SIZE = (s) => { const m = /^(\d+)(KB|MB)/.exec(s || ''); return m ? m[1] * (m[2] === 'MB' ? 1048576 : 1024) : 0; };
 
 async function drop() {
@@ -46,6 +51,8 @@ async function drop() {
   transport = loader = chip = boot = null;
   parts = [];
   flashBytes = 0;
+  if (nvs?.url) URL.revokeObjectURL(nvs.url);
+  nvs = nvsErr = null;
   if (t) try { await t.disconnect(); } catch (e) {}
   $('info').hidden = true;
   refresh();
@@ -64,7 +71,7 @@ async function connect() {
     const desc = await loader.main('default_reset');
     const c = loader.chip;
     chip = { name: c.CHIP_NAME, imageChipId: c.IMAGE_CHIP_ID, bootOffset: c.BOOTLOADER_FLASH_OFFSET };
-    let mac = 'not readable';
+    mac = 'not readable';
     try { mac = await c.readMac(loader); } catch (e) {}
     const fs = await loader.detectFlashSize();
     flashBytes = SIZE(fs);
@@ -82,6 +89,7 @@ async function connect() {
     $('i-boot').textContent = boot ? boot.text + (boot.notes.length ? `; ${boot.notes.join(', ')} (rolled back)` : '') : 'no otadata';
     $('info').hidden = false;
     log(`connected: ${chip.name}, MAC ${mac}, flash ${fs || 'unknown'}, ${parts.length} partitions`);
+    if (preset.wifi) await readNvs();
     say('conn-state', `Connected: ${chip.name}.`, 'good');
   } catch (e) {
     log(`error: ${e.message}`);
@@ -93,6 +101,49 @@ async function connect() {
   }
   busy = false;
   refresh();
+}
+
+// The board's NVS partition, for the Wi-Fi option: kept as read, offered as a backup, logged by
+// SHA-256 only.
+async function readNvs() {
+  const w = preset.wifi, p = parts.find((x) => x.type === 1 && x.subtype === 2);
+  nvsErr = null;
+  if (parts.some((x) => x.type === 1 && x.subtype === 4)) nvsErr = 'the board has an nvs_keys partition (encrypted NVS)';
+  else if (p && (p.offset !== w.addr || p.size !== w.size)) nvsErr = `the board's NVS is at ${hex(p.offset)}, ${kb(p.size)}; this device keeps it at ${hex(w.addr)}, ${kb(w.size)}`;
+  if (nvsErr) return log(`NVS: ${nvsErr}`);
+  try {
+    const data = (await loader.readFlash(w.addr, w.size)).slice(0, w.size);
+    const sha = [...new Uint8Array(await crypto.subtle.digest('SHA-256', data))].map((b) => b.toString(16).padStart(2, '0')).join('');
+    nvs = { addr: w.addr, data, url: blank(data) ? null : URL.createObjectURL(new Blob([data], { type: 'application/octet-stream' })) };
+    log(`NVS ${hex(w.addr)}: ${data.length} bytes${nvs.url ? '' : ', blank'}, sha256 ${sha}`);
+  } catch (e) {
+    nvsErr = `NVS not read: ${e.message}`;
+    log(nvsErr);
+  }
+}
+
+// The Wi-Fi option against the image rows: { row } to write, { why } to refuse, {} when unused.
+function wifiPlan(writes) {
+  const w = preset.wifi, ssid = $('ssid').value, pass = $('pass').value, at = $('hub').value.trim();
+  if (!w || !ssid) return {};
+  const bad = checkNet(ssid, pass);
+  if (bad) return { why: bad };
+  let hub = null;
+  if (w.hub && at) {
+    const m = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(?::(\d{1,5}))?$/.exec(at), ip = m ? m.slice(1, 5).map(Number) : [];
+    const port = m?.[5] ? Number(m[5]) : 82;   // Nucleus ValenceHub.cpp kWsPort
+    if (!m || ip.some((o) => o > 255) || port < 1 || port > 65535) return { why: 'hub address: a.b.c.d or a.b.c.d:port' };
+    hub = { ip, port };
+  }
+  if (!chip) return { wait: true };
+  if (nvsErr) return { why: nvsErr };
+  try {
+    const { base, from } = baseFor(writes, w, nvs?.data);
+    const r = withWifi(base, w, ssid, pass, hub);
+    return { row: { addr: w.addr, data: r.image, name: 'NVS with Wi-Fi', nvs: true, ssidLen: new TextEncoder().encode(ssid).length }, r, from };
+  } catch (e) {
+    return { why: e.message };
+  }
 }
 
 // ---- the preset, its slots and the files ----
@@ -146,6 +197,11 @@ function pickPreset() {
   $('erase').checked = !!preset.erase;
   $('blank-ota').checked = !!preset.blankOta;
   for (const n of document.querySelectorAll('[data-preset]')) n.hidden = n.dataset.preset !== $('preset').value;
+  $('wifi-sec').hidden = !preset.wifi;
+  if (chip && preset.wifi && !nvs && !nvsErr && !busy) {
+    busy = true;
+    readNvs().finally(() => { busy = false; refresh(); });
+  }
   srcTicket++;
   rows = freshRows();
   drawReleases();
@@ -205,11 +261,15 @@ function rowError(r) {
   return checkFile(r.data, r.addr, kind, chip, flashBytes, r.slot?.max, r.slot?.ptAt);
 }
 
+// The images by offset, then the Wi-Fi option's NVS row last.
 function plan() {
   const writes = rows.filter((r) => r.data).map((r) => ({ addr: r.addr, data: r.data, name: r.name }));
   const ota = rows.find((r) => r.slot?.kind === 'otadata');
   if (ota && !ota.data && $('blank-ota').checked && writes.length) writes.push({ addr: ota.addr, data: new Uint8Array(ota.slot.max).fill(0xff), name: 'blank otadata' });
-  return writes.sort((a, b) => a.addr - b.addr);
+  writes.sort((a, b) => a.addr - b.addr);
+  const wifi = wifiPlan(writes);
+  if (wifi.row) writes.push(wifi.row);
+  return { writes, wifi };
 }
 
 function refresh() {
@@ -242,19 +302,29 @@ function refresh() {
   // the plan and the gate
   const list = $('plan');
   list.replaceChildren();
-  const writes = plan();
+  const { writes, wifi } = plan();
   let why = null, notes = [];
   if (!connected) why = 'Connect first.';
   else if (preset.chip && chip.name !== preset.chip) why = `The board is ${chip.name}; this preset is for ${preset.chip}.`;
   else {
     const bad = rows.find((r) => rowError(r));
     if (bad) why = `Refused: ${bad.name}: ${rowError(bad)}.`;
+    else if (wifi.why) why = `Wi-Fi refused: ${wifi.why}. Clear the SSID to write the images alone.`;
     else {
       const pc = checkPlan(writes, parts);
       if (pc.error) why = pc.error[0].toUpperCase() + pc.error.slice(1) + '.';
       else notes = pc.notes;
     }
   }
+  // the Wi-Fi section's status and backup
+  if (!$('ssid').value) say('wifi-state', 'Empty SSID: NVS untouched.');
+  else if (wifi.wait) say('wifi-state', "Connect to read the board's NVS.");
+  else if (wifi.why) say('wifi-state', `Refused: ${wifi.why}. NVS untouched.`, 'bad');
+  else if (wifi.r) {
+    const r = wifi.r, kept = r.fresh ? (wifi.from === 'image' ? 'fresh NVS: the image blanks it' : 'fresh NVS') : `${r.entries - 1} other entries kept`;
+    say('wifi-state', `Slot ${r.slot + 1} of ${r.count}; ${kept}${r.reset ? '; the stored list did not read and starts over' : ''}.`, 'good');
+  }
+  $('nvs-save').disabled = busy || !nvs?.url;
   if (connected && !why && preset === PRESETS.p4 && boot?.slot === 'ota_1' && writes.some((w) => w.addr === 0x20000) && !writes.some((w) => w.addr === 0xf000)) {
     notes.push('otadata selects ota_1: the board keeps booting ota_1, not this app. Tick the blank otadata box.');
   }
@@ -269,7 +339,8 @@ function refresh() {
 
 // ---- the write ----
 async function write() {
-  const writes = plan();
+  const { writes } = plan();
+  const nv = writes.find((w) => w.nvs);
   busy = true;
   cancel = false;
   $('cancel').disabled = false;
@@ -293,6 +364,7 @@ async function write() {
       },
       calculateMD5Hash: md5,
     });
+    if (nv) log(`Wi-Fi: ${nv.data.length} bytes NVS written, SSID length ${nv.ssidLen}`);
     say('write-state', 'Written and verified. Resetting.');
     await loader.after('hard_reset');
     log('hard reset');
@@ -326,6 +398,19 @@ $('preset').addEventListener('change', pickPreset);
 $('src').addEventListener('change', pickRelease);
 $('add').addEventListener('click', () => { rows.push({ slot: null, addr: null, data: null, name: '' }); drawRows(); });
 for (const id of ['erase', 'blank-ota', 'ack']) $(id).addEventListener('change', refresh);
+for (const id of ['ssid', 'pass', 'hub']) $(id).addEventListener('input', refresh);
+$('pass-show').addEventListener('click', () => {
+  const show = $('pass').type === 'password';
+  $('pass').type = show ? 'text' : 'password';
+  $('pass-show').textContent = show ? 'Hide' : 'Show';
+  $('pass-show').setAttribute('aria-pressed', String(show));
+});
+$('nvs-save').addEventListener('click', () => {
+  if (!nvs?.url) return;
+  const name = `nvs-${String(mac).replace(/[^0-9a-f]/gi, '') || 'board'}-${hex(nvs.addr)}.bin`;
+  Object.assign(document.createElement('a'), { href: nvs.url, download: name }).click();
+  log(`NVS backup saved: ${nvs.data.length} bytes`);
+});
 $('write').addEventListener('click', write);
 $('cancel').addEventListener('click', () => { cancel = true; $('cancel').disabled = true; say('write-state', 'Cancelling after this block.'); });
 $('copy').addEventListener('click', async () => {

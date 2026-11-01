@@ -4,7 +4,8 @@
 // - Preset offsets come from the build configs and release notes named beside each preset. Change
 //   them there first, then here.
 // - The P4 preset never erases the chip: NVS holds the hub identity, the trust ledger and pairing.
-//   Its slot limits keep every write clear of NVS (0x9000 to 0xF000).
+//   Its slot limits keep every write clear of NVS (0x9000 to 0xF000); the one write there is the
+//   Wi-Fi option's NVS image (nvs.js), which keeps every other entry.
 // - otadata follows ESP-IDF esp_ota_select_entry_t and bootloader_common_ota_select_crc; see
 //   bootSlot().
 
@@ -24,12 +25,17 @@ export const PRESETS = {
   garnet: {
     // Garnet/platformio.ini env m5_remote (16 MB, partitions.csv); FLASHING.txt: one image at 0x0
     name: 'Garnet remote', chip: 'ESP32-S3', baud: 921600, erase: false, products: ['garnet'],
+    // Garnet src/net/wifi.cpp (namespace "garnet", blob "nets", legacy strings wifi_ssid/wifi_pass)
+    // and src/app/session.cpp (blobs hub_ip, inet_addr order, and hub_port, u16le)
+    wifi: { addr: 0x9000, size: 0x6000, ns: 'garnet', legacy: 'strings', hub: true },
     slots: [{ id: 'image', label: 'Factory image', hint: 'garnet-*.factory.bin', addr: 0x0, kind: 'merged', max: 16 * MB, ptAt: 0x8000 }],
   },
   p4: {
     // Nucleus flagship_p4/partitions.csv and sdkconfig (BOOTLOADER_OFFSET 0x2000, PARTITION_TABLE_OFFSET
     // 0x8000); the slot limits are the gaps to the next region
     name: 'Nucleus P4 recovery', chip: 'ESP32-P4', baud: 921600, erase: null, blankOta: true, products: ['nucleus-p4b', 'nucleus-p4'],
+    // flagship_p4 src/hub/ValenceProvisioning.cpp (namespace "valence", blob "nets", legacy blob "sta")
+    wifi: { addr: 0x9000, size: 0x6000, ns: 'valence', legacy: 'sta', hub: false },
     slots: [
       { id: 'boot', label: 'Bootloader', hint: 'bootloader.bin', addr: 0x2000, kind: 'boot', max: 0x6000 },
       { id: 'pt', label: 'Partition table', hint: 'partitions.bin', addr: 0x8000, kind: 'pt', max: 0x1000 },
@@ -100,16 +106,17 @@ export function parsePartitions(d) {
   return out;
 }
 
-// esp_rom_crc32_le(UINT32_MAX, &ota_seq, 4): the register starts at 0, not 0xFFFFFFFF, so this is
-// not the common CRC32. otatool.py spells it binascii.crc32(data, 0xFFFFFFFF).
-export function otaCrc(seq) {
+// esp_rom_crc32_le(UINT32_MAX, d, len), as otadata and NVS use it: the register starts at 0, not
+// 0xFFFFFFFF, so this is not the common CRC32. Python spells it binascii.crc32(d, 0xFFFFFFFF).
+export function crc32(d) {
   let c = 0;
-  for (let i = 0; i < 4; i++) {
-    c ^= (seq >>> (8 * i)) & 0xff;
+  for (const b of d) {
+    c ^= b;
     for (let k = 0; k < 8; k++) c = c & 1 ? (c >>> 1) ^ 0xedb88320 : c >>> 1;
   }
   return ~c >>> 0;
 }
+export const otaCrc = (seq) => crc32([0, 8, 16, 24].map((s) => (seq >>> s) & 0xff));
 
 const OTA_STATE = { 0: 'new', 1: 'pending verify', 2: 'valid', 3: 'invalid', 4: 'aborted', 0xffffffff: 'undefined' };
 // What the bootloader boots next, per bootloader_utility_get_selected_boot_partition: two
@@ -147,12 +154,13 @@ export function guessOffset(name, chip, parts) {
   return app ? app.offset : null;
 }
 
-// writes: [{ addr, data, name }]. Refusals for overlap and alignment, and notes for writes that
-// land on NVS. Returns { error } or { notes }.
+// writes: [{ addr, data, name, nvs }]. Refusals for overlap and alignment, and notes for writes
+// that land on NVS. The Wi-Fi option's row (nvs: true) is written last and may overlap a full
+// image. Returns { error } or { notes }.
 export function checkPlan(writes, parts) {
   if (!writes.length) return { error: 'no files chosen' };
-  const s = [...writes].sort((a, b) => a.addr - b.addr);
-  for (const w of s) if (w.addr % 0x1000) return { error: `${w.name}: ${hex(w.addr)} is not on a 4 KB sector boundary` };
+  for (const w of writes) if (w.addr % 0x1000) return { error: `${w.name}: ${hex(w.addr)} is not on a 4 KB sector boundary` };
+  const s = writes.filter((w) => !w.nvs).sort((a, b) => a.addr - b.addr);
   for (let i = 1; i < s.length; i++) {
     if (s[i - 1].addr + s[i - 1].data.length > s[i].addr) return { error: `${s[i - 1].name} and ${s[i].name} overlap at ${hex(s[i].addr)}` };
   }

@@ -93,7 +93,8 @@
 .ack input { flex: none; width: 20px; height: 20px; margin: .2em 0 0; accent-color: var(--accent); }
 .field { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 0 0 16px; }
 .field label { font: 900 .7rem/1.2 var(--display); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
-.tool select, .tool input[type=text] { font: 400 .9rem var(--text); color: var(--ink); background: var(--bg-2); border: 2px solid var(--rule); border-radius: 0; padding: 8px 10px; }
+#wifi-sec .field label { min-width: 8.5em; }
+.tool select, .tool input[type=text], .tool input[type=password] { font: 400 .9rem var(--text); color: var(--ink); background: var(--bg-2); border: 2px solid var(--rule); border-radius: 0; padding: 8px 10px; }
 .tool select:focus-visible, .tool input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .tool input.off { width: 9.5em; font: 400 .8rem var(--mono); }
 .tool input[type=file] { max-width: 100%; font: 400 .85rem var(--text); color: var(--ink-2); }
@@ -106,7 +107,7 @@
 .regs .n { font: 400 .8rem var(--mono); white-space: nowrap; color: var(--ink); }
 .regs .chk { font-size: .85rem; }
 .regs .sha { font: 400 .72rem/1.5 var(--mono); word-break: break-all; }
-.regs .x { font: 700 .8rem var(--text); color: var(--ink-2); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
+.tool .x { font: 700 .8rem var(--text); color: var(--ink-2); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
 ol.run { list-style: none; padding-left: 0; font: 400 .82rem/1.5 var(--mono); white-space: pre-wrap; }
 ol.run li { margin: 0; }
 .run li.bad { color: var(--bad); }
@@ -192,7 +193,7 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
       </select>
     </div>
     <div data-preset="garnet">
-      <p>The OSSM M5 Remote on a CoreS3 or CoreS3 SE. One full image at 0x0: bootloader, partition table and app. The image blanks NVS (0x9000 to 0xF000), so the saved Wi-Fi and key map go with it.</p>
+      <p>The OSSM M5 Remote on a CoreS3 or CoreS3 SE. One full image at 0x0: bootloader, partition table and app. The image blanks NVS (0x9000 to 0xF000), so the saved Wi-Fi and key map go with it; Pre-program Wi-Fi puts a network back.</p>
     </div>
     <div data-preset="p4" hidden>
       <p>Nucleus on the OSSM Flagship, or nucleus-p4b on a barnacle's Stamp-P4. Bootloader at 0x2000, partition table at 0x8000, otadata at 0xF000, app at 0x20000 (slot ota_0). Each file is optional. The chip is never erased: NVS holds the hub identity, the trust ledger and pairing.</p>
@@ -253,6 +254,28 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
     <label class="ack" data-preset="p4" hidden><input type="checkbox" id="blank-ota"><span>No otadata file: write a blank one, so the board boots ota_0.</span></label>
   </section>
 
+  <section class="tool" id="wifi-sec" aria-labelledby="s-wifi">
+    <h2 id="s-wifi">Pre-program Wi-Fi<a class="hl" href="#s-wifi" aria-label="Copy link to this section"></a></h2>
+    <p>Optional. Saves one network to the board's NVS after the images, so it joins on first boot. The same SSID is replaced; a full list of four drops its last network. Every other NVS entry is kept.</p>
+    <div class="field">
+      <label for="ssid">SSID</label>
+      <input type="text" id="ssid" maxlength="32" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="pass">Password</label>
+      <input type="password" id="pass" maxlength="64" autocomplete="new-password" spellcheck="false">
+      <button class="x" id="pass-show" type="button" aria-pressed="false" aria-controls="pass">Show</button>
+    </div>
+    <div class="field" data-preset="garnet">
+      <label for="hub">Hub address</label>
+      <input type="text" id="hub" placeholder="192.168.1.20:82" autocomplete="off" spellcheck="false">
+      <span class="fine">Optional. Skips discovery; port 82 when left out.</span>
+    </div>
+    <p id="wifi-state" class="state" role="status"></p>
+    <div class="btns"><button class="btn" id="nvs-save" type="button" disabled>Save NVS backup</button></div>
+    <p class="fine">The network goes only to the board: never stored by this page, never in the log (it records the NVS size and SSID length). The backup is the board's NVS as read, saved passwords included.</p>
+  </section>
+
   <section class="tool" aria-labelledby="s-write">
     <h2 id="s-write">Write<a class="hl" href="#s-write" aria-label="Copy link to this section"></a></h2>
     <p>The plan, in order:</p>
@@ -284,6 +307,6 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
 </footer>
 <!-- /chrome:footer -->
 
-<script type="module" src="/flash/flash.js?v=8ea8559602"></script>
+<script type="module" src="/flash/flash.js?v=cd6fe63e16"></script>
 </body>
 </html>
