@@ -185,12 +185,13 @@
     <p>The <a href="/guides/servo-setup/">motor setup</a> tool finds the motor at any baud rate and applies the barnacle's settings. It runs in Chrome or Edge on a desktop, and it is WIP. Unplug the adapter when you are done: the barnacle does not use RS485.</p>
 
     <h3 id="flash">1. Flash the firmware<a class="hl" href="#flash" aria-label="Copy link to this section"></a></h3>
-    <p>Flash both boards before any wire goes on, from the <a href="/flash/">web flasher</a> in Chrome or Edge on a desktop. Pick the newest release under Source.</p>
-    <ul>
+    <p>Flash both boards before any wire goes on, from the <a href="/flash/">web flasher</a> in Chrome or Edge on a desktop. Pick the newest release under Source. On a board that is already wired, disconnect the wires from J8 first.</p>
+    <ol>
+      <li>The WROOM, over the R+D board's USB-C, with nothing else powering the board: device Barnacle helper shim, release barnacle-shim 0.1.82 or newer. After this it needs USB only for recovery.</li>
       <li>The Stamp-P4, over its own USB-C: device Nucleus recovery, release nucleus-p4b. To have it join your network on first boot, fill in Pre-program Wi-Fi before you write.</li>
-      <li>The WROOM, over the R+D board's USB-C, with nothing else powering the board: device Barnacle helper shim, release barnacle-shim.</li>
-    </ul>
-    <p>Later Stamp updates go over the network from <a href="/phosphor/">Phosphor</a>: on the machine's System page, the Firmware card takes the release's app image (nucleus-p4b-<i>version</i>-app.bin, from the <a href="https://github.com/openvalence/openvalence.github.io/releases">release on GitHub</a>). Press Update, then double-press PAIR at the machine: on the barnacle, S2 on the R+D board. The WROOM never starts its radio, so its updates go over USB.</p>
+    </ol>
+    <p>Later updates go over the network from <a href="/phosphor/">Phosphor</a>: on the machine's System page, the Firmware card takes the release's app image (nucleus-p4b-<i>version</i>-app.bin, from the <a href="https://github.com/openvalence/openvalence.github.io/releases">release on GitHub</a>). Press Update, then double-press PAIR at the machine: on the barnacle, S2 on the R+D board.</p>
+    <p>Each nucleus-p4b image carries the WROOM's firmware. When the WROOM runs any other build, the Stamp installs its copy over J8 as soon as no motion runs, in about 40 s (an estimate, not yet measured). Starting that update unhomes the machine: home it again once the update finishes. Motion started during the update stops it, the WROOM keeps its old firmware, and the update starts over once motion stops. A WROOM on a barnacle-shim release older than 0.1.82 cannot take updates this way: the machine logs that and works as before until you flash it over USB once.</p>
 
     <h3 id="prep-stamp">2. Prep the Stamp<a class="hl" href="#prep-stamp" aria-label="Copy link to this section"></a></h3>
     <p>Plug the Stamp-AddOn C6 into the SDIO connector, at the lower left of the Stamp's top side, beside the USB-C.</p>
@@ -380,7 +381,7 @@
       <p class="big-line">The firmware is WIP. Both pieces are prereleases on the web flasher.</p>
       <ul>
         <li>nucleus-p4b, the Nucleus build for the barnacle: A on LPG1, B on LPG0, TRIP on LPG8 (active low), the link on G27 (TX) and G26 (RX) at 115200 baud, internal pull-ups on RX and TRIP.</li>
-        <li>The WROOM shim firmware: streams button, current and voltage to the P4, drives the RGB LED on request, and pulls TRIP on a current spike during homing, at the threshold the P4 sets for each home. Outside homing the current sensor only reports.</li>
+        <li>The WROOM shim firmware: streams button, current and voltage to the P4, drives the RGB LED on request, and pulls TRIP on a current spike during homing, at the threshold the P4 sets for each home. Outside homing the current sensor only reports. It takes its updates from the P4 over J8, and runs a new image on trial until the P4 confirms it.</li>
         <li>The <a href="/guides/servo-setup/">motor setup</a> tool for step 0.</li>
         <li>The <a href="/flash/">web flasher</a> for the Stamp-P4 and WROOM images, from Chrome or Edge.</li>
       </ul>
