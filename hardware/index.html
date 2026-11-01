@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hardware: OpenValence</title>
-<meta name="description" content="The OSSM Flagship is a 75 x 75 mm open-source controller PCB: ESP32-P4 plus ESP32-C6, quadrature and RS485 to a servo drive. KiCad 10, still in design.">
+<meta name="description" content="The OSSM Flagship is a 75 x 75 mm open-source controller PCB: ESP32-P4 plus ESP32-C6, quadrature and RS485 to the motor. KiCad 10, still in design.">
 <link rel="canonical" href="https://openvalence.org/hardware/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/hardware/">
@@ -71,14 +71,14 @@
 <script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:title" content="Hardware: OpenValence">
-<meta property="og:description" content="The OSSM Flagship is a 75 x 75 mm open-source controller PCB: ESP32-P4 plus ESP32-C6, quadrature and RS485 to a servo drive. KiCad 10, still in design.">
+<meta property="og:description" content="The OSSM Flagship is a 75 x 75 mm open-source controller PCB: ESP32-P4 plus ESP32-C6, quadrature and RS485 to the motor. KiCad 10, still in design.">
 <meta property="og:image" content="https://openvalence.org/images/og/hardware.png?v=e80e478aaf">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hardware: OpenValence. The OSSM Flagship is a 75 x 75 mm open-source controller PCB: ESP32-P4 plus ESP32-C6, quadrature and RS485 to a servo drive. KiCad 10, still in design.">
+<meta property="og:image:alt" content="Hardware: OpenValence. The OSSM Flagship is a 75 x 75 mm open-source controller PCB: ESP32-P4 plus ESP32-C6, quadrature and RS485 to the motor. KiCad 10, still in design.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Hardware: OpenValence">
-<meta name="twitter:description" content="The OSSM Flagship is a 75 x 75 mm open-source controller PCB: ESP32-P4 plus ESP32-C6, quadrature and RS485 to a servo drive. KiCad 10, still in design.">
+<meta name="twitter:description" content="The OSSM Flagship is a 75 x 75 mm open-source controller PCB: ESP32-P4 plus ESP32-C6, quadrature and RS485 to the motor. KiCad 10, still in design.">
 <meta name="twitter:image" content="https://openvalence.org/images/og/hardware.png?v=e80e478aaf">
 <!-- /chrome:head -->
 </head>
@@ -121,7 +121,7 @@
   <section class="opening">
     <h1>OSSM Flagship PCB</h1>
     <!-- Hardware origin/main flagship/FEATURES.md intro; SPEC.md 2026-09-26 "Board outline 75 x 75 mm" (85 mm inner-diameter housing) supersedes FEATURES' 58 x 58 -->
-    <p class="lede">A 75 x 75 mm controller PCB that sits in an 85 mm round housing. It takes a 36 V supply, powers and commands a servo drive, and talks to the outside world through an ESP32-P4 with a stacked ESP32-C6.</p>
+    <p class="lede">A 75 x 75 mm controller PCB that sits in an 85 mm round housing. It takes a 36 V supply, powers and commands the motor, and talks to the outside world through an ESP32-P4 with a stacked ESP32-C6.</p>
     <p>It runs <a href="/nucleus/">Nucleus</a>. The design is under <span class="nb">CERN-OHL-S-2.0</span>.</p>
   </section>
 
@@ -155,8 +155,8 @@
         <a class="spot" href="#part-regen-resistors" aria-label="5: Regen load resistors (pair)" style="left:34.76%;top:43.02%"><span aria-hidden="true">5</span><span class="bub">Regen load resistors (pair)</span></a>
         <a class="spot" href="#part-regen-clamp" aria-label="6: Regen clamp switch" style="left:50.0%;top:42.01%"><span aria-hidden="true">6</span><span class="bub">Regen clamp switch</span></a>
         <a class="spot" href="#part-motor-switch" aria-label="7: Motor switch (smart high-side)" style="left:80.03%;top:46.19%"><span aria-hidden="true">7</span><span class="bub">Motor switch (smart high-side)</span></a>
-        <a class="spot" href="#part-quad-buffer" aria-label="8: Quadrature buffer to the drive" style="left:72.86%;top:72.15%"><span aria-hidden="true">8</span><span class="bub">Quadrature buffer to the drive</span></a>
-        <a class="spot" href="#part-rs485" aria-label="9: RS485 transceiver (drive comms)" style="left:28.68%;top:71.44%"><span aria-hidden="true">9</span><span class="bub">RS485 transceiver (drive comms)</span></a>
+        <a class="spot" href="#part-quad-buffer" aria-label="8: Quadrature buffer to the motor" style="left:72.86%;top:72.15%"><span aria-hidden="true">8</span><span class="bub">Quadrature buffer to the motor</span></a>
+        <a class="spot" href="#part-rs485" aria-label="9: RS485 transceiver (motor comms)" style="left:28.68%;top:71.44%"><span aria-hidden="true">9</span><span class="bub">RS485 transceiver (motor comms)</span></a>
         <a class="spot" href="#part-home-button" aria-label="10: HOME button" style="left:28.04%;top:83.59%"><span aria-hidden="true">10</span><span class="bub">HOME button</span></a>
         <a class="spot" href="#part-pair-button" aria-label="11: PAIR button" style="left:71.96%;top:83.59%"><span aria-hidden="true">11</span><span class="bub">PAIR button</span></a>
         <a class="spot" href="#part-status-led" aria-label="12: Status LED" style="left:50.0%;top:50.0%"><span aria-hidden="true">12</span><span class="bub">Status LED</span></a>
@@ -170,9 +170,9 @@
         <li id="part-input-fuse"><b>Input fuse</b><span>15 A soldered fuse, the last-resort backstop against a dead short from a stiff supply.</span></li>
         <li id="part-regen-resistors"><b>Regen load resistors (pair)</b><span>Two 15 ohm power resistors in parallel (7.5 ohm) that burn off the energy a back-driven motor pumps into the bus; each handles about 6.8 W mean and 132 W bursts at worst case.</span></li>
         <li id="part-regen-clamp"><b>Regen clamp switch</b><span>Connects the resistors across the bus above 44.5 V and releases below 43.2 V, before the supply&#x27;s overvoltage trip, with no firmware involved.</span></li>
-        <li id="part-motor-switch"><b>Motor switch (smart high-side)</b><span>TPS48111 gates bus power to the motor XT30: soft pre-charge of the drive, latching trips at 15.2 A (10 ms) and 30 A (1.2 us), and the E-stop or an overvoltage cuts it in hardware.</span></li>
-        <li id="part-quad-buffer"><b>Quadrature buffer to the drive</b><span>74AHCT125 lifts the P4&#x27;s A/B pulses to 5 V for the drive&#x27;s opto inputs.</span></li>
-        <li id="part-rs485"><b>RS485 transceiver (drive comms)</b><span>THVD1450 carries Modbus to the drive, with ESD protection and an optional 120 ohm termination; the drive&#x27;s position comes back over it.</span></li>
+        <li id="part-motor-switch"><b>Motor switch (smart high-side)</b><span>TPS48111 gates bus power to the motor XT30: soft pre-charge of the motor, latching trips at 15.2 A (10 ms) and 30 A (1.2 us), and the E-stop or an overvoltage cuts it in hardware.</span></li>
+        <li id="part-quad-buffer"><b>Quadrature buffer to the motor</b><span>74AHCT125 lifts the P4&#x27;s A/B pulses to 5 V for the motor&#x27;s opto inputs.</span></li>
+        <li id="part-rs485"><b>RS485 transceiver (motor comms)</b><span>THVD1450 carries Modbus to the motor, with ESD protection and an optional 120 ohm termination; the motor&#x27;s position comes back over it.</span></li>
         <li id="part-home-button"><b>HOME button</b><span>Press to home, hold to reset; there is no separate reset button.</span></li>
         <li id="part-pair-button"><b>PAIR button</b><span>Press to open a 120 s pairing window. Hold it while powering on for config mode: Bluetooth and USB only, no Wi-Fi.</span></li>
         <li id="part-status-led"><b>Status LED</b><span>Addressable status LED, level-shifted to 5 V so the colors stay reliable.</span></li>
@@ -193,14 +193,14 @@
 
   <section class="aside" aria-labelledby="s-drive">
     <div>
-      <h2 id="s-drive">Drive interface<a class="hl" href="#s-drive" aria-label="Copy link to this section"></a></h2>
+      <h2 id="s-drive">Motor interface<a class="hl" href="#s-drive" aria-label="Copy link to this section"></a></h2>
       <!-- Hardware origin/main flagship/FEATURES.md:3-6 (60AIM40F 200 W, 60AIM40 350 W); "Drive interface"; flagship/SPEC.md "Fixed facts" -->
-      <p>The target is the YZ 60AIM40F integrated servo (200 W). The PCB is also built to drive the 350 W 60AIM40. It talks to the drive three ways.</p>
+      <p>The target motor is the YZ 60AIM40F (200 W). The PCB is also built to drive the 350 W 60AIM40. It talks to the motor three ways.</p>
     </div>
     <ul class="facts">
-      <li><b>Quadrature</b><p>A and B come from the P4's low-power core, buffered to 5 V, straight into the drive's opto inputs.</p></li>
-      <li><b>RS485 Modbus</b><p>Used for reads such as position. The PCB also supplies the drive's 485-side 5 V, so one cable carries signal and power for the drive's comms side.</p></li>
-      <li><b>Alarm and ready inputs</b><p>The drive's alarm and ready lines go to the P4, so a drive fault reaches the firmware directly.</p></li>
+      <li><b>Quadrature</b><p>A and B come from the P4's low-power core, buffered to 5 V, straight into the motor's opto inputs.</p></li>
+      <li><b>RS485 Modbus</b><p>Used for reads such as position. The PCB also supplies the motor's 485-side 5 V, so one cable carries signal and power for the motor's comms side.</p></li>
+      <li><b>Alarm and ready inputs</b><p>The motor's alarm and ready lines go to the P4, so a motor fault reaches the firmware directly.</p></li>
     </ul>
   </section>
 

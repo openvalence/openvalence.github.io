@@ -38,7 +38,7 @@ const ALARMS = { 0: 'none', 0x10: 'battery (the motor keeps running)', 0x12: 'ov
 
 // [address, name, meaning(raw value, all raw values), registers read together]
 const REGS = [
-  [0x00, 'Modbus control', (v) => (v === 0 ? 'off: the pulse input is live' : 'on: the drive ignores its pulse input')],
+  [0x00, 'Modbus control', (v) => (v === 0 ? 'off: the pulse input is live' : 'on: the motor ignores its pulse input')],
   [0x01, 'Output enable', (v) => (v === 0 ? 'off' : v === 1 ? 'on' : `on: the manual lists 0 and 1; a 60AIM40F reads ${v} with Modbus control off`)],
   [0x02, 'Speed limit', (v) => `${v} rpm`],
   [0x03, 'Acceleration', (v) => (v <= 60000 ? `${v} rpm/s` : `full ramp plus ${v - 60000} % feed-forward`)],
@@ -247,7 +247,7 @@ async function scan(stateId, first = []) {
           log(`found: ${b} baud, address ${a}, 0x15 reads ${r.regs[0]}`);
           return { baud: b, addr: a, id: r.regs[0] };
         }
-        if (r.kind === 'exception') odd.push(`${b} baud, address ${a} answered with exception ${r.code}: not this drive's register map`);
+        if (r.kind === 'exception') odd.push(`${b} baud, address ${a} answered with exception ${r.code}: not this motor's register map`);
       }
     }
   }
@@ -264,7 +264,7 @@ async function readAll() {
   }
   raw = next;
   render();
-  if (raw[0x15] === undefined) throw new Error('the drive stopped answering');
+  if (raw[0x15] === undefined) throw new Error('the motor stopped answering');
 }
 
 function render() {
@@ -282,10 +282,10 @@ function render() {
   }
   $('regs').hidden = false;
   const notes = [];
-  if (raw[0x15] !== undefined && raw[0x15] !== addr) notes.push(`0x15 reads ${raw[0x15]} but the drive answered at address ${addr}.`);
+  if (raw[0x15] !== undefined && raw[0x15] !== addr) notes.push(`0x15 reads ${raw[0x15]} but the motor answered at address ${addr}.`);
   if (addr !== 1) notes.push('Nucleus on the Flagship talks to address 1 only. A barnacle build does not use RS485.');
-  if (raw[0x0E]) notes.push(`The drive reports an alarm: ${ALARMS[raw[0x0E]] || 'code ' + raw[0x0E]}.`);
-  if (raw[0x00]) notes.push('Modbus control is on, so the drive ignores pulses. Release it below, or let the preset write release it.');
+  if (raw[0x0E]) notes.push(`The motor reports an alarm: ${ALARMS[raw[0x0E]] || 'code ' + raw[0x0E]}.`);
+  if (raw[0x00]) notes.push('Modbus control is on, so the motor ignores pulses. Release it below, or let the preset write release it.');
   $('drive-notes').textContent = notes.join(' ');
   renderDiff();
 }
@@ -305,7 +305,7 @@ function ready() {
   const r = raw || {};
   const rows = [
     [r[0x15] === 1, `0x15 address reads ${r[0x15] ?? 'nothing'}; the firmware talks to address 1`],
-    [r[0x00] === 0, `0x00 Modbus control ${r[0x00] ?? '?'}: must be 0, or the drive ignores the pulse input`],
+    [r[0x00] === 0, `0x00 Modbus control ${r[0x00] ?? '?'}: must be 0, or the motor ignores the pulse input`],
     [r[0x01] !== undefined && r[0x01] !== 0, `0x01 output enable ${r[0x01] ?? '?'}: must not be 0`],
     [r[0x19] === 2, `0x19 input mode ${r[0x19] ?? '?'}: must be 2, A/B quadrature`],
     [r[0x07] !== undefined && r[0x07] % 2 === 0, `0x07 position loop gain ${r[0x07] ?? '?'}: must be even, alarm output normally open`],
@@ -343,7 +343,7 @@ function renderDiff() {
     });
   }
   $('diff').hidden = !rows.length;
-  say('apply-state', !raw ? 'Find the drive first.' : rows.length ? `${rows.length} register${rows.length > 1 ? 's' : ''} to change.` : 'The drive matches the preset. Nothing to write.', raw && !rows.length ? 'good' : '');
+  say('apply-state', !raw ? 'Find the motor first.' : rows.length ? `${rows.length} register${rows.length > 1 ? 's' : ''} to change.` : 'The motor matches the preset. Nothing to write.', raw && !rows.length ? 'good' : '');
   ready();
 }
 
@@ -353,7 +353,7 @@ async function stillCheck() {
   const s1 = await readRegs(0x10), e1 = await readRegs(0x16, 2);
   await sleep(200);
   const s2 = await readRegs(0x10), e2 = await readRegs(0x16, 2);
-  if (!s1 || !e1 || !s2 || !e2) throw new Error('the drive stopped answering');
+  if (!s1 || !e1 || !s2 || !e2) throw new Error('the motor stopped answering');
   const v = Math.max(Math.abs(s16(s1[0])), Math.abs(s16(s2[0]))), de = Math.abs(s32(e2[0], e2[1]) - s32(e1[0], e1[1]));
   if (v >= 10 || de > 64) {
     step(`Refused: the motor is turning (${(v / 10).toFixed(1)} rpm, ${de} counts in 200 ms). Stop whatever drives it, then try again.`, true);
@@ -370,23 +370,23 @@ async function find() {
   render0();
   const f = await scan('find-state');
   if (!f) {
-    if (!stop) say('find-state', 'No drive answered at any rate or address. Check motor power, the 5 V and COM wires, and try A and B swapped.', 'bad');
+    if (!stop) say('find-state', 'No motor answered at any rate or address. Check motor power, the 5 V and COM wires, and try A and B swapped.', 'bad');
     else say('find-state', 'Stopped.');
     return;
   }
   addr = f.addr;
   await readAll();
-  say('find-state', `Found the drive at ${f.baud} baud, address ${f.addr}.`, 'good');
+  say('find-state', `Found the motor at ${f.baud} baud, address ${f.addr}.`, 'good');
   $('baud-now').textContent = baudNow();
 }
 
-const baudNow = () => (linkBaud === TARGET_BAUD ? `The drive is at ${TARGET_BAUD} baud already.` : `The drive is at ${linkBaud} baud.`);
+const baudNow = () => (linkBaud === TARGET_BAUD ? `The motor is at ${TARGET_BAUD} baud already.` : `The motor is at ${linkBaud} baud.`);
 
 function render0() {
   $('regs').hidden = true;
   $('diff').hidden = true;
   $('drive-notes').textContent = '';
-  say('apply-state', 'Find the drive first.');
+  say('apply-state', 'Find the motor first.');
   $('ready').replaceChildren();
 }
 
@@ -434,7 +434,7 @@ async function apply() {
   await w(0x01, 1, false);
   await readAll();
   step(`After the save: 0x19 reads ${raw[0x19]}, 0x00 reads ${raw[0x00]} (Modbus control stays on until the power cycle).`);
-  say('apply-state', 'Saved. Power-cycle the drive now: it ignores its pulse input until then. Then check.', 'good');
+  say('apply-state', 'Saved. Power-cycle the motor now: it ignores its pulse input until then. Then check.', 'good');
 }
 
 async function changeBaud() {
@@ -449,13 +449,13 @@ async function changeBaud() {
     await sleep(30);
     step(`${h2x(a)} = ${v}: ${r.kind === 'ok' ? 'acknowledged' : 'no acknowledgement'}`, r.kind !== 'ok');
     if (r.kind !== 'ok') {
-      step('Stopped. Power-cycle the drive: unsaved values revert. Then find it again; the scan covers every rate.', true);
-      say('baud-state', 'Not changed. Power-cycle the drive and find it again.', 'bad');
+      step('Stopped. Power-cycle the motor: unsaved values revert. Then find it again; the scan covers every rate.', true);
+      say('baud-state', 'Not changed. Power-cycle the motor and find it again.', 'bad');
       return;
     }
   }
   await w(0x00, 506, false);
-  say('baud-state', `Sent. Power-cycle the drive now; it comes back at ${TARGET_BAUD} baud. If it still answers at ${linkBaud}, power-cycle it once more. Then check below.`, 'good');
+  say('baud-state', `Sent. Power-cycle the motor now; it comes back at ${TARGET_BAUD} baud. If it still answers at ${linkBaud}, power-cycle it once more. Then check below.`, 'good');
 }
 
 async function check() {
@@ -463,7 +463,7 @@ async function check() {
   render0();
   const f = await scan('check-state', [linkBaud]);
   if (!f) {
-    say('check-state', stop ? 'Stopped.' : 'No drive answered. Is the motor supply back on? Wait two seconds after power-on, then check again.', stop ? '' : 'bad');
+    say('check-state', stop ? 'Stopped.' : 'No motor answered. Is the motor supply back on? Wait two seconds after power-on, then check again.', stop ? '' : 'bad');
     return;
   }
   addr = f.addr;
@@ -500,7 +500,7 @@ if (!('serial' in navigator)) {
     log('adapter unplugged');
     port = null; writer = null; reader = null; pumping = null; raw = null;
     render0();
-    say('find-state', 'The adapter was unplugged. Plug it in and find the drive again.', 'bad');
+    say('find-state', 'The adapter was unplugged. Plug it in and find the motor again.', 'bad');
     refresh();
   });
   refresh();

@@ -198,10 +198,10 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
     </div>
     <div data-preset="p4" hidden>
       <p>Nucleus on the OSSM Flagship, or nucleus-p4b on a barnacle's Stamp-P4. Bootloader at 0x2000, partition table at 0x8000, otadata at 0xF000, app at 0x20000 (slot ota_0). Each file is optional. The chip is never erased: NVS holds the hub identity, the trust ledger and pairing.</p>
-      <p class="warn">Flash with the motor powered down. On a barnacle, unplug the J8 loom first: the Stamp's USB-C feeds the R+D board's 5 V through it.</p>
+      <p class="warn">Flash with the motor powered down. On a barnacle, disconnect the wires to J8 first: the Stamp's USB-C feeds the R+D board's 5 V through it.</p>
     </div>
     <div data-preset="shim" hidden>
-      <p>The barnacle's ESP32-WROOM-32D, through the R+D board's own USB-C (the CP2102 on UART0). One full image at 0x0. Erase is on, as in the release notes. Power off and the J8 loom unplugged.</p>
+      <p>The barnacle's ESP32-WROOM-32D, through the R+D board's own USB-C (the CP2102 on UART0). One full image at 0x0. Erase is on, as in the release notes. Power off and the wires to J8 disconnected.</p>
     </div>
     <div data-preset="custom" hidden>
       <p>Any ESP32 chip. Set an offset for each file. Once connected, the offset list holds the chip's bootloader offset and the board's partitions, and files named like bootloader.bin, partitions.bin, ota_data_initial.bin or firmware.bin get their offset filled in. Erase of the whole chip is never offered on an ESP32-P4.</p>
