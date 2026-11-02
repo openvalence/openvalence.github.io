@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Web flasher: OpenValence</title>
-<meta name="description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. Work in progress.">
+<meta name="description" content="Write firmware to an OpenValence board over USB from Chrome or Edge. Pick the hub, the remote or the barnacle helper, then the board, and the page loads the newest release from this site. Local files and custom offsets also work; local files stay in the browser. Work in progress.">
 <link rel="canonical" href="https://openvalence.org/flash/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/flash/">
@@ -71,15 +71,15 @@
 <script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:title" content="Web flasher: OpenValence">
-<meta property="og:description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. Work in progress.">
-<meta property="og:image" content="https://openvalence.org/images/og/flash.png?v=108cc3387b">
+<meta property="og:description" content="Write firmware to an OpenValence board over USB from Chrome or Edge. Pick the hub, the remote or the barnacle helper, then the board, and the page loads the newest release from this site. Local files and custom offsets also work; local files stay in the browser. Work in progress.">
+<meta property="og:image" content="https://openvalence.org/images/og/flash.png?v=5dfe73b554">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Web flasher: OpenValence. Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. Work in progress.">
+<meta property="og:image:alt" content="Web flasher: OpenValence. Write firmware to an OpenValence board over USB from Chrome or Edge. Pick the hub, the remote or the barnacle helper, then the board, and the page loads the newest release from this site. Local files and custom offsets also work; local files stay in the browser. Work in progress.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Web flasher: OpenValence">
-<meta name="twitter:description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. Work in progress.">
-<meta name="twitter:image" content="https://openvalence.org/images/og/flash.png?v=108cc3387b">
+<meta name="twitter:description" content="Write firmware to an OpenValence board over USB from Chrome or Edge. Pick the hub, the remote or the barnacle helper, then the board, and the page loads the newest release from this site. Local files and custom offsets also work; local files stay in the browser. Work in progress.">
+<meta name="twitter:image" content="https://openvalence.org/images/og/flash.png?v=5dfe73b554">
 <!-- /chrome:head -->
 <style>
 /* this page only: the flasher (flash.js) */
@@ -93,6 +93,38 @@
 .ack { display: flex; gap: 12px; align-items: flex-start; max-width: var(--measure); margin: 0 0 12px; cursor: pointer; }
 .ack input { flex: none; width: 20px; height: 20px; margin: .2em 0 0; accent-color: var(--accent); }
 .field { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 0 0 16px; }
+.off { visibility: hidden; }
+.swap { display: grid; }
+.swap > * { grid-area: 1 / 1; align-self: start; min-width: 0; }
+.tool h2 + .cards, .tool h2 + .swap { margin-top: 18px; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-content: start; max-width: var(--break); margin: 0 0 18px; }
+.card { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 16px 44px 18px 18px; border: 2px solid var(--rule); background: var(--bg-2); color: var(--ink-2); cursor: pointer; transition: border-color .15s ease-out; }
+.card:hover { border-color: var(--ink-3); }
+.card input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+.card::after { content: ''; position: absolute; top: 16px; right: 16px; width: 16px; height: 16px; box-sizing: border-box; border: 2px solid var(--ink-3); border-radius: 50%; }
+.card b { font: 900 1.2rem/1.15 var(--display); font-stretch: 110%; color: var(--ink); }
+.card span { font-size: .9rem; line-height: 1.4; }
+.card:has(input:checked) { border-color: var(--accent); }
+.card:has(input:checked)::after { border: 5px solid var(--accent); background: #fff; }
+.card:has(input:focus-visible) { outline: 2px solid var(--accent-ink); outline-offset: 3px; }
+.card:has(input:disabled) { opacity: .5; cursor: not-allowed; }
+.card.pic { padding-top: 12px; }
+.card .art { position: relative; display: block; flex: none; aspect-ratio: 3 / 2; margin: 0 -30px 10px -6px; overflow: hidden; background: var(--bg); }
+.card .art > * { position: absolute; inset: 0; width: 100%; height: 100%; padding: 10px; box-sizing: border-box; object-fit: contain; }
+.card .art * { vector-effect: non-scaling-stroke; }
+.vers { display: flex; gap: 8px; min-height: 2.6rem; margin: 0 0 12px; overflow-x: auto; }
+.ver { position: relative; flex: none; }
+.ver input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+.ver span { display: block; padding: 6px 12px; border: 2px solid var(--rule); font: 400 .8rem/1.4 var(--mono); color: var(--ink-2); cursor: pointer; }
+.ver input:checked + span { border-color: var(--accent); color: var(--ink); }
+.ver input:focus-visible + span { outline: 2px solid var(--accent-ink); outline-offset: 2px; }
+.ver input:disabled + span { opacity: .4; cursor: not-allowed; }
+.local { max-width: var(--measure); margin: 0 0 16px; }
+.local summary { font: 700 .85rem var(--text); color: var(--ink-2); cursor: pointer; }
+.local[open] summary { margin-bottom: 12px; }
+#files-wrap { min-height: 17rem; }
+fieldset.bare { min-width: 0; margin: 0; padding: 0; border: 0; }
+fieldset.bare:disabled { opacity: .45; }
 .field label { font: 900 .7rem/1.2 var(--display); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
 #wifi-sec .field label { min-width: 8.5em; }
 .tool select, .tool input[type=text], .tool input[type=password] { font: 400 .9rem var(--text); color: var(--ink); background: var(--bg-2); border: 2px solid var(--rule); border-radius: 0; padding: 8px 10px; }
@@ -115,6 +147,10 @@ ol.run li { margin: 0; }
 progress { display: block; width: 100%; max-width: var(--measure); height: 8px; margin: 0 0 12px; accent-color: var(--accent); }
 pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .72rem/1.55 var(--mono); white-space: pre; color: var(--ink-2); }
 @media (max-width: 640px) {
+  .cards { grid-template-columns: 1fr; gap: 8px; }
+  .card.pic { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-content: start; column-gap: 14px; padding-top: 14px; }
+  .card.pic .art { grid-row: 1 / 3; margin: 0; }
+  #files-wrap { min-height: 26rem; }
   #files thead { display: none; }
   #files tr { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; padding: 10px 0; border-top: 1px solid var(--rule); }
   #files td { border: 0; padding: 0; }
@@ -160,7 +196,7 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
 <main>
   <section class="opening">
     <h1>Web flasher <span class="tag">WIP</span></h1>
-    <p class="lede">Write firmware to an OpenValence board over USB from Chrome or Edge. The page takes release images from this site or .bin files from your computer, and sends them only to the board.</p>
+    <p class="lede">Write firmware to an OpenValence board over USB from Chrome or Edge. Pick what you are flashing and the board: the page loads the newest release from this site. It sends the images only to the board.</p>
     <p class="fine">Work in progress. The offsets and image checks are tested against release images; the write itself has not yet run against a board from this page.</p>
   </section>
 
@@ -169,22 +205,83 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
     <ul>
       <li>Chrome or Edge on a desktop computer. The page uses Web Serial; Firefox, Safari and phones have none.</li>
       <li>A USB data cable to the board.</li>
-      <li>The images: a release hosted here, or your own build's files.</li>
+      <li>For your own build: its .bin files. A release needs no download.</li>
     </ul>
     <p id="support" class="state"></p>
     <noscript><p class="state bad">This tool needs JavaScript.</p></noscript>
   </section>
 
-  <section class="tool" aria-labelledby="s-device">
-    <h2 id="s-device">Device<a class="hl" href="#s-device" aria-label="Copy link to this section"></a></h2>
+  <section class="tool" aria-labelledby="s-what">
+    <h2 id="s-what">What you are flashing<a class="hl" href="#s-what" aria-label="Copy link to this section"></a></h2>
+    <div class="cards" role="radiogroup" aria-labelledby="s-what">
+      <label class="card"><input type="radio" name="role" value="hub" checked><b>Hub</b><span>Nucleus, the firmware that runs the machine.</span></label>
+      <label class="card"><input type="radio" name="role" value="helper"><b>Helper</b><span>Barnacle only: the ESP32 on the R+D board.</span></label>
+      <label class="card"><input type="radio" name="role" value="remote"><b>Remote</b><span>Garnet, the firmware for a handheld remote with a screen.</span></label>
+    </div>
+  </section>
+
+  <section class="tool" aria-labelledby="s-board">
+    <h2 id="s-board">Board<a class="hl" href="#s-board" aria-label="Copy link to this section"></a></h2>
+    <div class="swap">
+      <div class="cards" data-show="hub" role="radiogroup" aria-label="Hub board">
+        <label class="card pic"><input type="radio" name="board-hub" value="flagship"><span class="art"><img src="/images/hardware/pcb-angle-600.webp" width="600" height="409" alt="" decoding="async"></span><b>OSSM Flagship</b><span>The controller board, ESP32-P4. Pre-production.</span></label>
+        <label class="card pic"><input type="radio" name="board-hub" value="barnacle" checked><span class="art"><svg viewBox="140 66 266 352" aria-hidden="true"><path class="d-box" d="M162.0 80.0 L382.0 80.0 L393.0 91.0 L393.0 377.0 L382.0 388.0 L162.0 388.0 L151.0 377.0 L151.0 91.0Z"/><rect class="d-sunk" x="174.1" y="92.1" width="66.0" height="31.9" rx="2"/><rect class="d-sunk" x="190.6" y="135.0" width="110.0" height="110.0" rx="2"/><rect class="d-sunk" x="317.1" y="100.9" width="56.1" height="66.0" rx="2"/><rect class="d-hub" x="170.8" y="308.8" width="44.0" height="71.5" rx="2"/><rect class="d-box" x="223.1" y="319.8" width="97.9" height="93.5" rx="2"/><rect class="d-pad" x="164.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="175.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="186.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="197.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="208.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="219.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="230.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="241.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="252.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="263.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="274.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="285.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="296.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="307.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="318.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="329.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="340.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="351.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="362.8" y="74.5" width="5.5" height="11.0"/><rect class="d-pad" x="373.8" y="74.5" width="5.5" height="11.0"/><path class="d-line" d="M164.5 24H269.5M274.5 24H379.5"/><rect class="d-pad" x="164.2" y="382.5" width="6.6" height="11.0"/><rect class="d-pad" x="186.8" y="382.5" width="5.5" height="11.0"/><rect class="d-pad" x="208.8" y="382.5" width="5.5" height="11.0"/><rect class="d-pad" x="329.8" y="382.5" width="5.5" height="11.0"/><rect class="d-pad" x="351.8" y="382.5" width="5.5" height="11.0"/><rect class="d-pad" x="373.8" y="382.5" width="5.5" height="11.0"/><rect class="d-pad" x="250.0" y="382.5" width="44.0" height="5.5" opacity=".9"/><rect class="d-pad" x="145.1" y="103.9" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="108.3" r="8.2"/><rect class="d-pad" x="145.1" y="119.5" width="11.0" height="5.5"/><rect class="d-pad" x="145.1" y="131.8" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="136.2" r="8.2"/><rect class="d-pad" x="145.1" y="147.4" width="11.0" height="5.5"/><rect class="d-pad" x="145.1" y="159.8" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="164.2" r="8.2"/><rect class="d-pad" x="145.1" y="175.4" width="11.0" height="5.5"/><rect class="d-pad" x="145.1" y="187.7" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="192.1" r="8.2"/><rect class="d-pad" x="145.1" y="203.3" width="11.0" height="5.5"/><rect class="d-pad" x="145.1" y="215.6" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="220.0" r="8.2"/><rect class="d-pad" x="145.1" y="231.2" width="11.0" height="5.5"/><rect class="d-pad" x="145.1" y="243.6" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="248.0" r="8.2"/><rect class="d-pad" x="145.1" y="259.2" width="11.0" height="5.5"/><rect class="d-pad" x="145.1" y="271.5" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="275.9" r="8.2"/><rect class="d-pad" x="145.1" y="287.1" width="11.0" height="5.5"/><rect class="d-pad" x="145.1" y="299.5" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="303.9" r="8.2"/><rect class="d-pad" x="145.1" y="315.1" width="11.0" height="5.5"/><rect class="d-pad" x="145.1" y="327.4" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="331.8" r="8.2"/><rect class="d-pad" x="145.1" y="343.0" width="11.0" height="5.5"/><rect class="d-pad" x="145.1" y="355.3" width="11.0" height="8.8"/><circle class="d-th" cx="157.6" cy="359.7" r="8.2"/><rect class="d-pad" x="387.9" y="103.9" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="108.3" r="8.2"/><rect class="d-pad" x="387.9" y="119.5" width="11.0" height="5.5"/><rect class="d-pad" x="387.9" y="131.8" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="136.2" r="8.2"/><rect class="d-pad" x="387.9" y="147.4" width="11.0" height="5.5"/><rect class="d-pad" x="387.9" y="159.8" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="164.2" r="8.2"/><rect class="d-pad" x="387.9" y="175.4" width="11.0" height="5.5"/><rect class="d-pad" x="387.9" y="187.7" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="192.1" r="8.2"/><rect class="d-pad" x="387.9" y="203.3" width="11.0" height="5.5"/><rect class="d-pad" x="387.9" y="215.6" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="220.0" r="8.2"/><rect class="d-pad" x="387.9" y="231.2" width="11.0" height="5.5"/><rect class="d-pad" x="387.9" y="243.6" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="248.0" r="8.2"/><rect class="d-pad" x="387.9" y="259.2" width="11.0" height="5.5"/><rect class="d-pad" x="387.9" y="271.5" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="275.9" r="8.2"/><rect class="d-pad" x="387.9" y="287.1" width="11.0" height="5.5"/><rect class="d-pad" x="387.9" y="299.5" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="303.9" r="8.2"/><rect class="d-pad" x="387.9" y="315.1" width="11.0" height="5.5"/><rect class="d-pad" x="387.9" y="327.4" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="331.8" r="8.2"/><rect class="d-pad" x="387.9" y="343.0" width="11.0" height="5.5"/><rect class="d-pad" x="387.9" y="355.3" width="11.0" height="8.8"/><circle class="d-th" cx="386.4" cy="359.7" r="8.2"/></svg></span><b>Barnacle</b><span>A Stamp-P4 on the OSSM R+D board.</span></label>
+      </div>
+      <div class="cards" data-show="helper" role="radiogroup" aria-label="Helper board">
+        <label class="card pic"><input type="radio" name="board-helper" value="helper" checked><span class="art"><svg viewBox="0 0 560 432" aria-hidden="true"><rect class="d-box" x="10" y="10" width="540" height="412" rx="8"/><rect class="d-sunk" x="26" y="40" width="58" height="30" rx="2"/><rect class="d-pad" x="33" y="48" width="14" height="14"/><circle class="d-pad" cx="70" cy="55" r="7"/><rect class="d-sunk" x="148" y="40" width="22" height="22" rx="2"/><circle class="d-line" cx="159" cy="51" r="6"/><rect class="d-hub" x="196" y="10" width="168" height="132" rx="2"/><path class="d-line" d="M196 46H364" stroke-dasharray="3 3"/><rect class="d-sunk" x="430" y="40" width="96" height="70" rx="2"/><rect class="d-sunk" x="518" y="150" width="32" height="58" rx="2"/><rect class="d-sunk" x="14" y="196" width="40" height="30" rx="2"/><rect class="d-sunk" x="14" y="246" width="40" height="70" rx="2"/><circle class="d-th" cx="34" cy="264" r="9"/><circle class="d-th" cx="34" cy="298" r="9"/><path class="d-line" d="M34 226V246"/><rect class="d-dash" x="146" y="364" width="262" height="28" rx="2"/><rect class="d-th" x="153" y="371" width="14" height="14"/><circle class="d-th" cx="186" cy="378" r="7"/><circle class="d-th" cx="212" cy="378" r="7"/><circle class="d-th" cx="238" cy="378" r="7"/><circle class="d-th" cx="264" cy="378" r="7"/><circle class="d-th" cx="290" cy="378" r="7"/><circle class="d-th" cx="316" cy="378" r="7"/><circle class="d-th" cx="342" cy="378" r="7"/><circle class="d-th" cx="368" cy="378" r="7"/><circle class="d-th" cx="394" cy="378" r="7"/><rect class="d-sunk" x="102" y="367" width="22" height="22" rx="2"/><circle class="d-line" cx="113" cy="378" r="6"/><rect class="d-sunk" x="256" y="395" width="16" height="12" rx="1"/><rect class="d-sunk" x="308" y="395" width="16" height="12" rx="1"/><rect class="d-sunk" x="360" y="395" width="16" height="12" rx="1"/><rect class="d-sunk" x="242" y="236" width="136" height="28" rx="2"/><circle class="d-pad" cx="256" cy="250" r="6"/><circle class="d-pad" cx="292" cy="250" r="6"/><circle class="d-pad" cx="328" cy="250" r="6"/><rect class="d-pad" x="358" y="244" width="12" height="12"/><rect class="d-sunk" x="413" y="291" width="18" height="73" rx="2"/><rect class="d-pad" x="418.5" y="298.5" width="7" height="7"/><circle class="d-pad" cx="422" cy="319" r="4"/><circle class="d-pad" cx="422" cy="336" r="4"/><circle class="d-pad" cx="422" cy="353" r="4"/><rect class="d-sunk" x="465" y="291" width="18" height="73" rx="2"/><rect class="d-pad" x="470.5" y="298.5" width="7" height="7"/><circle class="d-pad" cx="474" cy="319" r="4"/><circle class="d-pad" cx="474" cy="336" r="4"/><circle class="d-pad" cx="474" cy="353" r="4"/><rect class="d-sunk" x="494" y="291" width="18" height="73" rx="2"/><rect class="d-pad" x="499.5" y="298.5" width="7" height="7"/><circle class="d-pad" cx="503" cy="319" r="4"/><circle class="d-pad" cx="503" cy="336" r="4"/><circle class="d-pad" cx="503" cy="353" r="4"/><rect class="d-sunk" x="523" y="291" width="18" height="56" rx="2"/><rect class="d-pad" x="528.5" y="298.5" width="7" height="7"/><circle class="d-pad" cx="532" cy="319" r="4"/><circle class="d-pad" cx="532" cy="336" r="4"/></svg></span><b>R+D board</b><span>The ESP32-WROOM-32D, through the board's own USB-C.</span></label>
+      </div>
+      <div class="cards" data-show="remote" role="radiogroup" aria-label="Remote board">
+        <label class="card pic"><input type="radio" name="board-remote" value="m5-remote" checked><span class="art"><svg viewBox="-10 -10 1080 660" aria-hidden="true"><rect class="d-box" x="0" y="0" width="1060" height="640" rx="120"/><rect class="d-sunk" x="330" y="40" width="400" height="300" rx="6"/><rect class="d-sunk" x="490" y="0" width="80" height="20" rx="4"/><rect class="d-pad" x="250" y="60" width="20" height="60" rx="6"/><rect class="d-pad" x="440" y="450" width="180" height="180" rx="6"/><circle class="d-th" cx="80" cy="350" r="62"/><circle class="d-th" cx="280" cy="548" r="62"/><circle class="d-th" cx="780" cy="548" r="62"/><circle class="d-th" cx="980" cy="350" r="62"/></svg></span><b>OSSM M5 Remote</b><span>A CoreS3 or CoreS3 SE on the remote board, with knobs and keys.</span></label>
+        <label class="card pic"><input type="radio" name="board-remote" value="cores3se"><span class="art"><svg viewBox="-10 -10 560 560" aria-hidden="true"><rect class="d-box" x="0" y="0" width="540" height="540" rx="40"/><rect class="d-sunk" x="66" y="70" width="408" height="306" rx="6"/><rect class="d-sunk" x="230" y="520" width="80" height="20" rx="4"/><rect class="d-sunk" x="520" y="420" width="20" height="50" rx="4"/><rect class="d-pad" x="0" y="80" width="20" height="60" rx="6"/></svg></span><b>M5Stack CoreS3 SE</b><span>The bare unit, or a CoreS3. Touch screen and power key.</span></label>
+        <label class="card pic"><input type="radio" name="board-remote" value="waveshare-s3-43"><span class="art"><svg viewBox="-10 -10 1080 700" aria-hidden="true"><rect class="d-box" x="0" y="0" width="1060" height="680" rx="30"/><rect class="d-sunk" x="53" y="44" width="955" height="543" rx="6"/><rect class="d-sunk" x="437" y="4" width="60" height="26" rx="4"/><rect class="d-sunk" x="1010" y="99" width="50" height="60" rx="4"/><rect class="d-sunk" x="1010" y="299" width="50" height="60" rx="4"/><rect class="d-pad" x="545" y="4" width="70" height="26" rx="6"/></svg></span><b>Waveshare ESP32-S3-Touch-LCD-4.3</b><span>The 8 MB flash version. Touch screen.</span></label>
+      </div>
+    </div>
+    <div class="swap">
+      <div data-show="flagship"><p>Nucleus on the OSSM Flagship. The board is pre-production.</p><p class="warn">Power down the motor before you connect USB.</p></div>
+      <div data-show="barnacle"><p>nucleus-p4b on the barnacle's Stamp-P4, through the Stamp's own USB-C.</p><p class="warn">Power down the motor before you connect USB. Disconnect the wires to J8 before you connect USB. The Stamp's USB-C feeds the R+D board's 5 V through J8.</p></div>
+      <div data-show="helper"><p>The barnacle's ESP32-WROOM-32D, through the R+D board's own USB-C (the CP2102 on UART0).</p><p class="warn">Power off the R+D board. Disconnect the wires to J8. Then connect USB.</p></div>
+      <div data-show="m5-remote"><p>Garnet on the OSSM M5 Remote. CoreS3 and CoreS3 SE only: a Core2 does not run it. This build is not yet tested on the remote.</p></div>
+      <div data-show="cores3se"><p>Garnet on a bare M5Stack CoreS3 SE or CoreS3. Earlier Garnet builds ran on a CoreS3 SE; this build is not yet tested on hardware.</p></div>
+      <div data-show="waveshare-s3-43"><p>Garnet on the Waveshare ESP32-S3-Touch-LCD-4.3 with 8 MB flash. The 16 MB versions need another build. This build is not yet tested on hardware.</p></div>
+    </div>
+    <div class="swap">
+      <p data-show="p4">Bootloader at 0x2000, partition table at 0x8000, otadata at 0xF000, app at 0x20000 (slot ota_0). Each file is optional. The page never erases the chip: NVS (non-volatile storage) holds the hub identity, the trust ledger and pairing.</p>
+      <p data-show="shim">One full image at 0x0. Erase is on, as in the release notes.</p>
+      <p data-show="garnet">One full image at 0x0: bootloader, partition table and app. The image erases NVS (non-volatile storage, 0x9000 to 0xF000): the saved Wi-Fi and key map go with it. With no saved network, the remote opens a setup hotspot. Pre-program Wi-Fi restores a network.</p>
+      <p data-show="custom">Custom offsets: the files and offsets in the table below.</p>
+    </div>
+  </section>
+
+  <section class="tool" aria-labelledby="s-version">
+    <h2 id="s-version">Version<a class="hl" href="#s-version" aria-label="Copy link to this section"></a></h2>
+    <p id="src-state" class="state" role="status"></p>
+    <div class="vers" id="vers" role="radiogroup" aria-label="Release"></div>
+    <details class="local" id="local">
+      <summary>Use a local file</summary>
+      <p>For your own build. Pick a file for each slot in the table below.</p>
+      <label class="ack"><input type="checkbox" id="custom"><span>Custom: any ESP32, at offsets you set.</span></label>
+      <div id="custom-note" hidden>
+        <p>Set an offset for each file. Once connected, the offset list holds the chip's bootloader offset and the board's partitions. Files named like bootloader.bin, partitions.bin, ota_data_initial.bin or firmware.bin get their offset filled in. Erase of the whole chip is never offered on an ESP32-P4.</p>
+        <p>Download mode on most boards: hold BOOT (GPIO0). Tap RESET. Release BOOT.</p>
+      </div>
+    </details>
+    <p>Each file is checked before the write: an image header (0xE9) where the bootloader or app starts, the chip the image was built for, an app where an app goes, the slot size and the flash size.</p>
+    <div class="wrap" id="files-wrap">
+      <table class="regs" id="files">
+        <thead><tr><th>Offset</th><th>Slot</th><th>File</th><th>Check</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <datalist id="offsets"></datalist>
+    <div class="btns"><button class="btn" id="add" type="button" hidden>Add file</button></div>
+    <label class="ack" id="erase-row"><input type="checkbox" id="erase"><span>Erase the whole flash first. Clears everything the images do not cover.</span></label>
+    <label class="ack" data-show="p4"><input type="checkbox" id="blank-ota"><span>No otadata file: write a blank one, so the board boots ota_0.</span></label>
+  </section>
+
+  <section class="tool" aria-labelledby="s-connect">
+    <h2 id="s-connect">Connect<a class="hl" href="#s-connect" aria-label="Copy link to this section"></a></h2>
+    <p>Pick the board's port. The page resets the board into download mode, reads the chip, its MAC address and flash size, and the partition table at 0x8000.</p>
     <div class="field">
-      <label for="preset">Device</label>
-      <select id="preset">
-        <option value="garnet">Garnet remote: OSSM M5 Remote, ESP32-S3</option>
-        <option value="p4">Nucleus recovery: Flagship or barnacle, ESP32-P4</option>
-        <option value="shim">Barnacle helper shim: R+D board, ESP32</option>
-        <option value="custom">Custom: any ESP32, your offsets</option>
-      </select>
       <label for="baud">Baud</label>
       <select id="baud">
         <option>115200</option>
@@ -193,32 +290,17 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
         <option>921600</option>
       </select>
     </div>
-    <div data-preset="garnet">
-      <p>The OSSM M5 Remote on a CoreS3 or CoreS3 SE. One full image at 0x0: bootloader, partition table and app. The image erases NVS (non-volatile storage, 0x9000 to 0xF000). The saved Wi-Fi and key map go with it. Pre-program Wi-Fi restores a network.</p>
-    </div>
-    <div data-preset="p4" hidden>
-      <p>Nucleus on the OSSM Flagship, or nucleus-p4b on a barnacle's Stamp-P4. Bootloader at 0x2000, partition table at 0x8000, otadata at 0xF000, app at 0x20000 (slot ota_0). Each file is optional. The chip is never erased: NVS holds the hub identity, the trust ledger and pairing.</p>
-      <p class="warn">Flash with the motor powered down. On a barnacle, disconnect the wires to J8 first: the Stamp's USB-C feeds the R+D board's 5 V through it.</p>
-    </div>
-    <div data-preset="shim" hidden>
-      <p>The barnacle's ESP32-WROOM-32D, through the R+D board's own USB-C (the CP2102 on UART0). One full image at 0x0. Erase is on, as in the release notes. Power off the board and disconnect the wires to J8.</p>
-    </div>
-    <div data-preset="custom" hidden>
-      <p>Any ESP32 chip. Set an offset for each file. Once connected, the offset list holds the chip's bootloader offset and the board's partitions. Files named like bootloader.bin, partitions.bin, ota_data_initial.bin or firmware.bin get their offset filled in. Erase of the whole chip is never offered on an ESP32-P4.</p>
-    </div>
-  </section>
-
-  <section class="tool" aria-labelledby="s-connect">
-    <h2 id="s-connect">Connect<a class="hl" href="#s-connect" aria-label="Copy link to this section"></a></h2>
-    <p>Pick the board's port. The page resets the board into download mode, reads the chip, its MAC address and flash size, and the partition table at 0x8000.</p>
     <div class="btns"><button class="btn go" id="connect" type="button">Choose port and connect</button><button class="btn" id="disconnect" type="button" hidden>Disconnect</button></div>
     <p id="conn-state" class="state" role="status"></p>
     <div id="boot-help" hidden>
       <h3 id="download-mode">Download mode by hand<a class="hl" href="#download-mode" aria-label="Copy link to this section"></a></h3>
-      <p data-preset="garnet">Hold the CoreS3's reset button for about 3 s, until the small green LED lights. The screen stays dark. Then connect.</p>
-      <p data-preset="p4" hidden>Hold the BOOT pad to GND while you plug in USB: TP903 on the Flagship, pad 36 (G35) on a bare Stamp-P4. Then connect.</p>
-      <p data-preset="shim" hidden>No port listed: install the Silicon Labs CP210x driver. Port listed but no answer: set the baud to 115200 and connect again.</p>
-      <p data-preset="custom" hidden>On most boards: hold BOOT (GPIO0), tap RESET, release BOOT, then connect.</p>
+      <div class="swap">
+        <p data-show="m5-remote cores3se">Hold the CoreS3's reset button for about 3 s, until the small green LED lights. The screen stays dark. Then connect.</p>
+        <p data-show="waveshare-s3-43">Hold BOOT. Tap RESET. Release BOOT. Then connect.</p>
+        <p data-show="flagship">Hold the BOOT pad TP903 to GND while you plug in USB. Then connect.</p>
+        <p data-show="barnacle">Hold pad 36 (G35) on the Stamp-P4 to GND while you plug in USB. Then connect.</p>
+        <p data-show="helper">No port listed: install the Silicon Labs CP210x driver. Port listed but no answer: set the baud to 115200 and connect again.</p>
+      </div>
     </div>
     <div class="wrap" id="info" hidden>
       <table class="regs">
@@ -233,31 +315,10 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
     </div>
   </section>
 
-  <section class="tool" aria-labelledby="s-files">
-    <h2 id="s-files">Files<a class="hl" href="#s-files" aria-label="Copy link to this section"></a></h2>
-    <p>Each file is checked before the write: an image header (0xE9) where the bootloader or app starts, the chip the image was built for, an app where an app goes, the slot size and the flash size.</p>
-    <div id="src-row" hidden>
-      <div class="field">
-        <label for="src">Source</label>
-        <select id="src"></select>
-      </div>
-      <p id="src-state" class="state" role="status"></p>
-    </div>
-    <div class="wrap">
-      <table class="regs" id="files">
-        <thead><tr><th>Offset</th><th>Slot</th><th>File</th><th>Check</th><th></th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <datalist id="offsets"></datalist>
-    <div class="btns"><button class="btn" id="add" type="button" hidden>Add file</button></div>
-    <label class="ack" id="erase-row"><input type="checkbox" id="erase"><span>Erase the whole flash first. Clears everything the images do not cover.</span></label>
-    <label class="ack" data-preset="p4" hidden><input type="checkbox" id="blank-ota"><span>No otadata file: write a blank one, so the board boots ota_0.</span></label>
-  </section>
-
   <section class="tool" id="wifi-sec" aria-labelledby="s-wifi">
     <h2 id="s-wifi">Pre-program Wi-Fi<a class="hl" href="#s-wifi" aria-label="Copy link to this section"></a></h2>
     <p>Optional. Saves one network to the board's NVS (non-volatile storage) after the images, so it joins on first boot. The same SSID is replaced; a full list of four drops its last network. Every other NVS entry is kept.</p>
+    <fieldset class="bare" id="wifi-f">
     <div class="field">
       <label for="ssid">SSID</label>
       <input type="text" id="ssid" maxlength="32" autocomplete="off" spellcheck="false">
@@ -267,11 +328,12 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
       <input type="password" id="pass" maxlength="64" autocomplete="new-password" spellcheck="false">
       <button class="x" id="pass-show" type="button" aria-pressed="false" aria-controls="pass">Show</button>
     </div>
-    <div class="field" data-preset="garnet">
+    <div class="field" data-show="garnet">
       <label for="hub">Hub address</label>
       <input type="text" id="hub" placeholder="192.168.1.20:82" autocomplete="off" spellcheck="false">
       <span class="fine">Optional. Skips discovery; port 82 when left out.</span>
     </div>
+    </fieldset>
     <p id="wifi-state" class="state" role="status"></p>
     <div class="btns"><button class="btn" id="nvs-save" type="button" disabled>Save NVS backup</button></div>
     <p class="fine">The network goes only to the board: never stored by this page, never in the log (it records the NVS size and SSID length). The backup is the board's NVS as read, saved passwords included.</p>
@@ -281,7 +343,7 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
     <h2 id="s-write">Write<a class="hl" href="#s-write" aria-label="Copy link to this section"></a></h2>
     <p>The plan, in order:</p>
     <ol class="run" id="plan"></ol>
-    <label class="ack"><input type="checkbox" id="ack"><span>The device and the files are right. The board stays plugged in until the reset.</span></label>
+    <label class="ack"><input type="checkbox" id="ack"><span>The board and the files are right. The board stays plugged in until the reset.</span></label>
     <div class="btns"><button class="btn go" id="write" type="button" disabled>Write</button><button class="btn" id="cancel" type="button" hidden>Cancel</button></div>
     <progress id="bar" max="1" value="0" hidden></progress>
     <p id="write-state" class="state" role="status"></p>
@@ -308,6 +370,6 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
 </footer>
 <!-- /chrome:footer -->
 
-<script type="module" src="/flash/flash.js?v=cd6fe63e16"></script>
+<script type="module" src="/flash/flash.js?v=8a07eaaf8e"></script>
 </body>
 </html>

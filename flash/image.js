@@ -1,4 +1,4 @@
-// The flasher's pure logic: device presets, image checks, the partition table, otadata, MD5 and the
+// The flasher's pure logic: the boards and their presets, release picking, image checks, the partition table, otadata, MD5 and the
 // write plan. No DOM and no serial port, so tools/flash_check.mjs runs it under node.
 // Constraints:
 // - Preset offsets come from the build configs and release notes named beside each preset. Change
@@ -23,17 +23,19 @@ const MB = 1048576;
 // boot, app, pt (partition table), otadata, raw (custom only: no check).
 export const PRESETS = {
   garnet: {
-    // Garnet/platformio.ini env m5_remote (16 MB, partitions.csv); FLASHING.txt: one image at 0x0
-    name: 'Garnet remote', chip: 'ESP32-S3', baud: 921600, erase: false, products: ['garnet'],
+    // Garnet platformio.ini envs m5_remote, m5_cores3se (16 MB) and waveshare_s3_43 (8 MB), one
+    // partitions.csv; the release is esptool merge_bin of bootloader 0x0, partitions 0x8000 and
+    // firmware 0x10000, one image at 0x0. The 8 MB board's limit is the flash size check.
+    name: 'Garnet remote', chip: 'ESP32-S3', baud: 921600, erase: false,
     // Garnet src/net/wifi.cpp (namespace "garnet", blob "nets", legacy strings wifi_ssid/wifi_pass)
     // and src/app/session.cpp (blobs hub_ip, inet_addr order, and hub_port, u16le)
     wifi: { addr: 0x9000, size: 0x6000, ns: 'garnet', legacy: 'strings', hub: true },
-    slots: [{ id: 'image', label: 'Factory image', hint: 'garnet-*.factory.bin', addr: 0x0, kind: 'merged', max: 16 * MB, ptAt: 0x8000 }],
+    slots: [{ id: 'image', label: 'Full image', hint: 'garnet-*.bin', addr: 0x0, kind: 'merged', max: 16 * MB, ptAt: 0x8000 }],
   },
   p4: {
     // Nucleus flagship_p4/partitions.csv and sdkconfig (BOOTLOADER_OFFSET 0x2000, PARTITION_TABLE_OFFSET
     // 0x8000); the slot limits are the gaps to the next region
-    name: 'Nucleus P4 recovery', chip: 'ESP32-P4', baud: 921600, erase: null, blankOta: true, products: ['nucleus-p4b', 'nucleus-p4'],
+    name: 'Nucleus P4 recovery', chip: 'ESP32-P4', baud: 921600, erase: null, blankOta: true,
     // flagship_p4 src/hub/ValenceProvisioning.cpp (namespace "valence", blob "nets", legacy blob "sta")
     wifi: { addr: 0x9000, size: 0x6000, ns: 'valence', legacy: 'sta', hub: false },
     slots: [
@@ -46,23 +48,41 @@ export const PRESETS = {
   shim: {
     // Nucleus barnacle_shim/platformio.ini (esp32dev, 4 MB); the barnacle-shim release README: erase,
     // then one image at 0x0 at 460800 baud
-    name: 'Barnacle helper shim', chip: 'ESP32', baud: 460800, erase: true, products: ['barnacle-shim'],
+    name: 'Barnacle helper shim', chip: 'ESP32', baud: 460800, erase: true,
     slots: [{ id: 'image', label: 'Shim image', hint: 'barnacle-shim-*.bin', addr: 0x0, kind: 'merged', max: 4 * MB, ptAt: 0x8000 }],
   },
-  custom: { name: 'Custom', chip: null, baud: 460800, erase: false, products: [], slots: [] },
+  custom: { name: 'Custom', chip: null, baud: 460800, erase: false, slots: [] },
 };
 
-// Hosted releases from /flash/fw/index.json (tools/fw_index.py writes it at deploy): the preset's
-// releases, newest version first, each keeping only the files with a slot in this preset.
-export function releasesFor(index, presetId) {
-  const p = PRESETS[presetId], ids = new Set(p.slots.map((s) => s.id));
+// The card tree: role (hub, helper, remote), then the board. The id is the page's URL hash
+// (/flash/#barnacle), which the guides link to: never rename one. product is the release tag's
+// <product> (tools/fw_index.py) and the app descriptor's (Nucleus flagship_p4/CMakeLists.txt).
+export const BOARDS = {
+  flagship: { role: 'hub', name: 'OSSM Flagship', preset: 'p4', product: 'nucleus-p4' },
+  barnacle: { role: 'hub', name: 'Barnacle', preset: 'p4', product: 'nucleus-p4b' },
+  helper: { role: 'helper', name: 'R+D board', preset: 'shim', product: 'barnacle-shim' },
+  'm5-remote': { role: 'remote', name: 'OSSM M5 Remote', preset: 'garnet', product: 'garnet-m5-remote' },
+  cores3se: { role: 'remote', name: 'M5Stack CoreS3 SE', preset: 'garnet', product: 'garnet-cores3se' },
+  'waveshare-s3-43': { role: 'remote', name: 'Waveshare ESP32-S3-Touch-LCD-4.3', preset: 'garnet', product: 'garnet-waveshare-s3-43' },
+};
+
+// Hosted releases from /flash/fw/index.json (tools/fw_index.py writes it at deploy): the board's
+// releases, newest version first, each keeping only the files with a slot in its preset.
+export function releasesFor(index, boardId) {
+  const b = BOARDS[boardId];
+  if (!b) return [];
+  const ids = new Set(PRESETS[b.preset].slots.map((s) => s.id));
   const v = (r) => r.version.split('.').map(Number);
   return (index?.releases || [])
-    .filter((r) => p.products.includes(r.product))
+    .filter((r) => r.product === b.product)
     .map((r) => ({ ...r, files: r.files.filter((f) => ids.has(f.role)) }))
     .filter((r) => r.files.length)
     .sort((a, b) => { const x = v(a), y = v(b); return y[0] - x[0] || y[1] - x[1] || y[2] - x[2]; });
 }
+
+// The release the page loads by itself from releasesFor's list: the newest full release, else the
+// newest prerelease while the board has no full release.
+export const newest = (rels) => rels.find((r) => !r.prerelease) || rels[0] || null;
 
 // chip: { name, imageChipId, bootOffset } from the connected loader. Returns a refusal or null.
 export function checkFile(d, addr, kind, chip, flashBytes, max, ptAt) {

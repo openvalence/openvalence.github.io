@@ -1,8 +1,8 @@
 // Checks flash/image.js and flash/nvs.js: synthetic cases always, real images when given. Run from
 // the repo root:
-//   node tools/flash_check.mjs [garnet=FILE] [shim=FILE] [p4app=FILE] [p4build=DIR] [index=FILE]
+//   node tools/flash_check.mjs [garnet=FILE[,FILE]] [shim=FILE] [p4app=FILE] [p4build=DIR] [index=FILE]
 //                              [nvscsv=DIR] [nvsgen=DIR]
-// garnet: a Garnet *.factory.bin; shim: a barnacle-shim-*.bin; p4app: a nucleus-*-app.bin;
+// garnet: Garnet full images (garnet-*.bin, firmware.factory.bin), comma-separated; shim: a barnacle-shim-*.bin; p4app: a nucleus-*-app.bin;
 // p4build: a flagship_p4 .pio/build/<env> folder (bootloader.bin, partitions.bin, ota_data_initial.bin);
 // index: a flash/fw/index.json from tools/fw_index.py.
 // nvscsv: writes the NVS fixture sets as CSVs; nvsgen: a folder of nvs_partition_gen.py outputs
@@ -10,7 +10,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { PRESETS, releasesFor, checkFile, customKind, parsePartitions, otaCrc, crc32, bootSlot, guessOffset, checkPlan, md5 } from '../flash/image.js';
+import { PRESETS, BOARDS, releasesFor, newest, checkFile, customKind, parsePartitions, otaCrc, crc32, bootSlot, guessOffset, checkPlan, md5 } from '../flash/image.js';
 import { parse, build, T, withWifi, baseFor, netsEncode, netsDecode, netsSave, checkNet, NETS_BYTES } from '../flash/nvs.js';
 
 const arg = Object.fromEntries(process.argv.slice(2).map((a) => a.split(/=(.*)/s).slice(0, 2)));
@@ -110,16 +110,31 @@ assert.match(checkPlan([{ addr: 0x2000, data: new Uint8Array(0x7000), name: 'a' 
 assert.deepEqual(checkPlan([{ addr: 0x0, data: new Uint8Array(0x20000), name: 'm' }], parts).notes, ['m overwrites nvs at 0x9000: stored settings are lost']);
 assert.deepEqual(checkPlan(PRESETS.p4.slots.map((s) => ({ addr: s.addr, data: new Uint8Array(s.max), name: s.id })), parts), { notes: [] }); n += 5;   // full P4 slots stay clear of NVS
 
-// hosted releases: the preset's products only, newest version first (0.1.10 above 0.1.9), files
-// without a slot in the preset dropped, releases left with none dropped
-const rel = (product, version, ...roles) => ({ product, version, tag: `${product}-${version}`, prerelease: true, files: roles.map((r) => ({ name: `${r}.bin`, role: r, size: 1, sha256: '0'.repeat(64) })) });
-const INDEX = { releases: [rel('nucleus-p4b', '0.1.9', 'app'), rel('barnacle-shim', '0.1.78', 'image'), rel('nucleus-p4b', '0.1.10', 'boot', 'pt', 'ota', 'app', 'image'), rel('nucleus-p4', '0.2.0', 'app'), rel('garnet', '0.1.1', 'boot')] };
-assert.deepEqual(releasesFor(INDEX, 'p4').map((r) => r.tag), ['nucleus-p4-0.2.0', 'nucleus-p4b-0.1.10', 'nucleus-p4b-0.1.9']);
-assert.deepEqual(releasesFor(INDEX, 'p4')[1].files.map((f) => f.role), ['boot', 'pt', 'ota', 'app']);
-assert.deepEqual(releasesFor(INDEX, 'shim').map((r) => r.tag), ['barnacle-shim-0.1.78']);
-assert.deepEqual(releasesFor(INDEX, 'garnet'), []);   // no 'boot' slot on the Garnet preset
+// the card tree: every board has a preset and its own product; ids are URL hashes
+for (const [id, b] of Object.entries(BOARDS)) { assert.ok(PRESETS[b.preset], id); assert.match(id, /^[a-z0-9-]+$/); n++; }
+assert.equal(new Set(Object.values(BOARDS).map((b) => b.product)).size, Object.keys(BOARDS).length); n++;
+assert.deepEqual(Object.values(BOARDS).filter((b) => b.preset === 'p4').map((b) => b.product), ['nucleus-p4', 'nucleus-p4b']); n++;
+
+// hosted releases: the board's product only, newest version first (0.1.10 above 0.1.9), files
+// without a slot in its preset dropped, releases left with none dropped
+const rel = (product, version, pre, ...roles) => ({ product, version, tag: `${product}-${version}`, prerelease: pre, files: roles.map((r) => ({ name: `${r}.bin`, role: r, size: 1, sha256: '0'.repeat(64) })) });
+const INDEX = { releases: [rel('nucleus-p4b', '0.1.9', true, 'app'), rel('barnacle-shim', '0.1.78', true, 'image'), rel('nucleus-p4b', '0.1.10', true, 'boot', 'pt', 'ota', 'app', 'image'), rel('nucleus-p4', '0.2.0', true, 'app'), rel('garnet-m5-remote', '0.1.1', true, 'boot'), rel('garnet-cores3se', '0.1.1', true, 'image')] };
+assert.deepEqual(releasesFor(INDEX, 'barnacle').map((r) => r.tag), ['nucleus-p4b-0.1.10', 'nucleus-p4b-0.1.9']);
+assert.deepEqual(releasesFor(INDEX, 'flagship').map((r) => r.tag), ['nucleus-p4-0.2.0']);
+assert.deepEqual(releasesFor(INDEX, 'barnacle')[0].files.map((f) => f.role), ['boot', 'pt', 'ota', 'app']);
+assert.deepEqual(releasesFor(INDEX, 'helper').map((r) => r.tag), ['barnacle-shim-0.1.78']);
+assert.deepEqual(releasesFor(INDEX, 'm5-remote'), []);   // no 'boot' slot on the Garnet preset
+assert.deepEqual(releasesFor(INDEX, 'cores3se').map((r) => r.tag), ['garnet-cores3se-0.1.1']);
+assert.deepEqual(releasesFor(INDEX, 'waveshare-s3-43'), []);
 assert.deepEqual(releasesFor(INDEX, 'custom'), []);
-assert.deepEqual(releasesFor(null, 'p4'), []); n += 6;
+assert.deepEqual(releasesFor(null, 'barnacle'), []); n += 9;
+// the auto pick: the newest full release, else the newest prerelease; none for no releases
+const vs = (...l) => l.map(([v, pre]) => rel('nucleus-p4b', v, pre, 'app'));
+assert.equal(newest(vs(['0.1.85', true], ['0.1.82', true])).version, '0.1.85');
+assert.equal(newest(vs(['0.2.1', true], ['0.2.0', false], ['0.1.9', false])).version, '0.2.0');
+assert.equal(newest(vs(['0.2.0', false], ['0.1.99', true])).version, '0.2.0');
+assert.equal(newest([]), null);
+assert.equal(newest(releasesFor(INDEX, 'barnacle')).tag, 'nucleus-p4b-0.1.10'); n += 5;
 
 // ---- flash/nvs.js: the Wi-Fi option ----
 // Generator fixtures: each set is [namespace, key, encoding, value] rows. The hashes are of
@@ -300,7 +315,12 @@ assert.deepEqual(checkPlan([{ addr: 0, data: full, name: 'm' }, { addr: 0x9000, 
 
 // real images
 const read = (f) => new Uint8Array(readFileSync(f));
-if (arg.garnet) { ok(check(read(arg.garnet), 'garnet', 'image', S3), 'Garnet factory image'); no(check(read(arg.garnet), 'garnet', 'image', P4), /no image header/); no(check(read(arg.garnet), 'garnet', 'image', { ...S3, imageChipId: 13, name: 'ESP32-C6' }), /built for ESP32-S3; the board is ESP32-C6/); }
+for (const f of arg.garnet ? arg.garnet.split(',') : []) {
+  const d = read(f);
+  ok(check(d, 'garnet', 'image', S3, 8 << 20), `Garnet full image ${f}`); no(check(d, 'garnet', 'image', P4), /no image header/); no(check(d, 'garnet', 'image', { ...S3, imageChipId: 13, name: 'ESP32-C6' }), /built for ESP32-S3; the board is ESP32-C6/);
+  assert.ok(d.subarray(0x9000, 0xf000).every((b) => b === 0xff), `${f}: NVS region blank`); n++;
+  assert.deepEqual(parsePartitions(d.subarray(0x8000, 0x8c00)).map((p) => [p.label, p.offset, p.size]), [['nvs', 0x9000, 0x6000], ['phy_init', 0xf000, 0x1000], ['factory', 0x10000, 0x600000]], `${f}: Garnet partitions.csv`); n++;
+}
 if (arg.shim) { ok(check(read(arg.shim), 'shim', 'image', E32, 4 << 20), 'shim image'); no(check(read(arg.shim), 'p4', 'app', P4), /no image header/); }
 if (arg.p4app) { ok(check(read(arg.p4app), 'p4', 'app', P4), 'P4 app'); no(check(read(arg.p4app), 'p4', 'boot', P4), /does not fit|an app image/); no(check(read(arg.p4app), 'garnet', 'image', S3), /built for ESP32-P4|an app image/); }
 if (arg.p4build) {
@@ -319,8 +339,8 @@ if (arg.index) {
   // every hosted release lands on a preset, every file on a slot of it
   const idx = JSON.parse(readFileSync(arg.index, 'utf8'));
   for (const r of idx.releases) {
-    const id = Object.keys(PRESETS).find((k) => PRESETS[k].products.includes(r.product));
-    assert.ok(id, `${r.tag}: no preset lists ${r.product}`);
+    const id = Object.keys(BOARDS).find((k) => BOARDS[k].product === r.product);
+    assert.ok(id, `${r.tag}: no board has product ${r.product}`);
     assert.equal(releasesFor(idx, id).find((x) => x.tag === r.tag)?.files.length, r.files.length, `${r.tag}: a file has no slot`);
     for (const f of r.files) assert.match(f.sha256, /^[0-9a-f]{64}$/);
     n++;

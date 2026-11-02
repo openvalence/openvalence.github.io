@@ -185,10 +185,10 @@
     <p>The <a href="/guides/servo-setup/">motor setup</a> tool finds the motor at 9600, 19200, 38400 or 115200 baud and applies the barnacle's settings. It runs in Chrome or Edge on a desktop. It is a work in progress. Unplug the adapter when you are done: the barnacle does not use RS485.</p>
 
     <h3 id="flash">1. Flash the firmware<a class="hl" href="#flash" aria-label="Copy link to this section"></a></h3>
-    <p>Flash both boards before any wire goes on, from the <a href="/flash/">web flasher</a> in Chrome or Edge on a desktop. Pick the newest release under Source. On a board that is already wired, disconnect the wires from J8 first.</p>
+    <p>Flash both boards before any wire goes on, from the <a href="/flash/">web flasher</a> in Chrome or Edge on a desktop. The flasher loads the newest release. On a board that is already wired, disconnect the wires from J8 first.</p>
     <ol>
-      <li>Flash the WROOM over the R+D board's USB-C, with nothing else powering the board. Pick device Barnacle helper shim, release barnacle-shim 0.1.82 or newer. After this, the WROOM needs USB only for recovery.</li>
-      <li>Flash the Stamp-P4 over its own USB-C. Pick device Nucleus recovery, release nucleus-p4b. To have it join your network on first boot, fill in Pre-program Wi-Fi before you write.</li>
+      <li>Flash the WROOM over the R+D board's USB-C, with nothing else powering the board. Open the flasher's <a href="/flash/#helper">Helper card</a>. Use barnacle-shim 0.1.82 or newer. After this, the WROOM needs USB only for recovery.</li>
+      <li>Flash the Stamp-P4 over its own USB-C. Open the flasher's <a href="/flash/#barnacle">Barnacle card</a>. It loads nucleus-p4b. To have it join your network on first boot, fill in Pre-program Wi-Fi before you write.</li>
     </ol>
     <p>Later updates go over the network from <a href="/phosphor/">Phosphor</a>. On the machine's System page, the Firmware card takes the release's app image (nucleus-p4b-<i>version</i>-app.bin, from the <a href="https://github.com/openvalence/openvalence.github.io/releases">release on GitHub</a>). Press Update. Then double-press PAIR at the machine: on the barnacle, S2 on the R+D board.</p>
     <p>Each nucleus-p4b image carries the WROOM's firmware. When the WROOM runs any other build, the Stamp installs its copy over J8. The install starts as soon as no motion runs and takes about 40 s (an estimate, not yet measured). The machine loses its home position when the update starts: home the machine again when the update finishes. Motion started during the update stops the update. The WROOM keeps its old firmware, and the update starts over once motion stops. A WROOM on a barnacle-shim release older than 0.1.82 cannot take updates this way. The machine logs that and works as before until you flash the WROOM over USB once.</p>
@@ -371,7 +371,7 @@
       <div><dt>A home fails: the link to the helper is lost</dt><dd>The link to the WROOM stopped during the home. Check the wires on J8 pins 2 and 9, then home again.</dd></div>
       <div><dt>The Stamp resets when Wi-Fi transmits</dt><dd>The 5 V sags on transmit bursts. Check the bulk capacitor is fitted at the Stamp end and its polarity is right.</dd></div>
       <div><dt>The R+D board lights up while you flash the Stamp</dt><dd>USB-C on the Stamp feeds the R+D 5 V rail through the 5V wire. Disconnect the wires to J8, or update over the network from Phosphor.</dd></div>
-      <div><dt>The WROOM will not flash</dt><dd>Flash it over the R+D board's USB-C. The CP2102 there owns UART0. The <a href="/flash/">web flasher</a> has a preset for it.</dd></div>
+      <div><dt>The WROOM will not flash</dt><dd>Flash it over the R+D board's USB-C. The CP2102 there owns UART0. The <a href="/flash/#helper">web flasher</a> has a Helper card for it.</dd></div>
     </dl>
   </section>
 

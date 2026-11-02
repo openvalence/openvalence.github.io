@@ -1,5 +1,5 @@
-// The web flasher: esptool-js over Web Serial, the device presets and their file slots, the
-// write plan, and the session log.
+// The web flasher: esptool-js over Web Serial, the card picker, the newest release, the preset's
+// file slots, the write plan and the session log.
 // Constraints:
 // - Release images come from this site only (/flash/fw/, same origin, index.json written at
 //   deploy by tools/fw_index.py); local files are read in the browser. Both go only to the serial
@@ -12,8 +12,8 @@
 //   NVS row; no log line or message carries them (the log gets the NVS size and SSID length). The
 //   NVS row is written last, after every image, and only from an NVS that nvs.js parsed whole.
 import { ESPLoader, Transport } from './vendor/esptool-js/bundle.js';
-import { PRESETS, releasesFor, checkFile, customKind, parsePartitions, bootSlot, guessOffset, checkPlan, md5, hex, kb } from './image.js?v=bd65b734d4';
-import { baseFor, withWifi, checkNet, blank } from './nvs.js?v=edb7ff98ca';
+import { PRESETS, BOARDS, releasesFor, newest, checkFile, customKind, parsePartitions, bootSlot, guessOffset, checkPlan, md5, hex, kb } from './image.js?v=6aae038b38';
+import { baseFor, withWifi, checkNet, blank } from './nvs.js?v=27e49e15af';
 
 const $ = (id) => document.getElementById(id);
 
@@ -146,29 +146,50 @@ function wifiPlan(writes) {
   }
 }
 
-// ---- the preset, its slots and the files ----
-let preset = PRESETS.garnet, rows = [], fwIndex = null, srcTicket = 0;
+// ---- the card picked, its preset, its slots and the files ----
+// boardId: a BOARDS key and the URL hash. local: the "Use a local file" disclosure is open.
+let boardId = 'barnacle', preset = PRESETS.p4, rows = [], fwIndex, srcTicket = 0, fetching = false;
+const local = () => $('local').open;
 const freshRows = () => {
   const r = preset.slots.map((s) => ({ slot: s, addr: s.addr, data: null, name: '' }));
   return r.length ? r : [{ slot: null, addr: null, data: null, name: '' }];
 };
+const relName = (r) => `${r.product} ${r.version}${r.prerelease ? ', prerelease' : ''}`;
 
-// The release list for this preset; hidden with no index.json (a local preview) or no releases.
+// The board's releases as one row of version choices; the one picked before stays, else the
+// newest is picked, and loaded. index.json absent (a local preview) or no release for the board:
+// the status names the local-file route.
 function drawReleases() {
-  const rels = releasesFor(fwIndex, $('preset').value), sel = $('src');
-  sel.replaceChildren(new Option('Local files', ''), ...rels.map((r) => new Option(`${r.product} ${r.version}${r.prerelease ? ', prerelease' : ''}`, r.tag)));
-  $('src-row').hidden = !rels.length;
-  say('src-state', '');
+  const rels = releasesFor(fwIndex, boardId), was = document.querySelector('input[name=rel]:checked')?.value;
+  const pick = rels.find((r) => r.tag === was) || newest(rels);
+  $('vers').replaceChildren(...rels.map((r) => {
+    const l = Object.assign(document.createElement('label'), { className: 'ver' });
+    const i = Object.assign(document.createElement('input'), { type: 'radio', name: 'rel', value: r.tag, checked: r === pick });
+    i.addEventListener('change', () => loadRelease(r.tag));
+    l.append(i, Object.assign(document.createElement('span'), { textContent: r.version + (r.prerelease ? ' pre' : '') }));
+    return l;
+  }));
+  srcTicket++;
+  rows = freshRows();
+  if (local()) {
+    say('src-state', 'Local files: pick a file for each slot.');
+    return drawRows();
+  }
+  if (!pick) {
+    drawRows();
+    if (fwIndex === undefined) return say('src-state', 'Loading the release list.');
+    return say('src-state', fwIndex ? 'No release of this board on this site yet. Use a local file.' : 'Release list not available. Use a local file.', 'bad');
+  }
+  loadRelease(pick.tag);
 }
 
 // A release's files into the preset's slots, each checked against its SHA-256 in index.json.
-async function pickRelease() {
-  const tag = $('src').value, ticket = ++srcTicket;
+async function loadRelease(tag) {
+  const ticket = ++srcTicket, rel = releasesFor(fwIndex, boardId).find((r) => r.tag === tag);
   rows = freshRows();
+  fetching = true;
   drawRows();
-  if (!tag) return say('src-state', '');
-  const rel = releasesFor(fwIndex, $('preset').value).find((r) => r.tag === tag);
-  say('src-state', `Fetching ${rel.tag}.`);
+  say('src-state', `Fetching ${relName(rel)}.`);
   const got = freshRows();
   try {
     for (const f of rel.files) {
@@ -182,30 +203,50 @@ async function pickRelease() {
     }
   } catch (e) {
     if (ticket !== srcTicket) return;
+    fetching = false;
     log(`release ${rel.tag}: ${e.message}`);
-    return say('src-state', `Fetch failed: ${e.message}.`, 'bad');
+    drawRows();
+    return say('src-state', `Fetch failed: ${e.message}. Pick the release again, or use a local file.`, 'bad');
   }
   if (ticket !== srcTicket) return;
+  fetching = false;
   rows = got;
-  say('src-state', `${rel.product} ${rel.version}${rel.prerelease ? ', prerelease' : ''}: ${rel.files.length} file${rel.files.length === 1 ? '' : 's'}, SHA-256 matched.`, 'good');
+  say('src-state', `${relName(rel)}: ${rel.files.length} file${rel.files.length === 1 ? '' : 's'}, SHA-256 matched.`, 'good');
   drawRows();
 }
 
-function pickPreset() {
-  preset = PRESETS[$('preset').value];
+// The cards, the local-file disclosure and the custom box into the board, its preset and the URL
+// hash. Every [data-show] element names the boards, roles or presets it belongs to; the others
+// keep their space (visibility), so a pick never moves the page.
+function pick(fromHash) {
+  const role = document.querySelector('input[name=role]:checked').value;
+  boardId = document.querySelector(`input[name=board-${role}]:checked`).value;
+  const custom = local() && $('custom').checked, b = BOARDS[boardId];
+  preset = PRESETS[custom ? 'custom' : b.preset];
+  if (!fromHash) history.replaceState(null, '', '#' + boardId);
+  const on = new Set([boardId, role, preset === PRESETS.custom ? 'custom' : b.preset]);
+  for (const n of document.querySelectorAll('[data-show]')) n.classList.toggle('off', !n.dataset.show.split(' ').some((t) => on.has(t)));
+  $('custom-note').hidden = !custom;
   $('baud').value = String(preset.baud);
   $('erase').checked = !!preset.erase;
   $('blank-ota').checked = !!preset.blankOta;
-  for (const n of document.querySelectorAll('[data-preset]')) n.hidden = n.dataset.preset !== $('preset').value;
-  $('wifi-sec').hidden = !preset.wifi;
   if (chip && preset.wifi && !nvs && !nvsErr && !busy) {
     busy = true;
     readNvs().finally(() => { busy = false; refresh(); });
   }
-  srcTicket++;
-  rows = freshRows();
+  fetching = false;
   drawReleases();
-  drawRows();
+}
+
+// The URL hash to the cards: a board id (#barnacle, #m5-remote) or a role (#hub, #remote).
+// Section links (#s-connect) and unknown tokens leave the cards as they are.
+function fromHash() {
+  const t = decodeURIComponent(location.hash.slice(1));
+  const b = BOARDS[t], role = b ? b.role : ['hub', 'remote', 'helper'].includes(t) ? t : null;
+  if (!role) return false;
+  document.querySelector(`input[name=role][value="${role}"]`).checked = true;
+  if (b) document.querySelector(`input[name=board-${role}][value="${t}"]`).checked = true;
+  return true;
 }
 
 function drawRows() {
@@ -238,6 +279,8 @@ function drawRows() {
     let file = td(f);
     if (r.sha) {
       file = td(Object.assign(document.createElement('span'), { textContent: r.name }), document.createElement('br'), Object.assign(document.createElement('span'), { className: 'fine sha', textContent: `SHA-256 ${r.sha}` }));
+    } else if (!local()) {
+      file = td(Object.assign(document.createElement('span'), { className: 'fine', textContent: fetching ? 'Fetching' : 'Not in this release' }));
     }
     const st = td();
     st.className = 'chk';
@@ -278,8 +321,9 @@ function refresh() {
   $('disconnect').hidden = !connected;
   $('disconnect').disabled = busy;
   $('baud').disabled = busy || connected;
-  $('preset').disabled = busy;
-  $('src').disabled = busy;
+  for (const i of document.querySelectorAll('input[name=role], input[name^="board-"]')) i.disabled = busy;
+  for (const i of document.querySelectorAll('input[name=rel]')) i.disabled = busy || local();
+  $('local').inert = busy;
   const p4 = chip?.name === 'ESP32-P4';
   $('erase-row').hidden = preset.erase === null || p4;
   if ($('erase-row').hidden) $('erase').checked = false;
@@ -305,7 +349,7 @@ function refresh() {
   const { writes, wifi } = plan();
   let why = null, notes = [];
   if (!connected) why = 'Connect first.';
-  else if (preset.chip && chip.name !== preset.chip) why = `The board is ${chip.name}; this preset is for ${preset.chip}.`;
+  else if (preset.chip && chip.name !== preset.chip) why = `The connected chip is ${chip.name}; the ${BOARDS[boardId].name} uses ${preset.chip}.`;
   else {
     const bad = rows.find((r) => rowError(r));
     if (bad) why = `Refused: ${bad.name}: ${rowError(bad)}.`;
@@ -317,7 +361,9 @@ function refresh() {
     }
   }
   // the Wi-Fi section's status and backup
-  if (!$('ssid').value) say('wifi-state', 'Empty SSID: NVS untouched.');
+  $('wifi-f').disabled = !preset.wifi;
+  if (!preset.wifi) say('wifi-state', preset === PRESETS.custom ? 'Not available with custom offsets.' : 'Not available: the helper stores no network.');
+  else if (!$('ssid').value) say('wifi-state', 'Empty SSID: NVS untouched.');
   else if (wifi.wait) say('wifi-state', "Connect to read the board's NVS.");
   else if (wifi.why) say('wifi-state', `Refused: ${wifi.why}. NVS untouched.`, 'bad');
   else if (wifi.r) {
@@ -394,8 +440,10 @@ if (!('serial' in navigator)) {
 }
 $('connect').addEventListener('click', connect);
 $('disconnect').addEventListener('click', () => { log('disconnected'); drop(); say('conn-state', 'Port closed.'); });
-$('preset').addEventListener('change', pickPreset);
-$('src').addEventListener('change', pickRelease);
+for (const i of document.querySelectorAll('input[name=role], input[name^="board-"]')) i.addEventListener('change', () => pick());
+$('local').addEventListener('toggle', () => pick());
+$('custom').addEventListener('change', () => pick());
+addEventListener('hashchange', () => { if (fromHash()) pick(true); });
 $('add').addEventListener('click', () => { rows.push({ slot: null, addr: null, data: null, name: '' }); drawRows(); });
 for (const id of ['erase', 'blank-ota', 'ack']) $(id).addEventListener('change', refresh);
 for (const id of ['ssid', 'pass', 'hub']) $(id).addEventListener('input', refresh);
@@ -421,5 +469,6 @@ $('copy').addEventListener('click', async () => {
   setTimeout(() => ($('copy').textContent = 'Copy log'), 2000);
 });
 $('clear').addEventListener('click', () => { lines.length = 0; $('log').textContent = ''; });
-pickPreset();
-fetch('/flash/fw/index.json').then((r) => (r.ok ? r.json() : null)).then((j) => { fwIndex = j; drawReleases(); }).catch(() => {});
+fromHash();
+pick(true);
+fetch('/flash/fw/index.json').then((r) => (r.ok ? r.json() : null)).catch(() => null).then((j) => { fwIndex = j; drawReleases(); });

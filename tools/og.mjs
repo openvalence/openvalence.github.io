@@ -27,8 +27,8 @@ const CARDS = {
   '/diagrams/': { subject: 'The system from app to motor, the path of a funscript action and the access tiers.', visual: { svg: 0, crop: true } },
   '/downloads/': { title: 'Downloads', subject: 'Phosphor pre-release builds for Windows, macOS, Linux and Android.', visual: { list: [
     ['Windows', 'MSIX package, installer, portable zip'], ['macOS', 'Disk image, Apple silicon'], ['Linux', 'AppImage, .deb'], ['Neutrino', 'Built in: try the app with no machine']] } },
-  '/flash/': { section: 'Guides', title: 'Web flasher', subject: 'Write firmware to an OpenValence board over USB from Chrome or Edge.', visual: { rows: [
-    ['0x2000', 'Bootloader'], ['0x8000', 'Partition table'], ['0xF000', 'otadata'], ['0x20000', 'App, slot ota_0'], ['0x9000', 'NVS: Pre-program Wi-Fi']] } },
+  '/flash/': { section: 'Guides', title: 'Web flasher', subject: 'Pick what you are flashing and the board. The page writes the newest release over USB from Chrome or Edge.', visual: { list: [
+    ['Hub', 'Nucleus on the OSSM Flagship or a barnacle'], ['Helper', "The barnacle's R+D board"], ['Remote', 'Garnet on the OSSM M5 Remote, CoreS3 SE or Waveshare 4.3'], ['Wi-Fi', 'Pre-programmed before the first boot']] } },
   '/guides/': { subject: 'Builds and mods you do with your own hands: parts, steps, pinouts and checks.', visual: { list: [
     ['Barnacle mod', 'A Stamp-P4 on the OSSM R+D board'], ['Motor setup', 'A/B quadrature input over RS485'], ['Web flasher', 'Firmware over USB']] } },
   '/guides/barnacle/': { subject: 'A Stamp-P4 on the OSSM R+D board, driving the motor on A/B quadrature.' },

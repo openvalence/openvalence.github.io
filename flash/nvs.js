@@ -8,7 +8,7 @@
 // - No message, return value or log line carries an SSID or a passphrase.
 // - The saved-network blob mirrors Valence lib/valence/include/valence/net/saved_networks.hpp
 //   (SavedNetworks::encode, decode, save, joinTarget, checkCredentials). Change it there first.
-import { crc32, parsePartitions } from './image.js?v=bd65b734d4';
+import { crc32, parsePartitions } from './image.js?v=6aae038b38';
 
 const PAGE = 4096, ENTRIES = 126, VERSION = 0xfe;
 const ACTIVE = 0xfffffffe, FULL = 0xfffffffc, FREEING = 0xfffffff8;

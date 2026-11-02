@@ -60,23 +60,34 @@ runs its string pass before it is pushed.
 ## Firmware releases
 
 The web flasher at `/flash/` offers the files of every release on this repo.
-The binaries live only as release assets, never in git. Each build is one
-release:
+The visitor picks a card (hub, helper or remote), then a board. The page
+loads that board's newest full release, else its newest prerelease. No file
+is chosen. The boards are `BOARDS` in `flash/image.js`. Each key is the URL
+hash the guides link to (`/flash/#barnacle`, `#helper`, `#m5-remote`). Never
+rename a key. The binaries live only as release assets, never in git.
+Each build is one release:
 
-- Tag `<product>-<version>`: `nucleus-p4b-0.1.79`, `nucleus-p4-0.1.80`,
-  `barnacle-shim-0.1.78`, `garnet-0.1.1`. The product picks the flasher preset
-  (`products` in `flash/image.js`).
+- Tag `<product>-<version>`: `nucleus-p4b-0.1.82`, `nucleus-p4-0.1.85`,
+  `barnacle-shim-0.1.82`, `garnet-m5-remote-0.1.1`. The product picks the
+  board: `nucleus-p4` (OSSM Flagship), `nucleus-p4b` (barnacle),
+  `barnacle-shim` (the barnacle helper), `garnet-m5-remote`,
+  `garnet-cores3se`, `garnet-waveshare-s3-43`.
 - Assets: exactly the files the flasher writes, plus `SHA256SUMS.txt`. A file's
   name picks its slot (`tools/fw_index.py`): `bootloader*.bin` 0x2000,
   `partition*.bin` 0x8000, `ota_data*.bin` 0xF000, `*-app.bin` or
   `firmware.bin` the app at 0x20000, any other `.bin` a full image at 0x0.
+- A Garnet release is one full image per board at 0x0. Make it with
+  `esptool merge-bin` from `.pio/build/<env>`: `bootloader.bin` at 0x0,
+  `partitions.bin` at 0x8000, `firmware.bin` at 0x10000. The bytes equal
+  PlatformIO's `firmware.factory.bin`. Its NVS region is blank, so the remote
+  opens its setup hotspot.
 - Prerelease while the flasher is WIP.
 - No image built with Wi-Fi credentials or a bench OTA key in `secrets.h`.
 
 ```
 cd <folder holding only the release files>
 sha256sum *.bin > SHA256SUMS.txt
-gh release create nucleus-p4b-0.1.79 *.bin SHA256SUMS.txt -R openvalence/openvalence.github.io   --target main --prerelease --title "nucleus-p4b 0.1.79" --notes-file NOTES.md
+gh release create nucleus-p4b-0.1.82 *.bin SHA256SUMS.txt -R openvalence/openvalence.github.io   --target main --prerelease --title "nucleus-p4b 0.1.82" --notes-file NOTES.md
 ```
 
 The deploy downloads every release, refuses one whose files do not match its
