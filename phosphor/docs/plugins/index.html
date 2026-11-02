@@ -185,7 +185,7 @@
     <ul>
       <li>An <strong>enabled</strong> switch. The choice is remembered. A disabled factory plugin stays off.</li>
       <li>A <strong>Show tab</strong> switch for plugins with a page. It hides the sidebar tab without disabling the plugin.</li>
-      <li>Its version, where it came from (factory, built-in or folder), its status, its permissions, the roles it binds, and its settings card.</li>
+      <li>Its version, where it came from (factory, built-in or folder), its status, its permissions, the roles it uses, and its settings card.</li>
       <li>A <strong>Reload</strong> button, and a last-error line that always shows, so an error never moves the layout.</li>
     </ul>
     <figure class="docshot"><picture><source srcset="../img/pl-pane-light.webp" data-hi="../img/hi/pl-pane-light.webp" media="(prefers-color-scheme: light)"><img src="../img/pl-pane-dark.webp" data-hi="../img/hi/pl-pane-dark.webp" width="1280" height="800" alt="The Plugins pane showing the installed plugins list with each plugin status, enable switch and permissions." decoding="async"></picture><figcaption>The Plugins pane in the sidebar's Phosphor section.</figcaption></figure>
@@ -197,19 +197,19 @@
       <li>Permissions lists what the plugin may do.</li>
       <li>Reload reloads the plugin.</li>
     </ol>
-    <p>A plugin that throws is recorded on its row and in the Log pane. If a card throws, it is dropped and its settings return to the standard controls.</p>
+    <p>A plugin that fails is recorded on its row and in the Log pane. If a card fails, it is dropped and its settings return to the standard controls.</p>
   </section>
 
   <section aria-labelledby="s-perm">
     <h2 id="s-perm" data-n="04">Permissions<a class="hl" href="#s-perm" aria-label="Copy link to this section"></a></h2>
     <!-- PLUGINS.md Permissions, The API (One producer); src/plugins/host.js:28 MOTION_HOLD_MS 500, :360 menu, :408 net.fetch -->
-    <p>Reading needs no permission. A plugin declares everything else in its manifest, the Plugins pane shows the list, and the app refuses a gated call that the manifest did not declare.</p>
+    <p>Reading needs no permission. A plugin declares everything else in its manifest, the Plugins pane shows the list, and the app refuses any call that needs a permission the manifest did not declare.</p>
     <table class="parts">
       <thead>
         <tr><th scope="col">Permission</th><th scope="col">Allows</th></tr>
       </thead>
       <tbody>
-        <tr><th scope="row"><code>intent</code></th><td>Writing settings, actions and commands, and controls bound to hub fields</td></tr>
+        <tr><th scope="row"><code>intent</code></th><td>Writing settings, actions and commands, and controls linked to hub fields</td></tr>
         <tr><th scope="row"><code>motion</code></th><td>Sending motion input to the machine</td></tr>
         <tr><th scope="row"><code>menu</code></th><td>Adding items to the right-click menus</td></tr>
         <tr><th scope="row"><code>net.fetch</code></th><td>HTTP and HTTPS requests to services that are not the machine. The connected hub's own addresses are refused.</td></tr>

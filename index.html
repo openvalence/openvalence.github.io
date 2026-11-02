@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Open-Source Software And Hardware For Linear Motion Machines</title>
-<meta name="description" content="Open Source OSSM Flagship PCB, Phosphor app with Buttplug.io support and built in funscript player, Nucleus firmware with Kinetic² Motion.">
+<meta name="description" content="Open-source OSSM Flagship PCB, Phosphor app with Buttplug.io support and a built-in funscript player, Nucleus firmware with Kinetic² motion.">
 <link rel="canonical" href="https://openvalence.org/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/">
@@ -74,14 +74,14 @@
 <script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:title" content="Open-Source Software And Hardware For Linear Motion Machines">
-<meta property="og:description" content="Open Source OSSM Flagship PCB, Phosphor app with Buttplug.io support and built in funscript player, Nucleus firmware with Kinetic² Motion.">
+<meta property="og:description" content="Open-source OSSM Flagship PCB, Phosphor app with Buttplug.io support and a built-in funscript player, Nucleus firmware with Kinetic² motion.">
 <meta property="og:image" content="https://openvalence.org/images/og/home.png?v=fddbacfe2f">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Open-Source Software And Hardware For Linear Motion Machines. Open Source OSSM Flagship PCB, Phosphor app with Buttplug.io support and built in funscript player, Nucleus firmware with Kinetic² Motion.">
+<meta property="og:image:alt" content="Open-Source Software And Hardware For Linear Motion Machines. Open-source OSSM Flagship PCB, Phosphor app with Buttplug.io support and a built-in funscript player, Nucleus firmware with Kinetic² motion.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Open-Source Software And Hardware For Linear Motion Machines">
-<meta name="twitter:description" content="Open Source OSSM Flagship PCB, Phosphor app with Buttplug.io support and built in funscript player, Nucleus firmware with Kinetic² Motion.">
+<meta name="twitter:description" content="Open-source OSSM Flagship PCB, Phosphor app with Buttplug.io support and a built-in funscript player, Nucleus firmware with Kinetic² motion.">
 <meta name="twitter:image" content="https://openvalence.org/images/og/home.png?v=fddbacfe2f">
 <!-- /chrome:head -->
 <script type="application/ld+json">
@@ -163,7 +163,7 @@
         <!-- data-app: the Phosphor mini build (Phosphor repo, npm run build:mini, memory only), live over the poster where site.js's gate allows -->
         <div class="frame" data-app="https://phosphor.openvalence.org/mini/" data-title="Phosphor, live in your browser, driving Neutrino with the Advanced pattern">
           <span class="tall" role="img" aria-label="Phosphor on a phone, connected to Neutrino: the position readout, the safety buttons and the Advanced pattern card with its speed and stroke shape."></span>
-          <video data-auto muted loop playsinline controls preload="none" width="1280" height="800" poster="/images/phosphor/hero-poster.webp" data-hi-poster="/images/phosphor/hi/hero-poster.webp" aria-label="Phosphor playing a funscript against Neutrino, the built-in machine: the timeline scrolls and the position marker follows it along the rail.">
+          <video data-auto muted loop playsinline controls preload="none" width="1280" height="800" poster="/images/phosphor/hero-poster.webp" data-hi-poster="/images/phosphor/hi/hero-poster.webp" aria-label="Phosphor playing a funscript against Neutrino, the machine firmware built into the app: the timeline scrolls and the position marker follows it along the rail.">
             <source src="/images/phosphor/hero.webm" type="video/webm">
           </video>
         </div>
@@ -238,7 +238,7 @@
       <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#radio"/></svg><span><strong>ESP32-C6</strong><small>radio</small></span><p class="tip">Moves bytes over SDIO and runs Espressif's stock firmware, so the P4 is the only chip you flash. <a href="/nucleus/#s-chips">Chips</a></p></div></li>
       <li><div class="blk hub" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chip"/></svg><span><strong>Hub</strong><small>Nucleus on the ESP32-P4</small></span><p class="tip">Holds the machine's state, clamps every request to the machine's limits and reports back what it actually did. <a href="/nucleus/">Nucleus</a></p></div></li>
       <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#curve"/></svg><span><strong>Kinetic²</strong><small>planner</small></span><p class="tip">Turns timed knots into a 128 ms strip of positions on a 1 ms grid, so a short planner stall doesn't reach the motor. <a href="/kinetic/">Kinetic</a></p></div></li>
-      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#quad"/></svg><span><strong>LP core</strong><small>quadrature out</small></span><p class="tip">Sends A/B quadrature from a 40 MHz crystal and parks itself if its 4 ms lease runs out. <a href="/nucleus/#s-motion">Motion</a></p></div></li>
+      <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#quad"/></svg><span><strong>LP core</strong><small>quadrature out</small></span><p class="tip">Sends A/B quadrature from a 40 MHz crystal and parks itself if its 4 ms timeout runs out. <a href="/nucleus/#s-motion">Motion</a></p></div></li>
       <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#drive"/></svg><span><strong>Servo drive</strong><small>closes the loop</small></span><p class="tip">Follows the quadrature and closes the loop on the motor. Alarms come back to the P4, RS485 carries reads. <a href="/hardware/#s-drive">Drive interface</a></p></div></li>
       <li><div class="blk" tabindex="0"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#rail"/></svg><span><strong>Motor and rail</strong><small>where it ends up</small></span><p class="tip">The firmware homes it and holds every move inside the rail window; the PCB's E-stop cuts motor power in hardware. <a href="/hardware/">Hardware</a></p></div></li>
       <li aria-hidden="true" class="hint-li"><p class="hint">Hover or tap a block for details.</p></li>
@@ -251,12 +251,12 @@
     <dl class="numbers">
       <!-- Nucleus .claude/rules/motion-control.md, "The LP-core emitter": Rigol DHO4204 single-shot captures at 8 ns per sample, 2026-09-20; the 5-cycle poll loop at 40 MHz is 125 ns, peak-to-peak spread 128 ns (16 samples); at a prime rate intervals take two values and the mean does not drift -->
       <div>
-        <dt>Peak-to-peak spread of the LP core's quadrature edges at a prime rate, Rigol DHO4204 at 8 ns per sample. It is the 125 ns poll loop, and it does not accumulate.</dt>
+        <dt>Peak-to-peak spread of the LP core's quadrature edges at a prime rate, Rigol DHO4204 at 8 ns per sample. The spread is the 125 ns poll loop and does not accumulate.</dt>
         <dd>128<span class="unit">ns</span></dd>
       </div>
       <!-- Nucleus .claude/rules/architecture.md, "Position truth": HP flash hammer with the cache off, LP late=0, 2,156 transitions, 0 illegal, 0 outliers -->
       <div>
-        <dt>Quadrature transitions scoped while the HP cores wrote to flash with the cache disabled (about 1.0 s of every 5 s): LP late count 0, illegal transitions 0.</dt>
+        <dt>Quadrature transitions measured on a scope while the HP cores wrote to flash with the cache disabled (about 1.0 s of every 5 s): LP late count 0, illegal transitions 0.</dt>
         <dd>2,156</dd>
       </div>
       <!-- Kinetic README.md, "Determinism": double-precision planning, same bits on every IEEE-754 target built with -ffp-contract=off -->
@@ -273,7 +273,7 @@
     <ul class="index">
       <li><h3><a href="/valence/">Valence</a></h3><p>The protocol: spec, registry, reference library, clients, tools, documentation.</p><span class="lic">MIT · spec text CC BY 4.0</span></li>
       <li><h3><a href="/nucleus/">Nucleus</a></h3><p>Firmware for the OSSM Flagship PCB: an ESP32-P4 with an ESP32-C6 for Wi-Fi, built on ESP-IDF. The P4's low-power (LP) core generates the quadrature output.</p><span class="lic">Apache-2.0</span></li>
-      <li><h3><a href="/phosphor/">Phosphor</a></h3><p>The reference client, for Windows, macOS and Linux (including a Flatpak), with plugins, themes and Neutrino, a built-in emulated machine. Android is WIP.</p><span class="lic">Apache-2.0</span>
+      <li><h3><a href="/phosphor/">Phosphor</a></h3><p>The reference client, for Windows, macOS and Linux (including a Flatpak), with plugins, themes and Neutrino, a built-in emulator. Android is in progress.</p><span class="lic">Apache-2.0</span>
         <div class="thumb"><picture><source srcset="/images/phosphor/dash-light-640.webp" data-hi="/images/phosphor/dash-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/dash-dark-640.webp" data-hi="/images/phosphor/dash-dark.webp" width="640" height="400" alt="" loading="lazy" decoding="async"></picture></div></li>
       <li><h3><a href="/kinetic/">Kinetic</a></h3><p>The motion planner: jerk-limited trajectories from timed knots. Header-only C++, deterministic across targets.</p><span class="lic">Apache-2.0</span></li>
       <li><h3><a href="/hardware/">Hardware</a></h3><p>The OSSM Flagship PCB and everything physical around it, in KiCad.</p><span class="lic">CERN-OHL-S-2.0</span>

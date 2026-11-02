@@ -146,7 +146,7 @@
       <li>Press Set up on your machine. Phosphor connects over Bluetooth and asks for the configure tier. The status reads "Asking for configure", then "Press Pair on the machine".</li>
       <li>Press Pair on the machine. Setup continues on approval.</li>
       <li>Choose a network. Where the machine can list the networks it hears, Phosphor shows them strongest first with signal bars, and asks for the passphrase once. Where it cannot, you get a setup form built from the machine's own Setup settings. <span class="tag">WIP</span> The network list depends on a draft protocol change.</li>
-      <li>Phosphor sends the join, then waits up to 30 s for the machine to appear on Wi-Fi and connects to it. "Connected over Wi-Fi" means it worked.</li>
+      <li>Phosphor sends the network details to the machine, then waits up to 30 s for it to appear on Wi-Fi and connects to it. "Connected over Wi-Fi" means it worked.</li>
     </ol>
     <p>If the machine does not appear, the status reads "Joined, but the hub did not appear on WiFi", with Try again. The setup flow itself does not store or log the network name or passphrase; the form sends them to the machine. The wait is 30 s because a machine can reboot after it joins.</p>
   </section>
@@ -183,7 +183,7 @@
       <div><dt>Pending knocks</dt><dd>Lists the clients waiting. Approve and Deny need configure.</dd></div>
       <div><dt>Trust ledger</dt><dd>Lists paired clients. <strong>Control ownership</strong> lists who holds each motion source, and Evict removes a session (needs configure).</dd></div>
     </dl>
-    <p>A factory-fresh machine gives its first knock the configure tier. After that, a window grants control, and configure by approval only.</p>
+    <p>A factory-fresh machine gives the first client to pair the configure tier. After that, a pairing window grants control, and configure needs approval.</p>
     <h3 id="at-the-machine">At the machine<a class="hl" href="#at-the-machine" aria-label="Copy link to this section"></a></h3>
     <p>Phosphor's own help text, under "At the machine" on the Pairing page, says:</p>
     <ol>
@@ -192,9 +192,9 @@
       <li>Hold Pair 5 s: every client drops to watch.</li>
       <li>No Pair button: power-cycle three times, each within 10 s of boot.</li>
     </ol>
-    <p>The window stays open for 120 s after the press. The power-cycle trick is for a machine with no Pair button.</p>
-    <p><span class="tag">WIP</span> The double press, the 5 s hold, and a single press that approves a configure ask on a machine that has lost its network are protocol drafts. The firmware has them, and they may change before release.</p>
-    <p>Booting a machine with Pair held puts it in config mode: Bluetooth and USB serial only, no Wi-Fi, and the first knock gets configure.</p>
+    <p>The pairing window stays open for 120 s after the press. The power-cycle method is for a machine with no Pair button.</p>
+    <p><span class="tag">WIP</span> The double press, the 5 s hold, and a single press that approves a configure request on a machine that has lost its network are not final. The firmware has them, and they may change before release.</p>
+    <p>Booting a machine with Pair held puts it in config mode: Bluetooth and USB serial only, no Wi-Fi, and the first client gets configure.</p>
   </section>
 
   <section aria-labelledby="s-estop">
@@ -208,7 +208,7 @@
       <li>The rail reads "E-stop latched".</li>
       <li>The button now reads Halted. Hold it for 3 s to release.</li>
     </ol>
-    <p>In the desktop app, each press also broadcasts a stop packet to every hub on your network, next to the stop sent over the session. Every hub on the network that supports it latches, including ones you are not connected to. You can turn this off under Settings, Connection, "Broadcast e-stop to every hub on the LAN". It needs a live link to fire, and Neutrino never broadcasts.</p>
+    <p>In the desktop app, each press also broadcasts a stop message to every hub on your network, in addition to the stop sent over the session. Every hub on the network that supports it latches, including ones you are not connected to. You can turn this off under Settings, Connection, "Broadcast e-stop to every hub on the LAN". It needs an active connection to send, and Neutrino never broadcasts.</p>
     <p>An app connected through the Buttplug server cannot latch E-Stop. When such an app stops or disconnects, the machine holds its last target. Only the hub's E-Stop latches. Use E-Stop, not the other app's stop button, when you need the machine to halt.</p>
     <p class="links"><a href="/phosphor/docs/troubleshooting/">Troubleshooting</a> · <a href="/phosphor/docs/getting-started/">Getting started</a> · <a href="/phosphor/docs/">Docs</a></p>
   </section>

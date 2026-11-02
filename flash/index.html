@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Web flasher: OpenValence</title>
-<meta name="description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. WIP.">
+<meta name="description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. Work in progress.">
 <link rel="canonical" href="https://openvalence.org/flash/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/flash/">
@@ -71,14 +71,14 @@
 <script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:title" content="Web flasher: OpenValence">
-<meta property="og:description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. WIP.">
+<meta property="og:description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. Work in progress.">
 <meta property="og:image" content="https://openvalence.org/images/og/flash.png?v=108cc3387b">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Web flasher: OpenValence. Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. WIP.">
+<meta property="og:image:alt" content="Web flasher: OpenValence. Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. Work in progress.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Web flasher: OpenValence">
-<meta name="twitter:description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. WIP.">
+<meta name="twitter:description" content="Write firmware to an OpenValence board over USB from Chrome or Edge: the Garnet remote, Nucleus on the ESP32-P4, the barnacle helper shim, or any ESP32 at offsets you set. Files stay in the browser. Work in progress.">
 <meta name="twitter:image" content="https://openvalence.org/images/og/flash.png?v=108cc3387b">
 <!-- /chrome:head -->
 <style>
@@ -194,17 +194,17 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
       </select>
     </div>
     <div data-preset="garnet">
-      <p>The OSSM M5 Remote on a CoreS3 or CoreS3 SE. One full image at 0x0: bootloader, partition table and app. The image blanks NVS (0x9000 to 0xF000), so the saved Wi-Fi and key map go with it; Pre-program Wi-Fi puts a network back.</p>
+      <p>The OSSM M5 Remote on a CoreS3 or CoreS3 SE. One full image at 0x0: bootloader, partition table and app. The image erases NVS (non-volatile storage, 0x9000 to 0xF000). The saved Wi-Fi and key map go with it. Pre-program Wi-Fi restores a network.</p>
     </div>
     <div data-preset="p4" hidden>
       <p>Nucleus on the OSSM Flagship, or nucleus-p4b on a barnacle's Stamp-P4. Bootloader at 0x2000, partition table at 0x8000, otadata at 0xF000, app at 0x20000 (slot ota_0). Each file is optional. The chip is never erased: NVS holds the hub identity, the trust ledger and pairing.</p>
       <p class="warn">Flash with the motor powered down. On a barnacle, disconnect the wires to J8 first: the Stamp's USB-C feeds the R+D board's 5 V through it.</p>
     </div>
     <div data-preset="shim" hidden>
-      <p>The barnacle's ESP32-WROOM-32D, through the R+D board's own USB-C (the CP2102 on UART0). One full image at 0x0. Erase is on, as in the release notes. Power off and the wires to J8 disconnected.</p>
+      <p>The barnacle's ESP32-WROOM-32D, through the R+D board's own USB-C (the CP2102 on UART0). One full image at 0x0. Erase is on, as in the release notes. Power off the board and disconnect the wires to J8.</p>
     </div>
     <div data-preset="custom" hidden>
-      <p>Any ESP32 chip. Set an offset for each file. Once connected, the offset list holds the chip's bootloader offset and the board's partitions, and files named like bootloader.bin, partitions.bin, ota_data_initial.bin or firmware.bin get their offset filled in. Erase of the whole chip is never offered on an ESP32-P4.</p>
+      <p>Any ESP32 chip. Set an offset for each file. Once connected, the offset list holds the chip's bootloader offset and the board's partitions. Files named like bootloader.bin, partitions.bin, ota_data_initial.bin or firmware.bin get their offset filled in. Erase of the whole chip is never offered on an ESP32-P4.</p>
     </div>
   </section>
 
@@ -257,7 +257,7 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
 
   <section class="tool" id="wifi-sec" aria-labelledby="s-wifi">
     <h2 id="s-wifi">Pre-program Wi-Fi<a class="hl" href="#s-wifi" aria-label="Copy link to this section"></a></h2>
-    <p>Optional. Saves one network to the board's NVS after the images, so it joins on first boot. The same SSID is replaced; a full list of four drops its last network. Every other NVS entry is kept.</p>
+    <p>Optional. Saves one network to the board's NVS (non-volatile storage) after the images, so it joins on first boot. The same SSID is replaced; a full list of four drops its last network. Every other NVS entry is kept.</p>
     <div class="field">
       <label for="ssid">SSID</label>
       <input type="text" id="ssid" maxlength="32" autocomplete="off" spellcheck="false">

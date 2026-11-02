@@ -127,7 +127,7 @@
     <h2 id="s-open" data-n="01">Open it<a class="hl" href="#s-open" aria-label="Copy link to this section"></a></h2>
     <!-- FUNSCRIPT.md Motion path; plugins/factory/funscript-player/index.js HERO.spec (input.target + input.duration required); page.js label 'Funscript'; PLUGINS.md Factory plugins -->
     <p>The player lives in the Phosphor app. The page a hub serves from its own flash loads no plugins, so it has no player. In the app the player has two places: a card you can put on the Dash, and a page called <strong>Funscript</strong> under Plugins in the sidebar. Both are the same player.</p>
-    <p>The player needs a hub that accepts scheduled motion (a segments stream). On a hub without one, the card and the page stay empty. Playing a script also needs a session at the control tier, since it drives motion. <a href="/phosphor/docs/connecting/">Connecting</a> covers pairing and tiers.</p>
+    <p>The player needs a hub that accepts scheduled motion. On a hub without that, the card and the page stay empty. Playing a script also needs a session at the control tier, since it drives motion. <a href="/phosphor/docs/connecting/">Connecting</a> covers pairing and tiers.</p>
     <p>You can turn the player off, or hide its sidebar tab, in the Plugins pane. See <a href="/phosphor/docs/plugins/">Plugins</a>.</p>
   </section>
 
@@ -155,7 +155,7 @@
     <p>Every other axis in the files is ignored, and the status says so, for example <code>Extra axes ignored: roll</code>. On a hub without an oscillator input the status reads <code>This machine has no oscillator input</code>. A side file that fails to read becomes a note in the status. It does not stop the load. A Stash scene serves one file, so it carries embedded axes only.</p>
     <h3 id="bad-scripts">Bad scripts<a class="hl" href="#bad-scripts" aria-label="Copy link to this section"></a></h3>
     <p><!-- funscript.js:20 MAX_ACTIONS 1000000, MAX_SPAN_MS 60000 -->
-    A file that is not JSON, has no valid action, or has more than a million actions is refused in words, and Play stays grayed. Fixable problems play and are named in the status: unsorted actions, duplicates, positions outside 0 to 100, invalid actions dropped, very long gaps split. The <code>range</code> field inside a script is ignored.</p>
+    A file that is not JSON, has no valid action, or has more than a million actions is refused with a message, and Play stays grayed. Fixable problems play and are named in the status: unsorted actions, duplicates, positions outside 0 to 100, invalid actions dropped, very long gaps split. The <code>range</code> field inside a script is ignored.</p>
   </section>
 
   <section aria-labelledby="s-scale">
@@ -209,7 +209,7 @@
     <p>Off by default. When on, the machine moves to the home point (the middle of the window by default) after a pause has lasted the set time (5 seconds by default). Play, a new load or any change to Motion cancels a pending move.</p>
     <h3 id="queue-and-autoplay">Queue and autoplay<a class="hl" href="#queue-and-autoplay" aria-label="Copy link to this section"></a></h3>
     <p>The library column has a Library and a Queue view. Add to queue and Play next are on each row, and a drag reorders. With Autoplay on, the next queued video loads and plays when one ends. <!-- ui.js:112 AUTO_WAIT_MS 10000 -->
-    A halt, a refusal, any other act of yours between videos, or 10 seconds without the next script cancels the pending start.</p>
+    A halt, a refusal, any other action you take between videos, or 10 seconds without the next script cancels the pending start.</p>
     <h3 id="rate-and-speed">Rate and speed<a class="hl" href="#rate-and-speed" aria-label="Copy link to this section"></a></h3>
     <!-- ui.js:106 RATES -->
     <p>Rate runs from 0.5x to 2x. The player does not slow a script down to fit the machine. The hub holds its input speed limit, and the status reads <code>Script past the input speed limit</code> when a script asks for more.</p>
@@ -231,7 +231,7 @@
   <section aria-labelledby="s-analyzer">
     <h2 id="s-analyzer" data-n="07">Analyzer<a class="hl" href="#s-analyzer" aria-label="Copy link to this section"></a></h2>
     <!-- FUNSCRIPT.md Analyzer (Controls, Live or Preview, Lag, Legend), Kinetic (What runs where, Fallback, What it is not); analyzer.js COPY -->
-    <p>The Graph button (key <code>g</code>) turns the timeline into a tuning bench. The card keeps its size. The video shrinks to a thumbnail and the graph grows. It shows four things:</p>
+    <p>The Graph button (key <code>g</code>) turns the timeline into the analyzer. The card keeps its size. The video shrinks to a thumbnail and the graph grows. It shows four things:</p>
     <ul>
       <li>The script's actions as dots.</li>
       <li>The curve the machine's own planner draws through them. The player runs Kinetic², the same planner code as the firmware, inside the app, so it costs the hub nothing.</li>
@@ -253,7 +253,7 @@
       <div><dt>Live</dt><dd>Stores each change as you make it.</dd></div>
       <div><dt>Preview</dt><dd>Applies a change on the machine without storing it. The status reads <code>Preview: not saved</code>. <strong>Apply</strong> stores the values and <strong>Discard</strong> puts the stored ones back. Preview is the default on a hub that supports it.</dd></div>
     </dl>
-    <p>The preview planner is an ideal one: it has none of the board's task jitter or edge quantization. It matches the firmware exactly only when both run the same Kinetic version.</p>
+    <p>The preview planner is an ideal one: it has none of the hub's scheduling jitter or edge quantization. It matches the firmware exactly only when both run the same Kinetic version.</p>
   </section>
 
   <section aria-labelledby="s-keys">

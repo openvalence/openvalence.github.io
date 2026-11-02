@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Isotope: OpenValence</title>
-<meta name="description" content="Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: a design home, nothing runs yet. No license chosen.">
+<meta name="description" content="Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: design stage, nothing runs yet. No license chosen.">
 <link rel="canonical" href="https://openvalence.org/isotope/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/isotope/">
@@ -71,14 +71,14 @@
 <script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:title" content="Isotope: OpenValence">
-<meta property="og:description" content="Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: a design home, nothing runs yet. No license chosen.">
+<meta property="og:description" content="Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: design stage, nothing runs yet. No license chosen.">
 <meta property="og:image" content="https://openvalence.org/images/og/isotope.png?v=8f4d6fe6c4">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Isotope: OpenValence. Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: a design home, nothing runs yet. No license chosen.">
+<meta property="og:image:alt" content="Isotope: OpenValence. Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: design stage, nothing runs yet. No license chosen.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Isotope: OpenValence">
-<meta name="twitter:description" content="Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: a design home, nothing runs yet. No license chosen.">
+<meta name="twitter:description" content="Isotope is the planned firmware for small ESP32 accessories that join a Valence hub over ESP-NOW. WIP: design stage, nothing runs yet. No license chosen.">
 <meta name="twitter:image" content="https://openvalence.org/images/og/isotope.png?v=8f4d6fe6c4">
 <!-- /chrome:head -->
 </head>
@@ -161,7 +161,7 @@
       <li><b>Hub and spoke</b><p>Accessories talk only to the hub. A client such as <a href="/phosphor/">Phosphor</a> sees accessory channels like any other channel in the hub's catalog, so it needs no accessory-specific code.</p></li>
       <li><b>Join and declare</b><p>You open a pairing window on the hub. The accessory sends a join request, then declares its own channels, and the hub stores them. Adding an accessory needs no change to the hub or the client.</p></li>
       <li><b>The hub runs the logic</b><p>The relationships that drive an accessory live in the hub, so an accessory behaves the same from any client.</p></li>
-      <li><span class="num">5<small>s</small></span><b>Fails safe on its own</b><p>The hub sends a beacon once a second. With no beacon for 5 seconds, or on a goodbye or an e-stop, each actuator goes to the safe value it declared in advance.</p></li>
+      <li><span class="num">5<small>s</small></span><b>Fails safe on its own</b><p>The hub sends a beacon once a second. With no beacon for 5 seconds, or on a goodbye message or an e-stop, each actuator goes to the safe value it declared in advance.</p></li>
       <li><b>Unencrypted</b><p>Accessory traffic is not encrypted. To make up for it, the accessory clamps every actuating value, and the hub never treats accessory telemetry as safety-grade.</p></li>
       <li><span class="num">19</span><b>Small fleets</b><p>A hub addresses at most 19 accessories; 3 is typical. The limit comes from ESP-NOW's peer table.</p></li>
     </ul>

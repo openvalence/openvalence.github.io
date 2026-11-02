@@ -128,7 +128,7 @@
   <section class="aside" aria-labelledby="s-status">
     <h2 id="s-status">Status<a class="hl" href="#s-status" aria-label="Copy link to this section"></a></h2>
     <!-- Phosphor docs/BUILD.md:21-23, src/main.js:95-106 (shell only); bead ph-5u0g.1 (Android, in progress) -->
-    <p class="big-line">In every Phosphor pre-release build for Windows, macOS and Linux. Android is WIP.</p>
+    <p class="big-line">In every Phosphor pre-release build for Windows, macOS and Linux. Android is in development.</p>
   </section>
 
   <section aria-labelledby="s-why">
@@ -189,7 +189,7 @@
     <!-- Phosphor src/shell/virtual.svelte.js:44-57, 96, 106; src/model/neutrino-bridge.js:29-30, 59; neutrino.worker.js; DESIGN.md "the built-in machine" -->
     <ol>
       <li>Phosphor carries the WebAssembly build inside the app, about 660 KB.</li>
-      <li>When you press Connect, it starts Neutrino in a worker thread, homed and with its pairing window open, so Phosphor pairs with it the way it pairs with a real machine.</li>
+      <li>When you press Connect, it starts Neutrino in a worker thread, at its home position with its pairing window open, so Phosphor pairs with it the way it pairs with a real machine.</li>
       <li>The worker runs the hub on its own clock: a motion pass every 1 ms, the same tick as the PCB's, and a hub pass every 5 ms.</li>
       <li>Phosphor talks to it through the same connection code it uses for a real hub. Nothing goes out on the network.</li>
       <li>Disconnecting stops Neutrino. Its settings, presets and pairings are saved for the next run.</li>
@@ -237,7 +237,7 @@ node sim/neutrino/wasm/check.mjs</code></pre>
     <!-- README.md parity table: emitter, Drive link and DRV_ALM, push-to-pair, heap and tcp figures, mDNS; src/SimCore.cpp:23-42 -->
     <div>
     <ul>
-      <li>Motion is perfect. There is no drive, motor or encoder, so following error and drive alarms never show up.</li>
+      <li>Motion is ideal. There is no drive, motor or encoder, so following error and drive alarms never show up.</li>
       <li>No HOME button and no E-stop input. Phosphor's Halt and Pause work.</li>
       <li>The Wi-Fi networks are made up, and memory and TCP figures read 0.</li>
     </ul>

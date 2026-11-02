@@ -143,7 +143,7 @@
     <!-- motion/timing.html; facts as the Sources comment above, plus MotionArbiter.h kStepsPerMm 208.608 and kLpClockHz 40 MHz; the stroke from motion/bake.mjs (Kinetic² WebAssembly build) -->
     <figure class="motion" data-live="/motion/kinetic-data.js /motion/common.js /motion/timing.js">
       <div class="frame dark">
-        <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/timing-dark.webp" aria-label="Animation, no sound: one stroke seen at five zoom levels, from a 2.4 second view where knots arrive 900 ms ahead, to the 128 ms plan strip, to 1 ms steer ticks that renew a 4 ms lease, to single quadrature steps of 4.79 micrometers, to the 125 ns poll grid where an edge lands on the first poll after its deadline.">
+        <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/timing-dark.webp" aria-label="Animation, no sound: one stroke seen at five zoom levels, from a 2.4 second view where planned points arrive 900 ms ahead, to the 128 ms plan strip, to 1 ms steer ticks that renew a 4 ms lease, to single quadrature steps of 4.79 micrometers, to the 125 ns poll grid where an edge lands on the first poll after its deadline.">
           <source src="/images/motion/timing-dark-640.webm" type="video/webm" media="(max-width: 700px)">
           <source src="/images/motion/timing-dark-640.mp4" type="video/mp4" media="(max-width: 700px)">
           <source src="/images/motion/timing-dark.webm" type="video/webm">
@@ -151,7 +151,7 @@
         </video>
       </div>
       <div class="frame light">
-        <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/timing-light.webp" aria-label="Animation, no sound: one stroke seen at five zoom levels, from a 2.4 second view where knots arrive 900 ms ahead, to the 128 ms plan strip, to 1 ms steer ticks that renew a 4 ms lease, to single quadrature steps of 4.79 micrometers, to the 125 ns poll grid where an edge lands on the first poll after its deadline.">
+        <video data-auto muted loop playsinline controls preload="none" width="1280" height="720" poster="/images/motion/timing-light.webp" aria-label="Animation, no sound: one stroke seen at five zoom levels, from a 2.4 second view where planned points arrive 900 ms ahead, to the 128 ms plan strip, to 1 ms steer ticks that renew a 4 ms lease, to single quadrature steps of 4.79 micrometers, to the 125 ns poll grid where an edge lands on the first poll after its deadline.">
           <source src="/images/motion/timing-light-640.webm" type="video/webm" media="(max-width: 700px)">
           <source src="/images/motion/timing-light-640.mp4" type="video/mp4" media="(max-width: 700px)">
           <source src="/images/motion/timing-light.webm" type="video/webm">
@@ -188,14 +188,14 @@
     <h2 id="s-safety">Safety<a class="hl" href="#s-safety" aria-label="Copy link to this section"></a></h2>
     <ul class="facts">
       <!-- architecture.md:69-77 MotionArbiter sole-caller rule -->
-      <li><b>The MotionArbiter</b><p>The only code allowed to command motion. Manual input, scripts, patterns and network sessions submit intents to it, so every safety check lives in one place: homed, commissioned, pause, e-stop, and a clamp to the rail window.</p></li>
+      <li><b>Motion control</b><p>The only code allowed to command motion. Manual input, scripts, patterns and network sessions submit intents to it, so every safety check lives in one place: homed, commissioned, pause, e-stop, and a clamp to the rail window.</p></li>
       <!-- subsystem-map.md:31,79 ValenceBoardIo (E-stop NC and NO contacts, read first on every pass); Hardware flagship/FEATURES.md:107-113 -->
       <li><b>E-stop</b><p>The E-stop input is read first on every 10 ms pass and latches an e-stop in the hub. On the PCB, the same button also cuts motor power in hardware, so an e-stop does not depend on the firmware.</p></li>
     </ul>
   </section>
 
   <section aria-labelledby="s-pairing">
-    <h2 class="xl" id="s-pairing">Pairing button <span class="tag">WIP</span><a class="hl" href="#s-pairing" aria-label="Copy link to this section"></a></h2>
+    <h2 class="xl" id="s-pairing">Pairing button <span class="tag">Draft</span><a class="hl" href="#s-pairing" aria-label="Copy link to this section"></a></h2>
     <!-- Nucleus flagship_p4/src/system/ButtonGesture.h:38-42 (kDoublePressMs 600, kDemoteHoldMs 5000; RFC-114 and RFC-117 are drafts); Valence SPEC §12.3; §13.4.1 -->
     <ul class="facts">
       <li><b>Press PAIR</b><p>Opens a 120 s pairing window.</p></li>

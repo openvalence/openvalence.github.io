@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Motor setup: OpenValence</title>
-<meta name="description" content="Find an AIM-series motor at any baud rate over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
+<meta name="description" content="Find an AIM-series motor at 9600, 19200, 38400 or 115200 baud over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
 <link rel="canonical" href="https://openvalence.org/guides/servo-setup/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/guides/servo-setup/">
@@ -71,14 +71,14 @@
 <script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:title" content="Motor setup: OpenValence">
-<meta property="og:description" content="Find an AIM-series motor at any baud rate over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
+<meta property="og:description" content="Find an AIM-series motor at 9600, 19200, 38400 or 115200 baud over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
 <meta property="og:image" content="https://openvalence.org/images/og/guides-servo-setup.png?v=ffd25d85ae">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Motor setup: OpenValence. Find an AIM-series motor at any baud rate over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
+<meta property="og:image:alt" content="Motor setup: OpenValence. Find an AIM-series motor at 9600, 19200, 38400 or 115200 baud over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Motor setup: OpenValence">
-<meta name="twitter:description" content="Find an AIM-series motor at any baud rate over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
+<meta name="twitter:description" content="Find an AIM-series motor at 9600, 19200, 38400 or 115200 baud over a USB to RS485 adapter, read its registers, and set it to A/B quadrature input with the OpenValence preset. Chrome or Edge on a desktop. WIP.">
 <meta name="twitter:image" content="https://openvalence.org/images/og/guides-servo-setup.png?v=ffd25d85ae">
 <!-- /chrome:head -->
 <style>
@@ -142,7 +142,7 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
 <main>
   <section class="opening">
     <h1>Motor setup <span class="tag">WIP</span></h1>
-    <p class="lede">Set up an AIM-series motor (57AIM, 60AIM) for an OpenValence build from your browser. The page finds the motor at whatever baud rate and address it is set to, reads its registers, and writes the preset.</p>
+    <p class="lede">Set up an AIM-series motor (57AIM, 60AIM) for an OpenValence build from your browser. The page finds the motor at one of four baud rates and at any address from 1 to 247, reads its registers, and writes the preset.</p>
     <p>On a barnacle build (a P4 Stamp on the OSSM R+D board) the firmware has no RS485 link to the motor, so set the motor up here before you build. The main job is the input mode: the firmware sends A/B quadrature, and a motor left on another mode will not follow it.</p>
     <p class="fine">Work in progress. Every write here follows a sequence proven on the bench from the command line; this page has not yet been tested against a motor.</p>
   </section>
@@ -158,7 +158,7 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
     <p id="support" class="state"></p>
     <noscript><p class="state bad">This tool needs JavaScript.</p></noscript>
     <h3 id="wiring">Wiring<a class="hl" href="#wiring" aria-label="Copy link to this section"></a></h3>
-    <p>The motor's RS485 side is opto-isolated and takes its own 5 V from the comms connector. Four wires from the motor's comms connector:</p>
+    <p>The motor's RS485 side is opto-isolated and takes its own 5 V from the communication connector. Connect four wires from that connector:</p>
     <ul>
       <li><b>485A</b> to the adapter's A (sometimes D+).</li>
       <li><b>485B</b> to the adapter's B (sometimes D-).</li>
@@ -177,7 +177,7 @@ pre.log { max-width: none; height: 22rem; overflow: auto; margin: 0; font: 400 .
 
   <section class="tool" aria-labelledby="s-settings">
     <h2 id="s-settings">Settings<a class="hl" href="#s-settings" aria-label="Copy link to this section"></a></h2>
-    <p>Every register in the motor's map, read one at a time. Pairs are 32-bit, low word first. The map has no model or firmware register.</p>
+    <p>The page reads every register in the motor's map, one at a time. Register pairs are 32-bit, low word first. The map has no model or firmware register.</p>
     <div class="btns"><button class="btn" id="reread" type="button">Read again</button><button class="btn" id="release" type="button" hidden>Release Modbus control</button></div>
     <p id="drive-notes" class="state"></p>
     <div class="wrap">

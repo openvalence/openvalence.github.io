@@ -183,7 +183,7 @@
         <h3 id="funscript-player">Funscript player<a class="hl" href="#funscript-player" aria-label="Copy link to this section"></a></h3>
         <!-- docs/plugins/FUNSCRIPT.md lines 66-77 (lead cap = horizon less 100 ms; 1000 ms horizon), 93-94 (horizons 500, 1000) -->
         <p>Plays a video next to its funscript and drives the rail from it. Video comes from a file or from a Stash server you point it at.</p>
-        <p>It sends the machine segments up to the granted horizon minus 100 ms ahead: 900 ms at a 1000 ms horizon, so a shorter Wi-Fi stall doesn't reach the stroke.</p>
+        <p>It sends movement up to 100 ms short of the horizon the machine grants: 900 ms ahead at a 1000 ms horizon, so a shorter Wi-Fi stall doesn't reach the stroke.</p>
         <p class="links"><a href="/phosphor/docs/funscript-player/">Funscript player docs</a> · <a href="/diagrams/#funscript">The path of one action</a></p>
       </div>
     </div>
@@ -193,7 +193,7 @@
       <div>
         <h3 id="node-editor">Node editor<a class="hl" href="#node-editor" aria-label="Copy link to this section"></a></h3>
         <!-- docs/GRAPH.md lines 8-29 (where a chain runs; TICK_MS 50 ms, 20 Hz), 31-47 (socket types) -->
-        <p>Wire catalog fields, math nodes and Buttplug outputs into chains with float, int and bool sockets.</p>
+        <p>Wire fields, math nodes and Buttplug outputs into chains with decimal, whole-number and true/false connectors.</p>
         <details class="more">
           <summary>Where a chain runs</summary>
           <p>A single hub map between a source field and an accessory field is stored on the hub and keeps running if Phosphor closes. Every other chain runs in Phosphor, 20 times a second, only while Phosphor is open, and stops on Pause or E-Stop.</p>
@@ -211,7 +211,7 @@
         <p>Phosphor ships five: the Advanced pattern card (a port of fray-d's OSSM-Lite), the funscript player, a quick-access tray, a Wi-Fi picker and a set of three small games.</p>
         <details class="more">
           <summary>What a plugin can and can't do</summary>
-          <p>A plugin has no socket or session handle. The plugin API is at version 1 and not frozen yet.</p>
+          <p>A plugin cannot open its own connection to the machine or keep a session. The plugin API is at version 1 and not frozen yet.</p>
           <p>A plugin runs with the page's full authority. The manifest lists what it intends to do and the Plugins pane shows it, but nothing enforces that list. Install plugins only from sources you would trust with a program.</p>
           <p>The hub-served page loads no plugins.</p>
         </details>
@@ -224,7 +224,7 @@
   <section class="band" aria-labelledby="s-themes">
     <h2 class="xl" id="s-themes">Themes<a class="hl" href="#s-themes" aria-label="Copy link to this section"></a></h2>
     <!-- src/themes/index.js lines 6-25 (20 themes); docs/THEMES.md line 19 (12 color presets), docs/DESIGN.md §10.16 lines 1559-1564 -->
-    <p>There are 20 themes, from the default Phosphor theme to Luna, Mica, Liquid Glass, Material, Blueprint and P1 Terminal. The default theme has 12 color presets. A theme restyles chrome, controls, type and icons. The stop pair, the safety edge and the warning states look the same in every theme.</p>
+    <p>There are 20 themes, from the default Phosphor theme to Luna, Mica, Liquid Glass, Material, Blueprint and P1 Terminal. The default theme has 12 color presets. A theme restyles the window frame, controls, type and icons. The stop pair, the safety edge and the warning states look the same in every theme.</p>
     <ul class="swipe" tabindex="0" aria-label="Theme screenshots, scroll sideways">
       <li><figure><img src="/images/phosphor/theme-luna.webp" data-hi="/images/phosphor/hi/theme-luna.webp" width="1280" height="800" alt="The Phosphor Dash in the Luna theme connected to Neutrino with a pattern running, in a bright blue and green desktop look with glossy blue panels over a sky-and-hill backdrop." loading="lazy" decoding="async"><figcaption><b>Luna</b></figcaption></figure></li>
       <li><figure><img src="/images/phosphor/theme-glass.webp" data-hi="/images/phosphor/hi/theme-glass.webp" width="1280" height="800" alt="The Phosphor Dash in the Liquid Glass theme connected to Neutrino with a pattern running, in translucent rounded panels over a dark purple backdrop with soft colored light orbs." loading="lazy" decoding="async"><figcaption><b>Liquid Glass</b></figcaption></figure></li>
@@ -241,8 +241,8 @@
     <ul class="gallery">
       <li><figure><picture><source srcset="/images/phosphor/wifi-light.webp" data-hi="/images/phosphor/hi/wifi-light.webp" media="(prefers-color-scheme: light)"><img src="/images/phosphor/wifi-dark.webp" data-hi="/images/phosphor/hi/wifi-dark.webp" width="1280" height="800" alt="The Phosphor Wi-Fi picker listing nearby networks with signal bars and lock icons, the connected network checked, and Other network, Advanced and Scan buttons at the bottom." loading="lazy" decoding="async"></picture><figcaption><b>Wi-Fi picker</b>One of the five plugins that ship with Phosphor.</figcaption></figure></li>
       <li><figure><picture><source srcset="/phosphor/docs/img/ts-health-light.webp" data-hi="/phosphor/docs/img/hi/ts-health-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/ts-health-dark.webp" data-hi="/phosphor/docs/img/hi/ts-health-dark.webp" width="1280" height="800" alt="The Health tab of the Log page showing the link readings, with the This device section below." loading="lazy" decoding="async"></picture><figcaption><b>Health</b>Measured facts with the number behind them. <a href="/phosphor/docs/troubleshooting/">Troubleshooting</a></figcaption></figure></li>
-      <li><figure><picture><source srcset="/phosphor/docs/img/conn-estop-light.webp" data-hi="/phosphor/docs/img/hi/conn-estop-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/conn-estop-dark.webp" data-hi="/phosphor/docs/img/hi/conn-estop-dark.webp" width="1280" height="800" alt="The top strip after Halt is pressed, with the latched E-stop message, the Halted button and the E-stop latched bar." loading="lazy" decoding="async"></picture><figcaption><b>Safety strip</b>E-Stop and Pause, always on top. <a href="/phosphor/docs/connecting/">Connecting</a></figcaption></figure></li>
-      <li><figure><picture><source srcset="/phosphor/docs/img/gs-hubs-light.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/gs-hubs-dark.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with Neutrino, the built-in machine, listed under Saved hubs and the Find a hub controls below it." loading="lazy" decoding="async"></picture><figcaption><b>Neutrino</b>Listed with the hubs, so you can try Phosphor without a machine. <a href="/phosphor/docs/getting-started/">Getting started</a></figcaption></figure></li>
+      <li><figure><picture><source srcset="/phosphor/docs/img/conn-estop-light.webp" data-hi="/phosphor/docs/img/hi/conn-estop-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/conn-estop-dark.webp" data-hi="/phosphor/docs/img/hi/conn-estop-dark.webp" width="1280" height="800" alt="The top strip after Halt is pressed, with the latched E-Stop message, the Halted button and the E-Stop latched bar." loading="lazy" decoding="async"></picture><figcaption><b>Safety strip</b>E-Stop and Pause, always on top. <a href="/phosphor/docs/connecting/">Connecting</a></figcaption></figure></li>
+      <li><figure><picture><source srcset="/phosphor/docs/img/gs-hubs-light.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-light.webp" media="(prefers-color-scheme: light)"><img src="/phosphor/docs/img/gs-hubs-dark.webp" data-hi="/phosphor/docs/img/hi/gs-hubs-dark.webp" width="1280" height="800" alt="The Hubs page before connecting, with Neutrino, the built-in hub, listed under Saved hubs and the Find a hub controls below it." loading="lazy" decoding="async"></picture><figcaption><b>Neutrino</b>Listed with the hubs, so you can try Phosphor without a machine. <a href="/phosphor/docs/getting-started/">Getting started</a></figcaption></figure></li>
     </ul>
 
     <ul class="facts three mt">
@@ -258,7 +258,7 @@
       <li><b>Health and diagnostics</b>
         <!-- docs/DESIGN.md §10.14 lines 1397-1411 (29 conditions, three areas), 1453-1455 (local only); src/model/health/core.js:39-201 -->
         <p>29 conditions in three areas, each a measured fact with one action. No telemetry, no crash reporting.</p></li>
-      <li><b>Neutrino, the built-in machine</b>
+      <li><b>Neutrino, the built-in hub</b>
         <!-- docs/DESIGN.md §10.10 lines 1113-1131, 1153-1160; docs/BUILD.md lines 19-24 -->
         <p>The Nucleus hub firmware compiled to WebAssembly, running inside Phosphor. <a href="/neutrino/">How it works</a></p></li>
     </ul>
@@ -280,7 +280,7 @@
     <details class="more">
       <summary>More on health and diagnostics</summary>
       <p>Phosphor tracks 29 conditions in three areas: Link, This device and Machine. Each line is a measured fact with the number that raised it, such as <code>Memory up 140 MB in 35 min</code>, and one action. When a stream pauses, Phosphor classifies the cause as this device, the network, the machine or unknown, and marks it "likely" when it cannot be sure.</p>
-      <p>Everything stays on your device. There is no telemetry and no crash reporting. A report is a public GitHub issue that you submit yourself, after a review screen that lists every field in it. Some Machine conditions read "not reported by this machine" until the protocol gains the health roles they need <span class="tag">WIP</span>.</p>
+      <p>Everything stays on your device. There is no telemetry and no crash reporting. A report is a public GitHub issue that you submit yourself, after a review screen that lists every field in it. Some Machine conditions read "not reported by this machine" until the protocol adds the health data they need <span class="tag">WIP</span>.</p>
     </details>
     <details class="more">
       <summary>More on Neutrino</summary>

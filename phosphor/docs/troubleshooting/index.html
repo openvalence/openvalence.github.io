@@ -145,11 +145,11 @@
       <li><code>Another ask is pending: Pair is refused</code> and <code>Another configure ask is pending: double-press approves neither</code>: two clients asked for configure at once. One of them has to give up before either is approved.</li>
       <li><code>Denied</code>, <code>Ask expired</code>, <code>Knock expired</code>, <code>No answer within the pairing window</code>: nobody approved in time. The window is 120 s. Ask again.</li>
       <li><code>Pairing is off on the machine</code> and <code>Refused: knock is off and no window is open</code>: press Pair on the machine to open a window, then try again.</li>
-      <li><code>Pending list full</code> and <code>Refused: pending list full</code>: the machine holds a limited number of waiting knocks. Deny or wait for the others to expire.</li>
-      <li><code>Granted control, not configure</code>: the window gave you control. To get configure, press Ask configure and double-press Pair. The double press is a draft behavior (see <a href="/phosphor/docs/connecting/">Connecting</a>).</li>
+      <li><code>Pending list full</code> and <code>Refused: pending list full</code>: the machine holds a limited number of waiting requests. Deny or wait for the others to expire.</li>
+      <li><code>Granted control, not configure</code>: the window gave you control. To get configure, press Ask configure and double-press Pair. The double press is not final (see <a href="/phosphor/docs/connecting/">Connecting</a>).</li>
       <li><code>Bluetooth link lost</code>: the link dropped mid-setup. Reconnect and ask again.</li>
       <li><code>Joined, but the hub did not appear on WiFi</code>: the machine accepted the network and never showed up on it. Try again, then check the passphrase and that the router is in range of the machine.</li>
-      <li><code>No answer from the hub</code>: a write got no reply. When the machine replies with a refusal, the line names it, for example <code>refused: NOT_HOMED</code>. For that one, home the machine.</li>
+      <li><code>No answer from the hub</code>: a command got no reply. When the machine replies with a refusal, the line names it, for example <code>refused: NOT_HOMED</code>. For that one, home the machine.</li>
       <li><code>session not authorized</code> and <code>Needs configure</code>: your tier is too low for that control. See access tiers on <a href="/phosphor/docs/connecting/">Connecting</a>.</li>
       <li><code>Machine is moving</code>: a Wi-Fi scan was refused because the machine is in motion. Phosphor asks again every 4 s.</li>
     </ul>

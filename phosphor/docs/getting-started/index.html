@@ -136,7 +136,7 @@ npm run build:app -- --bundles nsis</code></pre>
   <section aria-labelledby="s-launch">
     <h2 id="s-launch" data-n="02">First launch<a class="hl" href="#s-launch" aria-label="Copy link to this section"></a></h2>
     <!-- src/App.svelte:160 (first run opens Hubs), 152-157 (sections); src/model/prefs.js:32 (reconnect default true); docs/DESIGN.md §10.11 lines 1183-1187 -->
-    <p>With no saved hub, Phosphor opens on the Hubs page. That page lists saved hubs, finds new ones and holds Neutrino, the built-in machine. From the second launch on, Phosphor redials the last hub by default. The setting is Settings, Connection, "Reconnect to the last hub on launch", and it is on until you turn it off.</p>
+    <p>With no saved hub, Phosphor opens on the Hubs page. That page lists saved hubs, finds new ones and holds Neutrino, the built-in machine. From the second launch on, Phosphor reconnects to the last hub by default. The setting is Settings, Connection, "Reconnect to the last hub on launch", and it is on until you turn it off.</p>
     <p>The sidebar has three sections. Machine and Valence fill in once a hub's catalog has loaded. Phosphor, the third, is always there.</p>
   </section>
 
@@ -160,7 +160,7 @@ npm run build:app -- --bundles nsis</code></pre>
       <li>The hub address field, for when Scan finds nothing.</li>
     </ol>
     <p>Neutrino is never saved as a hub and never auto-connects. It boots homed. Any disconnect stops it, and its settings, presets and pairings persist between runs.</p>
-    <p>Layouts, plugins and the theme are Phosphor's own state, not the machine's, so anything you build while connected to Neutrino is already saved. To arrange the Dash, use the wrench next to the layout name in the sidebar.</p>
+    <p>Layouts, plugins and the theme are saved in Phosphor, not on the machine, so anything you build while connected to Neutrino is already saved. To arrange the Dash, use the wrench next to the layout name in the sidebar.</p>
   </section>
 
   <section aria-labelledby="s-find">
@@ -184,7 +184,7 @@ npm run build:app -- --bundles nsis</code></pre>
       <li>Dash, the first page in the Machine section.</li>
     </ol>
     <h3 id="machine">Machine<a class="hl" href="#machine" aria-label="Copy link to this section"></a></h3>
-    <p>Dash is the home page you arrange. Below it are the pages the machine's catalog defines. The names come from the registry and typically include Generator, Motion, Limits, Hardware, System, Other and Setup. A page appears only if the machine offers settings in that category.</p>
+    <p>Dash is the home page you arrange. Below it are the pages the machine provides. Their names come from the Valence registry and typically include Generator, Motion, Limits, Hardware, System, Other and Setup. A page appears only if the machine offers settings in that category.</p>
     <h3 id="valence">Valence<a class="hl" href="#valence" aria-label="Copy link to this section"></a></h3>
     <p>Pairing, Link and Log. Pairing handles access. Link shows the protocol view: traffic, channels and refusals. Log has tabs for the log, anomalies, safety events, the session, changes and Health.</p>
     <h3 id="phosphor">Phosphor<a class="hl" href="#phosphor" aria-label="Copy link to this section"></a></h3>
