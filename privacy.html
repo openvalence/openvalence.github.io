@@ -152,7 +152,7 @@
       <div><dt>Plugins and the pages they load</dt><dd>The app allows plugins to fetch <code>http</code> and <code>https</code> URLs. The plugins that ship with the app only contact addresses you configured. A plugin you install from elsewhere can contact whatever its author wrote it to; read its manifest before enabling it.</dd></div>
       <div><dt>Other programs on your computer</dt><dd>Phosphor runs a Buttplug server so that other software can drive the machine and your toys through it. It listens on the loopback address only (<code>127.0.0.1</code>, port 12345 by default), so only programs on the same computer can reach it. It never listens on your network unless you change that setting.</dd></div>
       <div><dt>Firmware updates</dt><dd>When you pick a firmware file, the app asks openvalence.org for our firmware list (flash/fw/index.json) to label it Official or Unrecognized. Nothing about the file or your machine is sent; the comparison runs on your computer. The file goes only to your machine.</dd></div>
-      <div><dt>Neutrino, the built-in simulator</dt><dd>It runs inside the app, as WebAssembly, and makes no network connections of its own.</dd></div>
+      <div><dt>Neutrino, the built-in hub</dt><dd>It runs inside the app, as WebAssembly, and makes no network connections of its own.</dd></div>
     </dl>
     <p>The app does not check for updates by itself. Updates arrive through whatever installed it: Flathub, or a download from GitHub.</p>
   </section>

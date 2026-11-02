@@ -25,7 +25,7 @@ const CARDS = {
     ['Kinetic', 'The motion planner'], ['Phosphor', 'The Valence client']] } },
   '/demos/': { subject: 'The Kinetic planner, funscript shaping and Phosphor driving Neutrino, in the browser.' },
   '/diagrams/': { subject: 'The system from app to motor, the path of a funscript action and the access tiers.', visual: { svg: 0, crop: true } },
-  '/downloads/': { title: 'Downloads', subject: 'Phosphor pre-release builds, straight from CI.', visual: { list: [
+  '/downloads/': { title: 'Downloads', subject: 'Phosphor pre-release builds for Windows, macOS, Linux and Android.', visual: { list: [
     ['Windows', 'MSIX package, installer, portable zip'], ['macOS', 'Disk image, Apple silicon'], ['Linux', 'AppImage, .deb'], ['Neutrino', 'Built in: try the app with no machine']] } },
   '/flash/': { section: 'Guides', title: 'Web flasher', subject: 'Write firmware to an OpenValence board over USB from Chrome or Edge.', visual: { rows: [
     ['0x2000', 'Bootloader'], ['0x8000', 'Partition table'], ['0xF000', 'otadata'], ['0x20000', 'App, slot ota_0'], ['0x9000', 'NVS: Pre-program Wi-Fi']] } },
