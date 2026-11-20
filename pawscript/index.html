@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pawscript: OpenValence</title>
+<meta name="description" content="Pawscript is a funscript editor for Windows. Tracking models follow the motion in a video and write a first script; you fix it, check it against your device and publish the .funscript.">
+<link rel="canonical" href="https://openvalence.org/pawscript/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://openvalence.org/pawscript/">
+<!-- chrome:head -->
+<meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#2E4BFF" media="(prefers-color-scheme: light)">
+<script>
+// The theme before first paint; site.js follows "themechange". Constraints: stays inline and above
+// the stylesheet; the theme-color metas stay first, dark then light. localStorage.theme is the ONLY
+// storage the site touches, written only by the theme button and only while it differs from the
+// default (the system, or Dark Reader's scheme on this page); privacy.html promises that, so add no
+// other storage without a consent story. darkreader-lock stands Dark Reader's dynamic mode down.
+(() => {
+  const d = document.documentElement, sys = matchMedia('(prefers-color-scheme: light)');
+  const get = (s, k) => { try { return window[s].getItem(k); } catch (e) {} };
+  const put = (s, k, v) => { try { v ? window[s].setItem(k, v) : window[s].removeItem(k); } catch (e) {} };
+  let dr;
+  const auto = () => dr || (sys.matches ? 'light' : 'dark');
+  const lock = () => document.querySelector('meta[name=darkreader-lock]') || document.head.append(Object.assign(document.createElement('meta'), { name: 'darkreader-lock' }));
+  const label = () => {
+    const b = document.querySelector('.theme'), to = d.dataset.theme === 'light' ? 'dark' : 'light';
+    if (b) { b.title = `Switch to ${to} theme`; b.setAttribute('aria-label', b.title); }
+  };
+  const apply = () => {
+    const t = get('localStorage', 'theme') || auto(), [dk, lt] = document.querySelectorAll('meta[name=theme-color]');
+    d.dataset.theme = t;
+    dk.media = t === 'dark' ? 'all' : 'not all';
+    lt.media = t === 'light' ? 'all' : 'not all';
+    label();
+    dispatchEvent(new Event('themechange'));
+  };
+  addEventListener('click', (e) => {
+    if (!e.target.closest || !e.target.closest('.theme')) return;
+    const t = d.dataset.theme === 'light' ? 'dark' : 'light';
+    put('localStorage', 'theme', t === auto() ? '' : t);
+    // a crossfade where the browser has view transitions (style.css .vt-theme); reduced motion: instant
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return apply();
+    d.classList.add('vt-theme');
+    document.startViewTransition(apply).finished.finally(() => d.classList.remove('vt-theme'));
+  });
+  new MutationObserver(() => {
+    if (d.getAttribute('data-darkreader-mode') !== 'dynamic') return;
+    dr = d.getAttribute('data-darkreader-scheme') === 'dimmed' ? 'light' : 'dark';
+    lock();
+    apply();
+  }).observe(d, { attributeFilter: ['data-darkreader-mode'] });
+  sys.addEventListener('change', apply);
+  document.addEventListener('DOMContentLoaded', label);
+  d.classList.add('js');
+  // The home page plays the header mark's intro unless the visitor came from another page of this
+  // site (site.js); html.intro hides the mark until it starts, and style.css shows it anyway after 2.5 s.
+  const inside = (() => { try { return new URL(document.referrer).origin === location.origin; } catch (e) { return false; } })();
+  if (location.pathname === '/' && !matchMedia('(prefers-reduced-motion: reduce)').matches && !inside) d.classList.add('intro');
+  apply();
+})();
+</script>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/icons/site.webmanifest">
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css?v=d6154b93a9">
+<script src="/site.js?v=f9696283bd" defer></script>
+<script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
+<meta property="og:site_name" content="OpenValence">
+<meta property="og:title" content="Pawscript: OpenValence">
+<meta property="og:description" content="Pawscript is a funscript editor for Windows. Tracking models follow the motion in a video and write a first script; you fix it, check it against your device and publish the .funscript.">
+<meta property="og:image" content="https://openvalence.org/images/og/pawscript.png?v=5e0e9820fd">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Pawscript: OpenValence. Pawscript is a funscript editor for Windows. Tracking models follow the motion in a video and write a first script; you fix it, check it against your device and publish the .funscript.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pawscript: OpenValence">
+<meta name="twitter:description" content="Pawscript is a funscript editor for Windows. Tracking models follow the motion in a video and write a first script; you fix it, check it against your device and publish the .funscript.">
+<meta name="twitter:image" content="https://openvalence.org/images/og/pawscript.png?v=5e0e9820fd">
+<!-- /chrome:head -->
+</head>
+<body>
+
+<!-- chrome:header -->
+<header class="strip">
+  <a class="brand" href="/">
+    <img src="/mark.svg" alt="" width="20" height="20">
+    <span>OpenValence</span>
+  </a>
+  <nav class="chips" aria-label="Site">
+    <a class="chip" href="/valence/">Valence</a>
+    <div class="menu">
+      <a class="chip" href="/components/">Components</a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-parts" aria-label="Components menu"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#chev"/></svg></button>
+      <div class="menu-panel" id="menu-parts">
+        <ul>
+          <li><a class="item" href="/nucleus/"><b>Nucleus</b><span>Firmware for the OSSM Flagship PCB</span></a></li>
+          <li><a class="item" href="/neutrino/"><b>Neutrino</b><span>The hub firmware, emulated inside Phosphor</span></a></li>
+          <li><a class="item" href="/kinetic/"><b>Kinetic</b><span>The motion planner: knots in, smooth motion out</span></a></li>
+          <li><a class="item" href="/isotope/"><b>Isotope <i>WIP</i></b><span>Accessory firmware that joins over <span class="nb">ESP-NOW</span></span></a></li>
+          <li><a class="item" href="/hardware/"><b>OSSM Flagship PCB <i>WIP</i></b><span>The controller board, in KiCad</span></a></li>
+        </ul>
+        <a class="item all" href="/components/">All components</a>
+      </div>
+    </div>
+    <a class="chip" href="/phosphor/">Phosphor</a>
+    <a class="chip" href="/pawscript/" aria-current="page">Pawscript</a>
+    <a class="chip" href="/diagrams/">Diagrams</a>
+    <a class="chip" href="/demos/">Demos</a>
+    <a class="chip util" href="/Valence/">Docs</a>
+    <a class="chip" href="/guides/">Guides</a>
+    <a class="chip" href="https://github.com/openvalence">GitHub</a>
+  </nav>
+  <a class="get" href="/downloads/"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Download</a>
+  <button class="theme" type="button" aria-label="Switch theme"><svg class="ico sun" aria-hidden="true"><use href="/icons/ui.svg#sun"/></svg><svg class="ico moon" aria-hidden="true"><use href="/icons/ui.svg#moon"/></svg></button>
+</header>
+<!-- /chrome:header -->
+
+<main>
+  <section class="opening">
+    <h1>Pawscript</h1>
+    <!-- Pawscript README.md "Pawscript"; docs/guide/README.md; LICENSE -->
+    <p class="lede">A funscript editor with a semi-automatic scripter for animated clips.</p>
+    <p class="fine">Made for explicit content. For adults only (18+). <span class="nb">GPL-3.0-or-later</span>.</p>
+    <div class="btns">
+      <a class="btn go" href="https://github.com/openvalence/Pawscript-releases/releases/latest"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Get Pawscript</a>
+      <a class="btn" href="https://github.com/openvalence/Pawscript">Source</a>
+    </div>
+  </section>
+
+  <div class="stage">
+  <figure class="feature-hero">
+    <div class="frame"><picture><source srcset="/images/pawscript/track-light.webp" data-hi="/images/pawscript/hi/track-light.webp" media="(prefers-color-scheme: light)"><img src="/images/pawscript/track-dark.webp" data-hi="/images/pawscript/hi/track-dark.webp" width="1280" height="800" alt="The Pawscript Track tab with the sample project open: the abstract sample clip on top, the machine preview beside it, the shots row, and the stroke lane below with the tracked script drawn in speed colors." fetchpriority="high" decoding="async"></picture></div>
+    <figcaption>The Track tab, with the sample project that ships with the app. The clip is a generated animation.</figcaption>
+  </figure>
+  </div>
+
+  <section class="aside" aria-labelledby="s-status">
+    <h2 id="s-status">Status<a class="hl" href="#s-status" aria-label="Copy link to this section"></a></h2>
+    <!-- README.md "State of the project" -->
+    <div>
+      <p class="big-line">Early access, for Windows.</p>
+      <p>The tracker usually gets the stroke direction backwards on the first try. You fix it once per scene with <code>F</code> or two anchors. Commit with <code>Ctrl+S</code> as you go, so you can step back.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-overview">
+    <h2 class="xl" id="s-overview">Overview<a class="hl" href="#s-overview" aria-label="Copy link to this section"></a></h2>
+    <!-- docs/guide/quick-start.md steps 1-9; docs/guide/README.md -->
+    <p>Open a video and Pawscript finds the cuts. Paint the moving parts on one frame of a shot, press <code>T</code>, and a tracking model follows them through the shot. The tracked motion is your script at once, drawn on the stroke lane and written by the next publish. Flip the direction, set the depth with anchors, edit points by hand, check the script against your device, then publish a <code>.funscript</code> beside the video.</p>
+    <p>If you have used OpenFunscripter, the layout is familiar: video on top, lanes below, a playhead, number keys for points. Position 0 is fully in and 100 is out, on every lane, tracker and generator.</p>
+  </section>
+
+  <section aria-labelledby="s-features">
+    <h2 class="xl" id="s-features">Features<a class="hl" href="#s-features" aria-label="Copy link to this section"></a></h2>
+
+    <div class="split">
+      <figure><picture><source srcset="/images/pawscript/scenes-light.webp" data-hi="/images/pawscript/hi/scenes-light.webp" media="(prefers-color-scheme: light)"><img src="/images/pawscript/scenes-dark.webp" data-hi="/images/pawscript/hi/scenes-dark.webp" width="1280" height="800" alt="The Pawscript Scenes tab with the sample project: the Actions panel with Detect and Describe all, the video, and a filmstrip of the three shots with their frame numbers at each cut." loading="lazy" decoding="async"></picture></figure>
+      <div>
+        <h3 id="video-and-tracking">Video and tracking<a class="hl" href="#video-and-tracking" aria-label="Copy link to this section"></a></h3>
+        <!-- docs/guide/tracking.md "Trackers", "Scenes, describe, loop", "From run to script: live and Bake"; quick-start.md steps 2-7 -->
+        <ul>
+          <li>Scene detection finds hard cuts, fades to black, dissolves and still frames. You fix cuts with single keys.</li>
+          <li>TAPNext++ points and SAM 2.1 masks run on the graphics card. Optical flow and template match run on the CPU.</li>
+          <li>Painted parts carry over the cuts inside a scene, by name.</li>
+          <li><code>F</code> flips a shot. Anchors at fully in and fully out set the depth. <code>Shift+B</code> bakes a shot so a re-track no longer moves it.</li>
+          <li>A shot tagger tags each scene, and a loop finder finds exact loops.</li>
+          <li>Videos: mp4, m4v, mkv, webm, mov and avi. A 480p proxy plays smoothly while the tracker reads the original.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="split flip">
+      <figure><picture><source srcset="/images/pawscript/review-light.webp" data-hi="/images/pawscript/hi/review-light.webp" media="(prefers-color-scheme: light)"><img src="/images/pawscript/review-dark.webp" data-hi="/images/pawscript/hi/review-dark.webp" width="1280" height="800" alt="The Pawscript Review tab with the sample project: the Statistics panel with duration, strokes per minute and speeds, the Problems panel listing one speed-limit warning, and the stroke lane below." loading="lazy" decoding="async"></picture></figure>
+      <div>
+        <h3 id="review">Review<a class="hl" href="#review" aria-label="Copy link to this section"></a></h3>
+        <!-- docs/guide/review.md "Problems", "Device profiles", "Heatmap", "Statistics", "Compare", "Machine preview" -->
+        <ul>
+          <li>The problem finder checks the script against a device profile: speed limit, points too close, long gaps, jitter, points past the end of the video. <code>F8</code> goes to the next problem and <code>Ctrl+F8</code> applies its fix.</li>
+          <li>Statistics: strokes per minute, speed percentiles, the share of segments over the limit, per chapter.</li>
+          <li>Compare the script against a reference funscript or a tracker run, and adopt the parts you want.</li>
+          <li>The machine preview moves as the device will. With a planner profile, such as Nucleus, it shows where the planner will reshape a stroke.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 id="draft-and-assist">Draft and Assist<a class="hl" href="#draft-and-assist" aria-label="Copy link to this section"></a></h3>
+    <!-- docs/guide/draft-and-assist.md -->
+    <ul class="facts">
+      <li><b>Draft</b><p><code>Ctrl+Shift+D</code> runs scene detection, scene tags, a loop check, a first plan, a base track and Generate over the whole video. Each step is one undo entry.</p></li>
+      <li><b>Assist</b><p><code>F6</code> asks the questions Draft cannot answer, one key each, such as which of two frames is deeper. The questions with the most effect on the script come first.</p></li>
+    </ul>
+
+    <h3 class="mt" id="editing">Editing<a class="hl" href="#editing" aria-label="Copy link to this section"></a></h3>
+    <!-- docs/guide/editing.md; keys.md "Keymaps"; getting-started.md "Open a video", "Command palette and help" -->
+    <ul class="facts">
+      <li><b>Points</b><p>Place points with the NumPad (Blender keymap, the default) or the number row (OFS keymap). Every key can be rebound.</p></li>
+      <li><b>Transform tools</b><p>Amplitude, time, density, speed, rhythm and variation tools, each with a preview before you apply it.</p></li>
+      <li><b>Fix a section</b><p>Re-track, regenerate, flip, scale or retime one stretch. Points outside it stay where they are.</p></li>
+      <li><b>Axes</b><p>Stroke plus roll, pitch, twist, surge, sway, vib and more, each on its own lane and written as its own funscript.</p></li>
+    </ul>
+
+    <h3 class="mt" id="generators-and-the-node-graph">Generators and the node graph<a class="hl" href="#generators-and-the-node-graph" aria-label="Copy link to this section"></a></h3>
+    <!-- docs/guide/generators.md "The plan in one pass", "Recipes"; graph.md, "Presets" -->
+    <ul class="facts">
+      <li><b>Plan and Generate</b><p>Lay out a scene as plan segments, each with a kind and a recipe. <code>Ctrl+Shift+G</code> writes the points. Where tracker runs exist, the follow recipes put the extremes on the tracked turning points.</p></li>
+      <li><b>Node graph</b><p>Wire axes, tracker runs, the plan and the scenes through nodes. The document changes only when you bake, in one undo step. Presets cover tracker clean-up, roll from the stroke and more.</p></li>
+    </ul>
+
+    <h3 class="mt" id="saving-and-export">Saving and export<a class="hl" href="#saving-and-export" aria-label="Copy link to this section"></a></h3>
+    <!-- docs/guide/getting-started.md "Save, commit, publish", "Checkpoints and recovery"; docs/formats/pawpack.md; README.md "What works" -->
+    <ul class="facts">
+      <li><b>Continuous projects</b><p>The project writes itself about a second after each change and survives the app being killed in the middle of a write. There is no Save for the project.</p></li>
+      <li><b>Commit and publish</b><p><code>Ctrl+S</code> commits a named point with an optional note. <code>Ctrl+Alt+S</code> publishes every axis as a funscript beside the video, numbered v1, v2 and on.</p></li>
+      <li><b>Other people's files</b><p>The first overwrite of a funscript Pawscript did not write keeps the original as <code>name.bak</code>.</p></li>
+      <li><b>Export and packs</b><p>Export all axes, one axis or a device-safe copy. Pack project writes one <code>.pawpack</code> with the video, the scripts and the project; every file's SHA-256 is checked when it opens.</p></li>
+      <li><b>Tabs</b><p>Several projects open as tabs. A track keeps running in a tab you are not looking at.</p></li>
+    </ul>
+
+    <h3 class="mt" id="devices">Devices<a class="hl" href="#devices" aria-label="Copy link to this section"></a></h3>
+    <!-- docs/guide/playback.md; README.md "Privacy" items 2 and 5 -->
+    <ul class="facts">
+      <li><b>Buttplug</b><p>A Buttplug server inside the app plays the stroke axis on a toy over Bluetooth LE, serial or HID, in sync with the video.</p></li>
+      <li><b>Valence hub</b><p>Works with <a href="/nucleus/">Nucleus</a> and <a href="/neutrino/">Neutrino</a> over WebSocket. Pawscript sends timed segments and the hub plans the motion within its own limits.</p></li>
+      <li><b>Stops</b><p><code>Shift+Esc</code> or <code>Pause</code> is the panic stop from anywhere. On a Valence hub it also pauses the hub. Pawscript never resumes motion by itself.</p></li>
+      <li><b>Network</b><p>The app goes online only when you press Download for models or Check for updates. It sends no telemetry and has no account.</p></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s-req">
+    <h2 class="xl" id="s-req">System requirements<a class="hl" href="#s-req" aria-label="Copy link to this section"></a></h2>
+    <!-- docs/guide/requirements.md "What you need", "Graphics memory per tracker setting"; dev/share/README.txt "WHAT YOU NEED"; AMD: docs/BUILDING.md (runtime-rocm), dev/share/runtime/runtime-rocm-2026-11-19.txt, src/features/models/logic.js RUNTIME_WORDS -->
+    <ul class="facts">
+      <li><b>Windows</b><p>Windows 10 or 11, 64-bit. A portable folder: no installer, no admin rights. Windows 10 may need the WebView2 Runtime from Microsoft.</p></li>
+      <li><b>Disk and folder</b><p>About 15 GB free. Keep the folder on a local drive with a short path, such as <code>C:\Pawscript</code>. The app refuses to start inside OneDrive, Dropbox, Google Drive or iCloud.</p></li>
+      <li><b>NVIDIA</b><p>GTX 16xx or RTX 20xx and newer, RTX 50xx included, with driver 580 or newer. The runtime is PyTorch on CUDA 13.0. The default tracker settings use about 4 GB of video memory; the larger TAPNext++ model wants about 8 GB.</p></li>
+      <li><b>AMD</b><p>A second runtime uses PyTorch on ROCm for Radeon RX 9000 and RX 7000 cards and the Radeon 780M and 760M, with Adrenalin 26.11.2 or newer. The app picks the runtime for your card.</p></li>
+      <li><b>Without a supported card</b><p>The editor, playback and the CPU trackers work. TAPNext++, SAM 2.1 and the shot tagger need the card. GTX 9xx and GTX 10xx cards are not supported.</p></li>
+      <li><b>Other systems</b><p>Linux and macOS are not built yet.</p></li>
+    </ul>
+  </section>
+
+  <section class="aside" aria-labelledby="s-download">
+    <h2 id="s-download">Download<a class="hl" href="#s-download" aria-label="Copy link to this section"></a></h2>
+    <!-- dev/share/README.txt "GETTING IT", "UPDATING"; docs/guide/requirements.md "Windows protected your PC"; README.md "Privacy" items 6 and 7 -->
+    <div>
+      <p>Get <code>Pawscript.zip</code> from the <a href="https://github.com/openvalence/Pawscript-releases/releases/latest">latest release on GitHub</a>. This site never hosts binaries. Extract it into a folder of its own and start <code>Pawscript.exe</code>. The first start asks which models you want, then downloads the runtime (2.3 GB) and those models.</p>
+      <p>The exe is not code-signed. If Windows SmartScreen stops it, click More info, then Run anyway.</p>
+      <p><b>Verify:</b> the runtime and the tracking models download from <code>dl.openvalence.org</code>, and the app checks every file against the SHA-256 in the manifest built into it before it keeps the file.</p>
+      <p>Help &gt; Check for updates installs an update only when its signature matches the key built into the app. In the app, <code>F1</code> opens the quick start.</p>
+    </div>
+  </section>
+
+  <section class="aside" aria-labelledby="s-source">
+    <h2 id="s-source">Source and license<a class="hl" href="#s-source" aria-label="Copy link to this section"></a></h2>
+    <!-- README.md "Licensing"; LICENSE; docs/guide/cotracker.md -->
+    <div>
+      <p>The source is on <a href="https://github.com/openvalence/Pawscript">GitHub</a>. Pawscript is free software under <span class="nb">GPL-3.0-or-later</span>. The file format specifications (<code>.pawproj</code>, <code>.pawruns</code>, <code>.pawpack</code>) are <span class="nb">CC BY 4.0</span>, and the scripts and projects you make are yours.</p>
+      <p>CoTracker3 is not included: its license allows non-commercial use only. TAPNext++ is the point tracker.</p>
+      <p>Pawscript is made for explicit content. For adults only (18+).</p>
+      <p class="links"><a href="https://github.com/openvalence/Pawscript">Source</a> · <a href="https://github.com/openvalence/Pawscript-releases/releases/latest">Releases</a> · <a href="/phosphor/">Phosphor</a> · <a href="/downloads/">Downloads</a></p>
+    </div>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="foot">
+  <span>© 2026 AtlanticTM</span>
+  <span class="lic">Software <span class="nb">Apache-2.0</span> · Valence spec <span class="nb">CC BY 4.0</span>, library <span class="nb">MIT</span> · Hardware <span class="nb">CERN-OHL-S-2.0</span></span>
+  <a href="https://github.com/openvalence">GitHub</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/Valence/">Docs</a>
+  <a href="/guides/">Guides</a>
+</footer>
+<!-- /chrome:footer -->
+
+</body>
+</html>

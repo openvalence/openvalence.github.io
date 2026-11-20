@@ -41,6 +41,7 @@ const CARDS = {
   '/nucleus/': { ...COMPONENTS, subject: 'Firmware for the OSSM Flagship: the Valence hub and the motion planner on an ESP32-P4.', visual: { rows: [
     ['128 ms', 'Plan strip, one position per 1 ms tick'], ['4 ms', 'Lease: the LP core parks without a renewal'], ['128 ns', 'Edge spread, on a 125 ns grid'], ['900 ms', 'Wi-Fi buffer ahead of the motion']] } },
   '/valence/': { subject: 'The machine serves its own control panel, any app can open it, and the machine enforces its own limits.', visual: { from: '/diagrams/', svg: 2 } },
+  '/pawscript/': { title: 'Pawscript', subject: 'A funscript editor with a semi-automatic scripter for animated clips. Windows, early access.', visual: { img: '/images/pawscript/track-dark.webp', pos: 'left top' } },
   '/phosphor/': { title: 'Phosphor', subject: 'The reference client for Valence machines.', visual: { img: '/images/phosphor/dash-dark.webp', pos: 'left top' } },
   '/phosphor/docs/': { section: 'Phosphor docs', subject: 'Guides for Phosphor, the Valence client.', visual: { img: '/images/phosphor/builder-dark.webp', pos: 'left top' } },
   '/phosphor/docs/connecting/': docs('conn-pairing-dark.webp', 'Discovery, Bluetooth setup, the access tiers and the Pair button.'),
