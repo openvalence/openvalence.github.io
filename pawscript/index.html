@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pawscript: OpenValence</title>
-<meta name="description" content="Pawscript is a funscript editor for Windows. Tracking models follow the motion in a video and write a first script; you fix it, check it against your device and publish the .funscript.">
+<meta name="description" content="Pawscript is a funscript editor for Windows with automatic tracking, multi-axis lanes, a problem finder and playback on Buttplug toys and Valence hubs. Free software, GPL-3.0-or-later.">
 <link rel="canonical" href="https://openvalence.org/pawscript/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://openvalence.org/pawscript/">
@@ -71,15 +71,15 @@
 <script src="https://stats.openvalence.org/stats.js" data-website-id="686ef328-490a-4ed2-b9df-1ce896b92dc3" data-domains="openvalence.org" data-do-not-track="true" defer></script>
 <meta property="og:site_name" content="OpenValence">
 <meta property="og:title" content="Pawscript: OpenValence">
-<meta property="og:description" content="Pawscript is a funscript editor for Windows. Tracking models follow the motion in a video and write a first script; you fix it, check it against your device and publish the .funscript.">
-<meta property="og:image" content="https://openvalence.org/images/og/pawscript.png?v=4876e96ddf">
+<meta property="og:description" content="Pawscript is a funscript editor for Windows with automatic tracking, multi-axis lanes, a problem finder and playback on Buttplug toys and Valence hubs. Free software, GPL-3.0-or-later.">
+<meta property="og:image" content="https://openvalence.org/images/og/pawscript.png?v=a60299b8ec">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Pawscript: OpenValence. Pawscript is a funscript editor for Windows. Tracking models follow the motion in a video and write a first script; you fix it, check it against your device and publish the .funscript.">
+<meta property="og:image:alt" content="Pawscript: OpenValence. Pawscript is a funscript editor for Windows with automatic tracking, multi-axis lanes, a problem finder and playback on Buttplug toys and Valence hubs. Free software, GPL-3.0-or-later.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Pawscript: OpenValence">
-<meta name="twitter:description" content="Pawscript is a funscript editor for Windows. Tracking models follow the motion in a video and write a first script; you fix it, check it against your device and publish the .funscript.">
-<meta name="twitter:image" content="https://openvalence.org/images/og/pawscript.png?v=4876e96ddf">
+<meta name="twitter:description" content="Pawscript is a funscript editor for Windows with automatic tracking, multi-axis lanes, a problem finder and playback on Buttplug toys and Valence hubs. Free software, GPL-3.0-or-later.">
+<meta name="twitter:image" content="https://openvalence.org/images/og/pawscript.png?v=a60299b8ec">
 <!-- /chrome:head -->
 </head>
 <body>
@@ -120,13 +120,15 @@
 
 <main>
   <section class="opening">
-    <h1>Pawscript</h1>
-    <!-- Pawscript README.md "Pawscript", "What works"; docs/guide/README.md; LICENSE -->
-    <p class="lede">A funscript editor that tracks the motion in a video and writes the script from it. You correct it by hand and publish the <code>.funscript</code>.</p>
-    <p class="fine">Free software, <span class="nb">GPL-3.0-or-later</span>. Made for explicit content: for adults only (18+).</p>
+    <h1>Pawscript, the funscript editor</h1>
+    <!-- Pawscript README.md "Pawscript", "State of the project", "Privacy", "Licensing"; docs/guide/README.md -->
+    <p class="lede">A funscript editor for Windows with automatic tracking, multi-axis lanes, a problem finder and playback on Buttplug toys and Valence hubs.</p>
+    <p>One Svelte 5 and Tauri 2 app with a small Rust backend and a Python tracker. Tracking models follow the motion in a video and write the script, and you finish it on the lanes. Free software under <span class="nb">GPL-3.0-or-later</span>. No telemetry: the app goes online only when you download models or check for an update.</p>
+    <p class="fine">Made for explicit content. For adults only (18+).</p>
     <div class="btns">
-      <a class="btn go" href="https://github.com/openvalence/Pawscript/releases/latest"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Get Pawscript</a>
-      <a class="btn" href="https://github.com/openvalence/Pawscript">Source</a>
+      <a class="btn go" href="/downloads/#s-pawscript"><svg class="ico" aria-hidden="true"><use href="/icons/ui.svg#down"/></svg>Get Pawscript</a>
+      <a class="btn" href="https://github.com/openvalence/Pawscript/blob/main/docs/guide/README.md">Guide</a>
+      <a class="btn" href="https://github.com/openvalence/Pawscript">Repo</a>
     </div>
   </section>
 
@@ -137,106 +139,73 @@
   </figure>
   </div>
 
-  <section aria-labelledby="s-overview">
-    <h2 class="xl" id="s-overview">Overview<a class="hl" href="#s-overview" aria-label="Copy link to this section"></a></h2>
-    <!-- docs/guide/quick-start.md steps 1-9; README.md "State of the project", "Privacy", "Licensing" -->
-    <p>Open a video and Pawscript finds the cuts. Paint the moving parts on one frame of a shot, and a tracking model follows them through the shot. The tracked motion is your script at once, drawn on the stroke lane. Flip the direction, set the depth with anchors and edit points by hand, then publish a <code>.funscript</code> beside the video. If you have used OpenFunscripter, the layout is familiar: video on top, lanes below and a playhead.</p>
-    <p>Pawscript is free software and will never be sold. It is licensed under <span class="nb">GPL-3.0-or-later</span>, and the source is on <a href="https://github.com/openvalence/Pawscript">GitHub</a>.</p>
-    <p>Editing and tracking run on your PC. The app goes online only when you press Download for models or Check for updates. It sends no telemetry and has no account.</p>
+  <section class="aside" aria-labelledby="s-status">
+    <h2 id="s-status">Status<a class="hl" href="#s-status" aria-label="Copy link to this section"></a></h2>
+    <!-- README.md "State of the project" -->
+    <p>Early access, Windows only. Builds are on <a href="/downloads/#s-pawscript">Downloads</a>.</p>
   </section>
 
   <section aria-labelledby="s-features">
     <h2 class="xl" id="s-features">Features<a class="hl" href="#s-features" aria-label="Copy link to this section"></a></h2>
-
-    <h3 id="video-and-tracking">Video and tracking<a class="hl" href="#video-and-tracking" aria-label="Copy link to this section"></a></h3>
-    <!-- docs/guide/tracking.md "Trackers", "Scenes, describe, loop", "From run to script: live and Bake"; quick-start.md steps 2-7; requirements.md "A video does not play" -->
     <ul class="facts">
-      <li><b>Scenes</b><p>Scene detection finds hard cuts, fades to black, dissolves and still frames. You can add, merge and move cuts, and mark camera moves.</p></li>
-      <li><b>Trackers</b><p>TAPNext++ points and SAM 2.1 masks run on the graphics card. Optical flow and template match run on the CPU.</p></li>
-      <li><b>Parts</b><p>Paint the parts on one frame. Inside a scene they carry over the cuts by name.</p></li>
-      <li><b>Direction and depth</b><p>Flip a shot's direction, and set its depth with anchors at fully in and fully out. Bake a shot so a re-track no longer moves it.</p></li>
-      <li><b>Tags and loops</b><p>A shot tagger tags each scene. The loop finder marks exact loops.</p></li>
-      <li><b>Video files</b><p>mp4, m4v, mkv, webm, mov and avi. A 480p proxy plays smoothly while the tracker reads the original.</p></li>
+      <li><b>Automatic tracking</b>
+        <!-- docs/guide/tracking.md "Trackers", "GPU notes" (RTX 4090, 1080p: TAPNext++ 256 chunk 8 about 25 fps), "Groups (Tab)" step 7 (seeder: 5 painted examples from 2 videos), "From run to script: live and Bake" -->
+        <p>Paint the parts on one frame and TAPNext++ or SAM 2.1 follows them through the shot. The run is your script as soon as it lands. On an RTX 4090 at 1080p, TAPNext++ tracks about 25 frames a second. The seeder learns the parts from what you paint and suggests them on new frames once it has at least 5 painted examples of a part from 2 videos.</p>
+        <p class="links"><a href="https://github.com/openvalence/Pawscript/blob/main/docs/guide/tracking.md">Tracking guide</a></p></li>
+      <li><b>Lanes and axes</b>
+        <!-- docs/guide/editing.md "Transform tools reference" (50 tools; src/lib/edit/index.js OPS); getting-started.md "Open a video" (axes); keys.md "Keymaps" -->
+        <p>Stroke plus roll, pitch, twist, surge, sway, vib and more, each on its own lane and written as its own funscript. About 50 transform tools shape amplitude, time, density, speed, rhythm and variation, each with a preview before it applies. Blender and OpenFunscripter keymaps.</p>
+        <p class="links"><a href="https://github.com/openvalence/Pawscript/blob/main/docs/guide/editing.md">Editing guide</a></p></li>
+      <li><b>Review</b>
+        <!-- docs/guide/review.md "Problems" (reruns about 140 ms after an edit), "What it finds" (16 kinds, 13 with a fix), "Machine preview" -->
+        <p>The problem finder checks the script against a device profile for 16 kinds of problem, such as overspeed, points too close and long gaps, and fixes 13 of them in one step. It reruns about 140 ms after each edit. The machine preview moves the way the device will.</p>
+        <p class="links"><a href="https://github.com/openvalence/Pawscript/blob/main/docs/guide/review.md">Review guide</a></p>
+        <figure class="docshot"><picture><source srcset="/images/pawscript/review-light.webp" data-hi="/images/pawscript/hi/review-light.webp" media="(prefers-color-scheme: light)"><img src="/images/pawscript/review-dark.webp" data-hi="/images/pawscript/hi/review-dark.webp" width="498" height="466" alt="The Pawscript Review tab's machine preview, showing the stroke position on a vertical rail with the speed readout, beside the Problems panel listing one speed-limit warning for the Generic stroker profile." loading="lazy" decoding="async"></picture>
+          <figcaption>The machine preview and the Problems panel.</figcaption></figure></li>
+      <li><b>Devices</b>
+        <!-- docs/guide/playback.md (Buttplug: BLE, serial, HID; Valence: segments stamped 100 ms ahead plus the hub's latency; panic stop from anywhere) -->
+        <p>A Buttplug server inside the app drives toys over Bluetooth LE, serial and HID, in sync with the video. On a Valence hub such as <a href="/nucleus/">Nucleus</a> or <a href="/neutrino/">Neutrino</a>, Pawscript sends timed segments at least 100 ms ahead and the hub plans the motion within its own limits. The panic stop works from anywhere in the app.</p>
+        <p class="links"><a href="https://github.com/openvalence/Pawscript/blob/main/docs/guide/playback.md">Device playback guide</a></p></li>
     </ul>
+  </section>
 
-    <h3 class="mt" id="draft-and-assist">Draft and Assist<a class="hl" href="#draft-and-assist" aria-label="Copy link to this section"></a></h3>
-    <!-- docs/guide/draft-and-assist.md -->
-    <ul class="facts">
-      <li><b>Draft</b><p>Runs scene detection, scene tags, a loop check, a first plan, a base track and Generate over the whole video. Each step is one undo entry.</p></li>
-      <li><b>Assist</b><p>Asks the questions Draft cannot answer, one at a time, such as which of two frames is deeper. The questions with the most effect on the script come first.</p></li>
-    </ul>
-
-    <h3 class="mt" id="editing">Editing<a class="hl" href="#editing" aria-label="Copy link to this section"></a></h3>
-    <!-- docs/guide/editing.md; keys.md "Keymaps" -->
-    <ul class="facts">
-      <li><b>Points</b><p>Place points from the keyboard or with the mouse, in the Blender or the OpenFunscripter keymap. Every binding can be changed.</p></li>
-      <li><b>Transform tools</b><p>Amplitude, time, density, speed, rhythm and variation tools, each with a preview before you apply it.</p></li>
-      <li><b>Fix a section</b><p>Re-track, regenerate, flip, scale or retime one stretch. Points outside it stay where they are.</p></li>
-      <li><b>Axes</b><p>Stroke plus roll, pitch, twist, surge, sway, vib and more, each on its own lane and written as its own funscript.</p></li>
-    </ul>
-
-    <h3 class="mt" id="generators-and-the-node-graph">Generators and the node graph<a class="hl" href="#generators-and-the-node-graph" aria-label="Copy link to this section"></a></h3>
-    <!-- docs/guide/generators.md "The plan in one pass", "Recipes"; graph.md, "Presets" -->
-    <ul class="facts">
-      <li><b>Plan and Generate</b><p>Lay out a scene as plan segments, each with a kind and a recipe, and Generate writes the points. Where tracker runs exist, the follow recipes put the extremes on the tracked turning points.</p></li>
-      <li><b>Node graph</b><p>Wire axes, tracker runs, the plan and the scenes through nodes. The document changes only when you bake, in one undo step. Presets cover tracker clean-up, roll from the stroke and more.</p></li>
-    </ul>
-
-    <div class="split mt">
-      <figure><picture><source srcset="/images/pawscript/review-light.webp" data-hi="/images/pawscript/hi/review-light.webp" media="(prefers-color-scheme: light)"><img src="/images/pawscript/review-dark.webp" data-hi="/images/pawscript/hi/review-dark.webp" width="498" height="466" alt="The Pawscript Review tab's machine preview, showing the stroke position on a vertical rail with the speed readout, beside the Problems panel listing one speed-limit warning for the Generic stroker profile." loading="lazy" decoding="async"></picture></figure>
-      <div>
-        <h3 id="review">Review<a class="hl" href="#review" aria-label="Copy link to this section"></a></h3>
-        <!-- docs/guide/review.md "Problems", "Device profiles", "Statistics", "Compare", "Machine preview" -->
-        <ul>
-          <li>The problem finder checks the script against a device profile: speed limit, points too close, long gaps, jitter, points past the end of the video. Walk the list and apply each problem's fix in one step.</li>
-          <li>Statistics: strokes per minute, speed percentiles, the share of segments over the limit, per chapter.</li>
-          <li>Compare the script against a reference funscript or a tracker run, and adopt the parts you want.</li>
-          <li>The machine preview moves as the device will. With a planner profile, such as Nucleus, it shows where the planner will reshape a stroke.</li>
-        </ul>
-      </div>
-    </div>
-
-    <h3 id="saving-and-export">Saving and export<a class="hl" href="#saving-and-export" aria-label="Copy link to this section"></a></h3>
-    <!-- docs/guide/getting-started.md "Save, commit, publish", "Checkpoints and recovery"; docs/formats/pawpack.md; README.md "What works" -->
-    <ul class="facts">
-      <li><b>Continuous projects</b><p>The project writes itself about a second after each change and survives the app being killed in the middle of a write. There is no Save for the project.</p></li>
-      <li><b>Commit and publish</b><p>A commit stores a named point with an optional note. Publish writes every axis as a funscript beside the video, numbered v1, v2 and on.</p></li>
-      <li><b>Other people's files</b><p>The first overwrite of a funscript Pawscript did not write keeps the original as <code>name.bak</code>.</p></li>
-      <li><b>Export and packs</b><p>Export all axes, one axis or a device-safe copy. Pack project writes one <code>.pawpack</code> with the video, the scripts and the project; every file's SHA-256 is checked when it opens.</p></li>
-      <li><b>Tabs</b><p>Several projects open as tabs. A track keeps running in a tab you are not looking at.</p></li>
-    </ul>
-
-    <h3 class="mt" id="devices">Devices<a class="hl" href="#devices" aria-label="Copy link to this section"></a></h3>
-    <!-- docs/guide/playback.md; README.md "Privacy" items 2 and 5 -->
-    <ul class="facts">
-      <li><b>Buttplug</b><p>A Buttplug server inside the app plays the stroke axis on a toy over Bluetooth LE, serial or HID, in sync with the video.</p></li>
-      <li><b>Valence hub</b><p>Works with <a href="/nucleus/">Nucleus</a> and <a href="/neutrino/">Neutrino</a> over WebSocket. Pawscript sends timed segments and the hub plans the motion within its own limits.</p></li>
-      <li><b>Panic stop</b><p>Works from anywhere in the app, text fields included. On a Valence hub it also pauses the hub, and Pawscript never resumes motion by itself.</p></li>
+  <section aria-labelledby="s-more">
+    <h2 class="xl" id="s-more">More features<a class="hl" href="#s-more" aria-label="Copy link to this section"></a></h2>
+    <!-- docs/guide/tracking.md "Scenes, describe, loop"; getting-started.md "Open a video", "Save, commit, publish", "Themes and density"; graph.md; review.md "Statistics", "Compare"; docs/formats/pawpack.md -->
+    <ul class="facts three">
+      <li><b>Scenes and cuts</b><p>Finds hard cuts, fades, dissolves and still frames. You add, merge and move cuts.</p></li>
+      <li><b>Scene tags</b><p>A shot tagger tags each scene.</p></li>
+      <li><b>Loops</b><p>The loop finder marks exact loops in a scene.</p></li>
+      <li><b>Continuous projects</b><p>The project writes itself about a second after each change.</p></li>
+      <li><b>Commit and publish</b><p>Commits with notes. Publish writes numbered funscripts beside the video.</p></li>
+      <li><b>Export</b><p>All axes, one axis or a device-safe copy.</p></li>
+      <li><b>Packs</b><p>One <code>.pawpack</code> file holds the video, the scripts and the project.</p></li>
+      <li><b>Tabs</b><p>Several projects at once. A track keeps running in a hidden tab.</p></li>
+      <li><b>Node graph</b><p>Wire axes and tracker runs through nodes. The document changes when you bake.</p></li>
+      <li><b>Statistics and compare</b><p>Speeds and strokes per minute by chapter, and a diff against a reference funscript.</p></li>
+      <li><b>Video formats</b><p>mp4, m4v, mkv, webm, mov and avi.</p></li>
+      <li><b>Themes</b><p>Dark, light and high contrast.</p></li>
     </ul>
   </section>
 
   <section aria-labelledby="s-req">
     <h2 class="xl" id="s-req">System requirements<a class="hl" href="#s-req" aria-label="Copy link to this section"></a></h2>
-    <!-- docs/guide/requirements.md "What you need", "Graphics memory per tracker setting"; dev/share/README.txt "WHAT YOU NEED"; AMD: docs/BUILDING.md (runtime-rocm), dev/share/runtime/runtime-rocm-2026-11-19.txt, src/features/models/logic.js RUNTIME_WORDS -->
+    <!-- docs/guide/requirements.md "What you need", "Graphics memory per tracker setting"; AMD: docs/BUILDING.md (runtime-rocm), dev/share/runtime/runtime-rocm-2026-11-19.txt, src/features/models/logic.js RUNTIME_WORDS -->
     <ul class="facts">
-      <li><b>Windows</b><p>Windows 10 or 11, 64-bit. A portable folder: no installer, no admin rights. Windows 10 may need the WebView2 Runtime from Microsoft.</p></li>
-      <li><b>Disk and folder</b><p>About 15 GB free. Keep the folder on a local drive with a short path, such as <code>C:\Pawscript</code>. The app refuses to start inside OneDrive, Dropbox, Google Drive or iCloud.</p></li>
-      <li><b>NVIDIA</b><p>GTX 16xx or RTX 20xx and newer, RTX 50xx included, with driver 580 or newer. The runtime is PyTorch on CUDA 13.0. The default tracker settings use about 4 GB of video memory; the larger TAPNext++ model wants about 8 GB.</p></li>
-      <li><b>AMD</b><p>A second runtime uses PyTorch on ROCm for Radeon RX 9000 and RX 7000 cards and the Radeon 780M and 760M, with Adrenalin 26.11.2 or newer. The app picks the runtime for your card.</p></li>
-      <li><b>Without a supported card</b><p>The editor, playback and the CPU trackers work. TAPNext++, SAM 2.1 and the shot tagger need the card. GTX 9xx and GTX 10xx cards are not supported.</p></li>
-      <li><b>Other systems</b><p>Linux and macOS are not built yet.</p></li>
+      <li><b>Windows</b><p>Windows 10 or 11, 64-bit, about 15 GB free. A portable folder on a local drive, outside OneDrive and other synced folders.</p></li>
+      <li><b>NVIDIA</b><p>GTX 16xx or RTX 20xx and newer, driver 580 or newer, PyTorch on CUDA 13.0. The default settings use about 4 GB of video memory.</p></li>
+      <li><b>AMD</b><p>Radeon RX 9000 and RX 7000, and the Radeon 780M and 760M, on a PyTorch ROCm runtime. Adrenalin 26.11.2 or newer.</p></li>
+      <li><b>Without a supported card</b><p>The editor, playback and the CPU trackers work. TAPNext++, SAM 2.1 and the shot tagger need the card.</p></li>
     </ul>
   </section>
 
   <section class="aside" aria-labelledby="s-download">
     <h2 id="s-download">Download<a class="hl" href="#s-download" aria-label="Copy link to this section"></a></h2>
-    <!-- dev/share/README.txt "GETTING IT", "UPDATING", "Guide\"; docs/guide/requirements.md "Windows protected your PC"; README.md "State of the project" (What is rough), "Privacy" items 6 and 7 -->
+    <!-- dev/share/README.txt "GETTING IT", "UPDATING"; docs/guide/requirements.md "Windows protected your PC"; README.md "Privacy" items 6 and 7 -->
     <div>
-      <p>Get <code>Pawscript.zip</code> from the <a href="https://github.com/openvalence/Pawscript/releases/latest">latest release on GitHub</a>. This site never hosts binaries. Extract it into a folder of its own and start <code>Pawscript.exe</code>. The first start asks which models you want, then downloads the runtime (2.3 GB) and those models. The user guide is in the <code>Guide</code> folder of the download.</p>
-      <p>The exe is not code-signed. If Windows SmartScreen stops it, click More info, then Run anyway.</p>
-      <p><b>Verify:</b> the runtime and the tracking models download from <code>dl.openvalence.org</code>, and the app checks every file against the SHA-256 in the manifest built into it before it keeps the file.</p>
-      <p>Help &gt; Check for updates installs an update only when its signature matches the key built into the app.</p>
-      <p class="fine">Early access: a few actions can still fail without a message, so commit as you go.</p>
+      <p>Get <code>Pawscript.zip</code> from the <a href="https://github.com/openvalence/Pawscript/releases/latest">latest release on GitHub</a>. This site never hosts binaries. Extract it into a folder of its own and start <code>Pawscript.exe</code>; the first start downloads the runtime (2.3 GB) and the models you pick.</p>
+      <p>The exe is not code-signed. If SmartScreen stops it, click More info, then Run anyway.</p>
+      <p><b>Verify:</b> the runtime and the tracking models come from <code>dl.openvalence.org</code>, and the app checks each file against the SHA-256 in the manifest built into it.</p>
     </div>
   </section>
 
@@ -244,10 +213,8 @@
     <h2 id="s-source">Source and license<a class="hl" href="#s-source" aria-label="Copy link to this section"></a></h2>
     <!-- README.md "Licensing"; LICENSE; docs/guide/cotracker.md -->
     <div>
-      <p>The source is on <a href="https://github.com/openvalence/Pawscript">GitHub</a> under <span class="nb">GPL-3.0-or-later</span>. The file format specifications (<code>.pawproj</code>, <code>.pawruns</code>, <code>.pawpack</code>) are <span class="nb">CC BY 4.0</span>, and the scripts and projects you make are yours.</p>
-      <p>CoTracker3 is not included: its license allows non-commercial use only. TAPNext++ is the point tracker.</p>
-      <p>Pawscript is made for explicit content. For adults only (18+).</p>
-      <p class="links"><a href="https://github.com/openvalence/Pawscript">Source</a> · <a href="https://github.com/openvalence/Pawscript/releases/latest">Releases</a> · <a href="/phosphor/">Phosphor</a> · <a href="/downloads/">Downloads</a></p>
+      <p>Source on <a href="https://github.com/openvalence/Pawscript">GitHub</a>, <span class="nb">GPL-3.0-or-later</span>. The file format specifications are <span class="nb">CC BY 4.0</span>. CoTracker3 is not included: its license is non-commercial only.</p>
+      <p class="links"><a href="https://github.com/openvalence/Pawscript">Repo</a> · <a href="https://github.com/openvalence/Pawscript/blob/main/docs/guide/README.md">Guide</a> · <a href="https://github.com/openvalence/Pawscript/releases/latest">Releases</a> · <a href="/downloads/">Downloads</a></p>
     </div>
   </section>
 </main>
